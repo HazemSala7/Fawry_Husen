@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CategoryWidget extends StatefulWidget {
-  const CategoryWidget({super.key});
+  final image, name;
+  const CategoryWidget({super.key, this.image, this.name});
 
   @override
   State<CategoryWidget> createState() => _CategoryWidgetState();
@@ -44,7 +45,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: Image.asset(
-                  'assets/images/WLanding.jpg',
+                  widget.image,
                 ).image,
               ),
             ),
@@ -75,7 +76,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "ملابس نسائيه",
+                      widget.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,

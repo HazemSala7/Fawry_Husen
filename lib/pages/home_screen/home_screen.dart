@@ -1,3 +1,5 @@
+import 'package:fawri_app_refactor/pages/home_screen/category-screen/category-screen.dart';
+import 'package:fawri_app_refactor/pages/home_screen/main-screen/main-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
@@ -42,27 +44,21 @@ class _HomeScreenState extends State<HomeScreen> {
         color: Colors.brown,
       ),
     ),
-    Container(
-      alignment: Alignment.center,
-      child: const Icon(
-        Icons.bolt,
-        size: 56,
-        color: Colors.brown,
-      ),
-    ),
-    Container(
-      alignment: Alignment.center,
-      child: const Icon(
-        Icons.tune_rounded,
-        size: 56,
-        color: Colors.brown,
-      ),
-    ),
+    CategoryScreen(),
+    MainScreen()
   ];
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _listOfWidget[selectedIndex],
+      appBar: AppBar(
+        elevation: 1,
+        centerTitle: true,
+        title: Text(
+          "فوري",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+      body: SingleChildScrollView(child: _listOfWidget[selectedIndex]),
       bottomNavigationBar: SlidingClippedNavBar(
         backgroundColor: Colors.white,
         onButtonPressed: onButtonPressed,
