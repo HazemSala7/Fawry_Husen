@@ -1,7 +1,11 @@
+import 'package:fawri_app_refactor/pages/authentication/register_screen/register_screen.dart';
+import 'package:fawri_app_refactor/pages/authentication/sign_in/sign_in.dart';
+import 'package:fawri_app_refactor/pages/category-splash/category-splash.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import '../../../components/button_widget/button_widget.dart';
+import '../../../services/auth/anonymous_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,7 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: const EdgeInsets.only(right: 15, left: 15),
                   child: ButtonWidget(
-                    OnClickFunction: () {},
+                    OnClickFunction: () {
+                      NavigatorFunction(context, LoginPage());
+                    },
                     width: double.infinity,
                     height: 40,
                     name: "تسجيل الدخول",
@@ -89,19 +95,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 // Create New Account Button
-                Padding(
-                  padding: const EdgeInsets.only(right: 15, left: 15, top: 15),
-                  child: ButtonWidget(
-                    OnClickFunction: () {},
-                    width: double.infinity,
-                    height: 40,
-                    name: "انشاء حساب جديد",
-                    BorderRaduis: 0,
-                    NameColor: Colors.white,
-                    BorderColor: Colors.white,
-                    ButtonColor: Color(0x6CFFFFFF),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.only(right: 15, left: 15, top: 15),
+                //   child: ButtonWidget(
+                //     OnClickFunction: () {
+                //       NavigatorFunction(context, CreateAccount());
+                //     },
+                //     width: double.infinity,
+                //     height: 40,
+                //     name: "انشاء حساب جديد",
+                //     BorderRaduis: 0,
+                //     NameColor: Colors.white,
+                //     BorderColor: Colors.white,
+                //     ButtonColor: Color(0x6CFFFFFF),
+                //   ),
+                // ),
                 // Skip Button
                 Padding(
                   padding: const EdgeInsets.only(top: 25),
@@ -127,11 +135,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               )),
                             )
                           : ButtonWidget(
-                              OnClickFunction: () {
+                              OnClickFunction: () async {
                                 setState(() {
                                   loading = true;
                                 });
-                                NavigatorFunction(context, HomeScreen());
+                                final user = await signInAnonymously(context);
+                                if (user == null) {
+                                  return;
+                                }
+                                NavigatorFunction(context, CategorySplash());
                               },
                               width: 160,
                               height: 40,

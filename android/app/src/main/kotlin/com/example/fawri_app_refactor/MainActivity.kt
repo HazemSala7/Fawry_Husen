@@ -1,4 +1,4 @@
-package com.example.fawri_app_refactor
+package FAWRI.APP
 
 import io.flutter.embedding.android.FlutterActivity
 

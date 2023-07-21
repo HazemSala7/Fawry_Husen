@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../components/category_widget/category-widget.dart';
 import '../../../constants/constants.dart';
+import '../../../services/custom_icons/custom_icons.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -28,7 +29,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
           itemBuilder: (context, int index) {
             return CategoryWidget(
+                main_category: categories[index]["main_category"],
                 name: categories[index]["name"],
+                CateIcon: Icons.abc,
                 // id: categories[index]["id"],
                 image: categories[index]["image"]);
           }),

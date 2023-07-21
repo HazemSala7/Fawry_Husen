@@ -1,8 +1,18 @@
+import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
+import 'package:fawri_app_refactor/server/functions/functions.dart';
+import 'package:fawri_app_refactor/services/dialogs/bottom-dialogs.dart';
 import 'package:flutter/material.dart';
 
 class CategoryWidget extends StatefulWidget {
-  final image, name;
-  const CategoryWidget({super.key, this.image, this.name});
+  final image, name, main_category;
+  IconData CateIcon;
+  CategoryWidget({
+    Key? key,
+    required this.name,
+    required this.image,
+    required this.main_category,
+    required this.CateIcon,
+  }) : super(key: key);
 
   @override
   State<CategoryWidget> createState() => _CategoryWidgetState();
@@ -13,27 +23,12 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
-        // setState(() {
-        //   FFAppState().sizecon1 = true;
-        //   FFAppState().homecat = '2030';
-        //   FFAppState().selectedsize = '';
-        //   FFAppState().subcat = '';
-        //   FFAppState().search = '';
-        //   FFAppState().selectedcats = [];
-        //   FFAppState().selectedcatsids = [];
-        // });
-        // await Navigator.push(
-        //   context,
-        //   PageTransition(
-        //       type: PageTransitionType.fade,
-        //       duration: Duration(milliseconds: 1000),
-        //       reverseDuration: Duration(milliseconds: 500),
-        //       child: ShowCaseWidget(
-        //         builder: Builder(
-        //           builder: (context) => NavBarPage(initialPage: 'Home'),
-        //         ),
-        //       )),
-        // );
+        ChooseSizeDialogForShoes().showBottomDialog(context);
+        // NavigatorFunction(
+        //     context,
+        //     ProductsCategories(
+        //       category_id: widget.main_category.toString(),
+        //     ));
       },
       child: Stack(
         children: [
@@ -65,7 +60,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.access_alarm,
+                      widget.CateIcon,
                       color: Colors.white,
                       size: 70,
                     ),
