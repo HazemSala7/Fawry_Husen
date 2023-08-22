@@ -42,7 +42,7 @@ class WhoWeAre extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 30),
                             child: Text(
-                              AppLocalizations.of(context)!.who,
+                              "من نحن",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),

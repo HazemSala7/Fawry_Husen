@@ -51,6 +51,21 @@ dependencies:
   sign_in_with_apple: ^5.0.0
   flutter_facebook_auth: ^6.0.0
   google_sign_in: ^6.1.4
+  flutter_vector_icons: ^2.0.0
+  vibration: ^1.8.1
+  flutter_animate: ^4.2.0+1
+  showcaseview: ^2.0.3
+  uuid: ^3.0.7
+  like_button: ^2.0.5
+  flutter_cache_manager: ^3.3.1
+  dots_indicator: ^3.0.0
+  swipe_to: ^1.0.2
+  shimmer: ^3.0.0
+  fancy_shimmer_image: ^2.0.3
+  connectivity_plus: ^4.0.2
+  flutter_switch: ^0.3.2
+  provider: ^6.0.5
+  flutter_image_slideshow: ^0.1.6
 
 dependency_overrides:
   test_api: ^0.4.18
@@ -58,6 +73,7 @@ dependency_overrides:
   firebase_messaging: ^14.6.5
   firebase_auth: ^4.7.1
   firebase_core_platform_interface: ^4.5.1
+  cloud_firestore: ^4.8.4
 
 dev_dependencies:
   flutter_test:
@@ -85,6 +101,7 @@ flutter:
   assets:
     - assets/fonts/
     - assets/images/
+    - assets/categories_icons/
     - assets/videos/
     - assets/audios/
     - assets/lottie_animations/

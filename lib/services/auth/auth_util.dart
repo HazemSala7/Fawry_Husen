@@ -18,7 +18,7 @@ Future<User?> signInOrCreateAccount(
 ) async {
   try {
     final userCredential = await signInFunc();
-    return userCredential?.user;
+    return userCredential!.user;
   } on FirebaseAuthException catch (e) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     ScaffoldMessenger.of(context).showSnackBar(

@@ -47,7 +47,7 @@ class _PrivacyState extends State<Privacy> {
                           Padding(
                             padding: const EdgeInsets.only(left: 30),
                             child: Text(
-                              AppLocalizations.of(context)!.privacy,
+                              "سياسه الخصوصيه",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.bold),
                             ),

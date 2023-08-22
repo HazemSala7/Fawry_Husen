@@ -64,8 +64,8 @@ class _CategorySplashState extends State<CategorySplash> {
                     return CategoryWidget(
                         main_category: categories[index]["main_category"],
                         name: categories[index]["name"],
-                        CateIcon: Icons.abc,
-                        // id: categories[index]["id"],
+                        CateImage: categories[index]["icon"],
+                        CateIcon: categories[index]["icon"],
                         image: categories[index]["image"]);
                   }),
             ),

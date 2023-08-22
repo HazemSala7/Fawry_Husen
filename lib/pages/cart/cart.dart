@@ -1,8 +1,24 @@
+import 'dart:async';
+import 'dart:convert';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
+import 'package:fawri_app_refactor/firebase/cart/CartController.dart';
+import 'package:fawri_app_refactor/firebase/cart/cart.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import '../../LocalDB/Models/CartModel.dart';
+import '../../LocalDB/Provider/CartProvider.dart';
 import '../../constants/constants.dart';
+import '../../firebase/cart/CartProvider.dart';
+import '../../server/domain/domain.dart';
+import '../../server/functions/functions.dart';
+import '../../services/dialogs/bottom-dialogs.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -13,294 +29,313 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   @override
+  String dropdownValue = 'اختر منطقتك';
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FaIcon(
-              FontAwesomeIcons.facebookMessenger,
-              color: Colors.black,
-              size: 25,
-            ),
-          ),
-          SizedBox(
-            width: 10,
-          ),
-          FaIcon(
-            FontAwesomeIcons.clock,
-            color: Colors.black,
-            size: 25,
-          ),
-          SizedBox(
-            width: 10,
-          ),
-        ],
-        title: Text(
-          "سلتي",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              width: double.infinity,
-              child: ListView.builder(
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 3, bottom: 3),
-                      child: Container(
-                        height: 140,
-                        width: double.infinity,
-                        decoration: BoxDecoration(boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            blurRadius: 5,
-                          ),
-                        ], color: Colors.white),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 100,
-                              width: double.infinity,
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Container(
-                                    height: 80,
-                                    width: 90,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          topLeft: Radius.circular(10)),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: Image.network(
-                                          "https://img.ltwebstatic.com/images3_pi/2022/12/16/1671155755e3da130379be82b897aa80003ed95b88.jpg",
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (context, child,
-                                              loadingProgress) {
-                                            if (loadingProgress == null)
-                                              return child;
+    final cartProvider = context.watch<CartProvider>();
+    return Consumer<CartProvider>(
+      builder: (context, cartProvider, _) {
+        List<CartItem> cartItems = cartProvider.cartItems;
 
-                                            return Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                              backgroundColor: MAIN_COLOR,
-                                            ));
-                                            // You can use LinearProgressIndicator or CircularProgressIndicator instead
-                                          },
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Container()),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, bottom: 10, right: 20),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "تخزين سفري شجرهمع تمط غزال",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        Text(
-                                          "ONR-SIZE",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "29.99",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                        color: Colors.red),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.7,
-              width: double.infinity,
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  blurRadius: 5,
-                ),
-              ], color: Colors.white),
-              child: Column(
-                children: [
+        double total = 0;
+        for (CartItem item in cartItems) {
+          // total += item.price * item.quantity;
+          total += item.price;
+        }
+        return Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                actions: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "المنطقه : ",
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
-                        ),
-                        Container(
-                          width: 150,
-                          height: 50,
-                          color: Colors.green,
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "المجموع : ",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "₪150",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "المبلغ النهائي بعد الخصم",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "₪150",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "التوصيل : ",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "₪150",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 30, left: 30),
-                    child: Container(
-                      width: double.infinity,
-                      height: 1,
+                    child: FaIcon(
+                      FontAwesomeIcons.facebookMessenger,
                       color: Colors.black,
+                      size: 25,
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    width: 10,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "المبلغ للدفع : ",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "₪150",
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
+                  FaIcon(
+                    FontAwesomeIcons.clock,
+                    color: Colors.black,
+                    size: 25,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                ],
+                title: Text(
+                  "سلتي",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+              ),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 20, right: 20, left: 20, bottom: 20),
+                      child: Row(
+                        children: [
+                          Text(
+                            "عدد المنتجات بالمفضله : ${cartItems.length}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
+                    cartItems.length != 0
+                        ? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: cartItems.length,
+                            itemBuilder: (context, index) {
+                              CartItem item = cartItems[index];
+                              double total = item.price * item.quantity;
+                              return CartProductMethod(
+                                cartProvider: cartProvider,
+                                price: item.price,
+                                name: item.name,
+                                qty: item.quantity,
+                                removeProduct: () {
+                                  cartProvider.removeFromCart(item);
+                                  setState(() {});
+                                },
+                                image: item.image,
+                                item: item,
+                              );
+                            },
+                          )
+                        : Container(
+                            height: MediaQuery.of(context).size.height,
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "لا يوجد منتجات بالسله",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 17),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Icon(Icons.no_accounts_sharp)
+                              ],
+                            ),
+                          ),
+                    SizedBox(
+                      height: 100,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Material(
+              child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 60,
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
                     child: ButtonWidget(
                         name: "تأكيد عمليه الشراء",
                         height: 50,
                         width: 300,
                         BorderColor: Colors.black,
-                        OnClickFunction: () {},
+                        OnClickFunction: () {
+                          showCheckoutDialog().showBottomDialog(context, total);
+                        },
                         BorderRaduis: 10,
                         ButtonColor: Colors.black,
                         NameColor: Colors.white),
-                  )
-                ],
-              ),
-            )
+                  )),
+            ),
           ],
+        );
+      },
+    );
+  }
+
+  deleteCart(removeProduct) async {
+    Navigator.pop(context);
+    removeProduct();
+    Fluttertoast.showToast(msg: "تم حذف المنتج بنجاح");
+  }
+
+  addToCart(product_ID, name, image, price, cartProvider) async {
+    final newItem = CartItem(
+      productId: product_ID,
+      name: name,
+      image: image.toString(),
+      price: double.parse(price.toString()),
+      quantity: 1,
+      user_id: 0,
+    );
+    cartProvider.addToCart(newItem);
+    Navigator.pop(context);
+    Fluttertoast.showToast(
+      msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
+    );
+    Timer(Duration(milliseconds: 500), () {
+      Fluttertoast.cancel(); // Dismiss the toast after the specified duration
+    });
+  }
+
+  Widget CartProductMethod(
+      {String image = "",
+      String name = "",
+      CartProvider? cartProvider,
+      Function? removeProduct,
+      int product_id = 0,
+      CartItem? item,
+      int index = 0,
+      int qty = 0,
+      String cart_id = "",
+      var price}) {
+    final cartProvider = Provider.of<CartProvider>(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: 3, bottom: 3),
+      child: Dismissible(
+        key: Key(index.toString()), // Provide a unique key for each item
+        direction:
+            DismissDirection.horizontal, // Allow both left and right swipes
+        confirmDismiss: (direction) async {
+          bool isDeleteAction = direction == DismissDirection.startToEnd;
+          return await showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Text(isDeleteAction
+                    ? 'هل أنت متأكد انك تريد حذف هذا المنتج من سله المنتجات'
+                    : 'هل تريد بالتأكيد اضافه هذا المنتج الى السله ؟ '),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text('اغلاق'),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      String UserID = prefs.getString('user_id') ?? "";
+                      isDeleteAction
+                          ? deleteCart(removeProduct)
+                          : addToCart(
+                              product_id, name, image, price, cartProvider);
+                    },
+                    child: Text(isDeleteAction ? 'حذف' : 'اضافه'),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        onDismissed: (direction) async {
+          if (direction == DismissDirection.startToEnd) {
+          } else if (direction == DismissDirection.endToStart) {}
+        },
+        background: Container(
+          color: Colors
+              .red, // Use different colors for delete and add to cart actions
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 20),
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
+        ),
+        secondaryBackground: Container(
+          color: Colors
+              .blue, // Use different colors for delete and add to cart actions
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 20),
+          child: Icon(
+            Icons.add_shopping_cart,
+            color: Colors.white,
+          ),
+        ),
+        child: Container(
+          height: 140,
+          width: double.infinity,
+          decoration: BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 5,
+            ),
+          ], color: Colors.white),
+          child: Stack(
+            alignment: Alignment.bottomLeft,
+            children: [
+              SizedBox(
+                // height: 100,
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Container(
+                      // height: 80,
+                      width: 90,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            topLeft: Radius.circular(10)),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: FancyShimmerImage(
+                          imageUrl: image,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: 10, bottom: 10, right: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 250,
+                            child: Text(
+                              name.length > 50
+                                  ? name.substring(0, 50) + '...'
+                                  : name,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ),
+                          Text(
+                            "ONE-SIZE",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: Text(
+                  "₪$price",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.red),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

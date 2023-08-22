@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
+import '../../LocalDB/Models/FavoriteItem.dart';
+import '../../LocalDB/Provider/FavouriteProvider.dart';
+import '../../firebase/favourites/FavouriteControler.dart';
+import '../../firebase/favourites/favourite.dart';
 import '../domain/domain.dart';
 
 var headers = {'ContentType': 'application/json', "Connection": "Keep-Alive"};
@@ -11,20 +18,44 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Widget));
 }
 
-getProducts() async {
+getProducts(int page) async {
   var response = await http.get(
       Uri.parse(
-          "http://34.227.78.214/api/getAllItems?api_key=H93J48593HFNWIEUTR287TG3&page=12"),
+          "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$page"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
 }
 
-getProductByCategory(category_id, int page) async {
+getSpeceficProduct(id) async {
+  if (id.toString().endsWith(',')) {
+    id = id.toString().substring(0, id.toString().length - 1);
+  }
+  print("id");
+  print(id);
   var response = await http.get(
-      Uri.parse(
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&season=Summer&page=$page&api_key=$key_bath"),
+      Uri.parse("$URL_SINGLE_PRODUCT?id=$id&api_key=$key_bath"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
+}
+
+getProductByCategory(category_id, sub_category_key, int page) async {
+  var response = await http.get(
+      Uri.parse(
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&season=Summer&page=$page&api_key=$key_bath"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res;
+}
+
+getSizesByCategory(category_id, context) async {
+  var response = await http.get(
+      Uri.parse(
+          "$URL_SIZES_BY_CATEGORY?main_category=$category_id&season=Summer&api_key=$key_bath"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  Navigator.of(context, rootNavigator: true).pop();
+
+  return res["sizes"];
 }

@@ -1,0 +1,43 @@
+class UserItem {
+  final String id;
+  final String email;
+  final String password;
+  final String phone;
+  final String city;
+  final String area;
+  final String address;
+
+  UserItem({
+    required this.id,
+    required this.email,
+    required this.password,
+    required this.phone,
+    required this.city,
+    required this.area,
+    required this.address,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'email': email,
+      'password': password,
+      'phone': phone,
+      'city': city,
+      'area': area,
+      'address': address,
+    };
+  }
+
+  factory UserItem.fromMap(Map<String, dynamic>? map) {
+    return UserItem(
+      id: map?['id'] ?? '',
+      email: map?['email'] ?? '',
+      password: map?['password'] ?? "",
+      phone: map?['phone'] ?? "",
+      city: map?['city'] ?? "",
+      area: map?['area'] ?? "",
+      address: map?['address'] ?? "",
+    );
+  }
+}

@@ -284,30 +284,21 @@ class _LoginPageState extends State<LoginPage> {
                     size: 33,
                   ),
                   onPressed: () async {
-                    // final user = await signInWithFacebook(context);
+                    // final user = await signInWithEmail(
+                    //   context,
+                    //   emailAddressController!.text,
+                    //   passwordLoginController!.text,
+                    // );
                     // if (user == null) {
                     //   return;
                     // }
-                    // bool firstRun = await IsFirstRun.isFirstRun();
-                    // bool firstRunCart = await IsFirstRun.isFirstRun();
-                    // bool firstRunBadge = await IsFirstRun.isFirstRun();
-                    // bool firstRunproduct = await IsFirstRun.isFirstRun();
 
-                    // setState(() {
-                    //   FFAppState().firstrun = firstRun;
-                    //   FFAppState().firstruncart = firstRunCart;
-                    //   FFAppState().firstrunbadge = firstRunBadge;
-                    //   FFAppState().firstrunproduct = firstRunproduct;
-                    //   FFAppState().isstarting = true;
-                    // });
-                    // await Navigator.push(
+                    // await Navigator.pushAndRemoveUntil(
                     //   context,
-                    //   PageTransition(
-                    //     type: PageTransitionType.fade,
-                    //     duration: Duration(milliseconds: 300),
-                    //     reverseDuration: Duration(milliseconds: 300),
-                    //     child: CatsWidget(),
+                    //   MaterialPageRoute(
+                    //     builder: (context) => NavBarPage(initialPage: 'Home'),
                     //   ),
+                    //   (r) => false,
                     // );
                   },
                 ),
