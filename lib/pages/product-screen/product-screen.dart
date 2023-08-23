@@ -28,6 +28,7 @@ import '../../firebase/cart/cart.dart';
 import '../../firebase/cart/CartController.dart';
 import '../../firebase/favourites/FavouriteControler.dart';
 import '../../firebase/favourites/favourite.dart';
+import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../../services/animation_info/animation_info.dart';
 import '../../services/json/json-services.dart';
@@ -102,6 +103,16 @@ class _ProductScreenState extends State<ProductScreen> {
   //     isLoading = false;
   //   }
   // }
+  fetchAdditionalData() async {
+    final response = await http.get(Uri.parse(
+        'http://34.227.78.214/api/getItemData?id=10365,10666,10367,10368,10369&api_key=$key_bath'));
+    var res = json.decode(utf8.decode(response.bodyBytes));
+
+    var additionalItems = res["item"];
+    print("additionalItems");
+    print(additionalItems);
+    return additionalItems;
+  }
 
   final animationsMap = {
     'badgeOnActionTriggerAnimation': AnimationInfo(
@@ -375,6 +386,66 @@ class _ProductScreenState extends State<ProductScreen> {
                       orderedItems.add(item);
                     }
                   }
+                  // if (orderedItems.length == widgetIds.length) {
+                  //   fetchAdditionalData().then((additionalData) {
+                  //     if (additionalData is List<dynamic>) {
+                  //       List<Map<String, dynamic>> additionalItems =
+                  //           additionalData.cast<Map<String, dynamic>>();
+                  //       orderedItems.addAll(additionalItems);
+
+                  //       return AnimationLimiter(
+                  //         child: CarouselSlider(
+                  //           options: CarouselOptions(
+                  //             aspectRatio: 2.5,
+                  //             autoPlay: false,
+                  //             enlargeCenterPage: true,
+                  //             viewportFraction: 1,
+                  //             height: MediaQuery.of(context).size.height,
+                  //           ),
+                  //           items: orderedItems.map((item) {
+                  //             List<String> images =
+                  //                 (item["vendor_images_links"] as List)
+                  //                     .cast<String>();
+                  //             int itemIndex = orderedItems.indexOf(item);
+                  //             return Builder(
+                  //               builder: (BuildContext context) {
+                  //                 return AnimationConfiguration.staggeredList(
+                  //                   position: itemIndex,
+                  //                   duration: const Duration(milliseconds: 500),
+                  //                   child: SlideAnimation(
+                  //                     verticalOffset: 100.0,
+                  //                     child: FadeInAnimation(
+                  //                       curve: Curves.easeIn,
+                  //                       child: ProductMethod(
+                  //                         name: item["title"] ?? "-",
+                  //                         id: item["id"],
+                  //                         images: images,
+                  //                         description: item["description"],
+                  //                         new_price: item["variants"][0]
+                  //                             ["price"],
+                  //                         old_price: double.parse(
+                  //                                 item["variants"][0]["price"]
+                  //                                     .toString()) *
+                  //                             1.5,
+                  //                         image: item["vendor_images_links"][0]
+                  //                             as String,
+                  //                       ),
+                  //                     ),
+                  //                   ),
+                  //                 );
+                  //               },
+                  //             );
+                  //           }).toList(),
+                  //         ),
+                  //       );
+                  //     } else {
+                  //       print(
+                  //           "Additional data has an unexpected type: ${additionalData.runtimeType}");
+                  //       // Handle the unexpected data type here
+                  //     }
+                  //   });
+                  // }
+                  // else {
                   return AnimationLimiter(
                     child: CarouselSlider(
                       options: CarouselOptions(
@@ -388,12 +459,11 @@ class _ProductScreenState extends State<ProductScreen> {
                         List<String> images =
                             (item["vendor_images_links"] as List)
                                 .cast<String>();
-                        print("item");
-                        print(item);
+                        int itemIndex = orderedItems.indexOf(item);
                         return Builder(
                           builder: (BuildContext context) {
                             return AnimationConfiguration.staggeredList(
-                              position: orderedItems.indexOf(item),
+                              position: itemIndex,
                               duration: const Duration(milliseconds: 500),
                               child: SlideAnimation(
                                 verticalOffset: 100.0,
@@ -420,6 +490,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       }).toList(),
                     ),
                   );
+                  // }
                 } else {
                   return Center(
                       child: SizedBox(
@@ -428,6 +499,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           child: CircularProgressIndicator()));
                 }
               }
+              return Container();
             },
           ),
         ),
@@ -495,50 +567,66 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: Stack(
                     alignment: Alignment.topRight,
                     children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          // onPageChanged: (index, reason) {
-                          //   _currentIndex = index;
-                          //   // setState(() {});
-                          // },
-                          height: 450.0,
-                          scrollDirection: Axis.vertical,
-                          viewportFraction: 1,
-                          autoPlayCurve: Curves.fastOutSlowIn,
-                          aspectRatio: 2.0,
-                          autoPlay: true,
+                      images!.length == 1
+                          ? Container(
+                              height: 450,
+                              width: MediaQuery.of(context).size.width,
+                              child: FancyShimmerImage(
+                                imageUrl: images[0],
+                              ),
+                            )
+                          : CarouselSlider(
+                              options: CarouselOptions(
+                                onPageChanged: (index, reason) {
+                                  _currentIndex = index;
+                                  setState(() {});
+                                },
+                                height: 450.0,
+                                scrollDirection: Axis.vertical,
+                                viewportFraction: 1,
+                                autoPlayCurve: Curves.fastOutSlowIn,
+                                aspectRatio: 2.0,
+                                autoPlay: true,
+                              ),
+                              items: images.map((i) {
+                                return Builder(
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      height: 450,
+                                      width: MediaQuery.of(context).size.width,
+                                      child: InteractiveViewer(
+                                        panEnabled: false, // Set it to false
+                                        boundaryMargin: EdgeInsets.all(100),
+                                        minScale: 0.5,
+                                        maxScale: 2,
+                                        child: FancyShimmerImage(
+                                          imageUrl: i,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                      Container(
+                        margin: EdgeInsets.only(right: 10.0, top: 150),
+                        width:
+                            20.0, // Adjust the width of the indicator container
+                        child: DotsIndicator(
+                          dotsCount: images.length == 0 ? 1 : images.length,
+                          position: _currentIndex >= images.length
+                              ? images.length - 1
+                              : _currentIndex,
+                          axis: Axis.vertical,
+                          decorator: DotsDecorator(
+                            size: const Size.square(9.0),
+                            activeSize: const Size(38.0, 15.0),
+                            activeShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                          ),
                         ),
-                        items: images!.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return Container(
-                                height: 450,
-                                width: MediaQuery.of(context).size.width,
-                                child: FancyShimmerImage(
-                                  imageUrl: i,
-                                ),
-                              );
-                            },
-                          );
-                        }).toList(),
                       ),
-                      // Container(
-                      //   margin: EdgeInsets.only(right: 10.0),
-                      //   width:
-                      //       20.0, // Adjust the width of the indicator container
-                      //   child: DotsIndicator(
-                      //     dotsCount: images.length,
-                      //     position: _currentIndex,
-                      //     axis: Axis.vertical,
-                      //     decorator: DotsDecorator(
-                      //       size: const Size.square(9.0),
-                      //       activeSize: const Size(18.0, 9.0),
-                      //       activeShape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(5.0),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       Positioned(
                         top: 10,
                         right: 10,
@@ -734,29 +822,33 @@ class _ProductScreenState extends State<ProductScreen> {
                                             mainAxisSize: MainAxisSize.max,
                                             children: [
                                               Align(
-                                                alignment:
-                                                    AlignmentDirectional(-1, 0),
-                                                child: ListView.builder(
-                                                  physics:
-                                                      NeverScrollableScrollPhysics(),
-                                                  shrinkWrap: true,
-                                                  itemCount: description.length,
-                                                  itemBuilder:
-                                                      (context, index) {
-                                                    final item =
-                                                        description[index];
-                                                    return Row(
-                                                      children: [
-                                                        Text(
-                                                            "${item.keys.first} : "),
-                                                        Expanded(
-                                                            child: Text(
-                                                                "${item.values.first}")),
-                                                      ],
-                                                    );
-                                                  },
-                                                ),
-                                              ),
+                                                  alignment:
+                                                      AlignmentDirectional(
+                                                          -1, 0),
+                                                  child: ListView.builder(
+                                                    physics:
+                                                        NeverScrollableScrollPhysics(),
+                                                    shrinkWrap: true,
+                                                    itemCount:
+                                                        description.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      final item =
+                                                          description[index];
+                                                      final key =
+                                                          item.keys.first;
+                                                      final value =
+                                                          item.values.first;
+                                                      return Row(
+                                                        children: [
+                                                          Text("$key: "),
+                                                          Expanded(
+                                                              child: Text(
+                                                                  "$value")),
+                                                        ],
+                                                      );
+                                                    },
+                                                  )),
                                             ],
                                           ),
                                         ),

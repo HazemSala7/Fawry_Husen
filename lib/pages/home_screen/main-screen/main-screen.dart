@@ -174,8 +174,8 @@ class _MainScreenState extends State<MainScreen> {
                   )
                 : Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: 15, bottom: 30, right: 10, left: 10),
+                      padding:
+                          const EdgeInsets.only(top: 15, right: 10, left: 10),
                       child: AnimationLimiter(
                         child: GridView.builder(
                             cacheExtent: 5000,

@@ -31,8 +31,6 @@ getSpeceficProduct(id) async {
   if (id.toString().endsWith(',')) {
     id = id.toString().substring(0, id.toString().length - 1);
   }
-  print("id");
-  print(id);
   var response = await http.get(
       Uri.parse("$URL_SINGLE_PRODUCT?id=$id&api_key=$key_bath"),
       headers: headers);

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:fawri_app_refactor/LocalDB/Provider/FavouriteProvider.dart';
+import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -49,9 +50,14 @@ class _FavouriteState extends State<Favourite> {
                       itemCount: favoritesItems.length,
                       itemBuilder: (context, index) {
                         FavoriteItem item = favoritesItems[index];
+                        String productIdsString = favoritesItems
+                            .map((item) => item.productId)
+                            .join(', ');
+
                         return cartCard(
                           price: item.price,
                           name: item.name,
+                          IDs: productIdsString,
                           product_id: item.productId,
                           removeProduct: () {
                             Navigator.pop(context);
@@ -115,6 +121,7 @@ class _FavouriteState extends State<Favourite> {
       String name = "",
       int fav_id = 0,
       int index = 0,
+      var IDs,
       Function? removeProduct,
       int product_id = 0,
       String categry = ""}) {
@@ -188,59 +195,72 @@ class _FavouriteState extends State<Favourite> {
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [
-            Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 7,
-                      blurRadius: 5,
-                    ),
-                  ],
-                  color: Colors.white),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10)),
-                          child: Image.network(
-                            image,
-                            height: 180,
-                            width: 110,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 7,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Container(
-                                width: 200,
-                                child: Text(name.length > 50
-                                    ? name.substring(0, 50)
-                                    : name)),
-                            Text(categry),
-                            Text("${price} NIS"),
-                          ],
-                        ),
+            InkWell(
+              onTap: () {
+                NavigatorFunction(
+                    context,
+                    ProductScreen(
+                        index: index,
+                        favourite: false,
+                        Images: [image],
+                        Product: [],
+                        IDs: IDs,
+                        id: 10));
+              },
+              child: Container(
+                height: 150,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        spreadRadius: 7,
+                        blurRadius: 5,
                       ),
                     ],
-                  ),
-                ],
+                    color: Colors.white),
+                child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                bottomRight: Radius.circular(10)),
+                            child: Image.network(
+                              image,
+                              height: 180,
+                              width: 110,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 7,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Container(
+                                  width: 200,
+                                  child: Text(name.length > 50
+                                      ? name.substring(0, 50)
+                                      : name)),
+                              Text(categry),
+                              Text("${price} NIS"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             Row(

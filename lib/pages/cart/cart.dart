@@ -19,6 +19,7 @@ import '../../firebase/cart/CartProvider.dart';
 import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../../services/dialogs/bottom-dialogs.dart';
+import '../product-screen/product-screen.dart';
 
 class Cart extends StatefulWidget {
   const Cart({super.key});
@@ -82,7 +83,7 @@ class _CartState extends State<Cart> {
                       child: Row(
                         children: [
                           Text(
-                            "عدد المنتجات بالمفضله : ${cartItems.length}",
+                            "عدد المنتجات بالسله : ${cartItems.length}",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 17),
                           ),
@@ -97,11 +98,15 @@ class _CartState extends State<Cart> {
                             itemBuilder: (context, index) {
                               CartItem item = cartItems[index];
                               double total = item.price * item.quantity;
+                              String productIdsString = cartItems
+                                  .map((item) => item.productId)
+                                  .join(', ');
                               return CartProductMethod(
                                 cartProvider: cartProvider,
                                 price: item.price,
                                 name: item.name,
                                 qty: item.quantity,
+                                IDs: productIdsString,
                                 removeProduct: () {
                                   cartProvider.removeFromCart(item);
                                   setState(() {});
@@ -196,6 +201,7 @@ class _CartState extends State<Cart> {
       int product_id = 0,
       CartItem? item,
       int index = 0,
+      var IDs,
       int qty = 0,
       String cart_id = "",
       var price}) {
@@ -261,80 +267,93 @@ class _CartState extends State<Cart> {
             color: Colors.white,
           ),
         ),
-        child: Container(
-          height: 140,
-          width: double.infinity,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.2),
-              blurRadius: 5,
-            ),
-          ], color: Colors.white),
-          child: Stack(
-            alignment: Alignment.bottomLeft,
-            children: [
-              SizedBox(
-                // height: 100,
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      // height: 80,
-                      width: 90,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            topLeft: Radius.circular(10)),
+        child: InkWell(
+          onTap: () {
+            NavigatorFunction(
+                context,
+                ProductScreen(
+                    index: index,
+                    favourite: false,
+                    Images: [image],
+                    Product: [],
+                    IDs: IDs,
+                    id: 10));
+          },
+          child: Container(
+            height: 140,
+            width: double.infinity,
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 5,
+              ),
+            ], color: Colors.white),
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                SizedBox(
+                  // height: 100,
+                  width: double.infinity,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: FancyShimmerImage(
-                          imageUrl: image,
+                      Container(
+                        // height: 80,
+                        width: 90,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(10)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: FancyShimmerImage(
+                            imageUrl: image,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, bottom: 10, right: 20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 250,
-                            child: Text(
-                              name.length > 50
-                                  ? name.substring(0, 50) + '...'
-                                  : name,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, right: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 250,
+                              child: Text(
+                                name.length > 50
+                                    ? name.substring(0, 50) + '...'
+                                    : name,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                            ),
+                            Text(
+                              "ONE-SIZE",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
-                          ),
-                          Text(
-                            "ONE-SIZE",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Text(
-                  "₪$price",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.red),
+                Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: Text(
+                    "₪$price",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.red),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
