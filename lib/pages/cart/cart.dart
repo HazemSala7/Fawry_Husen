@@ -46,6 +46,7 @@ class _CartState extends State<Cart> {
           alignment: Alignment.bottomCenter,
           children: [
             Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 centerTitle: true,
                 actions: [

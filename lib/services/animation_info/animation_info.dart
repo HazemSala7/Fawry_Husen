@@ -16,7 +16,7 @@ class AnimationInfo {
   final List<Effect<dynamic>> effects;
   final bool applyInitialState;
   late Adapter adapter;
-  late AnimationController controller;
+  AnimationController? controller;
 }
 
 // void createAnimation(AnimationInfo animation, TickerProvider vsync) {

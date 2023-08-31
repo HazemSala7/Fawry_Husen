@@ -138,14 +138,15 @@ class _ProductWidgetState extends State<ProductWidget> {
               child: ImageSlideshow(
                 width: double.infinity,
                 initialPage: 0,
-                indicatorColor: MAIN_COLOR,
+                indicatorColor:
+                    widget.Images.length == 1 ? Colors.transparent : MAIN_COLOR,
                 indicatorBackgroundColor: Colors.grey,
                 children: widget.Images.map((e) => FancyShimmerImage(
                       imageUrl: e,
                     )).toList(),
                 onPageChanged: (value) {},
                 autoPlayInterval: 3000,
-                isLoop: true,
+                // isLoop: true,
               ),
               // child: ClipRRect(
               //   borderRadius: BorderRadius.only(

@@ -159,11 +159,16 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          _firstLoad();
-                          Sub_Category_Key =
-                              sub_categories_women_appearel[index]["key"]
-                                  .toString();
-                          Sub_Category_Number = index;
+                          if (selectedIndexes.contains(index)) {
+                            selectedIndexes.remove(index);
+                          } else {
+                            selectedIndexes.add(index);
+                            _firstLoad();
+                            Sub_Category_Key =
+                                sub_categories_women_appearel[index]["key"]
+                                    .toString();
+                            Sub_Category_Number = index;
+                          }
                         });
                       },
                       child: Container(
@@ -173,7 +178,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               width: 2,
-                              color: Sub_Category_Number == index
+                              color: selectedIndexes.contains(index)
                                   ? Colors.red
                                   : Colors.black,
                             ),
@@ -292,6 +297,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     );
   }
 
+  List<int> selectedIndexes = [0];
   int Sub_Category_Number = 0;
   String Sub_Category_Key = sub_categories_women_appearel[0]["key"].toString();
 

@@ -114,12 +114,19 @@ class _MainScreenState extends State<MainScreen> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          _firstLoad();
-                          Sub_Category_Key =
-                              sub_categories_women_appearel[index]["key"]
-                                  .toString();
-                          Sub_Category_Number = index;
+                          if (selectedIndexes.contains(index)) {
+                            selectedIndexes.remove(index);
+                          } else {
+                            selectedIndexes.add(index);
+                            _firstLoad();
+                            Sub_Category_Key =
+                                sub_categories_women_appearel[index]["key"]
+                                    .toString();
+                            Sub_Category_Number = index;
+                          }
                         });
+                        print("selectedIndexes");
+                        print(selectedIndexes);
                       },
                       child: Container(
                         height: 40,
@@ -127,11 +134,10 @@ class _MainScreenState extends State<MainScreen> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              width: 2,
-                              color: Sub_Category_Number == index
-                                  ? Colors.red
-                                  : Colors.black,
-                            ),
+                                width: 3,
+                                color: selectedIndexes.contains(index)
+                                    ? Colors.red
+                                    : Colors.black),
                             color: Colors.black),
                         child: Center(
                           child: Padding(
@@ -186,7 +192,7 @@ class _MainScreenState extends State<MainScreen> {
                               crossAxisCount: 2,
                               crossAxisSpacing: 6,
                               mainAxisSpacing: 10,
-                              childAspectRatio: 0.5,
+                              childAspectRatio: 0.48,
                             ),
                             itemBuilder: (context, int index) {
                               return AnimationConfiguration.staggeredList(
@@ -243,6 +249,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  List<int> selectedIndexes = [];
   int Sub_Category_Number = 0;
   String Sub_Category_Key = sub_categories_women_appearel[0]["key"].toString();
   var AllProducts;

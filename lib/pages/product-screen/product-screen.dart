@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:add_to_cart_animation/add_to_cart_animation.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_options.dart';
@@ -35,6 +36,7 @@ import '../../services/json/json-services.dart';
 import '../authentication/login_screen/login_screen.dart';
 import '../cart/cart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProductScreen extends StatefulWidget {
   var favourite;
@@ -103,15 +105,19 @@ class _ProductScreenState extends State<ProductScreen> {
   //     isLoading = false;
   //   }
   // }
+  int _currentPage = 0;
   fetchAdditionalData() async {
     final response = await http.get(Uri.parse(
         'http://34.227.78.214/api/getItemData?id=10365,10666,10367,10368,10369&api_key=$key_bath'));
     var res = json.decode(utf8.decode(response.bodyBytes));
-
     var additionalItems = res["item"];
-    print("additionalItems");
-    print(additionalItems);
     return additionalItems;
+  }
+
+  GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
+  late Function(GlobalKey) runAddToCartAnimation;
+  void listClick(GlobalKey widgetKey) async {
+    await runAddToCartAnimation(widgetKey);
   }
 
   final animationsMap = {
@@ -274,233 +280,221 @@ class _ProductScreenState extends State<ProductScreen> {
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
-        child: Scaffold(
-          appBar: PreferredSize(
-            preferredSize: Size.fromHeight(40),
-            child: AppBar(
-              backgroundColor: MAIN_COLOR,
-              centerTitle: true,
-              title: Text(
-                "فوري",
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        child: AddToCartAnimation(
+          cartKey: cartKey,
+          height: 50,
+          width: 30,
+          opacity: 0.99,
+          dragAnimation: const DragToCartAnimationOptions(
+            rotation: true,
+          ),
+          jumpAnimation:
+              const JumpAnimationOptions(duration: Duration(microseconds: 200)),
+          createAddToCartAnimation: (runAddToCartAnimation) {
+            this.runAddToCartAnimation = runAddToCartAnimation;
+          },
+          child: Scaffold(
+            appBar: PreferredSize(
+              preferredSize: Size.fromHeight(40),
+              child: AppBar(
+                backgroundColor: MAIN_COLOR,
+                centerTitle: true,
+                title: Text(
+                  "فوري",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.white),
+                ),
+                actions: [
+                  // AddToCartIcon(
+
+                  //   icon: const Icon(Icons.shopping_cart),
+                  //   badgeOptions: const BadgeOptions(
+                  //     active: true,
+                  //     backgroundColor: Colors.red,
+                  //   ),
+                  // ),
+                  Container(
+                    key: cartKey,
+                    child: Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            NavigatorFunction(context, Cart());
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Image.asset(
+                              "assets/images/shopping-cart.png",
+                              height: 35,
+                              width: 35,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        Consumer<CartProvider>(
+                          builder: (context, cartProvider, _) {
+                            int itemCount = cartProvider.cartItemsCount;
+                            return CartIcon(itemCount);
+                          },
+                        )
+                      ],
+                    ),
+                  )
+                ],
+                leading: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_rounded,
+                      color: Colors.white,
+                    )),
               ),
-              actions: [
-                Stack(
-                  alignment: Alignment.topRight,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        NavigatorFunction(context, Cart());
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Image.asset(
-                          "assets/images/shopping-cart.png",
-                          height: 35,
-                          width: 35,
-                          color: Colors.white,
+            ),
+            body: FutureBuilder(
+              future: getSpeceficProduct(widget.IDs),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  if (widget.Product.length == 0) {
+                    return Container(
+                      width: double.infinity,
+                      height: 400,
+                      child: Center(
+                        child: SpinKitPulse(
+                          color: MAIN_COLOR,
+                          size: 60,
                         ),
                       ),
-                    ),
-                    Consumer<CartProvider>(
-                      builder: (context, cartProvider, _) {
-                        int itemCount = cartProvider.cartItemsCount;
-                        return CartIcon(itemCount);
-                      },
-                    )
-                  ],
-                )
-              ],
-              leading: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_rounded,
-                    color: Colors.white,
-                  )),
-            ),
-          ),
-          body: FutureBuilder(
-            future: getSpeceficProduct(widget.IDs),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                List newArray = [];
-                for (int i = 0; i < widget.Product.length; i++) {
-                  newArray.add(i);
-                }
-                return AnimationLimiter(
-                  child: CarouselSlider(
-                    options: CarouselOptions(
-                      aspectRatio: 2.5,
-                      autoPlay: false,
-                      enlargeCenterPage: true,
-                      viewportFraction: 1,
-                      height: MediaQuery.of(context).size.height,
-                    ),
-                    items: newArray.map((i) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return AnimationConfiguration.staggeredList(
-                            position: i,
-                            duration: const Duration(milliseconds: 700),
-                            child: SlideAnimation(
-                              verticalOffset: 100.0,
-                              child: FadeInAnimation(
-                                curve: Curves.easeIn,
-                                child: ProductMethod(
-                                    name: widget.Product[i]["title"] as String,
-                                    id: widget.Product[i]["id"],
-                                    images: widget.Product[i]
-                                        ["vendor_images_links"],
-                                    description: [],
-                                    new_price: widget.Product[i]["price"],
-                                    old_price: double.parse(widget.Product[i]
-                                                ["price"]
-                                            .toString()) *
-                                        1.5,
-                                    image: widget.Product[i]
-                                        ["vendor_images_links"][0] as String),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }).toList(),
-                  ),
-                );
-              } else {
-                if (snapshot.data != null) {
-                  List<dynamic> ProductsAPI = snapshot.data["item"];
-
-                  List<int> widgetIds = _extractIds(widget.IDs);
-                  List<Map<String, dynamic>> orderedItems = [];
-
-                  for (int id in widgetIds) {
-                    var item = ProductsAPI.firstWhere(
-                      (product) => product["id"] == id,
-                      orElse: () => null,
                     );
-                    if (item != null) {
-                      orderedItems.add(item);
+                  } else {
+                    List newArray = [];
+                    for (int i = 0; i < widget.Product.length; i++) {
+                      newArray.add(i);
                     }
-                  }
-                  // if (orderedItems.length == widgetIds.length) {
-                  //   fetchAdditionalData().then((additionalData) {
-                  //     if (additionalData is List<dynamic>) {
-                  //       List<Map<String, dynamic>> additionalItems =
-                  //           additionalData.cast<Map<String, dynamic>>();
-                  //       orderedItems.addAll(additionalItems);
-
-                  //       return AnimationLimiter(
-                  //         child: CarouselSlider(
-                  //           options: CarouselOptions(
-                  //             aspectRatio: 2.5,
-                  //             autoPlay: false,
-                  //             enlargeCenterPage: true,
-                  //             viewportFraction: 1,
-                  //             height: MediaQuery.of(context).size.height,
-                  //           ),
-                  //           items: orderedItems.map((item) {
-                  //             List<String> images =
-                  //                 (item["vendor_images_links"] as List)
-                  //                     .cast<String>();
-                  //             int itemIndex = orderedItems.indexOf(item);
-                  //             return Builder(
-                  //               builder: (BuildContext context) {
-                  //                 return AnimationConfiguration.staggeredList(
-                  //                   position: itemIndex,
-                  //                   duration: const Duration(milliseconds: 500),
-                  //                   child: SlideAnimation(
-                  //                     verticalOffset: 100.0,
-                  //                     child: FadeInAnimation(
-                  //                       curve: Curves.easeIn,
-                  //                       child: ProductMethod(
-                  //                         name: item["title"] ?? "-",
-                  //                         id: item["id"],
-                  //                         images: images,
-                  //                         description: item["description"],
-                  //                         new_price: item["variants"][0]
-                  //                             ["price"],
-                  //                         old_price: double.parse(
-                  //                                 item["variants"][0]["price"]
-                  //                                     .toString()) *
-                  //                             1.5,
-                  //                         image: item["vendor_images_links"][0]
-                  //                             as String,
-                  //                       ),
-                  //                     ),
-                  //                   ),
-                  //                 );
-                  //               },
-                  //             );
-                  //           }).toList(),
-                  //         ),
-                  //       );
-                  //     } else {
-                  //       print(
-                  //           "Additional data has an unexpected type: ${additionalData.runtimeType}");
-                  //       // Handle the unexpected data type here
-                  //     }
-                  //   });
-                  // }
-                  // else {
-                  return AnimationLimiter(
-                    child: CarouselSlider(
-                      options: CarouselOptions(
-                        aspectRatio: 2.5,
-                        autoPlay: false,
-                        enlargeCenterPage: true,
-                        viewportFraction: 1,
-                        height: MediaQuery.of(context).size.height,
-                      ),
-                      items: orderedItems.map((item) {
-                        List<String> images =
-                            (item["vendor_images_links"] as List)
-                                .cast<String>();
-                        int itemIndex = orderedItems.indexOf(item);
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return AnimationConfiguration.staggeredList(
-                              position: itemIndex,
-                              duration: const Duration(milliseconds: 500),
-                              child: SlideAnimation(
-                                verticalOffset: 100.0,
-                                child: FadeInAnimation(
-                                  curve: Curves.easeIn,
-                                  child: ProductMethod(
-                                    name: item["title"] ?? "-",
-                                    id: item["id"],
-                                    images: images,
-                                    description: item["description"],
-                                    new_price: item["variants"][0]["price"],
-                                    old_price: double.parse(item["variants"][0]
-                                                ["price"]
-                                            .toString()) *
-                                        1.5,
-                                    image: item["vendor_images_links"][0]
-                                        as String,
+                    return AnimationLimiter(
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          aspectRatio: 2.5,
+                          autoPlay: false,
+                          enlargeCenterPage: true,
+                          viewportFraction: 1,
+                          height: MediaQuery.of(context).size.height,
+                        ),
+                        items: newArray.map((i) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return AnimationConfiguration.staggeredList(
+                                position: i,
+                                duration: const Duration(milliseconds: 700),
+                                child: SlideAnimation(
+                                  verticalOffset: 100.0,
+                                  child: FadeInAnimation(
+                                    curve: Curves.easeIn,
+                                    child: ProductMethod(
+                                        name: widget.Product[i]["title"]
+                                            as String,
+                                        id: widget.Product[i]["id"],
+                                        images: widget.Product[i]
+                                            ["vendor_images_links"],
+                                        description: [],
+                                        new_price: widget.Product[i]["price"],
+                                        old_price: double.parse(widget
+                                                .Product[i]["price"]
+                                                .toString()) *
+                                            1.5,
+                                        image: widget.Product[i]
+                                                ["vendor_images_links"][0]
+                                            as String),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                    ),
-                  );
-                  // }
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
                 } else {
-                  return Center(
-                      child: SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: CircularProgressIndicator()));
+                  if (snapshot.data != null) {
+                    List<dynamic> ProductsAPI = snapshot.data["item"];
+
+                    List<int> widgetIds = _extractIds(widget.IDs);
+                    var orderedItems = [];
+
+                    for (int id in widgetIds) {
+                      var item = ProductsAPI.firstWhere(
+                        (product) => product["id"] == id,
+                        orElse: () => null,
+                      );
+                      if (item != null) {
+                        orderedItems.add(item);
+                      }
+                    }
+
+                    return AnimationLimiter(
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          aspectRatio: 2.5,
+                          autoPlay: false,
+                          enlargeCenterPage: true,
+                          viewportFraction: 1,
+                          height: MediaQuery.of(context).size.height,
+                          initialPage: _currentPage,
+                          onPageChanged: (index, reason) async {
+                            setState(() {
+                              _currentPage = index;
+                            });
+
+                            if (orderedItems.length - 3 < _currentPage) {
+                              var additionalItems = await fetchAdditionalData();
+
+                              orderedItems.add(additionalItems);
+                            }
+                          },
+                        ),
+                        items: orderedItems.map((item) {
+                          List<String> images =
+                              (item["vendor_images_links"] as List)
+                                  .cast<String>();
+                          int itemIndex = orderedItems.indexOf(item);
+
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return AnimationConfiguration.staggeredList(
+                                position: itemIndex,
+                                duration: const Duration(milliseconds: 500),
+                                child: SlideAnimation(
+                                  verticalOffset: 100.0,
+                                  child: FadeInAnimation(
+                                    curve: Curves.easeIn,
+                                    child: ProductMethod(
+                                      name: item["title"] ?? "-",
+                                      id: item["id"],
+                                      images: images,
+                                      description: item["description"],
+                                      new_price: item["variants"][0]["price"],
+                                      old_price: double.parse(item["variants"]
+                                                  [0]["price"]
+                                              .toString()) *
+                                          1.5,
+                                      image: item["vendor_images_links"][0]
+                                          as String,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  } else {
+                    return Container();
+                  }
                 }
-              }
-              return Container();
-            },
+              },
+            ),
           ),
         ),
       ),
@@ -552,6 +546,7 @@ class _ProductScreenState extends State<ProductScreen> {
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
+    final GlobalKey widgetKey = GlobalKey();
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -562,78 +557,98 @@ class _ProductScreenState extends State<ProductScreen> {
             child: Column(
               children: [
                 Container(
+                  key: widgetKey,
                   height: 450.0,
                   width: double.infinity,
-                  child: Stack(
-                    alignment: Alignment.topRight,
-                    children: [
-                      images!.length == 1
-                          ? Container(
-                              height: 450,
-                              width: MediaQuery.of(context).size.width,
-                              child: FancyShimmerImage(
-                                imageUrl: images[0],
-                              ),
-                            )
-                          : CarouselSlider(
-                              options: CarouselOptions(
-                                onPageChanged: (index, reason) {
-                                  _currentIndex = index;
-                                  setState(() {});
-                                },
-                                height: 450.0,
-                                scrollDirection: Axis.vertical,
-                                viewportFraction: 1,
-                                autoPlayCurve: Curves.fastOutSlowIn,
-                                aspectRatio: 2.0,
-                                autoPlay: true,
-                              ),
-                              items: images.map((i) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return Container(
-                                      height: 450,
-                                      width: MediaQuery.of(context).size.width,
-                                      child: InteractiveViewer(
-                                        panEnabled: false, // Set it to false
-                                        boundaryMargin: EdgeInsets.all(100),
-                                        minScale: 0.5,
-                                        maxScale: 2,
+                  child: clicked
+                      ? Container()
+                      : StatefulBuilder(
+                          builder:
+                              (BuildContext context, StateSetter setState) {
+                            return Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                images!.length == 1
+                                    ? Container(
+                                        height: 450,
+                                        width:
+                                            MediaQuery.of(context).size.width,
                                         child: FancyShimmerImage(
-                                          imageUrl: i,
+                                          imageUrl: images[0],
+                                        ),
+                                      )
+                                    : CarouselSlider(
+                                        options: CarouselOptions(
+                                          onPageChanged: (index, reason) {
+                                            _currentIndex = index;
+                                            setState(() {});
+                                          },
+                                          height: 450.0,
+                                          scrollDirection: Axis.vertical,
+                                          viewportFraction: 1,
+                                          autoPlayCurve: Curves.fastOutSlowIn,
+                                          aspectRatio: 2.0,
+                                          autoPlay: true,
+                                        ),
+                                        items: images.map((i) {
+                                          return Builder(
+                                            builder: (BuildContext context) {
+                                              return Container(
+                                                height: 450,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: InteractiveViewer(
+                                                  panEnabled:
+                                                      false, // Set it to false
+                                                  boundaryMargin:
+                                                      EdgeInsets.all(100),
+                                                  minScale: 0.5,
+                                                  maxScale: 2,
+                                                  child: FancyShimmerImage(
+                                                    imageUrl: i,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        }).toList(),
+                                      ),
+                                Visibility(
+                                  visible: images.length == 1 ? false : true,
+                                  child: Container(
+                                    margin:
+                                        EdgeInsets.only(right: 10.0, top: 150),
+                                    width: 20.0,
+                                    child: DotsIndicator(
+                                      dotsCount: images.length == 0
+                                          ? 1
+                                          : images.length,
+                                      position: _currentIndex >= images.length
+                                          ? images.length - 1
+                                          : _currentIndex,
+                                      axis: Axis.vertical,
+                                      decorator: DotsDecorator(
+                                        size: const Size.square(9.0),
+                                        activeSize: const Size(38.0, 15.0),
+                                        activeShape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5.0),
                                         ),
                                       ),
-                                    );
-                                  },
-                                );
-                              }).toList(),
-                            ),
-                      Container(
-                        margin: EdgeInsets.only(right: 10.0, top: 150),
-                        width:
-                            20.0, // Adjust the width of the indicator container
-                        child: DotsIndicator(
-                          dotsCount: images.length == 0 ? 1 : images.length,
-                          position: _currentIndex >= images.length
-                              ? images.length - 1
-                              : _currentIndex,
-                          axis: Axis.vertical,
-                          decorator: DotsDecorator(
-                            size: const Size.square(9.0),
-                            activeSize: const Size(38.0, 15.0),
-                            activeShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                          ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: Icon(Icons.info,
+                                      size: 30, color: MAIN_COLOR),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ),
-                      Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Icon(Icons.info, size: 30, color: MAIN_COLOR),
-                      ),
-                    ],
-                  ),
                 ),
                 Column(
                   children: [
@@ -769,7 +784,9 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: description.length == 0 ? false : true,
+                      visible: description is List
+                          ? description.isNotEmpty
+                          : description != null && description != '',
                       child: Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
                         child: Row(
@@ -817,41 +834,48 @@ class _ProductScreenState extends State<ProductScreen> {
                                             color: Colors.black,
                                           ),
                                         ),
-                                        expanded: SingleChildScrollView(
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Align(
-                                                  alignment:
-                                                      AlignmentDirectional(
-                                                          -1, 0),
-                                                  child: ListView.builder(
-                                                    physics:
-                                                        NeverScrollableScrollPhysics(),
-                                                    shrinkWrap: true,
-                                                    itemCount:
-                                                        description.length,
-                                                    itemBuilder:
-                                                        (context, index) {
-                                                      final item =
-                                                          description[index];
-                                                      final key =
-                                                          item.keys.first;
-                                                      final value =
-                                                          item.values.first;
-                                                      return Row(
-                                                        children: [
-                                                          Text("$key: "),
-                                                          Expanded(
-                                                              child: Text(
-                                                                  "$value")),
-                                                        ],
-                                                      );
-                                                    },
-                                                  )),
-                                            ],
-                                          ),
-                                        ),
+                                        expanded: description is List
+                                            ? SingleChildScrollView(
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.max,
+                                                  children: [
+                                                    Align(
+                                                        alignment:
+                                                            AlignmentDirectional(
+                                                                -1, 0),
+                                                        child: ListView.builder(
+                                                          physics:
+                                                              NeverScrollableScrollPhysics(),
+                                                          shrinkWrap: true,
+                                                          itemCount: description
+                                                              .length,
+                                                          itemBuilder:
+                                                              (context, index) {
+                                                            final item =
+                                                                description[
+                                                                    index];
+                                                            final key =
+                                                                item.keys.first;
+                                                            final value = item
+                                                                .values.first;
+                                                            return Row(
+                                                              children: [
+                                                                Text("$key: "),
+                                                                Expanded(
+                                                                    child: Text(
+                                                                        "$value")),
+                                                              ],
+                                                            );
+                                                          },
+                                                        )),
+                                                  ],
+                                                ),
+                                              )
+                                            : description is String
+                                                ? Text(
+                                                    description) // Show the simple string description
+                                                : Container(),
                                         theme: ExpandableThemeData(
                                           tapHeaderToExpand: true,
                                           tapBodyToExpand: false,
@@ -904,61 +928,51 @@ class _ProductScreenState extends State<ProductScreen> {
                 "ONE-SIZE",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              loadingcart
-                  ? InkWell(
-                      onTap: () {
-                        // widget.OnClickFunction();
-                      },
-                      child: Container(
-                        height: 50,
-                        width: 150,
-                        decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.black)),
-                        child: Center(
-                            child: Container(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )),
-                      ),
-                    )
-                  : ButtonWidget(
-                      name: "أضف الى السله",
-                      height: 50,
-                      width: 150,
-                      BorderColor: Colors.black,
-                      OnClickFunction: () async {
-                        final newItem = CartItem(
-                          productId: id,
-                          name: name,
-                          image: image.toString(),
-                          price: double.parse(new_price.toString()),
-                          quantity: 1,
-                          user_id: 0,
-                        );
-                        cartProvider.addToCart(newItem);
+              ButtonWidget(
+                  name: "أضف الى السله",
+                  height: 50,
+                  width: 150,
+                  BorderColor: Colors.black,
+                  OnClickFunction: () async {
+                    setState(() {
+                      clicked = true;
+                    });
+                    listClick(widgetKey);
+                    Vibration.vibrate(duration: 300);
 
-                        Fluttertoast.showToast(
-                          msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
-                        );
-                        Timer(Duration(milliseconds: 500), () {
-                          Fluttertoast
-                              .cancel(); // Dismiss the toast after the specified duration
-                        });
-                      },
-                      BorderRaduis: 10,
-                      ButtonColor: Colors.black,
-                      NameColor: Colors.white)
+                    final newItem = CartItem(
+                      productId: id,
+                      name: name,
+                      image: image.toString(),
+                      price: double.parse(new_price.toString()),
+                      quantity: 1,
+                      user_id: 0,
+                    );
+                    cartProvider.addToCart(newItem);
+
+                    const snackBar = SnackBar(
+                      content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    Timer(Duration(milliseconds: 500), () {
+                      Fluttertoast.cancel();
+                      // Dismiss the toast after the specified duration
+                    });
+                    Timer(Duration(seconds: 1), () async {
+                      Navigator.pop(context);
+                    });
+                  },
+                  BorderRaduis: 10,
+                  ButtonColor: Colors.black,
+                  NameColor: Colors.white)
             ],
           ),
         ),
       ],
     );
   }
+
+  bool clicked = false;
 
   var desc = [
     {"لون": "عنابي اللون"},

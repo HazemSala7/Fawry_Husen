@@ -24,24 +24,26 @@ class ButtonWidget extends StatefulWidget {
 class _ButtonWidgetState extends State<ButtonWidget> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        widget.OnClickFunction();
-      },
-      child: Container(
-        width: widget.width,
-        height: widget.height,
-        decoration: BoxDecoration(
-            color: widget.ButtonColor,
-            borderRadius: BorderRadius.circular(widget.BorderRaduis),
-            border: Border.all(color: widget.BorderColor)),
-        child: Center(
-          child: Text(
-            widget.name,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-                color: widget.NameColor),
+    return Material(
+      child: InkWell(
+        onTap: () {
+          widget.OnClickFunction();
+        },
+        child: Container(
+          width: widget.width,
+          height: widget.height,
+          decoration: BoxDecoration(
+              color: widget.ButtonColor,
+              borderRadius: BorderRadius.circular(widget.BorderRaduis),
+              border: Border.all(color: widget.BorderColor)),
+          child: Center(
+            child: Text(
+              widget.name,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: widget.NameColor),
+            ),
           ),
         ),
       ),

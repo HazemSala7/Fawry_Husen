@@ -59,7 +59,7 @@ class _FawriState extends State<Fawri> {
       });
     }
   }
-
+  
   FawriFirebaseUser? initialUser;
 
   bool displaySplashImage = true;

@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 import '../../../components/button_widget/button_widget.dart';
 import '../../../firebase/user/UserController.dart';
 import '../../../services/auth/anonymous_auth.dart';
+import 'bottom-dialog/bottom-dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,41 +73,104 @@ class _LoginScreenState extends State<LoginScreen> {
                 : Padding(
                     padding:
                         const EdgeInsets.only(right: 15, left: 15, top: 450),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ButtonWidget(
-                          OnClickFunction: () async {
-                            setState(() {
-                              loading = true;
-                            });
-                            Timer(Duration(seconds: 1), () async {
-                              addUser();
-                              // final user = await signInAnonymously(context);
-                              // if (user == null) {
-                              //   return;
-                              // }
-                            });
-                          },
-                          width: double.infinity,
-                          height: 50,
-                          name: "تخطي",
-                          BorderRaduis: 40,
-                          NameColor: Colors.white,
-                          BorderColor: Colors.black,
-                          ButtonColor: Colors.black,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Container(
-                              width: double.infinity,
-                              height: 50,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Visibility(
-                                    visible: isAppleDevice,
-                                    child: Container(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              right: 15,
+                              left: 15,
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                setState(() {
+                                  loading = true;
+                                });
+
+                                addUser();
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(40),
+                                    border: Border.all(color: Colors.black)),
+                                child: Center(
+                                    child: Text(
+                                  "تخطي",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.white),
+                                )),
+                              ),
+                            ),
+                          ),
+                          // ButtonWidget(
+                          //   OnClickFunction: () async {
+                          //     setState(() {
+                          //       loading = true;
+                          //     });
+                          //     Timer(Duration(seconds: 1), () async {
+                          //       addUser();
+                          //     });
+                          //   },
+                          //   width: double.infinity,
+                          //   height: 50,
+                          //   name: "تخطي",
+                          //   BorderRaduis: 40,
+                          //   NameColor: Colors.white,
+                          //   BorderColor: Colors.black,
+                          //   ButtonColor: Colors.black,
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ OR ــــــــــــــــــــــــــــــــــــــــــــــــــــــــــــ",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Container(
+                                width: double.infinity,
+                                height: 50,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Visibility(
+                                      visible: isAppleDevice,
+                                      child: Container(
+                                        height: 50,
+                                        width: 50,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: MAIN_COLOR),
+                                        child: Center(
+                                          child: IconButton(
+                                              onPressed: () {},
+                                              icon: Icon(
+                                                FontAwesome.apple,
+                                                color: Colors.white,
+                                                size: 30,
+                                              )),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 15,
+                                    ),
+                                    Container(
                                       height: 50,
                                       width: 50,
                                       decoration: BoxDecoration(
@@ -116,79 +180,71 @@ class _LoginScreenState extends State<LoginScreen> {
                                         child: IconButton(
                                             onPressed: () {},
                                             icon: Icon(
-                                              FontAwesome.apple,
+                                              FontAwesome.facebook,
                                               color: Colors.white,
                                               size: 30,
                                             )),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: MAIN_COLOR),
-                                    child: Center(
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            FontAwesome.facebook,
-                                            color: Colors.white,
-                                            size: 30,
-                                          )),
+                                    SizedBox(
+                                      width: 15,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: MAIN_COLOR),
-                                    child: Center(
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.mail,
-                                            color: Colors.white,
-                                            size: 30,
-                                          )),
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: MAIN_COLOR),
+                                      child: Center(
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(
+                                              Icons.mail,
+                                              color: Colors.white,
+                                              size: 30,
+                                            )),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  Container(
-                                    height: 50,
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: MAIN_COLOR),
-                                    child: Center(
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(
-                                            Icons.phone,
-                                            color: Colors.white,
-                                            size: 30,
-                                          )),
+                                    SizedBox(
+                                      width: 15,
                                     ),
-                                  ),
-                                ],
-                              )),
-                        )
-                      ],
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: MAIN_COLOR),
+                                      child: Center(
+                                        child: IconButton(
+                                            onPressed: () {
+                                              _showBottomDialog(context);
+                                            },
+                                            icon: Icon(
+                                              Icons.phone,
+                                              color: Colors.white,
+                                              size: 30,
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          )
+                        ],
+                      ),
                     ),
                   )
           ],
         ),
       ),
+    );
+  }
+
+  void _showBottomDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return BottomDialog();
+      },
     );
   }
 

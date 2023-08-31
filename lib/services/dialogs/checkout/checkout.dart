@@ -39,23 +39,33 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             topRight: Radius.circular(40),
           ),
         ),
-        child: Material(
-          child: Column(
-            children: [
-              Container(
-                height: clicked
-                    ? MediaQuery.of(context).size.height * 0.6
-                    : MediaQuery.of(context).size.height * 0.75,
-                width: double.infinity,
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
-                    blurRadius: 5,
-                  ),
-                ], color: Colors.white),
-                child: clicked ? SecondScreen() : FirstScreen(),
-              )
-            ],
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Material(
+            child: Column(
+              children: [
+                Container(
+                    height: clicked
+                        ? MediaQuery.of(context).size.height * 0.6
+                        : MediaQuery.of(context).size.height * 0.75,
+                    width: double.infinity,
+                    decoration: BoxDecoration(boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 5,
+                      ),
+                    ], color: Colors.white),
+                    child: SingleChildScrollView(
+                      child: AnimatedSwitcher(
+                        switchInCurve: Curves.linear,
+                        switchOutCurve: Curves.linear,
+                        duration: Duration(milliseconds: 1500),
+                        child: clicked ? SecondScreen() : FirstScreen(),
+                      ),
+                    ))
+              ],
+            ),
           ),
         ),
       ),
@@ -64,6 +74,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
 
   Widget SecondScreen() {
     return Column(
+      key: Key("1"),
       children: [
         Column(
           children: [
@@ -295,6 +306,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
 
   Widget FirstScreen() {
     return Column(
+      key: Key("2"),
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
