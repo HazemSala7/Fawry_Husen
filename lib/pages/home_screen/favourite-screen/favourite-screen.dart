@@ -59,6 +59,7 @@ class _FavouriteState extends State<Favourite> {
                           name: item.name,
                           IDs: productIdsString,
                           product_id: item.productId,
+                          index: index,
                           removeProduct: () {
                             Navigator.pop(context);
                             favoriteProvider.removeFromFavorite(item.productId);
@@ -96,7 +97,8 @@ class _FavouriteState extends State<Favourite> {
     );
   }
 
-  addToCart(product_ID, name, image, price, cartProvider) async {
+  addToCart(
+      product_ID, name, image, price, cartProvider, favoriteProvider) async {
     final newItem = CartItem(
       productId: product_ID,
       name: name,
@@ -110,6 +112,8 @@ class _FavouriteState extends State<Favourite> {
     Fluttertoast.showToast(
       msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
     );
+    favoriteProvider.removeFromFavorite(product_ID);
+    setState(() {});
     Timer(Duration(milliseconds: 500), () {
       Fluttertoast.cancel(); // Dismiss the toast after the specified duration
     });
@@ -126,7 +130,8 @@ class _FavouriteState extends State<Favourite> {
       int product_id = 0,
       String categry = ""}) {
     final cartProvider = Provider.of<CartProvider>(context);
-
+    final favoriteProvider = Provider.of<FavouriteProvider>(context);
+    List<FavoriteItem> favItems = favoriteProvider.favoriteItems;
     return Dismissible(
       key: Key(image), // Provide a unique key for each item
       direction: DismissDirection.horizontal,
@@ -148,8 +153,8 @@ class _FavouriteState extends State<Favourite> {
                   onPressed: () async {
                     isDeleteAction
                         ? removeProduct!()
-                        : addToCart(
-                            product_id, name, image, price, cartProvider);
+                        : addToCart(product_id, name, image, price,
+                            cartProvider, favoriteProvider);
                   },
                   child: Text(isDeleteAction ? 'حذف' : 'اضافه'),
                 ),
@@ -197,15 +202,55 @@ class _FavouriteState extends State<Favourite> {
           children: [
             InkWell(
               onTap: () {
+                List<Map<String, dynamic>> products = [];
+
+                for (int i = 0; i < favItems.length; i++) {
+                  Map<String, dynamic> product = {
+                    'id': favItems[i].productId,
+                    'title': favItems[i].name,
+                    'image': favItems[i].image,
+                    'price': favItems[i].price,
+                  };
+                  products.add(product);
+                }
+                List<T> reorderListBasedOnIndex<T>(List<T> list, int index) {
+                  if (index >= 0 && index < list.length) {
+                    var firstPart = list.sublist(index);
+                    var secondPart = list.sublist(0, index);
+                    return [...firstPart, ...secondPart];
+                  }
+                  return list; // Return the original list if the index is out of bounds
+                }
+
+                String productIdsString = reorderListBasedOnIndex(
+                        favItems.map((item) => item.productId).toList(), index)
+                    .join(', ');
+                print("productIdsString");
+                print(productIdsString);
+
+// Create a map for the first object you want to insert
+                Map<String, dynamic> firstProduct = {
+                  'id': favItems[index].productId,
+                  'title': favItems[index].name,
+                  'image': favItems[index].image,
+                  'price': favItems[index].price,
+                };
+
+// Insert the first object at the specified index
+                products.insert(0, firstProduct);
+
                 NavigatorFunction(
-                    context,
-                    ProductScreen(
-                        index: index,
-                        favourite: false,
-                        Images: [image],
-                        Product: [],
-                        IDs: IDs,
-                        id: 10));
+                  context,
+                  ProductScreen(
+                    index: index,
+                    cart_fav: true,
+                    favourite: false,
+                    Images: [image],
+                    Product: products,
+                    IDs: productIdsString,
+                    id: 10,
+                  ),
+                );
               },
               child: Container(
                 height: 150,
@@ -268,10 +313,37 @@ class _FavouriteState extends State<Favourite> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.add_shopping_cart,
-                    color: MAIN_COLOR,
-                    size: 30,
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text(
+                                'هل تريد بالتأكيد اضافه هذا المنتج الى سله المنتجات ؟ '),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text('اغلاق'),
+                              ),
+                              TextButton(
+                                onPressed: () async {
+                                  addToCart(product_id, name, image, price,
+                                      cartProvider, favoriteProvider);
+                                },
+                                child: Text('اضافه'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Icon(
+                      Icons.add_shopping_cart,
+                      color: MAIN_COLOR,
+                      size: 30,
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -279,10 +351,35 @@ class _FavouriteState extends State<Favourite> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.delete_forever,
-                    color: MAIN_COLOR,
-                    size: 30,
+                  child: InkWell(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: Text(
+                                'هل أنت متأكد انك تريد حذف هذا المنتج من المفضله'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: Text('اغلاق'),
+                              ),
+                              TextButton(
+                                  onPressed: () async {
+                                    removeProduct!();
+                                  },
+                                  child: Text('حذف')),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                    child: Icon(
+                      Icons.delete_forever,
+                      color: MAIN_COLOR,
+                      size: 30,
+                    ),
                   ),
                 ),
               ],

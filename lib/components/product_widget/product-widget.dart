@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:like_button/like_button.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 import '../../LocalDB/Models/FavoriteItem.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../constants/constants.dart';
@@ -81,13 +82,6 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget build(BuildContext context) {
-    var _images = [
-      'https://img0.baidu.com/it/u=1653580614,1680935100&fm=26&fmt=auto&gp=0.jpg',
-      'https://img2.baidu.com/it/u=3610762567,1537181675&fm=26&fmt=auto&gp=0.jpg',
-      'https://img1.baidu.com/it/u=392290897,2018293179&fm=26&fmt=auto&gp=0.jpg',
-      'https://img0.baidu.com/it/u=1174472233,2731877603&fm=26&fmt=auto&gp=0.jpg',
-    ];
-
     return InkWell(
       onTap: () {
         var result = [];
@@ -109,6 +103,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
                       index: widget.index,
+                      cart_fav: false,
                       Images: widget.Images,
                       favourite: false,
                       id: widget.id,
@@ -145,8 +140,8 @@ class _ProductWidgetState extends State<ProductWidget> {
                       imageUrl: e,
                     )).toList(),
                 onPageChanged: (value) {},
-                autoPlayInterval: 3000,
-                // isLoop: true,
+                autoPlayInterval: 0,
+                isLoop: false,
               ),
               // child: ClipRRect(
               //   borderRadius: BorderRadius.only(
@@ -238,10 +233,10 @@ class _ProductWidgetState extends State<ProductWidget> {
                   Container(
                     width: 177,
                     child: Text(
-                      widget.name.length > 35
-                          ? widget.name.substring(0, 35)
+                      widget.name.length > 30
+                          ? widget.name.substring(0, 30)
                           : widget.name,
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 14),
                     ),
                   ),
                 ],
@@ -266,7 +261,7 @@ class _ProductWidgetState extends State<ProductWidget> {
       return false;
     }
     try {
-      // await addToWish(widget.id);
+      Vibration.vibrate(duration: 300);
       final newItem = FavoriteItem(
         productId: widget.id,
         name: widget.name,

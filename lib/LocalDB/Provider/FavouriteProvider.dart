@@ -31,7 +31,6 @@ class FavouriteProvider extends ChangeNotifier {
   }
 
   bool isProductFavorite(int productId) {
-    // Assuming you have a list of favorite items in _favoriteItems
     return _favouritesItems.any((item) => item.productId == productId);
   }
 

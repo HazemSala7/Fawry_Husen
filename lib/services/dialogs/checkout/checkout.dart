@@ -26,6 +26,19 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   String dropdownValue = 'اختر منطقتك';
   bool status = false;
   bool clicked = false;
+  late PageController _pageController;
+  double _progress = 0;
+  @override
+  void initState() {
+    _pageController = PageController()
+      ..addListener(() {
+        setState(() {
+          _progress = _pageController.page ?? 0;
+        });
+      });
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return IntrinsicHeight(
       child: Container(
@@ -46,9 +59,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: clicked
-                        ? MediaQuery.of(context).size.height * 0.6
-                        : MediaQuery.of(context).size.height * 0.75,
+                    height: 500 - _progress * 104,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
@@ -56,13 +67,13 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                         blurRadius: 5,
                       ),
                     ], color: Colors.white),
-                    child: SingleChildScrollView(
-                      child: AnimatedSwitcher(
-                        switchInCurve: Curves.linear,
-                        switchOutCurve: Curves.linear,
-                        duration: Duration(milliseconds: 1500),
-                        child: clicked ? SecondScreen() : FirstScreen(),
-                      ),
+                    child: PageView(
+                      physics: NeverScrollableScrollPhysics(),
+                      controller: _pageController,
+                      children: [
+                        FirstScreen(),
+                        SecondScreen(),
+                      ],
                     ))
               ],
             ),
@@ -224,85 +235,111 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30),
-          child: ButtonWidget(
-              name: "تأكيد عمليه الشراء",
-              height: 50,
-              width: 300,
-              BorderColor: Colors.black,
-              OnClickFunction: () async {
-                if (PhoneController.text == "" ||
-                    AreaController.text == "" ||
-                    AddressController.text == "" ||
-                    CityController.text == "") {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Text(
-                          "الرجاء تعبئه جميع البيانات",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        actions: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              width: 100,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                  color: MAIN_COLOR,
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Center(
-                                child: Text(
-                                  "حسنا",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
+        loading
+            ? Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Container(
+                  height: 50,
+                  width: 300,
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(40),
+                      border: Border.all(color: Colors.black)),
+                  child: Center(
+                      child: Container(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  )),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: ButtonWidget(
+                    name: "تأكيد عمليه الشراء",
+                    height: 50,
+                    width: 300,
+                    BorderColor: Colors.black,
+                    OnClickFunction: () async {
+                      if (PhoneController.text == "" ||
+                          AreaController.text == "" ||
+                          AddressController.text == "" ||
+                          CityController.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              content: Text(
+                                "الرجاء تعبئه جميع البيانات",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                            ),
-                          ),
-                        ],
-                      );
+                              actions: <Widget>[
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: Container(
+                                    width: 100,
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        color: MAIN_COLOR,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                      child: Text(
+                                        "حسنا",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        setState(() {
+                          loading = true;
+                        });
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String UserID = prefs.getString('user_id') ?? "";
+                        UserItem updatedUser = UserItem(
+                          id: UserID,
+                          email: "$UserID@email.com",
+                          phone: PhoneController.text,
+                          city: CityController.text,
+                          area: AreaController.text,
+                          address: AddressController.text,
+                          password: '123',
+                        );
+                        try {
+                          final cartProvider =
+                              Provider.of<CartProvider>(context, listen: false);
+                          await userService.updateUser(updatedUser);
+                          Navigator.of(context).pop();
+                          Fluttertoast.showToast(msg: "تم اضافه الطلبيه بنجاح");
+                          cartProvider.clearCart();
+                          NavigatorFunction(context, HomeScreen());
+                        } catch (e) {
+                          print('Error updating user data: $e');
+                        }
+                      }
                     },
-                  );
-                } else {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  String UserID = prefs.getString('user_id') ?? "";
-                  UserItem updatedUser = UserItem(
-                    id: UserID,
-                    email: "test",
-                    phone: PhoneController.text,
-                    city: CityController.text,
-                    area: AreaController.text,
-                    address: AddressController.text,
-                    password: '123',
-                  );
-                  try {
-                    final cartProvider =
-                        Provider.of<CartProvider>(context, listen: false);
-                    await userService.updateUser(updatedUser);
-                    Navigator.of(context).pop();
-                    Fluttertoast.showToast(msg: "تم اضافه الطلبيه بنجاح");
-                    cartProvider.clearCart();
-                    NavigatorFunction(context, HomeScreen());
-                  } catch (e) {
-                    print('Error updating user data: $e');
-                  }
-                }
-              },
-              BorderRaduis: 10,
-              ButtonColor: Colors.black,
-              NameColor: Colors.white),
-        )
+                    BorderRaduis: 10,
+                    ButtonColor: Colors.black,
+                    NameColor: Colors.white),
+              )
       ],
     );
   }
+
+  bool loading = false;
 
   Widget FirstScreen() {
     return Column(
@@ -557,6 +594,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   setState(() {
                     clicked = true;
                   });
+                  _pageController.animateToPage(1,
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.ease);
                 }
               },
               BorderRaduis: 10,

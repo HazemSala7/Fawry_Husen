@@ -40,6 +40,10 @@ getSpeceficProduct(id) async {
 }
 
 getProductByCategory(category_id, sub_category_key, int page) async {
+  print("sub_category_key");
+  print(sub_category_key);
+  print(
+      "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&season=Summer&page=$page&api_key=$key_bath");
   var response = await http.get(
       Uri.parse(
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&season=Summer&page=$page&api_key=$key_bath"),

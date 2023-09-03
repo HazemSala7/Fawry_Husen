@@ -142,4 +142,14 @@ class CartDatabaseHelper {
       whereArgs: [item.id],
     );
   }
+
+  Future<bool> isProductInFavorites(String productID) async {
+    final db = await database;
+    final result = await db!.query(
+      'favorites',
+      where: 'productId = ?',
+      whereArgs: [productID],
+    );
+    return result.isNotEmpty;
+  }
 }

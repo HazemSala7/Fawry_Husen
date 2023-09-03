@@ -151,7 +151,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
             height: 40,
             width: double.infinity,
             child: ListView.builder(
-                itemCount: sub_categories_women_appearel.length,
+                itemCount: SubCategories.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
                   return Padding(
@@ -165,8 +165,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             selectedIndexes.add(index);
                             _firstLoad();
                             Sub_Category_Key =
-                                sub_categories_women_appearel[index]["key"]
-                                    .toString();
+                                SubCategories[index]["key"].toString();
                             Sub_Category_Number = index;
                           }
                         });
@@ -187,8 +186,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
-                              sub_categories_women_appearel[index]["name"]
-                                  .toString(),
+                              SubCategories[index]["name"].toString(),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
@@ -299,7 +297,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
 
   List<int> selectedIndexes = [0];
   int Sub_Category_Number = 0;
-  String Sub_Category_Key = sub_categories_women_appearel[0]["key"].toString();
+  String Sub_Category_Key = "";
 
   var AllProducts;
   // At the beginning, we fetch the first 20 posts
@@ -371,10 +369,27 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     }
   }
 
+  var SubCategories;
+
+  setStaticSubCategories() {
+    if (widget.category_id.toString() == "Women Apparel") {
+      SubCategories = sub_categories_women_appearel;
+    } else if (widget.category_id.toString() == "Men Apparel") {
+      SubCategories = sub_categories_Men__sizes;
+    } else if (widget.category_id.toString() == "Kids") {
+      SubCategories = sub_categories_kids_sizes;
+    } else {
+      SubCategories = sub_categories_women_appearel;
+    }
+    Sub_Category_Key = SubCategories[0]["key"].toString();
+    setState(() {});
+  }
+
   // The controller for the ListView
   ScrollController? _controller;
   @override
   void initState() {
+    setStaticSubCategories();
     super.initState();
     _firstLoad();
     _controller = ScrollController()..addListener(_loadMore);

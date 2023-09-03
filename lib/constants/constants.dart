@@ -37,19 +37,19 @@ var categories = [
   {
     "name": "الأحذيه",
     "image": "assets/images/Shoescat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Shoes",
     "icon": "assets/categories_icons/shoes.png"
   },
   {
     "name": "ملابس داخليه",
     "image": "assets/images/Undercat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Underwear & Sleepwear",
     "icon": "assets/categories_icons/bikini.png"
   },
   {
     "name": "للمنزل",
     "image": "assets/images/Homecat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Home & Living",
     "icon": "assets/categories_icons/house.png"
   },
   {
@@ -113,57 +113,190 @@ var categories = [
     "icon": "assets/categories_icons/dumbbell.png"
   },
 ];
+//the main cat will be "Men Apparel"
+var sub_categories_Men__sizes = [
+  {
+    "name": "بلايز",
+    "key": "Men Tops",
+  },
+  {
+    "name": "تنسيقات واطقم",
+    "key": "Men Co-ords",
+  },
+  {
+    "name": "هوديز",
+    "key": "Men Hoodies & Sweatshirts",
+  },
+  {
+    "name": "ملابس سفلية",
+    "key": "Men Bottoms",
+  },
+  {
+    "name": "ملابس خارجية",
+    "key": "Men Outerwear",
+  },
+  {
+    "name": "اقمشة جينز",
+    "key": "Men Denim",
+  },
+  {
+    "name": "منسوجات",
+    "key": "Men Knitwear",
+  },
+  {
+    "name": "بدلات",
+    "key": "Men Suits & Separates",
+  },
+  {
+    "name": "ملابس سباحة",
+    "key": "Men Swimwear",
+  },
+];
+
+List<String> Men_sizes = [
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "XXXL",
+  "0XL",
+  "1XL",
+  "2XL",
+  "3XL",
+  "4XL",
+  "5XL",
+  "6XL",
+];
+List<String> women__sizes = [
+  "XXS",
+  "XS",
+  "S",
+  "M",
+  "L",
+  "XL",
+  "XXL",
+  "XXXL",
+  "ONE SIZE",
+];
+List<String> kids_boys_sizes = [
+  "6-9 شهر",
+  "9-12 شهر",
+  "S"
+      "2سنة",
+  "2-3سنة",
+  "3سنة",
+  "4سنة",
+  "5سنة",
+  "5-6سنة",
+  "6سنة",
+  "7سنة",
+  "8 سنة",
+  "9 سنة",
+  "10 سنة",
+  "9-10 سنة",
+  "11-12 سنة",
+  "12 سنة",
+  "12-13 سنة",
+  "13-14 سنة",
+];
+
 var sub_categories_women_appearel = [
   {
-    "name": "فساتين نسائية",
+    "name": "فساتين",
     "key": "Women Dresses",
   },
   {
-    "name": "قيعان النساء",
+    "name": "ملابس سفلية",
     "key": "Women Bottoms",
   },
   {
-    "name": "ملابس نسائيه",
-    "key": "تريكو النساء",
+    "name": "ملابس منسوجات",
+    "key": "Women Knitwear",
   },
   {
-    "name": "ملابس نسائيه",
+    "name": "ملابس خارجية",
     "key": "Women Outerwear",
   },
   {
-    "name": "المرأة الدينيم",
+    "name": "اقمشة جينز",
     "key": "Women Denim",
   },
   {
-    "name": "بلوزات نسائية",
+    "name": "بلايز نسائية",
     "key": "Women Sweatshirts",
   },
   {
-    "name": "ملابس عربية",
+    "name": "ملابس خليجية",
     "key": "Arabian Wear",
   },
   {
-    "name": "المنسقات النسائية",
+    "name": "تنسيقات",
     "key": "Women Co-ords",
   },
   {
-    "name": "زفاف النساء",
-    "key": "Women Wedding",
+    "name": "زفاف وسهرات",
+    "key": "Women Wedding,Weddings,Women Party Wear",
   },
   {
-    "name": "النساء بحر",
+    "name": "ملابس سباحة",
     "key": "Women Beachwear",
   },
   {
-    "name": "بدلات نسائية",
+    "name": "بدلات",
     "key": "Women Suits",
   },
   {
-    "name": "جمبسوت نسائية",
+    "name": "جمبسوت ",
     "key": "Women Jumpsuits & Bodysuits",
   },
   {
-    "name": "بلايز وبلوزات وقمصان نسائية",
+    "name": "ملابس علوية",
     "key": "Women Tops,Blouses & Tee",
+  },
+];
+
+var sub_categories_kids_sizes = [
+  {
+    "name": "بلايز",
+    "key": "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops",
+  },
+  {
+    "name": "ملابس خارجية",
+    "key": "Young Boys Outerwear, Tween Boys Outerwear",
+  },
+  {
+    "name": "تنسيقات واطقم",
+    "key": "Young Boys Sets, Tween Boys Sets",
+  },
+  {
+    "name": "هوديز",
+    "key": "Young Boys Sweatshirts, Tween Boys Sweatshirts",
+  },
+  {
+    "name": "منسوجات",
+    "key": "Young Boys Knitwear, Tween Boys Knitwear",
+  },
+  {
+    "name": "ملابس سفلية",
+    "key":
+        "Tween Boys Bottoms, Tween Boys Jeans, Tween Boys Denim Shorts, Young Boys Bottoms, Young Boys Jeans",
+  },
+  {
+    "name": "اقمشة جينز",
+    "key": "Tween Boys Denim, Young Boys Denim",
+  },
+  {
+    "name": "بجامات",
+    "key": "Tween Boys Pajamas",
+  },
+  {
+    "name": "بدلات",
+    "key": "Young Boys Suits",
+  },
+  {
+    "name": "ملابس سباحة",
+    "key": "Tween Boys Swimwear",
   },
 ];

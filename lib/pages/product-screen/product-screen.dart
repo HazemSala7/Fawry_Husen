@@ -43,12 +43,14 @@ class ProductScreen extends StatefulWidget {
   int id;
   int index;
   var Product;
+  bool cart_fav;
   List Images;
   var IDs;
   ProductScreen({
     Key? key,
     required this.index,
     required this.favourite,
+    required this.cart_fav,
     required this.Images,
     required this.Product,
     required this.IDs,
@@ -108,7 +110,7 @@ class _ProductScreenState extends State<ProductScreen> {
   int _currentPage = 0;
   fetchAdditionalData() async {
     final response = await http.get(Uri.parse(
-        'http://34.227.78.214/api/getItemData?id=10365,10666,10367,10368,10369&api_key=$key_bath'));
+        'http://34.227.78.214/api/getItemData?id=4289,17462,17475,17474,17460,10365,10666,10367,10368,10369&api_key=$key_bath'));
     var res = json.decode(utf8.decode(response.bodyBytes));
     var additionalItems = res["item"];
     return additionalItems;
@@ -120,161 +122,8 @@ class _ProductScreenState extends State<ProductScreen> {
     await runAddToCartAnimation(widgetKey);
   }
 
-  final animationsMap = {
-    'badgeOnActionTriggerAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onActionTrigger,
-      applyInitialState: true,
-      effects: [
-        ShakeEffect(
-          curve: Curves.easeInOut,
-          delay: 700.ms,
-          duration: 1000.ms,
-          hz: 6,
-          offset: Offset(6, 0),
-          rotation: 0.105,
-        ),
-      ],
-    ),
-    'imageOnActionTriggerAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onActionTrigger,
-      applyInitialState: true,
-      effects: [
-        // ScaleEffect(
-        //   curve: Curves.easeInOut,
-        //   delay: 0.ms,
-        //   duration: 900.ms,
-        //   begin: 1,
-        //   end: 0.05,
-        // ),
-        RotateEffect(
-          curve: Curves.easeInOut,
-          delay: 100.ms,
-          duration: 900.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 900.ms,
-          begin: Offset(0, 0),
-          end: Offset(-200, -350),
-        ),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 400.ms,
-          duration: 400.ms,
-          begin: 1,
-          end: 0,
-        ),
-      ],
-    ),
-    'columnOnActionTriggerAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onActionTrigger,
-      applyInitialState: true,
-      effects: [
-        // ScaleEffect(
-        //   curve: Curves.easeInOut,
-        //   delay: 0.ms,
-        //   duration: 600.ms,
-        //   begin: 1,
-        //   end: 0.05,
-        // ),
-        RotateEffect(
-          curve: Curves.easeInOut,
-          delay: 100.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 200.ms,
-          duration: 600.ms,
-          begin: Offset(0, 0),
-          end: Offset(-125, -375),
-        ),
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 400.ms,
-          duration: 400.ms,
-          begin: 1,
-          end: 0,
-        ),
-      ],
-    ),
-    'rowOnPageLoadAnimation1': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 40),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'rowOnPageLoadAnimation2': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 80),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-    'dropDownOnActionTriggerAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onActionTrigger,
-      applyInitialState: true,
-      effects: [
-        ShakeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 1000.ms,
-          hz: 6,
-          offset: Offset(0, 0),
-          rotation: 0.035,
-        ),
-      ],
-    ),
-    'containerOnPageLoadAnimation': AnimationInfo(
-      trigger: AnimationTrigger.onPageLoad,
-      effects: [
-        FadeEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: 0,
-          end: 1,
-        ),
-        MoveEffect(
-          curve: Curves.easeInOut,
-          delay: 0.ms,
-          duration: 600.ms,
-          begin: Offset(0, 140),
-          end: Offset(0, 0),
-        ),
-      ],
-    ),
-  };
+  bool isLoadingMoreItems = false;
+  final favouriteProvider = FavouriteProvider();
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     return Container(
@@ -356,15 +205,49 @@ class _ProductScreenState extends State<ProductScreen> {
               future: getSpeceficProduct(widget.IDs),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  if (widget.Product.length == 0) {
-                    return Container(
-                      width: double.infinity,
-                      height: 400,
-                      child: Center(
-                        child: SpinKitPulse(
-                          color: MAIN_COLOR,
-                          size: 60,
+                  if (widget.cart_fav) {
+                    List newArray = [];
+                    for (int i = 0; i < widget.Product.length; i++) {
+                      newArray.add(i);
+                    }
+                    return AnimationLimiter(
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          aspectRatio: 2.5,
+                          autoPlay: false,
+                          enlargeCenterPage: true,
+                          viewportFraction: 1,
+                          height: MediaQuery.of(context).size.height,
                         ),
+                        items: newArray.map((i) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return AnimationConfiguration.staggeredList(
+                                position: i,
+                                duration: const Duration(milliseconds: 700),
+                                child: SlideAnimation(
+                                  verticalOffset: 100.0,
+                                  child: FadeInAnimation(
+                                    curve: Curves.easeIn,
+                                    child: ProductMethod(
+                                        name: widget.Product[i]["title"]
+                                            as String,
+                                        id: widget.Product[i]["id"],
+                                        images: [widget.Product[i]["image"]],
+                                        description: [],
+                                        new_price: widget.Product[i]["price"],
+                                        old_price: double.parse(widget
+                                                .Product[i]["price"]
+                                                .toString()) *
+                                            1.5,
+                                        image: widget.Product[i]["image"]
+                                            as String),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
                       ),
                     );
                   } else {
@@ -447,9 +330,34 @@ class _ProductScreenState extends State<ProductScreen> {
                             });
 
                             if (orderedItems.length - 3 < _currentPage) {
-                              var additionalItems = await fetchAdditionalData();
+                              // Check if you are already loading more items
+                              if (!isLoadingMoreItems) {
+                                // Set isLoadingMoreItems to true to prevent multiple requests
+                                isLoadingMoreItems = true;
+                                // Show a loading dialog
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                );
 
-                              orderedItems.add(additionalItems);
+                                // Fetch additional items
+                                var additionalItems =
+                                    await fetchAdditionalData();
+
+                                // Add the additional items to orderedItems
+                                orderedItems.addAll(additionalItems);
+                                setState(() {});
+
+                                // Hide the loading dialog
+                                Navigator.of(context).pop();
+
+                                // Set isLoadingMoreItems back to false
+                                isLoadingMoreItems = false;
+                              }
                             }
                           },
                         ),
@@ -501,39 +409,10 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  bool isLikedButton = false;
-  Future<bool> onLikeButtonTapped(FavouriteProvider favoriteProvider,
-      String title, String image, String Price, int ID) async {
-    bool isFavorite = favoriteProvider.isProductFavorite(widget.id);
-    if (isFavorite) {
-      await favoriteProvider.removeFromFavorite(widget.id);
-      Fluttertoast.showToast(
-        msg: "تم حذف هذا المنتج من المفضلة بنجاح",
-      );
-      return false;
-    }
-    try {
-      // await addToWish(widget.id);
-      final newItem = FavoriteItem(
-        productId: ID,
-        name: title,
-        image: image,
-        price: double.parse(Price.toString()),
-      );
-
-      await favoriteProvider.addToFavorite(newItem);
-      Fluttertoast.showToast(
-        msg: "تم اضافة هذا المنتج الى المفضلة بنجاح",
-      );
-      isLikedButton = true;
-      return true;
-    } catch (e) {
-      return !isLikedButton;
-    }
-  }
-
   bool loadingcart = false;
   bool loadingfav = false;
+  bool loading = false;
+
   int _currentIndex = 0;
   Widget ProductMethod(
       {String image = "",
@@ -541,11 +420,42 @@ class _ProductScreenState extends State<ProductScreen> {
       List? images,
       int id = 0,
       var description,
+      bool isLikedProduct = false,
       var old_price,
       var new_price}) {
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
+    Future<bool> onLikeButtonTapped(FavouriteProvider favoriteProvider,
+        String title, String image, String Price, int ID) async {
+      bool isFavorite = favoriteProvider.isProductFavorite(widget.id);
+      if (isFavorite) {
+        await favoriteProvider.removeFromFavorite(widget.id);
+        Fluttertoast.showToast(
+          msg: "تم حذف هذا المنتج من المفضلة بنجاح",
+        );
+        return false;
+      }
+      try {
+        Vibration.vibrate(duration: 300);
+        final newItem = FavoriteItem(
+          productId: ID,
+          name: title,
+          image: image,
+          price: double.parse(Price.toString()),
+        );
+
+        await favoriteProvider.addToFavorite(newItem);
+        Fluttertoast.showToast(
+          msg: "تم اضافة هذا المنتج الى المفضلة بنجاح",
+        );
+        isLikedProduct = true;
+        return true;
+      } catch (e) {
+        return !isLikedProduct;
+      }
+    }
+
     final GlobalKey widgetKey = GlobalKey();
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -657,23 +567,32 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          LikeButton(
-                            circleColor:
-                                CircleColor(start: Colors.red, end: Colors.red),
-                            size: 35,
-                            onTap: (isLiked) async {
-                              bool updatedLikedState = await onLikeButtonTapped(
-                                favoriteProvider,
-                                name,
-                                image,
-                                new_price
-                                    .toString(), // Make sure new_price is numeric
-                                id,
+                          StreamBuilder<bool>(
+                            initialData:
+                                favouriteProvider.isProductFavorite(id),
+                            builder: (context, snapshot) {
+                              final isLikedProduct = snapshot.data ?? false;
+
+                              return LikeButton(
+                                circleColor: CircleColor(
+                                    start: Colors.red, end: Colors.red),
+                                size: 35,
+                                onTap: (isLiked) async {
+                                  bool updatedLikedState =
+                                      await onLikeButtonTapped(
+                                    favoriteProvider,
+                                    name,
+                                    image,
+                                    new_price
+                                        .toString(), // Make sure new_price is numeric
+                                    id,
+                                  );
+                                  return updatedLikedState; // Return the updated state based on the operation's success
+                                },
+                                isLiked: isLikedProduct,
                               );
-                              return updatedLikedState; // Return the updated state based on the operation's success
                             },
-                            isLiked: isLikedButton,
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -928,43 +847,61 @@ class _ProductScreenState extends State<ProductScreen> {
                 "ONE-SIZE",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              ButtonWidget(
-                  name: "أضف الى السله",
-                  height: 50,
-                  width: 150,
-                  BorderColor: Colors.black,
-                  OnClickFunction: () async {
-                    setState(() {
-                      clicked = true;
-                    });
-                    listClick(widgetKey);
-                    Vibration.vibrate(duration: 300);
+              loading
+                  ? Container(
+                      height: 50,
+                      width: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(40),
+                          border: Border.all(color: Colors.black)),
+                      child: Center(
+                          child: Container(
+                        height: 15,
+                        width: 15,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )),
+                    )
+                  : ButtonWidget(
+                      name: "أضف الى السله",
+                      height: 50,
+                      width: 150,
+                      BorderColor: Colors.black,
+                      OnClickFunction: () async {
+                        setState(() {
+                          loading = true;
+                          clicked = true;
+                        });
+                        listClick(widgetKey);
+                        Vibration.vibrate(duration: 300);
 
-                    final newItem = CartItem(
-                      productId: id,
-                      name: name,
-                      image: image.toString(),
-                      price: double.parse(new_price.toString()),
-                      quantity: 1,
-                      user_id: 0,
-                    );
-                    cartProvider.addToCart(newItem);
+                        final newItem = CartItem(
+                          productId: id,
+                          name: name,
+                          image: image.toString(),
+                          price: double.parse(new_price.toString()),
+                          quantity: 1,
+                          user_id: 0,
+                        );
+                        cartProvider.addToCart(newItem);
 
-                    const snackBar = SnackBar(
-                      content: Text('تم اضافه المنتج الى السله بنجاح!'),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    Timer(Duration(milliseconds: 500), () {
-                      Fluttertoast.cancel();
-                      // Dismiss the toast after the specified duration
-                    });
-                    Timer(Duration(seconds: 1), () async {
-                      Navigator.pop(context);
-                    });
-                  },
-                  BorderRaduis: 10,
-                  ButtonColor: Colors.black,
-                  NameColor: Colors.white)
+                        const snackBar = SnackBar(
+                          content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Timer(Duration(milliseconds: 500), () {
+                          Fluttertoast.cancel();
+                          // Dismiss the toast after the specified duration
+                        });
+                        Timer(Duration(seconds: 1), () async {
+                          Navigator.pop(context);
+                        });
+                      },
+                      BorderRaduis: 10,
+                      ButtonColor: Colors.black,
+                      NameColor: Colors.white)
             ],
           ),
         ),

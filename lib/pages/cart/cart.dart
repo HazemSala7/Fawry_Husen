@@ -99,15 +99,13 @@ class _CartState extends State<Cart> {
                             itemBuilder: (context, index) {
                               CartItem item = cartItems[index];
                               double total = item.price * item.quantity;
-                              String productIdsString = cartItems
-                                  .map((item) => item.productId)
-                                  .join(', ');
+
                               return CartProductMethod(
+                                index: index,
                                 cartProvider: cartProvider,
                                 price: item.price,
                                 name: item.name,
                                 qty: item.quantity,
-                                IDs: productIdsString,
                                 removeProduct: () {
                                   cartProvider.removeFromCart(item);
                                   setState(() {});
@@ -204,9 +202,11 @@ class _CartState extends State<Cart> {
       int index = 0,
       var IDs,
       int qty = 0,
+      var products,
       String cart_id = "",
       var price}) {
     final cartProvider = Provider.of<CartProvider>(context);
+    List<CartItem> cartItems = cartProvider.cartItems;
     return Padding(
       padding: const EdgeInsets.only(top: 3, bottom: 3),
       child: Dismissible(
@@ -219,9 +219,8 @@ class _CartState extends State<Cart> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                content: Text(isDeleteAction
-                    ? 'هل أنت متأكد انك تريد حذف هذا المنتج من سله المنتجات'
-                    : 'هل تريد بالتأكيد اضافه هذا المنتج الى السله ؟ '),
+                content: Text(
+                    'هل أنت متأكد انك تريد حذف هذا المنتج من سله المنتجات'),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
@@ -232,12 +231,9 @@ class _CartState extends State<Cart> {
                       SharedPreferences prefs =
                           await SharedPreferences.getInstance();
                       String UserID = prefs.getString('user_id') ?? "";
-                      isDeleteAction
-                          ? deleteCart(removeProduct)
-                          : addToCart(
-                              product_id, name, image, price, cartProvider);
+                      deleteCart(removeProduct);
                     },
-                    child: Text(isDeleteAction ? 'حذف' : 'اضافه'),
+                    child: Text('حذف'),
                   ),
                 ],
               );
@@ -258,27 +254,67 @@ class _CartState extends State<Cart> {
             color: Colors.white,
           ),
         ),
-        secondaryBackground: Container(
-          color: Colors
-              .blue, // Use different colors for delete and add to cart actions
-          alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: 20),
-          child: Icon(
-            Icons.add_shopping_cart,
-            color: Colors.white,
-          ),
-        ),
+        // secondaryBackground: Container(
+        //   color: Colors
+        //       .blue, // Use different colors for delete and add to cart actions
+        //   alignment: Alignment.centerLeft,
+        //   padding: EdgeInsets.only(left: 20),
+        //   child: Icon(
+        //     Icons.add_shopping_cart,
+        //     color: Colors.white,
+        //   ),
+        // ),
         child: InkWell(
           onTap: () {
+            List<Map<String, dynamic>> products = [];
+
+            for (int i = 0; i < cartItems.length; i++) {
+              Map<String, dynamic> product = {
+                'id': cartItems[i].productId,
+                'title': cartItems[i].name,
+                'image': cartItems[i].image,
+                'price': cartItems[i].price,
+              };
+              products.add(product);
+            }
+            List<T> reorderListBasedOnIndex<T>(List<T> list, int index) {
+              if (index >= 0 && index < list.length) {
+                var firstPart = list.sublist(index);
+                var secondPart = list.sublist(0, index);
+                return [...firstPart, ...secondPart];
+              }
+              return list; // Return the original list if the index is out of bounds
+            }
+
+            String productIdsString = reorderListBasedOnIndex(
+                    cartItems.map((item) => item.productId).toList(), index)
+                .join(', ');
+            print("productIdsString");
+            print(productIdsString);
+
+// Create a map for the first object you want to insert
+            Map<String, dynamic> firstProduct = {
+              'id': cartItems[index].productId,
+              'title': cartItems[index].name,
+              'image': cartItems[index].image,
+              'price': cartItems[index].price,
+            };
+
+// Insert the first object at the specified index
+            products.insert(0, firstProduct);
+
             NavigatorFunction(
-                context,
-                ProductScreen(
-                    index: index,
-                    favourite: false,
-                    Images: [image],
-                    Product: [],
-                    IDs: IDs,
-                    id: 10));
+              context,
+              ProductScreen(
+                index: index,
+                cart_fav: true,
+                favourite: false,
+                Images: [image],
+                Product: products,
+                IDs: productIdsString,
+                id: 10,
+              ),
+            );
           },
           child: Container(
             height: 140,
@@ -297,19 +333,16 @@ class _CartState extends State<Cart> {
                   width: double.infinity,
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: 20,
-                      ),
                       Container(
                         // height: 80,
-                        width: 90,
+                        width: 100,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10),
                               topLeft: Radius.circular(10)),
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(0),
                           child: FancyShimmerImage(
                             imageUrl: image,
                           ),
