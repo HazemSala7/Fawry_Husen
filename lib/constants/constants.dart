@@ -20,7 +20,7 @@ var categories = [
     "name": "ملابس نسائيه مقاس كبير",
     "image": "assets/images/Womenpluscat.jpg",
     "main_category": "Women Apparel",
-    "icon": "assets/categories_icons/women_big_size.png"
+    "icon": "assets/categories_icons/t-shirt_women.png"
   },
   {
     "name": "ملابس أطفال",
@@ -116,6 +116,10 @@ var categories = [
 //the main cat will be "Men Apparel"
 var sub_categories_Men__sizes = [
   {
+    "name": "جميع الأقسام",
+    "key": "all",
+  },
+  {
     "name": "بلايز",
     "key": "Men Tops",
   },
@@ -154,32 +158,34 @@ var sub_categories_Men__sizes = [
 ];
 
 List<String> Men_sizes = [
-  "XS",
-  "S",
-  "M",
-  "L",
-  "XL",
-  "XXL",
-  "XXXL",
-  "0XL",
-  "1XL",
-  "2XL",
-  "3XL",
-  "4XL",
-  "5XL",
-  "6XL",
+  "XS 👔",
+  "S 👖",
+  "M 👖",
+  "L 👖",
+  "XL 🧥",
+  "XXL 👔",
+  "XXXL 👔",
+  "0XL 👖",
+  "1XL 👖",
+  "2XL 👕",
+  "3XL 👖",
+  "4XL 👕",
+  "5XL 👖",
+  "6XL 👕",
 ];
 List<String> women__sizes = [
-  "XXS",
-  "XS",
-  "S",
-  "M",
-  "L",
-  "XL",
-  "XXL",
-  "XXXL",
-  "ONE SIZE",
+  "XXS 👚",
+  "XS 👗",
+  "S 🩱",
+  "M 🩱",
+  "L 🩱",
+  "XL 🩱",
+  "XXL 👘",
+  "XXXL 🧥",
+  "ONE SIZE 👘",
 ];
+
+var women_Plus_sizes = ["0XL", "1XL", "2XL", "3XL", "4XL", "5XL"];
 List<String> kids_boys_sizes = [
   "6-9 شهر",
   "9-12 شهر",
@@ -203,6 +209,10 @@ List<String> kids_boys_sizes = [
 ];
 
 var sub_categories_women_appearel = [
+  {
+    "name": "جميع الأقسام",
+    "key": "Women Clothing",
+  },
   {
     "name": "فساتين",
     "key": "Women Dresses",
@@ -257,7 +267,62 @@ var sub_categories_women_appearel = [
   },
 ];
 
+var sub_categories_women_plus_sizes = [
+  {
+    "name": "فساتين",
+    "key": "Plus Size Dresses",
+  },
+  {
+    "name": "ملابس علوية",
+    "key": "Plus Size Tops",
+  },
+  {
+    "name": "ملابس سفلية",
+    "key": "Plus Size Bottoms",
+  },
+  {
+    "name": "ملابس خارجية",
+    "key": "Plus Size Outerwears",
+  },
+  {
+    "name": "تنسيقات واطقم",
+    "key": "Plus Size Co-Ords",
+  },
+  {
+    "name": "منسوجات",
+    "key": "Plus Size Knitwear",
+  },
+  {
+    "name": "ملابس خليجية",
+    "key": "Plus Size Arabian Wear",
+  },
+  {
+    "name": "بلايز  نسائية",
+    "key": "Plus Size Sweatshirts",
+  },
+  {
+    "name": "بدلات",
+    "key": "Plus Size Suits",
+  },
+  {
+    "name": "جمبسوت ",
+    "key": "Plus Size Jumpsuits & Bodysuits",
+  },
+  {
+    "name": "ملابس سباحة",
+    "key": "Women Plus Beachwear",
+  },
+  {
+    "name": "ملابس زفاف وسهرات",
+    "key": "Women Plus Wedding",
+  },
+];
+
 var sub_categories_kids_sizes = [
+  {
+    "name": "جميع الأقسام",
+    "key": "all",
+  },
   {
     "name": "بلايز",
     "key": "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops",

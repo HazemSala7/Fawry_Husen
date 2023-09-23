@@ -16,21 +16,39 @@ import '../../constants/constants.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class ProductWidget extends StatefulWidget {
-  final image, name, old_price, new_price, thumbnail;
+  final image,
+      name,
+      old_price,
+      new_price,
+      thumbnail,
+      category_id,
+      Sub_Category_Key,
+      size,
+      page,
+      url;
   int index, id;
   List Products;
   List Images;
+  bool home = false;
+  bool isLiked = false;
   ProductWidget({
     super.key,
     this.image,
     this.name,
     required this.id,
     required this.Images,
+    required this.isLiked,
     this.old_price,
     required this.Products,
+    required this.home,
+    required this.category_id,
+    required this.Sub_Category_Key,
+    required this.size,
+    required this.page,
     required this.thumbnail,
     this.new_price,
     required this.index,
+    required this.url,
   });
 
   @override
@@ -98,10 +116,13 @@ class _ProductWidgetState extends State<ProductWidget> {
         List<String> idsList =
             result.map((item) => item['id'].toString()).toList();
         String commaSeparatedIds = idsList.join(', ');
+
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      url: widget.url,
+                      page: widget.page,
                       index: widget.index,
                       cart_fav: false,
                       Images: widget.Images,
@@ -121,65 +142,29 @@ class _ProductWidgetState extends State<ProductWidget> {
         ], color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              height: 260,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  topLeft: Radius.circular(10),
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 260,
+                child: ImageSlideshow(
+                  width: double.infinity,
+                  initialPage: 0,
+                  indicatorColor: widget.Images.length == 1
+                      ? Colors.transparent
+                      : MAIN_COLOR,
+                  indicatorBackgroundColor: Colors.grey,
+                  children: widget.Images.map((e) => FancyShimmerImage(
+                        imageUrl: e,
+                      )).toList(),
+                  onPageChanged: (value) {},
+                  autoPlayInterval: 0,
+                  isLoop: false,
                 ),
               ),
-              child: ImageSlideshow(
-                width: double.infinity,
-                initialPage: 0,
-                indicatorColor:
-                    widget.Images.length == 1 ? Colors.transparent : MAIN_COLOR,
-                indicatorBackgroundColor: Colors.grey,
-                children: widget.Images.map((e) => FancyShimmerImage(
-                      imageUrl: e,
-                    )).toList(),
-                onPageChanged: (value) {},
-                autoPlayInterval: 0,
-                isLoop: false,
-              ),
-              // child: ClipRRect(
-              //   borderRadius: BorderRadius.only(
-              //     topRight: Radius.circular(10),
-              //     topLeft: Radius.circular(10),
-              //   ),
-              //   child: Container(
-              //     height: 240,
-              //     child: CarouselSlider(
-              //       items: widget.Images.map((url) {
-              //         return Builder(
-              //           builder: (BuildContext context) {
-              //             return FancyShimmerImage(
-              //               imageUrl: url,
-              //             );
-              //           },
-              //         );
-              //       }).toList(),
-              //       options: CarouselOptions(
-              //         height: 240,
-              //         viewportFraction: 1.0,
-              //         onPageChanged: (index, reason) {
-              //           setState(() {
-              //             _currentIndex = index;
-              //           });
-              //         },
-              //         enableInfiniteScroll: true,
-              //         autoPlay: true,
-              //         autoPlayInterval: Duration(seconds: 3),
-              //         autoPlayAnimationDuration: Duration(milliseconds: 2500),
-              //         autoPlayCurve: Curves.fastOutSlowIn,
-              //         aspectRatio: 2.0,
-              //         enlargeCenterPage: false,
-              //         scrollDirection: Axis.horizontal,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ),
             Padding(
               padding: const EdgeInsets.only(top: 5, left: 5, right: 5),
@@ -216,7 +201,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                   LikeButton(
                     size: 25,
                     onTap: onLikeButtonTapped,
-                    isLiked: isLikedButton,
+                    isLiked: widget.isLiked,
                   )
                   // Icon(
                   //   Icons.favorite_border,
@@ -248,7 +233,6 @@ class _ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  bool isLikedButton = false;
   Future<bool> onLikeButtonTapped(bool isLiked) async {
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
@@ -272,10 +256,10 @@ class _ProductWidgetState extends State<ProductWidget> {
       Fluttertoast.showToast(
         msg: "تم اضافة هذا المنتج الى المفضلة بنجاح",
       );
-      isLikedButton = true;
+      widget.isLiked = true;
       return true;
     } catch (e) {
-      return !isLiked;
+      return !widget.isLiked;
     }
     // return true;
   }

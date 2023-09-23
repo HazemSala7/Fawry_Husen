@@ -1,3 +1,4 @@
+import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
@@ -59,7 +60,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: 500 - _progress * 104,
+                    height: 550 - _progress * 104,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
@@ -257,83 +258,88 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               )
             : Padding(
                 padding: const EdgeInsets.only(top: 30),
-                child: ButtonWidget(
-                    name: "تأكيد عمليه الشراء",
-                    height: 50,
-                    width: 300,
-                    BorderColor: Colors.black,
-                    OnClickFunction: () async {
-                      if (PhoneController.text == "" ||
-                          AreaController.text == "" ||
-                          AddressController.text == "" ||
-                          CityController.text == "") {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              content: Text(
-                                "الرجاء تعبئه جميع البيانات",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              actions: <Widget>[
-                                InkWell(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: Container(
-                                    width: 100,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        color: MAIN_COLOR,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: Center(
-                                      child: Text(
-                                        "حسنا",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
+                child: BouncingWidget(
+                  child: ButtonWidget(
+                      name: "تأكيد عمليه الشراء",
+                      height: 50,
+                      width: 300,
+                      BorderColor: Colors.black,
+                      OnClickFunction: () async {
+                        if (PhoneController.text == "" ||
+                            AreaController.text == "" ||
+                            AddressController.text == "" ||
+                            CityController.text == "") {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text(
+                                  "الرجاء تعبئه جميع البيانات",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                actions: <Widget>[
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: MAIN_COLOR,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: Text(
+                                          "حسنا",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        setState(() {
-                          loading = true;
-                        });
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        String UserID = prefs.getString('user_id') ?? "";
-                        UserItem updatedUser = UserItem(
-                          id: UserID,
-                          email: "$UserID@email.com",
-                          phone: PhoneController.text,
-                          city: CityController.text,
-                          area: AreaController.text,
-                          address: AddressController.text,
-                          password: '123',
-                        );
-                        try {
-                          final cartProvider =
-                              Provider.of<CartProvider>(context, listen: false);
-                          await userService.updateUser(updatedUser);
-                          Navigator.of(context).pop();
-                          Fluttertoast.showToast(msg: "تم اضافه الطلبيه بنجاح");
-                          cartProvider.clearCart();
-                          NavigatorFunction(context, HomeScreen());
-                        } catch (e) {
-                          print('Error updating user data: $e');
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          setState(() {
+                            loading = true;
+                          });
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          String UserID = prefs.getString('user_id') ?? "";
+                          UserItem updatedUser = UserItem(
+                            id: UserID,
+                            email: "$UserID@email.com",
+                            phone: PhoneController.text,
+                            city: CityController.text,
+                            area: AreaController.text,
+                            address: AddressController.text,
+                            password: '123',
+                          );
+                          try {
+                            final cartProvider = Provider.of<CartProvider>(
+                                context,
+                                listen: false);
+                            await userService.updateUser(updatedUser);
+                            Navigator.of(context).pop();
+                            Fluttertoast.showToast(
+                                msg: "تم اضافه الطلبيه بنجاح");
+                            cartProvider.clearCart();
+                            NavigatorFunction(context, HomeScreen());
+                          } catch (e) {
+                            print('Error updating user data: $e');
+                          }
                         }
-                      }
-                    },
-                    BorderRaduis: 10,
-                    ButtonColor: Colors.black,
-                    NameColor: Colors.white),
+                      },
+                      BorderRaduis: 10,
+                      ButtonColor: Colors.black,
+                      NameColor: Colors.white),
+                ),
               )
       ],
     );
@@ -565,43 +571,45 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 20),
-          child: ButtonWidget(
-              name: "تأكيد عمليه الشراء",
-              height: 50,
-              width: 300,
-              BorderColor: Colors.black,
-              OnClickFunction: () {
-                if (dropdownValue.toString() == "اختر منطقتك") {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.white,
-                        title: Text("خطأ"),
-                        content: Text("الرجاء اختيار المنطقه"),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: Text("موافق"),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  setState(() {
-                    clicked = true;
-                  });
-                  _pageController.animateToPage(1,
-                      duration: Duration(milliseconds: 200),
-                      curve: Curves.ease);
-                }
-              },
-              BorderRaduis: 10,
-              ButtonColor: Colors.black,
-              NameColor: Colors.white),
+          child: BouncingWidget(
+            child: ButtonWidget(
+                name: "تأكيد عمليه الشراء",
+                height: 50,
+                width: 300,
+                BorderColor: Colors.black,
+                OnClickFunction: () {
+                  if (dropdownValue.toString() == "اختر منطقتك") {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          backgroundColor: Colors.white,
+                          title: Text("خطأ"),
+                          content: Text("الرجاء اختيار المنطقه"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text("موافق"),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    setState(() {
+                      clicked = true;
+                    });
+                    _pageController.animateToPage(1,
+                        duration: Duration(milliseconds: 200),
+                        curve: Curves.ease);
+                  }
+                },
+                BorderRaduis: 10,
+                ButtonColor: Colors.black,
+                NameColor: Colors.white),
+          ),
         )
       ],
     );

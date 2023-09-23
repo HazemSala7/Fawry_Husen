@@ -3,8 +3,13 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:provider/provider.dart';
+import '../../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../../constants/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../../server/domain/domain.dart';
+import '../../search_screen/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -26,9 +31,13 @@ class _MainScreenState extends State<MainScreen> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: TextFormField(
-                  onTap: () => textController!.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: textController!.value.text.length),
+                  onTap: () {
+                    // NavigatorFunction(
+                    //     context,
+                    //     SearchScreen(
+                    //       SubCategories: SubCategories,
+                    //     ));
+                  },
                   controller: textController,
                   onChanged: (searchInput) {
                     // Filter the customers based on search input
@@ -125,8 +134,6 @@ class _MainScreenState extends State<MainScreen> {
                             Sub_Category_Number = index;
                           }
                         });
-                        print("selectedIndexes");
-                        print(selectedIndexes);
                       },
                       child: Container(
                         height: 40,
@@ -195,6 +202,9 @@ class _MainScreenState extends State<MainScreen> {
                               childAspectRatio: 0.48,
                             ),
                             itemBuilder: (context, int index) {
+                              final isLiked = Provider.of<FavouriteProvider>(
+                                      context)
+                                  .isProductFavorite(AllProducts[index]["id"]);
                               return AnimationConfiguration.staggeredList(
                                 position: index,
                                 duration: const Duration(milliseconds: 500),
@@ -204,6 +214,14 @@ class _MainScreenState extends State<MainScreen> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
+                                        url:
+                                            "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
+                                        isLiked: isLiked,
+                                        Sub_Category_Key: Sub_Category_Key,
+                                        page: _page,
+                                        home: true,
+                                        category_id: "",
+                                        size: "",
                                         Images: AllProducts[index]
                                                 ["vendor_images_links"] ??
                                             [],
@@ -268,11 +286,23 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _isFirstLoadRunning = true;
     });
+
     try {
-      var _products = await getProducts(_page);
-      setState(() {
-        AllProducts = _products["items"];
-      });
+      // Check if data for the current sub-category key exists in the cache
+      if (cache.containsKey("all_products")) {
+        // Use the cached data
+        setState(() {
+          AllProducts = cache["all_products"];
+        });
+      } else {
+        // Fetch data from the API
+        var _products = await getProducts(_page);
+        setState(() {
+          AllProducts = _products["items"];
+          // Store the fetched data in the cache
+          cache["all_products"] = AllProducts;
+        });
+      }
     } catch (err) {
       if (kDebugMode) {
         print('Something went wrong');
@@ -296,17 +326,27 @@ class _MainScreenState extends State<MainScreen> {
       });
       _page += 1; // Increase _page by 1
       try {
-        var _products = await getProducts(_page);
-        if (_products.isNotEmpty) {
+        // Check if data for the current sub-category key exists in the cache
+        if (cache.containsKey("all_products")) {
+          // Use the cached data
           setState(() {
-            AllProducts.addAll(_products["items"]);
+            AllProducts.addAll(cache["all_products"]);
           });
         } else {
-          // This means there is no more data
-          // and therefore, we will not send another GET request
-          setState(() {
-            _hasNextPage = false;
-          });
+          // Fetch data from the API
+          var _products = await getProducts(_page);
+          if (_products.isNotEmpty) {
+            setState(() {
+              AllProducts.addAll(_products["items"]);
+              cache["all_products"] = AllProducts;
+            });
+          } else {
+            // This means there is no more data
+            // and therefore, we will not send another GET request
+            setState(() {
+              _hasNextPage = false;
+            });
+          }
         }
       } catch (err) {
         if (kDebugMode) {
@@ -320,6 +360,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
+  Map<String, List<dynamic>> cache = {};
   // The controller for the ListView
   ScrollController? _controller;
   @override

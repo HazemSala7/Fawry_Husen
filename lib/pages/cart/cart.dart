@@ -289,8 +289,6 @@ class _CartState extends State<Cart> {
             String productIdsString = reorderListBasedOnIndex(
                     cartItems.map((item) => item.productId).toList(), index)
                 .join(', ');
-            print("productIdsString");
-            print(productIdsString);
 
 // Create a map for the first object you want to insert
             Map<String, dynamic> firstProduct = {
@@ -307,6 +305,8 @@ class _CartState extends State<Cart> {
               context,
               ProductScreen(
                 index: index,
+                url: "",
+                page: 1,
                 cart_fav: true,
                 favourite: false,
                 Images: [image],

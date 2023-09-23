@@ -3,20 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
+import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../components/product_widget/product-widget.dart';
 import '../../constants/constants.dart';
+import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../../services/app_bar/app_bar.dart';
 import '../home_screen/category-screen/category-screen.dart';
 import '../home_screen/favourite-screen/favourite-screen.dart';
 import '../home_screen/main-screen/main-screen.dart';
 import '../home_screen/profile-screen/profile-screen.dart';
+import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
-  final category_id;
-  const ProductsCategories({super.key, this.category_id});
+  final category_id, size;
+  const ProductsCategories({super.key, this.category_id, this.size});
 
   @override
   State<ProductsCategories> createState() => _ProductsCategoriesState();
@@ -68,7 +72,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
               ],
             ),
             appBar: PreferredSize(
-                child: AppBarWidget(), preferredSize: Size.fromHeight(50)),
+                child: AppBarWidget(
+                  main_Category: widget.category_id,
+                ),
+                preferredSize: Size.fromHeight(50)),
             body: _listOfWidget[selectedIndex]),
       ),
     );
@@ -84,9 +91,13 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
               child: Padding(
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: TextFormField(
-                  onTap: () => textController!.selection = TextSelection(
-                      baseOffset: 0,
-                      extentOffset: textController!.value.text.length),
+                  onTap: () {
+                    NavigatorFunction(
+                        context,
+                        SearchScreen(
+                          SubCategories: SubCategories,
+                        ));
+                  },
                   controller: textController,
                   onFieldSubmitted: (_) {},
                   obscureText: false,
@@ -241,6 +252,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                               childAspectRatio: 0.5,
                             ),
                             itemBuilder: (context, int index) {
+                              final isLiked = Provider.of<FavouriteProvider>(
+                                      context)
+                                  .isProductFavorite(AllProducts[index]["id"]);
                               return AnimationConfiguration.staggeredList(
                                 position: index,
                                 duration: const Duration(milliseconds: 500),
@@ -250,6 +264,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
+                                        url:
+                                            "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                        isLiked: isLiked,
                                         Images: AllProducts[index]
                                                 ["vendor_images_links"] ??
                                             [],
@@ -263,7 +280,12 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                         old_price:
                                             AllProducts[index]["price"] ?? 0.0,
                                         image: AllProducts[index]
-                                            ["vendor_images_links"][0]),
+                                            ["vendor_images_links"][0],
+                                        Sub_Category_Key: Sub_Category_Key,
+                                        page: _page,
+                                        home: false,
+                                        category_id: widget.category_id,
+                                        size: widget.size),
                                   ),
                                 ),
                               );
@@ -317,7 +339,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     });
     try {
       var _products = await getProductByCategory(
-          widget.category_id, Sub_Category_Key, _page);
+          widget.category_id, Sub_Category_Key, widget.size, _page);
       setState(() {
         AllProducts = _products["items"];
       });
@@ -345,7 +367,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       _page += 1; // Increase _page by 1
       try {
         var _products = await getProductByCategory(
-            widget.category_id, Sub_Category_Key, _page);
+            widget.category_id, Sub_Category_Key, widget.size, _page);
         if (_products.isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products["items"]);

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_options.dart';
@@ -37,6 +38,7 @@ import '../authentication/login_screen/login_screen.dart';
 import '../cart/cart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:photo_view/photo_view.dart';
 
 class ProductScreen extends StatefulWidget {
   var favourite;
@@ -46,8 +48,12 @@ class ProductScreen extends StatefulWidget {
   bool cart_fav;
   List Images;
   var IDs;
+  final url;
+  int page;
   ProductScreen({
     Key? key,
+    required this.url,
+    required this.page,
     required this.index,
     required this.favourite,
     required this.cart_fav,
@@ -63,17 +69,12 @@ class ProductScreen extends StatefulWidget {
 
 class _ProductScreenState extends State<ProductScreen> {
   @override
+  bool loadingPage = true;
   String user_id = "";
   setUserID() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
     user_id = UserID;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setUserID();
   }
 
   List<int> _extractIds(String idsString) {
@@ -87,33 +88,117 @@ class _ProductScreenState extends State<ProductScreen> {
     return ids;
   }
 
-  //  Future<void> fetchMoreProducts() async {
-  //   // Your API call logic to fetch more products
-  //   final apiUrl = "your_api_url_here?page=$currentPage";
-  //   final response = await http.get(Uri.parse(apiUrl));
+  var orderedItems = [];
 
-  //   if (response.statusCode == 200) {
-  //     final data = json.decode(response.body);
-  //     final newProducts = data["item"] as List<dynamic>;
-
-  //     setState(() {
-  //       loadedProducts.addAll(newProducts);
-  //       currentPage++; // Increment the page for the next API call
-  //       isLoading = false;
-  //     });
-  //   } else {
-  //     // Handle API error
-  //     print("Error fetching more products");
-  //     isLoading = false;
-  //   }
-  // }
   int _currentPage = 0;
-  fetchAdditionalData() async {
-    final response = await http.get(Uri.parse(
-        'http://34.227.78.214/api/getItemData?id=4289,17462,17475,17474,17460,10365,10666,10367,10368,10369&api_key=$key_bath'));
+  @override
+  void initState() {
+    super.initState();
+
+    setUserID();
+    loadInitialData();
+  }
+
+  void reorderOrderedItems() {
+    // Create a set to store unique 'id' values from 'widget.Products'
+    final Set<int> uniqueIds = {};
+
+    // Filter 'widget.Products' to remove duplicates based on 'id'
+    final List<dynamic> uniqueProducts = widget.Product.where((product) {
+      final int id = product['id'];
+      if (uniqueIds.contains(id)) {
+        return false; // Skip duplicates
+      } else {
+        uniqueIds.add(id);
+        return true;
+      }
+    }).toList();
+
+    // Create a map to store 'uniqueProducts' using their 'id' as the key
+    final Map<int, dynamic> productMap = {};
+
+    // Fill the product map
+    for (var product in uniqueProducts) {
+      final int id = product['id'];
+      productMap[id] = product;
+    }
+
+    // Create a new list by ordering 'orderedItems' based on the 'id' field
+    final List<dynamic> reorderedItems = [];
+
+    for (var item in orderedItems) {
+      final int id = item['id'];
+      if (productMap.containsKey(id)) {
+        reorderedItems.add(productMap[id]);
+      }
+    }
+
+    // Update 'orderedItems' with the reordered list
+    setState(() {
+      orderedItems = reorderedItems;
+    });
+  }
+
+  void moveItemToFront(List<dynamic> orderedItems, int targetId) {
+    int index = orderedItems.indexWhere((item) => item['id'] == targetId);
+    if (index != -1) {
+      // If the item with the target ID is found, remove it and add it to the front.
+      var itemToMove = orderedItems.removeAt(index);
+      orderedItems.insert(0, itemToMove);
+    }
+  }
+
+  Future<void> loadInitialData() async {
+    setState(() {
+      loadingPage = true;
+    });
+    var InitialData = await getSpeceficProduct(widget.IDs);
+    setState(() {
+      orderedItems = InitialData["item"];
+    });
+    moveItemToFront(orderedItems, widget.id);
+
+    setState(() {
+      loadingPage = false;
+    });
+  }
+
+  Future<void> loadAdditionalData() async {
+    final uri = Uri.parse(widget.url);
+
+    if (uri.host == null) {
+      // Handle the case where the URL does not contain a host
+      print("Invalid URL: No host specified");
+      return;
+    }
+
+    final updatedQueryParameters =
+        Map<String, String>.from(uri.queryParameters);
+    int incrementPage = int.parse(widget.page.toString()) + 1;
+    updatedQueryParameters['page'] = incrementPage.toString();
+
+    final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
+    final updatedUrl = updatedUri.toString();
+    final response = await http.get(updatedUri);
     var res = json.decode(utf8.decode(response.bodyBytes));
-    var additionalItems = res["item"];
-    return additionalItems;
+
+    var additionalItems = [];
+    if (res != null) {
+      additionalItems = res["items"];
+    }
+
+    List<String> idsList =
+        additionalItems.map((item) => item['id'].toString()).toList();
+
+    String commaSeparatedIds = idsList.join(', ');
+
+    var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
+
+    if (additionalItems != null) {
+      setState(() {
+        orderedItems.addAll(ProductsApiData["item"]);
+      });
+    }
   }
 
   GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
@@ -126,6 +211,10 @@ class _ProductScreenState extends State<ProductScreen> {
   final favouriteProvider = FavouriteProvider();
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
+    List newArray = [];
+    for (int i = 0; i < widget.Product.length; i++) {
+      newArray.add(i);
+    }
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
@@ -154,14 +243,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 actions: [
-                  // AddToCartIcon(
-
-                  //   icon: const Icon(Icons.shopping_cart),
-                  //   badgeOptions: const BadgeOptions(
-                  //     active: true,
-                  //     backgroundColor: Colors.red,
-                  //   ),
-                  // ),
                   Container(
                     key: cartKey,
                     child: Stack(
@@ -201,213 +282,360 @@ class _ProductScreenState extends State<ProductScreen> {
                     )),
               ),
             ),
-            body: FutureBuilder(
-              future: getSpeceficProduct(widget.IDs),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  if (widget.cart_fav) {
-                    List newArray = [];
-                    for (int i = 0; i < widget.Product.length; i++) {
-                      newArray.add(i);
-                    }
-                    return AnimationLimiter(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          aspectRatio: 2.5,
-                          autoPlay: false,
-                          enlargeCenterPage: true,
-                          viewportFraction: 1,
-                          height: MediaQuery.of(context).size.height,
-                        ),
-                        items: newArray.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return AnimationConfiguration.staggeredList(
-                                position: i,
-                                duration: const Duration(milliseconds: 700),
-                                child: SlideAnimation(
-                                  verticalOffset: 100.0,
-                                  child: FadeInAnimation(
-                                    curve: Curves.easeIn,
-                                    child: ProductMethod(
-                                        name: widget.Product[i]["title"]
-                                            as String,
-                                        id: widget.Product[i]["id"],
-                                        images: [widget.Product[i]["image"]],
-                                        description: [],
-                                        new_price: widget.Product[i]["price"],
-                                        old_price: double.parse(widget
-                                                .Product[i]["price"]
-                                                .toString()) *
-                                            1.5,
-                                        image: widget.Product[i]["image"]
-                                            as String),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  } else {
-                    List newArray = [];
-                    for (int i = 0; i < widget.Product.length; i++) {
-                      newArray.add(i);
-                    }
-                    return AnimationLimiter(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          aspectRatio: 2.5,
-                          autoPlay: false,
-                          enlargeCenterPage: true,
-                          viewportFraction: 1,
-                          height: MediaQuery.of(context).size.height,
-                        ),
-                        items: newArray.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return AnimationConfiguration.staggeredList(
-                                position: i,
-                                duration: const Duration(milliseconds: 700),
-                                child: SlideAnimation(
-                                  verticalOffset: 100.0,
-                                  child: FadeInAnimation(
-                                    curve: Curves.easeIn,
-                                    child: ProductMethod(
-                                        name: widget.Product[i]["title"]
-                                            as String,
-                                        id: widget.Product[i]["id"],
-                                        images: widget.Product[i]
-                                            ["vendor_images_links"],
-                                        description: [],
-                                        new_price: widget.Product[i]["price"],
-                                        old_price: double.parse(widget
-                                                .Product[i]["price"]
-                                                .toString()) *
-                                            1.5,
-                                        image: widget.Product[i]
-                                                ["vendor_images_links"][0]
-                                            as String),
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        }).toList(),
-                      ),
-                    );
-                  }
-                } else {
-                  if (snapshot.data != null) {
-                    List<dynamic> ProductsAPI = snapshot.data["item"];
-
-                    List<int> widgetIds = _extractIds(widget.IDs);
-                    var orderedItems = [];
-
-                    for (int id in widgetIds) {
-                      var item = ProductsAPI.firstWhere(
-                        (product) => product["id"] == id,
-                        orElse: () => null,
-                      );
-                      if (item != null) {
-                        orderedItems.add(item);
-                      }
-                    }
-
-                    return AnimationLimiter(
-                      child: CarouselSlider(
-                        options: CarouselOptions(
-                          aspectRatio: 2.5,
-                          autoPlay: false,
-                          enlargeCenterPage: true,
-                          viewportFraction: 1,
-                          height: MediaQuery.of(context).size.height,
-                          initialPage: _currentPage,
-                          onPageChanged: (index, reason) async {
-                            setState(() {
-                              _currentPage = index;
-                            });
-
-                            if (orderedItems.length - 3 < _currentPage) {
-                              // Check if you are already loading more items
-                              if (!isLoadingMoreItems) {
-                                // Set isLoadingMoreItems to true to prevent multiple requests
-                                isLoadingMoreItems = true;
-                                // Show a loading dialog
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                );
-
-                                // Fetch additional items
-                                var additionalItems =
-                                    await fetchAdditionalData();
-
-                                // Add the additional items to orderedItems
-                                orderedItems.addAll(additionalItems);
-                                setState(() {});
-
-                                // Hide the loading dialog
-                                Navigator.of(context).pop();
-
-                                // Set isLoadingMoreItems back to false
-                                isLoadingMoreItems = false;
+            body: loadingPage
+                ? widget.cart_fav
+                    ? AnimationLimiter(
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            aspectRatio: 2.5,
+                            autoPlay: false,
+                            enlargeCenterPage: true,
+                            viewportFraction: 1,
+                            height: MediaQuery.of(context).size.height,
+                            onPageChanged: (index, reason) {
+                              if (index == orderedItems.length - 1 &&
+                                  reason == CarouselPageChangedReason.manual) {
+                                loadAdditionalData();
                               }
-                            }
-                          },
-                        ),
-                        items: orderedItems.map((item) {
-                          List<String> images =
-                              (item["vendor_images_links"] as List)
-                                  .cast<String>();
-                          int itemIndex = orderedItems.indexOf(item);
-
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return AnimationConfiguration.staggeredList(
-                                position: itemIndex,
-                                duration: const Duration(milliseconds: 500),
-                                child: SlideAnimation(
-                                  verticalOffset: 100.0,
-                                  child: FadeInAnimation(
-                                    curve: Curves.easeIn,
-                                    child: ProductMethod(
-                                      name: item["title"] ?? "-",
-                                      id: item["id"],
-                                      images: images,
-                                      description: item["description"],
-                                      new_price: item["variants"][0]["price"],
-                                      old_price: double.parse(item["variants"]
-                                                  [0]["price"]
-                                              .toString()) *
-                                          1.5,
-                                      image: item["vendor_images_links"][0]
-                                          as String,
+                            },
+                          ),
+                          items: newArray.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: i,
+                                  duration: const Duration(milliseconds: 700),
+                                  child: SlideAnimation(
+                                    verticalOffset: 100.0,
+                                    child: FadeInAnimation(
+                                      curve: Curves.easeIn,
+                                      child: ProductMethod(
+                                          Sizes: sizeOptions,
+                                          SelectedSizes: selectedSize,
+                                          name: widget.Product[i]["title"]
+                                              as String,
+                                          id: widget.Product[i]["id"],
+                                          images: [widget.Product[i]["image"]],
+                                          description: [],
+                                          new_price: widget.Product[i]["price"],
+                                          old_price: double.parse(widget
+                                                  .Product[i]["price"]
+                                                  .toString()) *
+                                              1.5,
+                                          image: widget.Product[i]["image"]
+                                              as String),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      )
+                    : AnimationLimiter(
+                        child: CarouselSlider(
+                          options: CarouselOptions(
+                            aspectRatio: 2.5,
+                            autoPlay: false,
+                            enlargeCenterPage: true,
+                            viewportFraction: 1,
+                            height: MediaQuery.of(context).size.height,
+                            onPageChanged: (index, reason) {
+                              if (index == orderedItems.length - 1 &&
+                                  reason == CarouselPageChangedReason.manual) {
+                                loadAdditionalData();
+                              }
                             },
-                          );
-                        }).toList(),
+                          ),
+                          items: newArray.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return AnimationConfiguration.staggeredList(
+                                  position: i,
+                                  duration: const Duration(milliseconds: 700),
+                                  child: SlideAnimation(
+                                    verticalOffset: 100.0,
+                                    child: FadeInAnimation(
+                                      curve: Curves.easeIn,
+                                      child: ProductMethod(
+                                          Sizes: sizeOptions,
+                                          SelectedSizes: selectedSize,
+                                          name: widget.Product[i]["title"]
+                                              as String,
+                                          id: widget.Product[i]["id"],
+                                          images: widget.Product[i]
+                                              ["vendor_images_links"],
+                                          description: [],
+                                          new_price: widget.Product[i]["price"],
+                                          old_price: double.parse(widget
+                                                  .Product[i]["price"]
+                                                  .toString()) *
+                                              1.5,
+                                          image: widget.Product[i]
+                                                  ["vendor_images_links"][0]
+                                              as String),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      )
+                : AnimationLimiter(
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        aspectRatio: 2.5,
+                        autoPlay: false,
+                        enlargeCenterPage: true,
+                        viewportFraction: 1,
+                        height: MediaQuery.of(context).size.height,
+                        initialPage: _currentPage,
+                        onPageChanged: (index, reason) {
+                          if (index == orderedItems.length - 1 &&
+                              reason == CarouselPageChangedReason.manual) {
+                            loadAdditionalData();
+                          }
+                        },
                       ),
-                    );
-                  } else {
-                    return Container();
-                  }
-                }
-              },
-            ),
+                      items: orderedItems.map((item) {
+                        List<String> images =
+                            (item["vendor_images_links"] as List)
+                                .cast<String>();
+                        int itemIndex = orderedItems.indexOf(item);
+
+                        return Builder(
+                          builder: (BuildContext context) {
+                            List<String> sizesAPI = ["اختر الحجم"];
+                            for (int i = 0; i < item["variants"].length; i++) {
+                              sizesAPI.add(item["variants"][i]["size"]);
+                            }
+
+                            return AnimationConfiguration.staggeredList(
+                              position: itemIndex,
+                              duration: const Duration(milliseconds: 500),
+                              child: SlideAnimation(
+                                verticalOffset: 100.0,
+                                child: FadeInAnimation(
+                                  curve: Curves.easeIn,
+                                  child: ProductMethod(
+                                    isLikedProduct: favouriteProvider
+                                        .isProductFavorite(item["id"]),
+                                    name: item["title"] ?? "-",
+                                    Sizes: sizesAPI,
+                                    SelectedSizes: "اختر الحجم",
+                                    id: item["id"],
+                                    images: images,
+                                    description: item["description"],
+                                    SKU: item["sku"] ?? "-",
+                                    new_price: item["variants"][0]["price"],
+                                    old_price: double.parse(item["variants"][0]
+                                                ["price"]
+                                            .toString()) *
+                                        1.5,
+                                    image: item["vendor_images_links"][0]
+                                        as String,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+            // FutureBuilder(
+            //   future: getSpeceficProduct(widget.IDs),
+            //   builder: (BuildContext context, AsyncSnapshot snapshot) {
+            //     if (snapshot.connectionState == ConnectionState.waiting) {
+            //       if (widget.cart_fav) {
+            //         List newArray = [];
+            //         for (int i = 0; i < widget.Product.length; i++) {
+            //           newArray.add(i);
+            //         }
+            //         return AnimationLimiter(
+            //           child: CarouselSlider(
+            //             options: CarouselOptions(
+            //               aspectRatio: 2.5,
+            //               autoPlay: false,
+            //               enlargeCenterPage: true,
+            //               viewportFraction: 1,
+            //               height: MediaQuery.of(context).size.height,
+            //               onPageChanged: (index, reason) {
+            //                 if (index == orderedItems.length - 1 &&
+            //                     reason == CarouselPageChangedReason.manual) {
+            //                   loadAdditionalData();
+            //                 }
+            //               },
+            //             ),
+            //             items: newArray.map((i) {
+            //               return Builder(
+            //                 builder: (BuildContext context) {
+            //                   return AnimationConfiguration.staggeredList(
+            //                     position: i,
+            //                     duration: const Duration(milliseconds: 700),
+            //                     child: SlideAnimation(
+            //                       verticalOffset: 100.0,
+            //                       child: FadeInAnimation(
+            //                         curve: Curves.easeIn,
+            //                         child: ProductMethod(
+            //                             name: widget.Product[i]["title"]
+            //                                 as String,
+            //                             id: widget.Product[i]["id"],
+            //                             images: [widget.Product[i]["image"]],
+            //                             description: [],
+            //                             new_price: widget.Product[i]["price"],
+            //                             old_price: double.parse(widget
+            //                                     .Product[i]["price"]
+            //                                     .toString()) *
+            //                                 1.5,
+            //                             image: widget.Product[i]["image"]
+            //                                 as String),
+            //                       ),
+            //                     ),
+            //                   );
+            //                 },
+            //               );
+            //             }).toList(),
+            //           ),
+            //         );
+            //       } else {
+            //         List newArray = [];
+            //         for (int i = 0; i < widget.Product.length; i++) {
+            //           newArray.add(i);
+            //         }
+            //         return AnimationLimiter(
+            //           child: CarouselSlider(
+            //             options: CarouselOptions(
+            //               aspectRatio: 2.5,
+            //               autoPlay: false,
+            //               enlargeCenterPage: true,
+            //               viewportFraction: 1,
+            //               height: MediaQuery.of(context).size.height,
+            //               onPageChanged: (index, reason) {
+            //                 if (index == orderedItems.length - 1 &&
+            //                     reason == CarouselPageChangedReason.manual) {
+            //                   loadAdditionalData();
+            //                 }
+            //               },
+            //             ),
+            //             items: newArray.map((i) {
+            //               return Builder(
+            //                 builder: (BuildContext context) {
+            //                   return AnimationConfiguration.staggeredList(
+            //                     position: i,
+            //                     duration: const Duration(milliseconds: 700),
+            //                     child: SlideAnimation(
+            //                       verticalOffset: 100.0,
+            //                       child: FadeInAnimation(
+            //                         curve: Curves.easeIn,
+            //                         child: ProductMethod(
+            //                             name: widget.Product[i]["title"]
+            //                                 as String,
+            //                             id: widget.Product[i]["id"],
+            //                             images: widget.Product[i]
+            //                                 ["vendor_images_links"],
+            //                             description: [],
+            //                             new_price: widget.Product[i]["price"],
+            //                             old_price: double.parse(widget
+            //                                     .Product[i]["price"]
+            //                                     .toString()) *
+            //                                 1.5,
+            //                             image: widget.Product[i]
+            //                                     ["vendor_images_links"][0]
+            //                                 as String),
+            //                       ),
+            //                     ),
+            //                   );
+            //                 },
+            //               );
+            //             }).toList(),
+            //           ),
+            //         );
+            //       }
+            //     } else {
+            //       if (snapshot.data != null) {
+            //         List<dynamic> ProductsAPI = snapshot.data["item"];
+
+            //         List<int> widgetIds = _extractIds(widget.IDs);
+
+            //         for (int id in widgetIds) {
+            //           var item = ProductsAPI.firstWhere(
+            //             (product) => product["id"] == id,
+            //             orElse: () => null,
+            //           );
+            //           if (item != null) {
+            //             orderedItems.add(item);
+            //           }
+            //         }
+
+            //         return AnimationLimiter(
+            //           child: CarouselSlider(
+            //             options: CarouselOptions(
+            //               aspectRatio: 2.5,
+            //               autoPlay: false,
+            //               enlargeCenterPage: true,
+            //               viewportFraction: 1,
+            //               height: MediaQuery.of(context).size.height,
+            //               initialPage: _currentPage,
+            //               onPageChanged: (index, reason) {
+            //                 if (index == orderedItems.length - 1 &&
+            //                     reason == CarouselPageChangedReason.manual) {
+            //                   loadAdditionalData();
+            //                 }
+            //               },
+            //             ),
+            //             items: orderedItems.map((item) {
+            //               List<String> images =
+            //                   (item["vendor_images_links"] as List)
+            //                       .cast<String>();
+            //               int itemIndex = orderedItems.indexOf(item);
+
+            //               return Builder(
+            //                 builder: (BuildContext context) {
+            //                   return AnimationConfiguration.staggeredList(
+            //                     position: itemIndex,
+            //                     duration: const Duration(milliseconds: 500),
+            //                     child: SlideAnimation(
+            //                       verticalOffset: 100.0,
+            //                       child: FadeInAnimation(
+            //                         curve: Curves.easeIn,
+            //                         child: ProductMethod(
+            //                           name: item["title"] ?? "-",
+            //                           id: item["id"],
+            //                           images: images,
+            //                           description: item["description"],
+            //                           SKU: item["sku"] ?? "-",
+            //                           new_price: item["variants"][0]["price"],
+            //                           old_price: double.parse(item["variants"]
+            //                                       [0]["price"]
+            //                                   .toString()) *
+            //                               1.5,
+            //                           image: item["vendor_images_links"][0]
+            //                               as String,
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   );
+            //                 },
+            //               );
+            //             }).toList(),
+            //           ),
+            //         );
+            //       } else {
+            //         return Container();
+            //       }
+            //     }
+            //   },
+            // ),
           ),
         ),
       ),
     );
   }
+
+  String selectedSize = "اختر الحجم";
+  List<String> sizeOptions = ["اختر الحجم", "S", "M", "L", "XL"];
 
   bool loadingcart = false;
   bool loadingfav = false;
@@ -417,18 +645,22 @@ class _ProductScreenState extends State<ProductScreen> {
   Widget ProductMethod(
       {String image = "",
       String name = "",
+      String SKU = "",
+      required List<String> Sizes,
+      String SelectedSizes = "اختر الحجم",
       List? images,
       int id = 0,
       var description,
+      bool inCart = false,
       bool isLikedProduct = false,
       var old_price,
       var new_price}) {
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
-    Future<bool> onLikeButtonTapped(FavouriteProvider favoriteProvider,
-        String title, String image, String Price, int ID) async {
+    Future<bool> onLikeButtonTapped(bool liked) async {
       bool isFavorite = favoriteProvider.isProductFavorite(widget.id);
+
       if (isFavorite) {
         await favoriteProvider.removeFromFavorite(widget.id);
         Fluttertoast.showToast(
@@ -439,10 +671,10 @@ class _ProductScreenState extends State<ProductScreen> {
       try {
         Vibration.vibrate(duration: 300);
         final newItem = FavoriteItem(
-          productId: ID,
-          name: title,
+          productId: id,
+          name: name,
           image: image,
-          price: double.parse(Price.toString()),
+          price: double.parse(new_price.toString()),
         );
 
         await favoriteProvider.addToFavorite(newItem);
@@ -457,6 +689,7 @@ class _ProductScreenState extends State<ProductScreen> {
     }
 
     final GlobalKey widgetKey = GlobalKey();
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -468,7 +701,7 @@ class _ProductScreenState extends State<ProductScreen> {
               children: [
                 Container(
                   key: widgetKey,
-                  height: 450.0,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   width: double.infinity,
                   child: clicked
                       ? Container()
@@ -552,8 +785,18 @@ class _ProductScreenState extends State<ProductScreen> {
                                 Positioned(
                                   top: 10,
                                   right: 10,
-                                  child: Icon(Icons.info,
-                                      size: 30, color: MAIN_COLOR),
+                                  child: Tooltip(
+                                    onTriggered: () {
+                                      Clipboard.setData(
+                                          ClipboardData(text: SKU));
+                                      Fluttertoast.showToast(
+                                          msg: "copied successfully!");
+                                    },
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: SKU,
+                                    child: Icon(Icons.info,
+                                        size: 30, color: MAIN_COLOR),
+                                  ),
                                 ),
                               ],
                             );
@@ -567,31 +810,12 @@ class _ProductScreenState extends State<ProductScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          StreamBuilder<bool>(
-                            initialData:
-                                favouriteProvider.isProductFavorite(id),
-                            builder: (context, snapshot) {
-                              final isLikedProduct = snapshot.data ?? false;
-
-                              return LikeButton(
-                                circleColor: CircleColor(
-                                    start: Colors.red, end: Colors.red),
-                                size: 35,
-                                onTap: (isLiked) async {
-                                  bool updatedLikedState =
-                                      await onLikeButtonTapped(
-                                    favoriteProvider,
-                                    name,
-                                    image,
-                                    new_price
-                                        .toString(), // Make sure new_price is numeric
-                                    id,
-                                  );
-                                  return updatedLikedState; // Return the updated state based on the operation's success
-                                },
-                                isLiked: isLikedProduct,
-                              );
-                            },
+                          LikeButton(
+                            circleColor:
+                                CircleColor(start: Colors.red, end: Colors.red),
+                            size: 35,
+                            onTap: onLikeButtonTapped,
+                            isLiked: isLikedProduct,
                           ),
                         ],
                       ),
@@ -843,9 +1067,28 @@ class _ProductScreenState extends State<ProductScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text(
-                "ONE-SIZE",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Container(
+                width: 120,
+                child: StatefulBuilder(builder: (context, setState) {
+                  return DropdownButton<String>(
+                    isExpanded: true,
+                    value: SelectedSizes,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        SelectedSizes = newValue!;
+                      });
+                    },
+                    items: Sizes.map((String size) {
+                      return DropdownMenuItem<String>(
+                        value: size,
+                        child: Text(
+                          size,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                }),
               ),
               loading
                   ? Container(
@@ -865,7 +1108,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       )),
                     )
                   : ButtonWidget(
-                      name: "أضف الى السله",
+                      name: inCart ? "ازاله من السله" : "أضف الى السله",
                       height: 50,
                       width: 150,
                       BorderColor: Colors.black,
@@ -910,31 +1153,6 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   bool clicked = false;
-
-  var desc = [
-    {"لون": "عنابي اللون"},
-    {"تصاميم": "حفلة"},
-    {"أصناف التصميم": "الصاف"},
-    {"تفاصيل": "طوق كشكش"},
-    {"تفاصيل": "غير متساوي او غير متماثل"},
-    {"تفاصيل": "حزام"},
-    {"خط العنق": "ياقة القاع"},
-    {"تفاصيل": "سستة"},
-    {"نوع": "مناسب"},
-    {"طول الأكمام": "نصف الأكمام"},
-    {"أنواع الأكمام": "كم ضيق"},
-    {"محيط الخصر": "ارتفاع الخصر"},
-    {"شكل الكُفة": "غير متساوي او غير متماثل"},
-    {"الطول": "طويل"},
-    {"نوع الشكل": "النمط العادي"},
-    {"قماش": "غير متمدد"},
-    {"المواد": "الستان"},
-    {"تكوين": "95% بوليستر"},
-    {"تكوين": "5% إيلاستين"},
-    {"ارشادات العناية": "يغسل بالغسالة، لا يستخدم التنظيف الجاف"},
-    {"حزام": "نعم"},
-    {"شفاف": "لا"}
-  ];
 
   Widget desceiptionMethod({String key = "", String value = ""}) {
     return Container(

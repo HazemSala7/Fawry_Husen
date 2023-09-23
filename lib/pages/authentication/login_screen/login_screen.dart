@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/firebase/user/UserModel.dart';
 import 'package:fawri_app_refactor/pages/authentication/register_screen/register_screen.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vibration/vibration.dart';
 import '../../../components/button_widget/button_widget.dart';
 import '../../../firebase/user/UserController.dart';
 import '../../../services/auth/anonymous_auth.dart';
@@ -82,29 +84,32 @@ class _LoginScreenState extends State<LoginScreen> {
                               right: 15,
                               left: 15,
                             ),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  loading = true;
-                                });
+                            child: BouncingWidget(
+                              child: InkWell(
+                                onTap: () {
+                                  Vibration.vibrate(duration: 300);
+                                  setState(() {
+                                    loading = true;
+                                  });
 
-                                addUser();
-                              },
-                              child: Container(
-                                width: double.infinity,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius: BorderRadius.circular(40),
-                                    border: Border.all(color: Colors.black)),
-                                child: Center(
-                                    child: Text(
-                                  "تخطي",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Colors.white),
-                                )),
+                                  addUser();
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.circular(40),
+                                      border: Border.all(color: Colors.black)),
+                                  child: Center(
+                                      child: Text(
+                                    "تخطي",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.white),
+                                  )),
+                                ),
                               ),
                             ),
                           ),
@@ -141,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(top: 5),
+                            padding: const EdgeInsets.only(top: 5, left: 20),
                             child: Container(
                                 width: double.infinity,
                                 height: 50,

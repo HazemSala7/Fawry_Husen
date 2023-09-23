@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  bouncerwidget:
+    dependency: "direct main"
+    description:
+      name: bouncerwidget
+      sha256: "1024d00f204eac31fd14e3c79a15e455ed26b38a673c77f444019d03f2750cec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   cached_network_image:
     dependency: "direct main"
     description:
@@ -773,6 +781,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.0"
+  photo_view:
+    dependency: "direct main"
+    description:
+      name: photo_view
+      sha256: "8036802a00bae2a78fc197af8a158e3e2f7b500561ed23b4c458107685e645bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.0"
   platform:
     dependency: transitive
     description:

@@ -3,6 +3,7 @@ import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../pages/products-category/products-category.dart';
 import '../../services/custom_icons/custom_icons.dart';
@@ -24,21 +25,7 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   @override
-  IconData? getIconData(String iconName) {
-    // Find the IconData based on the icon name
-
-    switch (iconName) {
-      case "FFIcons.kmenlogo":
-        return FFIcons.kmenlogo;
-      case "FFIcons.kshortDress":
-        return FFIcons.kshortDress;
-      // Add more cases here for other icons you might use
-      default:
-        return null;
-    }
-  }
-
-  var Sizes;
+  List<String> Sizes = [];
 
   setSizesArray() {
     if (widget.name == "ملابس نسائيه") {
@@ -61,79 +48,174 @@ class _CategoryWidgetState extends State<CategoryWidget> {
 
   getSizesAndShow() async {
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
+      context: context,
+      builder: (BuildContext context) {
+        List<bool> selectedStates =
+            List.generate(Sizes.length, (index) => false);
+        String getSelectedSizes() {
+          List<String> selectedSizes = [];
+          for (int index = 0; index < Sizes.length; index++) {
+            if (selectedStates[index]) {
+              String size = Sizes[index].split(' ')[0]; // Extract the size part
+              selectedSizes.add(size);
+            }
+          }
+          return selectedSizes
+              .join(', '); // Join selected sizes into a single string
+        }
+
+        // Calculate the widths for each Container
+        List<double> containerWidths = Sizes.map((text) =>
+            getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
+            32.0).toList(); // Add padding to the calculated width
+        double gridViewHeight = calculateGridViewHeight(Sizes.length);
+        return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             backgroundColor: Colors.white,
             title: Text(
-              'لتجربه أفضل , الرجاء اختيار الحجم',
+              'لتجربة أفضل, الرجاء اختيار الحجم',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             content: Container(
-              height: 350,
+              height: gridViewHeight + 120,
               child: Column(
                 children: [
-                  Container(
-                    height: 300.0,
-                    width: 300.0,
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: Sizes.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        return sizeMethod(size: Sizes[index]);
-                      },
-                    ),
+                  Wrap(
+                    spacing: 15.0, // gap between adjacent chips
+                    runSpacing: 15.0, // gap between lines
+                    children: <Widget>[
+                      for (int index = 0; index < Sizes.length; index++)
+                        Container(
+                          width: containerWidths[
+                              index], // Use the calculated width
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: selectedStates[index],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    selectedStates[index] = value!;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedStates[index] =
+                                          !selectedStates[index];
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          spreadRadius: 2,
+                                          blurRadius: 8,
+                                        ),
+                                      ],
+                                      color: selectedStates[index]
+                                          ? Colors.black
+                                          : Colors.white,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    height: 40,
+                                    child: Center(
+                                      child: Text(
+                                        Sizes[index],
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: selectedStates[index]
+                                              ? Colors.white
+                                              : Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                    ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ButtonWidget(
-                            name: "تخطي",
-                            height: 40,
-                            width: 120,
-                            BorderColor: Colors.black,
-                            OnClickFunction: () {
-                              NavigatorFunction(
-                                  context,
-                                  ProductsCategories(
-                                    category_id:
-                                        widget.main_category.toString(),
-                                  ));
-                            },
-                            BorderRaduis: 10,
-                            ButtonColor: MAIN_COLOR,
-                            NameColor: Colors.white),
+                          name: "حفظ",
+                          height: 40,
+                          width: 120,
+                          BorderColor: Colors.black,
+                          OnClickFunction: () async {
+                            String selectedSizes = getSelectedSizes();
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setString('size', selectedSizes);
+                            NavigatorFunction(
+                                context,
+                                ProductsCategories(
+                                  category_id: widget.main_category,
+                                  size: selectedSizes,
+                                ));
+                          },
+                          BorderRaduis: 10,
+                          ButtonColor: MAIN_COLOR,
+                          NameColor: Colors.white,
+                        ),
                         ButtonWidget(
-                            name: "التالي",
-                            height: 40,
-                            width: 120,
-                            BorderColor: Colors.black,
-                            OnClickFunction: () {
-                              NavigatorFunction(
-                                  context,
-                                  ProductsCategories(
-                                    category_id:
-                                        widget.main_category.toString(),
-                                  ));
-                            },
-                            BorderRaduis: 10,
-                            ButtonColor: MAIN_COLOR,
-                            NameColor: Colors.white),
+                          name: "تخطي",
+                          height: 40,
+                          width: 120,
+                          BorderColor: Colors.black,
+                          OnClickFunction: () async {
+                            String selectedSizes = getSelectedSizes();
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setString('size', selectedSizes);
+                            NavigatorFunction(
+                                context,
+                                ProductsCategories(
+                                  category_id: widget.main_category,
+                                  size: selectedSizes,
+                                ));
+                          },
+                          BorderRaduis: 10,
+                          ButtonColor: MAIN_COLOR,
+                          NameColor: Colors.white,
+                        ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
           );
         });
+      },
+    );
+  }
+
+  double calculateGridViewHeight(int itemCount) {
+    final double itemHeight = 30.0; // Height of each item
+    final int itemsPerRow = 3; // Number of items per row
+    final int rowCount = (itemCount / itemsPerRow).ceil();
+    final double gridHeight = itemHeight * rowCount;
+    final double spacingHeight = 30.0 * (rowCount - 1); // Adjust for spacing
+    return gridHeight + spacingHeight;
+  }
+
+  double getTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.width;
   }
 
   Widget build(BuildContext context) {
@@ -255,6 +337,22 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                                 NameColor: Colors.white),
                           ],
                         ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            ButtonWidget(
+                                name: "التالي",
+                                height: 40,
+                                width: 100,
+                                BorderColor: MAIN_COLOR,
+                                OnClickFunction: () {
+                                  getSizesAndShow();
+                                },
+                                BorderRaduis: 4,
+                                ButtonColor: MAIN_COLOR,
+                                NameColor: Colors.white),
+                          ],
+                        ),
                       ],
                     ),
                   ));
@@ -314,7 +412,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           widget.name,
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: widget.name.length >= 13 ? 16 : 18,
                           ),
                         ),
                       ),

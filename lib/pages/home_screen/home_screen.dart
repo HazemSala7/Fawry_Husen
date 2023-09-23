@@ -45,7 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          child: AppBarWidget(), preferredSize: Size.fromHeight(60)),
+          child: AppBarWidget(
+            main_Category: "",
+          ),
+          preferredSize: Size.fromHeight(60)),
       body: _listOfWidget[selectedIndex],
       bottomNavigationBar: SlidingClippedNavBar(
         backgroundColor: Colors.white,

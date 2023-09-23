@@ -225,8 +225,6 @@ class _FavouriteState extends State<Favourite> {
                 String productIdsString = reorderListBasedOnIndex(
                         favItems.map((item) => item.productId).toList(), index)
                     .join(', ');
-                print("productIdsString");
-                print(productIdsString);
 
 // Create a map for the first object you want to insert
                 Map<String, dynamic> firstProduct = {
@@ -243,6 +241,8 @@ class _FavouriteState extends State<Favourite> {
                   context,
                   ProductScreen(
                     index: index,
+                    url: "",
+                    page: 1,
                     cart_fav: true,
                     favourite: false,
                     Images: [image],
