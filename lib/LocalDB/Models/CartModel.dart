@@ -4,13 +4,15 @@ class CartItem {
   final String name;
   final String image;
   final double price;
+  final String type;
   int quantity;
   int user_id;
 
   CartItem(
       {this.id,
       required this.productId,
-      required this.name,
+        required this.name,
+        required this.type,
       required this.image,
       required this.price,
       required this.user_id,
@@ -23,6 +25,7 @@ class CartItem {
       'name': name,
       'image': image,
       'price': price,
+      'type': type,
       'user_id': user_id,
       'quantity': quantity,
     };
@@ -33,6 +36,7 @@ class CartItem {
       id: json['id'],
       productId: json['productId'],
       name: json['name'],
+      type: json['type'],
       image: json['image'],
       price: json['price'],
       user_id: json['user_id'],
@@ -44,6 +48,7 @@ class CartItem {
     int? id,
     int? productId,
     String? name,
+    String? type,
     String? image,
     double? price,
     int? quantity,
@@ -54,6 +59,7 @@ class CartItem {
       productId: productId ?? this.productId,
       name: name ?? this.name,
       price: price ?? this.price,
+      type: type ?? this.type,
       image: image ?? this.image,
       quantity: quantity ?? this.quantity,
       user_id: quantity ?? this.user_id,

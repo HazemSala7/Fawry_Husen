@@ -104,6 +104,7 @@ class _CartState extends State<Cart> {
                                 index: index,
                                 cartProvider: cartProvider,
                                 price: item.price,
+                                type: item.type,
                                 name: item.name,
                                 qty: item.quantity,
                                 removeProduct: () {
@@ -180,7 +181,7 @@ class _CartState extends State<Cart> {
       image: image.toString(),
       price: double.parse(price.toString()),
       quantity: 1,
-      user_id: 0,
+      user_id: 0, type: '',
     );
     cartProvider.addToCart(newItem);
     Navigator.pop(context);
@@ -198,10 +199,11 @@ class _CartState extends State<Cart> {
       CartProvider? cartProvider,
       Function? removeProduct,
       int product_id = 0,
-      CartItem? item,
+        CartItem? item,
       int index = 0,
       var IDs,
-      int qty = 0,
+        int qty = 0,
+        String type = "",
       var products,
       String cart_id = "",
       var price}) {
@@ -367,7 +369,7 @@ class _CartState extends State<Cart> {
                               ),
                             ),
                             Text(
-                              "ONE-SIZE",
+                              type.toString(),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),

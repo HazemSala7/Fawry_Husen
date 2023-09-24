@@ -104,7 +104,7 @@ class _FavouriteState extends State<Favourite> {
       image: image.toString(),
       price: double.parse(price.toString()),
       quantity: 1,
-      user_id: 0,
+      user_id: 0, type: '',
     );
     cartProvider.addToCart(newItem);
     Navigator.pop(context);

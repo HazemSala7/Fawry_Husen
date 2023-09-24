@@ -1,10 +1,11 @@
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vibration/vibration.dart';
+import 'package:fawri_app_refactor/constants/constants.dart';
 
 import '../../pages/products-category/products-category.dart';
 import '../../services/custom_icons/custom_icons.dart';
@@ -26,17 +27,17 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   @override
-  List<String> Sizes = [];
+  Map sizes = {};
 
   setSizesArray() {
     if (widget.name == "ملابس نسائيه") {
-      Sizes = women__sizes;
+      sizes = LocalStorage().getSize("menSizes");
     } else if (widget.name == "ملابس رجاليه") {
-      Sizes = Men_sizes;
+      sizes = LocalStorage().getSize("menSizes");
     } else if (widget.name == "ملابس أطفال") {
-      Sizes = kids_boys_sizes;
+      sizes = LocalStorage().getSize("kidsboysSizes");
     } else {
-      Sizes = women__sizes;
+      sizes = LocalStorage().getSize("womenSizes");
     }
     setState(() {});
   }
@@ -48,99 +49,71 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   }
 
   getSizesAndShow() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String savedSize = prefs.getString('size') ?? '';
-    List<bool> selectedStates = List.generate(women__sizes.length, (index) {
-      String size = women__sizes[index].split(' ')[0];
-      return savedSize == size; // Check if the size matches the saved size
-    });
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        String getSelectedSizes() {
-          List<String> selectedSizes = [];
-          for (int index = 0; index < women__sizes.length; index++) {
-            if (selectedStates[index]) {
-              String size =
-                  women__sizes[index].split(' ')[0]; // Extract the size part
-              selectedSizes.add(size);
-            }
-          }
-          return selectedSizes
-              .join(', '); // Join selected sizes into a single string
-        }
-
-        // Calculate the widths for each Container
-        List<double> containerWidths = women__sizes
-            .map((text) =>
-                getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
-                32.0)
-            .toList(); // Add padding to the calculated width
-        double gridViewHeight = calculateGridViewHeight(women__sizes.length);
+        var keys = sizes.keys.toList();
+        double gridViewHeight = calculateGridViewHeight(sizes.length);
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             backgroundColor: Colors.white,
-            title: Row(
-              children: [
-                Text(
-                  'لتجربه أفضل ,',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                Text(
-                  'الرجاء اختيار الحجم',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-              ],
+            title: Text(
+              'لتجربة أفضل, الرجاء اختيار الحجم',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             content: Container(
-              height: gridViewHeight + 130,
+              height: MediaQuery.of(context).size.height,
               child: Column(
                 children: [
                   Wrap(
                     spacing: 15.0, // gap between adjacent chips
                     runSpacing: 15.0, // gap between lines
                     children: <Widget>[
-                      for (int index = 0; index < women__sizes.length; index++)
-                        InkWell(
-                          onTap: () {
-                            Vibration.vibrate(duration: 300);
-                            setState(() {
-                              setState(() {
-                                selectedStates[index] = !selectedStates[index];
-                              });
-                            });
-                          },
-                          child: Container(
-                            width: containerWidths[
-                                index], // Use the calculated width
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 8,
-                                ),
-                              ],
-                              color: selectedStates[index]
-                                  ? Colors.black
-                                  : Colors.white,
-
-                              borderRadius: BorderRadius.circular(
-                                  20), // Adjust the border radius
-                            ),
-                            height: selectedStates[index] ? 50 : 40,
-                            child: Center(
-                              child: Text(
-                                women__sizes[index],
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: selectedStates[index]
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
+                      for (int index = 0; index < keys.length; index++)
+                        Container(
+                          width: 100, // Use the calculated width
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Checkbox(
+                                value: sizes[keys[index]],
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    sizes[keys[index]] = value!;
+                                  });
+                                },
+                              ),
+                              Expanded(
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 8,
+                                      ),
+                                    ],
+                                    color: sizes[keys[index]]
+                                        ? Colors.black
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  height: 40,
+                                  child: Center(
+                                    child: Text(
+                                      keys[index],
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: sizes[keys[index]]
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
                         )
                     ],
@@ -156,16 +129,32 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
-                            Vibration.vibrate(duration: 300);
-                            String selectedSizes = getSelectedSizes();
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setString('size', selectedSizes);
+                            if (widget.name == "ملابس نسائيه") {
+                              LocalStorage().editSize("menSizes", sizes);
+                            } else if (widget.name == "ملابس رجاليه") {
+                              LocalStorage().editSize("menSizes", sizes);
+                            } else if (widget.name == "ملابس أطفال") {
+                              LocalStorage().editSize("kidsboysSizes", sizes);
+                            } else {
+                              LocalStorage().editSize("womenSizes", sizes);
+                            }
+                            String sizeApi = "";
+                            List sizeApp = [];
+                            // return selectedSizes
+                            //     .join(', ');
+                            sizes.keys.forEach((k) {
+                              if (sizes[k]) {
+                                sizeApi = sizeApi + k;
+                                sizeApp.add(k.split(' ')[0]);
+                              }
+                            });
+                            LocalStorage().setSizeUser(sizeApp);
+                            print(sizeApp.join(', '));
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(
                                   category_id: widget.main_category,
-                                  size: selectedSizes,
+                                  size: sizeApp.join(', '),
                                 ));
                           },
                           BorderRaduis: 10,
@@ -177,8 +166,17 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           height: 40,
                           width: 120,
                           BorderColor: Colors.black,
-                          OnClickFunction: () {
-                            Navigator.pop(context);
+                          OnClickFunction: () async {
+                            // String selectedSizes = getSelectedSizes();
+                            // SharedPreferences prefs =
+                            //     await SharedPreferences.getInstance();
+                            // await prefs.setString('size', selectedSizes);
+                            // NavigatorFunction(
+                            //     context,
+                            //     ProductsCategories(
+                            //       category_id: widget.main_category,
+                            //       size: selectedSizes,
+                            //     ));
                           },
                           BorderRaduis: 10,
                           ButtonColor: MAIN_COLOR,

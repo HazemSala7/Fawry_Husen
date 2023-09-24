@@ -313,16 +313,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductMethod(
-                                          removeProduct: () {
-                                            cartProvider
-                                                .deleteCartItemByProductId(
-                                                    widget.Product[i]["id"]);
-                                            setState(() {});
-                                          },
-                                          Sizes: sizeOptions,
-                                          SelectedSizes: selectedSize,
-                                          inCart: cartProvider.isProductCart(
-                                              widget.Product[i]["id"]),
+                                          // Sizes: sizeOptions,
+                                          // SelectedSizes: selectedSize,
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
@@ -369,16 +361,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductMethod(
-                                          removeProduct: () {
-                                            cartProvider
-                                                .deleteCartItemByProductId(
-                                                    widget.Product[i]["id"]);
-                                            setState(() {});
-                                          },
-                                          inCart: cartProvider.isProductCart(
-                                              widget.Product[i]["id"]),
-                                          Sizes: sizeOptions,
-                                          SelectedSizes: selectedSize,
+                                          // Sizes: sizeOptions,
+                                          // SelectedSizes: selectedSize,
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
@@ -426,9 +410,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         return Builder(
                           builder: (BuildContext context) {
                             List sizesAPI = widget.sizes;
-                            for (int i = 0; i < item["variants"].length; i++) {
-                              sizesAPI.add(item["variants"][i]["size"]);
-                            }
+                            // for (int i = 0; i < item["variants"].length; i++) {
+                            //   sizesAPI.add(item["variants"][i]["size"]);
+                            // }
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
@@ -438,18 +422,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                 child: FadeInAnimation(
                                   curve: Curves.easeIn,
                                   child: ProductMethod(
-                                    removeProduct: () {
-                                      cartProvider.deleteCartItemByProductId(
-                                          item["id"]);
-                                      setState(() {});
-                                    },
-                                    inCart:
-                                        cartProvider.isProductCart(item["id"]),
                                     isLikedProduct: favouriteProvider
                                         .isProductFavorite(item["id"]),
                                     name: item["title"] ?? "-",
-                                    Sizes: [],
-                                    SelectedSizes: "اختر الحجم",
+                                    // Sizes: [],
+                                    // SelectedSizes: "اختر الحجم",
                                     id: item["id"],
                                     images: images,
                                     description: item["description"],
@@ -476,21 +453,17 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
-  String selectedSize = "اختر الحجم";
-  List<String> sizeOptions = ["اختر الحجم", "S", "M", "L", "XL"];
-
   bool loadingcart = false;
   bool loadingfav = false;
   bool loading = false;
-
+  String SelectedSizes = "";
   int _currentIndex = 0;
   Widget ProductMethod(
       {String image = "",
       String name = "",
       String SKU = "",
-      Function? removeProduct,
-      required List<String> Sizes,
-      String SelectedSizes = "اختر الحجم",
+      // required List<String> Sizes,
+      // String SelectedSizes = "اختر الحجم",
       List? images,
       int id = 0,
       var description,
@@ -498,6 +471,8 @@ class _ProductScreenState extends State<ProductScreen> {
       bool isLikedProduct = false,
       var old_price,
       var new_price}) {
+    // String SelectedSizes = "";
+    List Sizes = LocalStorage().sizeUser;
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
@@ -658,14 +633,13 @@ class _ProductScreenState extends State<ProductScreen> {
                             builder: (context, favoriteProvider, _) {
                               return InkWell(
                                   onTap: () {
+                                    print(LocalStorage()
+                                        .isFavorite(id.toString()));
                                     if (LocalStorage()
                                         .isFavorite(id.toString())) {
                                       LocalStorage()
                                           .deleteFavorite(id.toString());
                                       favoriteProvider.notifyListeners();
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "تم ازاله المنتج من المفضله بنجاح!");
                                     } else {
                                       LocalStorage().setFavorite(FavoriteItem(
                                         productId: id,
@@ -676,9 +650,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                             double.parse(new_price.toString()),
                                       ));
                                       favoriteProvider.notifyListeners();
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "تم اضافه المنتج الى المفضله بنجاح!");
                                     }
                                   },
                                   child: Icon(
@@ -950,27 +921,33 @@ class _ProductScreenState extends State<ProductScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
-                width: 120,
-                child: StatefulBuilder(builder: (context, setState) {
-                  return DropdownButton<String>(
-                    isExpanded: true,
-                    value: SelectedSizes,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        SelectedSizes = newValue!;
-                      });
-                    },
-                    items: Sizes.map((String size) {
-                      return DropdownMenuItem<String>(
-                        value: size,
-                        child: Text(
-                          size,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                width: 100,
+                height: 100,
+                child: DropdownButton(
+                  hint: SelectedSizes == ""
+                      ? Text(LocalStorage().sizeUser[0] ?? "")
+                      : Text(
+                          SelectedSizes,
+                          style: TextStyle(color: Colors.blue),
                         ),
+                  isExpanded: true,
+                  iconSize: 30.0,
+                  style: TextStyle(color: Colors.blue),
+                  items: Sizes.map(
+                    (val) {
+                      return DropdownMenuItem<String>(
+                        value: val,
+                        child: Text(val),
                       );
-                    }).toList(),
-                  );
-                }),
+                    },
+                  ).toList(),
+                  onChanged: (val) {
+                    setState(() {
+                      SelectedSizes = val.toString();
+                      print("SelectedSizes");
+                    });
+                  },
+                ),
               ),
               loading
                   ? Container(
@@ -999,42 +976,33 @@ class _ProductScreenState extends State<ProductScreen> {
                           loading = true;
                           clicked = true;
                         });
-                        if (inCart) {
-                          Vibration.vibrate(duration: 300);
-                          Timer(Duration(milliseconds: 400), () async {
-                            Navigator.pop(context);
-                          });
-                          removeProduct!();
-                          const snackBar = SnackBar(
-                            content: Text('تم ازاله المنتج من السله بنجاح'),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        } else {
-                          listClick(widgetKey);
-                          Vibration.vibrate(duration: 300);
+                        listClick(widgetKey);
+                        Vibration.vibrate(duration: 300);
+                        final newItem = CartItem(
+                          productId: id,
+                          name: name,
+                          image: image.toString(),
+                          price: double.parse(new_price.toString()),
+                          quantity: 1,
+                          user_id: 0,
+                          type: SelectedSizes,
+                        );
 
-                          final newItem = CartItem(
-                            productId: id,
-                            name: name,
-                            image: image.toString(),
-                            price: double.parse(new_price.toString()),
-                            quantity: 1,
-                            user_id: 0,
-                          );
-                          cartProvider.addToCart(newItem);
+                        print("newItem.toJson()");
+                        print(newItem.toJson());
+                        cartProvider.addToCart(newItem);
 
-                          const snackBar = SnackBar(
-                            content: Text('تم اضافه المنتج الى السله بنجاح!'),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Timer(Duration(milliseconds: 500), () {
-                            Fluttertoast.cancel();
-                            // Dismiss the toast after the specified duration
-                          });
-                          Timer(Duration(seconds: 1), () async {
-                            Navigator.pop(context);
-                          });
-                        }
+                        const snackBar = SnackBar(
+                          content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        Timer(Duration(milliseconds: 500), () {
+                          Fluttertoast.cancel();
+                          // Dismiss the toast after the specified duration
+                        });
+                        Timer(Duration(seconds: 1), () async {
+                          Navigator.pop(context);
+                        });
                       },
                       BorderRaduis: 10,
                       ButtonColor: Colors.black,

@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 
 import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../components/product_widget/product-widget.dart';
@@ -19,9 +20,8 @@ import '../home_screen/profile-screen/profile-screen.dart';
 import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
-  final category_id, size, sizeList;
-  const ProductsCategories(
-      {super.key, this.category_id, this.size, this.sizeList});
+  final category_id, size;
+  const ProductsCategories({super.key, this.category_id, this.size});
 
   @override
   State<ProductsCategories> createState() => _ProductsCategoriesState();
@@ -38,7 +38,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
 
   Widget build(BuildContext context) {
     List<Widget> _listOfWidget = <Widget>[
-      ProductsCategoryMethod(widget.sizeList),
+      ProductsCategoryMethod(),
       CategoryScreen(),
       Favourite(),
       ProfileScreen(),
@@ -82,7 +82,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     );
   }
 
-  Widget ProductsCategoryMethod(sizeList) {
+  Widget ProductsCategoryMethod() {
     return Column(
       children: [
         Row(
@@ -265,9 +265,8 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
-                                        sizes: [],
-                                        url:
-                                            "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                      sizes: LocalStorage().sizeUser,
+                                        url: "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
                                         isLiked: isLiked,
                                         Images: AllProducts[index]
                                                 ["vendor_images_links"] ??

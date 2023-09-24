@@ -57,6 +57,7 @@ class CartDatabaseHelper {
         productId INTEGER NOT NULL,
         name TEXT NOT NULL,
         image TEXT NOT NULL,
+        type TEXT NOT NULL,
         price REAL NOT NULL,
         quantity INTEGER NOT NULL,
         user_id INTEGER NOT NULL

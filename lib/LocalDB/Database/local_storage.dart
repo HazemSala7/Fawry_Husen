@@ -140,7 +140,9 @@ class LocalStorage {
     }
   }
 
-
+  setSizeUser(data) {
+    sizeDataBox.put('sizeUser', data);
+  }
 
 
   void deleteFavorite(String id) async {
@@ -170,4 +172,5 @@ class LocalStorage {
 
   List<dynamic> get favorites =>
       favoriteDataBox.get('favorites', defaultValue: []);
+  List get sizeUser => sizeDataBox.get('sizeUser', defaultValue: []);
 }
