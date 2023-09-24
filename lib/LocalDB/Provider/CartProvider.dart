@@ -66,6 +66,23 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> deleteCartItemByProductId(int productId) async {
+    // Find the index of the cart item with the given productId
+    final existingIndex =
+        _cartItems.indexWhere((cartItem) => cartItem.productId == productId);
+
+    if (existingIndex != -1) {
+      // Remove the item from the cartItems list
+      final removedItem = _cartItems.removeAt(existingIndex);
+
+      // Delete the item from the database
+      await _dbHelper.deleteCartItem(removedItem.id!);
+
+      // Notify listeners about the change
+      notifyListeners();
+    }
+  }
+
   Future<void> clearCart() async {
     _cartItems.clear(); // Clear the cart items in memory
     await _dbHelper.clearCart(); // Clear the cart items from the local database
@@ -77,6 +94,10 @@ class CartProvider extends ChangeNotifier {
     // Refresh _cartItems with the latest data from the database
     _cartItems = await _dbHelper.getCartItems();
     notifyListeners();
+  }
+
+  bool isProductCart(int productId) {
+    return _cartItems.any((item) => item.productId == productId);
   }
 
   Future<CartItem?> getCartItemByProductId(int productId) async {

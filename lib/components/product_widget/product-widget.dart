@@ -206,27 +206,34 @@ class _ProductWidgetState extends State<ProductWidget> {
                     builder: (context, favoriteProvider, _) {
                       return InkWell(
                           onTap: () {
-                            print(LocalStorage().isFavorite(widget.id.toString()));
-                            if(LocalStorage().isFavorite(widget.id.toString())){
-                              LocalStorage().deleteFavorite(widget.id.toString());
+                            if (LocalStorage()
+                                .isFavorite(widget.id.toString())) {
+                              LocalStorage()
+                                  .deleteFavorite(widget.id.toString());
                               favoriteProvider.notifyListeners();
-                            }else{
-
+                              Fluttertoast.showToast(
+                                  msg: "تم ازاله المنتج من المفضله بنجاح!");
+                            } else {
                               LocalStorage().setFavorite(FavoriteItem(
                                 productId: widget.id,
                                 id: widget.id,
                                 name: widget.name,
                                 image: widget.image,
-                                price: double.parse(widget.new_price.toString()),
+                                price:
+                                    double.parse(widget.new_price.toString()),
                               ));
                               favoriteProvider.notifyListeners();
+                              Fluttertoast.showToast(
+                                  msg: "تم اضافه المنتج الى المفضله بنجاح!");
                             }
-
                           },
                           child: Icon(
                             Icons.favorite,
                             size: 30,
-                            color:LocalStorage().isFavorite(widget.id.toString())  ?Colors.red:Colors.black26,
+                            color:
+                                LocalStorage().isFavorite(widget.id.toString())
+                                    ? Colors.red
+                                    : Colors.black26,
                           ));
                     },
                   ),

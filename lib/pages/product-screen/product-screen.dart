@@ -313,8 +313,16 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductMethod(
+                                          removeProduct: () {
+                                            cartProvider
+                                                .deleteCartItemByProductId(
+                                                    widget.Product[i]["id"]);
+                                            setState(() {});
+                                          },
                                           Sizes: sizeOptions,
                                           SelectedSizes: selectedSize,
+                                          inCart: cartProvider.isProductCart(
+                                              widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
@@ -361,6 +369,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductMethod(
+                                          removeProduct: () {
+                                            cartProvider
+                                                .deleteCartItemByProductId(
+                                                    widget.Product[i]["id"]);
+                                            setState(() {});
+                                          },
+                                          inCart: cartProvider.isProductCart(
+                                              widget.Product[i]["id"]),
                                           Sizes: sizeOptions,
                                           SelectedSizes: selectedSize,
                                           name: widget.Product[i]["title"]
@@ -422,6 +438,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                 child: FadeInAnimation(
                                   curve: Curves.easeIn,
                                   child: ProductMethod(
+                                    removeProduct: () {
+                                      cartProvider.deleteCartItemByProductId(
+                                          item["id"]);
+                                      setState(() {});
+                                    },
+                                    inCart:
+                                        cartProvider.isProductCart(item["id"]),
                                     isLikedProduct: favouriteProvider
                                         .isProductFavorite(item["id"]),
                                     name: item["title"] ?? "-",
@@ -465,6 +488,7 @@ class _ProductScreenState extends State<ProductScreen> {
       {String image = "",
       String name = "",
       String SKU = "",
+      Function? removeProduct,
       required List<String> Sizes,
       String SelectedSizes = "اختر الحجم",
       List? images,
@@ -625,7 +649,8 @@ class _ProductScreenState extends State<ProductScreen> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 20,bottom: 10),
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 20, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -633,27 +658,36 @@ class _ProductScreenState extends State<ProductScreen> {
                             builder: (context, favoriteProvider, _) {
                               return InkWell(
                                   onTap: () {
-                                    print(LocalStorage().isFavorite(id.toString()));
-                                    if(LocalStorage().isFavorite(id.toString())){
-                                      LocalStorage().deleteFavorite(id.toString());
+                                    if (LocalStorage()
+                                        .isFavorite(id.toString())) {
+                                      LocalStorage()
+                                          .deleteFavorite(id.toString());
                                       favoriteProvider.notifyListeners();
-                                    }else{
-
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "تم ازاله المنتج من المفضله بنجاح!");
+                                    } else {
                                       LocalStorage().setFavorite(FavoriteItem(
                                         productId: id,
                                         id: id,
                                         name: name,
                                         image: image,
-                                        price: double.parse(new_price.toString()),
+                                        price:
+                                            double.parse(new_price.toString()),
                                       ));
                                       favoriteProvider.notifyListeners();
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "تم اضافه المنتج الى المفضله بنجاح!");
                                     }
-
                                   },
                                   child: Icon(
                                     Icons.favorite,
                                     size: 40,
-                                    color:LocalStorage().isFavorite(id.toString())  ?Colors.red:Colors.black26,
+                                    color:
+                                        LocalStorage().isFavorite(id.toString())
+                                            ? Colors.red
+                                            : Colors.black26,
                                   ));
                             },
                           ),
@@ -965,30 +999,42 @@ class _ProductScreenState extends State<ProductScreen> {
                           loading = true;
                           clicked = true;
                         });
-                        listClick(widgetKey);
-                        Vibration.vibrate(duration: 300);
+                        if (inCart) {
+                          Vibration.vibrate(duration: 300);
+                          Timer(Duration(milliseconds: 400), () async {
+                            Navigator.pop(context);
+                          });
+                          removeProduct!();
+                          const snackBar = SnackBar(
+                            content: Text('تم ازاله المنتج من السله بنجاح'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        } else {
+                          listClick(widgetKey);
+                          Vibration.vibrate(duration: 300);
 
-                        final newItem = CartItem(
-                          productId: id,
-                          name: name,
-                          image: image.toString(),
-                          price: double.parse(new_price.toString()),
-                          quantity: 1,
-                          user_id: 0,
-                        );
-                        cartProvider.addToCart(newItem);
+                          final newItem = CartItem(
+                            productId: id,
+                            name: name,
+                            image: image.toString(),
+                            price: double.parse(new_price.toString()),
+                            quantity: 1,
+                            user_id: 0,
+                          );
+                          cartProvider.addToCart(newItem);
 
-                        const snackBar = SnackBar(
-                          content: Text('تم اضافه المنتج الى السله بنجاح!'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        Timer(Duration(milliseconds: 500), () {
-                          Fluttertoast.cancel();
-                          // Dismiss the toast after the specified duration
-                        });
-                        Timer(Duration(seconds: 1), () async {
-                          Navigator.pop(context);
-                        });
+                          const snackBar = SnackBar(
+                            content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Timer(Duration(milliseconds: 500), () {
+                            Fluttertoast.cancel();
+                            // Dismiss the toast after the specified duration
+                          });
+                          Timer(Duration(seconds: 1), () async {
+                            Navigator.pop(context);
+                          });
+                        }
                       },
                       BorderRaduis: 10,
                       ButtonColor: Colors.black,

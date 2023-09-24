@@ -19,8 +19,9 @@ import '../home_screen/profile-screen/profile-screen.dart';
 import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
-  final category_id, size,sizeList;
-  const ProductsCategories({super.key, this.category_id, this.size,this.sizeList});
+  final category_id, size, sizeList;
+  const ProductsCategories(
+      {super.key, this.category_id, this.size, this.sizeList});
 
   @override
   State<ProductsCategories> createState() => _ProductsCategoriesState();
@@ -264,7 +265,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
-                                      sizes: sizeList,
+                                        sizes: [],
                                         url:
                                             "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
                                         isLiked: isLiked,
