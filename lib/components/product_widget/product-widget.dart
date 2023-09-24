@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class ProductWidget extends StatefulWidget {
       url;
   int index, id;
   List Products;
+  List sizes;
   List Images;
   bool home = false;
   bool isLiked = false;
@@ -35,6 +37,7 @@ class ProductWidget extends StatefulWidget {
     super.key,
     this.image,
     this.name,
+    required this.sizes,
     required this.id,
     required this.Images,
     required this.isLiked,
@@ -123,6 +126,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 builder: (context) => ProductScreen(
                       url: widget.url,
                       page: widget.page,
+                      sizes: widget.sizes,
                       index: widget.index,
                       cart_fav: false,
                       Images: widget.Images,
@@ -198,11 +202,35 @@ class _ProductWidgetState extends State<ProductWidget> {
                       ),
                     ],
                   ),
-                  LikeButton(
-                    size: 25,
-                    onTap: onLikeButtonTapped,
-                    isLiked: widget.isLiked,
-                  )
+                  Consumer<FavouriteProvider>(
+                    builder: (context, favoriteProvider, _) {
+                      return InkWell(
+                          onTap: () {
+                            print(LocalStorage().isFavorite(widget.id.toString()));
+                            if(LocalStorage().isFavorite(widget.id.toString())){
+                              LocalStorage().deleteFavorite(widget.id.toString());
+                              favoriteProvider.notifyListeners();
+                            }else{
+
+                              LocalStorage().setFavorite(FavoriteItem(
+                                productId: widget.id,
+                                id: widget.id,
+                                name: widget.name,
+                                image: widget.image,
+                                price: double.parse(widget.new_price.toString()),
+                              ));
+                              favoriteProvider.notifyListeners();
+                            }
+
+                          },
+                          child: Icon(
+                            Icons.favorite,
+                            size: 30,
+                            color:LocalStorage().isFavorite(widget.id.toString())  ?Colors.red:Colors.black26,
+                          ));
+                    },
+                  ),
+
                   // Icon(
                   //   Icons.favorite_border,
                   //   color: Colors.black,

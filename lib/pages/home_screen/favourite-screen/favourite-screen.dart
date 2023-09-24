@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/FavouriteProvider.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
@@ -26,6 +27,7 @@ class _FavouriteState extends State<Favourite> {
   Widget build(BuildContext context) {
     return Consumer<FavouriteProvider>(
       builder: (context, favoriteProvider, _) {
+        favoriteProvider.getFavouritesItems();
         List<FavoriteItem> favoritesItems = favoriteProvider.favoriteItems;
         return SingleChildScrollView(
           child: Column(
@@ -37,56 +39,53 @@ class _FavouriteState extends State<Favourite> {
                   children: [
                     Text(
                       "عدد المنتجات بالمفضله : ${favoritesItems.length}",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                   ],
                 ),
               ),
               favoritesItems.length != 0
                   ? ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: favoritesItems.length,
-                      itemBuilder: (context, index) {
-                        FavoriteItem item = favoritesItems[index];
-                        String productIdsString = favoritesItems
-                            .map((item) => item.productId)
-                            .join(', ');
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: favoritesItems.length,
+                itemBuilder: (context, index) {
+                  FavoriteItem item = favoritesItems[index];
+                  String productIdsString = favoritesItems.map((item) => item.productId).join(', ');
+                  return cartCard(
+                    price: item.price,
+                    name: item.name,
+                    IDs: productIdsString,
+                    product_id: item.productId,
+                    index: index,
+                    removeProduct: () {
 
-                        return cartCard(
-                          price: item.price,
-                          name: item.name,
-                          IDs: productIdsString,
-                          product_id: item.productId,
-                          index: index,
-                          removeProduct: () {
-                            Navigator.pop(context);
-                            favoriteProvider.removeFromFavorite(item.productId);
-                            setState(() {});
-                          },
-                          image: item.image,
-                        );
-                      },
-                    )
+                      Navigator.pop(context);
+                      favoriteProvider.removeFromFavorite(item.productId);
+                      setState(() {});
+                    },
+                    image: item.image,
+                  );
+                },
+              )
                   : Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "لا يوجد منتجات بالمفضله",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 17),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Icon(Icons.no_accounts_sharp)
-                        ],
-                      ),
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "لا يوجد منتجات بالمفضله",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Icon(Icons.no_accounts_sharp)
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 100,
               )
@@ -241,6 +240,7 @@ class _FavouriteState extends State<Favourite> {
                   context,
                   ProductScreen(
                     index: index,
+                    sizes: [],
                     url: "",
                     page: 1,
                     cart_fav: true,

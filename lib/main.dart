@@ -1,3 +1,5 @@
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -18,6 +20,7 @@ import 'services/auth/firebase_user_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await LocalStorage().initHive();
   // await _pushNotificationService.initialise();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),

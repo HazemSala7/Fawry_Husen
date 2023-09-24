@@ -307,6 +307,7 @@ class _CartState extends State<Cart> {
                 index: index,
                 url: "",
                 page: 1,
+                sizes: [],
                 cart_fav: true,
                 favourite: false,
                 Images: [image],

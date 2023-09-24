@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import '../DataBase/DataBase.dart';
 import '../Models/FavoriteItem.dart';
 
@@ -11,6 +12,19 @@ class FavouriteProvider extends ChangeNotifier {
 
   CartProvider() {
     _init();
+  }
+
+
+  getFavouritesItems(){
+    _favouritesItems = [];
+    for (int i = 0; i < LocalStorage().favorites.length; i++) {
+      _favouritesItems.add(FavoriteItem(id: LocalStorage().favorites[i]["id"],
+        productId: LocalStorage().favorites[i]["productId"],
+        name: LocalStorage().favorites[i]["name"],
+        image: LocalStorage().favorites[i]["image"],
+        price: LocalStorage().favorites[i]["price"]));
+    }
+
   }
 
   Future<void> _init() async {
@@ -35,8 +49,9 @@ class FavouriteProvider extends ChangeNotifier {
   }
 
   Future<void> removeFromFavorite(int productId) async {
-    await _dbHelper.deleteFavoriteItem(productId);
-    _favouritesItems.removeWhere((item) => item.productId == productId);
+    // await _dbHelper.deleteFavoriteItem(productId);
+    // _favouritesItems.removeWhere((item) => item.productId == productId);
+    LocalStorage().deleteFavorite(productId.toString());
     notifyListeners();
   }
 

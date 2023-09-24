@@ -1,9 +1,11 @@
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fawri_app_refactor/constants/constants.dart';
 
 import '../../pages/products-category/products-category.dart';
 import '../../services/custom_icons/custom_icons.dart';
@@ -25,17 +27,17 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   @override
-  List<String> Sizes = [];
+  Map sizes = {};
 
   setSizesArray() {
     if (widget.name == "ملابس نسائيه") {
-      Sizes = women__sizes;
+      sizes = LocalStorage().getSize("menSizes");
     } else if (widget.name == "ملابس رجاليه") {
-      Sizes = Men_sizes;
+      sizes = LocalStorage().getSize("menSizes");
     } else if (widget.name == "ملابس أطفال") {
-      Sizes = kids_boys_sizes;
+      sizes = LocalStorage().getSize("kidsboysSizes");
     } else {
-      Sizes = women__sizes;
+      sizes = LocalStorage().getSize("womenSizes");
     }
     setState(() {});
   }
@@ -50,25 +52,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        List<bool> selectedStates =
-            List.generate(Sizes.length, (index) => false);
-        String getSelectedSizes() {
-          List<String> selectedSizes = [];
-          for (int index = 0; index < Sizes.length; index++) {
-            if (selectedStates[index]) {
-              String size = Sizes[index].split(' ')[0]; // Extract the size part
-              selectedSizes.add(size);
-            }
-          }
-          return selectedSizes
-              .join(', '); // Join selected sizes into a single string
-        }
-
-        // Calculate the widths for each Container
-        List<double> containerWidths = Sizes.map((text) =>
-            getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
-            32.0).toList(); // Add padding to the calculated width
-        double gridViewHeight = calculateGridViewHeight(Sizes.length);
+        var keys = sizes.keys.toList();
+        double gridViewHeight = calculateGridViewHeight(sizes.length);
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             backgroundColor: Colors.white,
@@ -77,61 +62,52 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             content: Container(
-              height: gridViewHeight + 120,
+              height: MediaQuery.of(context).size.height,
               child: Column(
                 children: [
                   Wrap(
                     spacing: 15.0, // gap between adjacent chips
                     runSpacing: 15.0, // gap between lines
                     children: <Widget>[
-                      for (int index = 0; index < Sizes.length; index++)
+                      for (int index = 0; index < keys.length; index++)
                         Container(
-                          width: containerWidths[
-                              index], // Use the calculated width
+                          width: 100, // Use the calculated width
                           height: 40,
                           child: Row(
                             children: [
                               Checkbox(
-                                value: selectedStates[index],
+                                value: sizes[keys[index]],
                                 onChanged: (bool? value) {
                                   setState(() {
-                                    selectedStates[index] = value!;
+                                    sizes[keys[index]] = value!;
                                   });
                                 },
                               ),
                               Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedStates[index] =
-                                          !selectedStates[index];
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 2,
-                                          blurRadius: 8,
-                                        ),
-                                      ],
-                                      color: selectedStates[index]
-                                          ? Colors.black
-                                          : Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    height: 40,
-                                    child: Center(
-                                      child: Text(
-                                        Sizes[index],
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: selectedStates[index]
-                                              ? Colors.white
-                                              : Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 8,
+                                      ),
+                                    ],
+                                    color: sizes[keys[index]]
+                                        ? Colors.black
+                                        : Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  height: 40,
+                                  child: Center(
+                                    child: Text(
+                                      keys[index],
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: sizes[keys[index]]
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
@@ -153,15 +129,32 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
-                            String selectedSizes = getSelectedSizes();
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setString('size', selectedSizes);
+                            if (widget.name == "ملابس نسائيه") {
+                              LocalStorage().editSize("menSizes", sizes);
+                            } else if (widget.name == "ملابس رجاليه") {
+                              LocalStorage().editSize("menSizes", sizes);
+                            } else if (widget.name == "ملابس أطفال") {
+                              LocalStorage().editSize("kidsboysSizes", sizes);
+                            } else {
+                              LocalStorage().editSize("womenSizes", sizes);
+                            }
+                            String sizeApi = "";
+                            List sizeApp = [];
+                            // return selectedSizes
+                            //     .join(', ');
+                            sizes.keys.forEach((k) {
+                              if (sizes[k]) {
+                                sizeApi = sizeApi + k;
+                                sizeApp.add(k.split(' ')[0]);
+                              }
+                            });
+                            print(sizeApp.join(', '));
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(
                                   category_id: widget.main_category,
-                                  size: selectedSizes,
+                                  size: sizeApp.join(', '),
+                                  sizeList: sizeApp,
                                 ));
                           },
                           BorderRaduis: 10,
@@ -174,16 +167,16 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
-                            String selectedSizes = getSelectedSizes();
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setString('size', selectedSizes);
-                            NavigatorFunction(
-                                context,
-                                ProductsCategories(
-                                  category_id: widget.main_category,
-                                  size: selectedSizes,
-                                ));
+                            // String selectedSizes = getSelectedSizes();
+                            // SharedPreferences prefs =
+                            //     await SharedPreferences.getInstance();
+                            // await prefs.setString('size', selectedSizes);
+                            // NavigatorFunction(
+                            //     context,
+                            //     ProductsCategories(
+                            //       category_id: widget.main_category,
+                            //       size: selectedSizes,
+                            //     ));
                           },
                           BorderRaduis: 10,
                           ButtonColor: MAIN_COLOR,

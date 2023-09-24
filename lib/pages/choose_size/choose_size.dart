@@ -12,7 +12,7 @@ class ChooseSize extends StatefulWidget {
 class _ChooseSizeState extends State<ChooseSize> {
   @override
   List<bool> selectedStates =
-      List.generate(women__sizes.length, (index) => false);
+      List.generate([].length, (index) => false);
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.bottomCenter,
@@ -52,7 +52,7 @@ class _ChooseSizeState extends State<ChooseSize> {
                         cacheExtent: 5000,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
-                        itemCount: women__sizes.length,
+                        itemCount: [].length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -86,7 +86,7 @@ class _ChooseSizeState extends State<ChooseSize> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
                                   child: Text(
-                                    women__sizes[index],
+                                    "",
                                     style: TextStyle(
                                         color: selectedStates[index]
                                             ? Colors.white

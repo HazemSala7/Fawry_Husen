@@ -214,17 +214,16 @@ class _MainScreenState extends State<MainScreen> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
-                                        url:
-                                            "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
+                                        url: "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
                                         isLiked: isLiked,
                                         Sub_Category_Key: Sub_Category_Key,
                                         page: _page,
+                                         sizes: [],
                                         home: true,
                                         category_id: "",
                                         size: "",
                                         Images: AllProducts[index]
-                                                ["vendor_images_links"] ??
-                                            [],
+                                                ["vendor_images_links"] ?? [],
                                         Products: AllProducts,
                                         index: index,
                                         name: AllProducts[index]["title"],

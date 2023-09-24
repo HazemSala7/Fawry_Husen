@@ -9,6 +9,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -47,6 +48,7 @@ class ProductScreen extends StatefulWidget {
   var Product;
   bool cart_fav;
   List Images;
+  List sizes;
   var IDs;
   final url;
   int page;
@@ -55,6 +57,7 @@ class ProductScreen extends StatefulWidget {
     required this.url,
     required this.page,
     required this.index,
+    required this.sizes,
     required this.favourite,
     required this.cart_fav,
     required this.Images,
@@ -406,7 +409,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
                         return Builder(
                           builder: (BuildContext context) {
-                            List<String> sizesAPI = ["اختر الحجم"];
+                            List sizesAPI = widget.sizes;
                             for (int i = 0; i < item["variants"].length; i++) {
                               sizesAPI.add(item["variants"][i]["size"]);
                             }
@@ -422,7 +425,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     isLikedProduct: favouriteProvider
                                         .isProductFavorite(item["id"]),
                                     name: item["title"] ?? "-",
-                                    Sizes: sizesAPI,
+                                    Sizes: [],
                                     SelectedSizes: "اختر الحجم",
                                     id: item["id"],
                                     images: images,
@@ -444,190 +447,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       }).toList(),
                     ),
                   ),
-            // FutureBuilder(
-            //   future: getSpeceficProduct(widget.IDs),
-            //   builder: (BuildContext context, AsyncSnapshot snapshot) {
-            //     if (snapshot.connectionState == ConnectionState.waiting) {
-            //       if (widget.cart_fav) {
-            //         List newArray = [];
-            //         for (int i = 0; i < widget.Product.length; i++) {
-            //           newArray.add(i);
-            //         }
-            //         return AnimationLimiter(
-            //           child: CarouselSlider(
-            //             options: CarouselOptions(
-            //               aspectRatio: 2.5,
-            //               autoPlay: false,
-            //               enlargeCenterPage: true,
-            //               viewportFraction: 1,
-            //               height: MediaQuery.of(context).size.height,
-            //               onPageChanged: (index, reason) {
-            //                 if (index == orderedItems.length - 1 &&
-            //                     reason == CarouselPageChangedReason.manual) {
-            //                   loadAdditionalData();
-            //                 }
-            //               },
-            //             ),
-            //             items: newArray.map((i) {
-            //               return Builder(
-            //                 builder: (BuildContext context) {
-            //                   return AnimationConfiguration.staggeredList(
-            //                     position: i,
-            //                     duration: const Duration(milliseconds: 700),
-            //                     child: SlideAnimation(
-            //                       verticalOffset: 100.0,
-            //                       child: FadeInAnimation(
-            //                         curve: Curves.easeIn,
-            //                         child: ProductMethod(
-            //                             name: widget.Product[i]["title"]
-            //                                 as String,
-            //                             id: widget.Product[i]["id"],
-            //                             images: [widget.Product[i]["image"]],
-            //                             description: [],
-            //                             new_price: widget.Product[i]["price"],
-            //                             old_price: double.parse(widget
-            //                                     .Product[i]["price"]
-            //                                     .toString()) *
-            //                                 1.5,
-            //                             image: widget.Product[i]["image"]
-            //                                 as String),
-            //                       ),
-            //                     ),
-            //                   );
-            //                 },
-            //               );
-            //             }).toList(),
-            //           ),
-            //         );
-            //       } else {
-            //         List newArray = [];
-            //         for (int i = 0; i < widget.Product.length; i++) {
-            //           newArray.add(i);
-            //         }
-            //         return AnimationLimiter(
-            //           child: CarouselSlider(
-            //             options: CarouselOptions(
-            //               aspectRatio: 2.5,
-            //               autoPlay: false,
-            //               enlargeCenterPage: true,
-            //               viewportFraction: 1,
-            //               height: MediaQuery.of(context).size.height,
-            //               onPageChanged: (index, reason) {
-            //                 if (index == orderedItems.length - 1 &&
-            //                     reason == CarouselPageChangedReason.manual) {
-            //                   loadAdditionalData();
-            //                 }
-            //               },
-            //             ),
-            //             items: newArray.map((i) {
-            //               return Builder(
-            //                 builder: (BuildContext context) {
-            //                   return AnimationConfiguration.staggeredList(
-            //                     position: i,
-            //                     duration: const Duration(milliseconds: 700),
-            //                     child: SlideAnimation(
-            //                       verticalOffset: 100.0,
-            //                       child: FadeInAnimation(
-            //                         curve: Curves.easeIn,
-            //                         child: ProductMethod(
-            //                             name: widget.Product[i]["title"]
-            //                                 as String,
-            //                             id: widget.Product[i]["id"],
-            //                             images: widget.Product[i]
-            //                                 ["vendor_images_links"],
-            //                             description: [],
-            //                             new_price: widget.Product[i]["price"],
-            //                             old_price: double.parse(widget
-            //                                     .Product[i]["price"]
-            //                                     .toString()) *
-            //                                 1.5,
-            //                             image: widget.Product[i]
-            //                                     ["vendor_images_links"][0]
-            //                                 as String),
-            //                       ),
-            //                     ),
-            //                   );
-            //                 },
-            //               );
-            //             }).toList(),
-            //           ),
-            //         );
-            //       }
-            //     } else {
-            //       if (snapshot.data != null) {
-            //         List<dynamic> ProductsAPI = snapshot.data["item"];
-
-            //         List<int> widgetIds = _extractIds(widget.IDs);
-
-            //         for (int id in widgetIds) {
-            //           var item = ProductsAPI.firstWhere(
-            //             (product) => product["id"] == id,
-            //             orElse: () => null,
-            //           );
-            //           if (item != null) {
-            //             orderedItems.add(item);
-            //           }
-            //         }
-
-            //         return AnimationLimiter(
-            //           child: CarouselSlider(
-            //             options: CarouselOptions(
-            //               aspectRatio: 2.5,
-            //               autoPlay: false,
-            //               enlargeCenterPage: true,
-            //               viewportFraction: 1,
-            //               height: MediaQuery.of(context).size.height,
-            //               initialPage: _currentPage,
-            //               onPageChanged: (index, reason) {
-            //                 if (index == orderedItems.length - 1 &&
-            //                     reason == CarouselPageChangedReason.manual) {
-            //                   loadAdditionalData();
-            //                 }
-            //               },
-            //             ),
-            //             items: orderedItems.map((item) {
-            //               List<String> images =
-            //                   (item["vendor_images_links"] as List)
-            //                       .cast<String>();
-            //               int itemIndex = orderedItems.indexOf(item);
-
-            //               return Builder(
-            //                 builder: (BuildContext context) {
-            //                   return AnimationConfiguration.staggeredList(
-            //                     position: itemIndex,
-            //                     duration: const Duration(milliseconds: 500),
-            //                     child: SlideAnimation(
-            //                       verticalOffset: 100.0,
-            //                       child: FadeInAnimation(
-            //                         curve: Curves.easeIn,
-            //                         child: ProductMethod(
-            //                           name: item["title"] ?? "-",
-            //                           id: item["id"],
-            //                           images: images,
-            //                           description: item["description"],
-            //                           SKU: item["sku"] ?? "-",
-            //                           new_price: item["variants"][0]["price"],
-            //                           old_price: double.parse(item["variants"]
-            //                                       [0]["price"]
-            //                                   .toString()) *
-            //                               1.5,
-            //                           image: item["vendor_images_links"][0]
-            //                               as String,
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   );
-            //                 },
-            //               );
-            //             }).toList(),
-            //           ),
-            //         );
-            //       } else {
-            //         return Container();
-            //       }
-            //     }
-            //   },
-            // ),
           ),
         ),
       ),
@@ -806,17 +625,46 @@ class _ProductScreenState extends State<ProductScreen> {
                 Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 10, left: 10),
+                      padding: const EdgeInsets.only(top: 10, left: 20,bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          LikeButton(
-                            circleColor:
-                                CircleColor(start: Colors.red, end: Colors.red),
-                            size: 35,
-                            onTap: onLikeButtonTapped,
-                            isLiked: isLikedProduct,
+                          Consumer<FavouriteProvider>(
+                            builder: (context, favoriteProvider, _) {
+                              return InkWell(
+                                  onTap: () {
+                                    print(LocalStorage().isFavorite(id.toString()));
+                                    if(LocalStorage().isFavorite(id.toString())){
+                                      LocalStorage().deleteFavorite(id.toString());
+                                      favoriteProvider.notifyListeners();
+                                    }else{
+
+                                      LocalStorage().setFavorite(FavoriteItem(
+                                        productId: id,
+                                        id: id,
+                                        name: name,
+                                        image: image,
+                                        price: double.parse(new_price.toString()),
+                                      ));
+                                      favoriteProvider.notifyListeners();
+                                    }
+
+                                  },
+                                  child: Icon(
+                                    Icons.favorite,
+                                    size: 40,
+                                    color:LocalStorage().isFavorite(id.toString())  ?Colors.red:Colors.black26,
+                                  ));
+                            },
                           ),
+
+                          // LikeButton(
+                          //   circleColor:
+                          //       CircleColor(start: Colors.red, end: Colors.red),
+                          //   size: 35,
+                          //   onTap: onLikeButtonTapped,
+                          //   isLiked: false,
+                          // ),
                         ],
                       ),
                     ),
