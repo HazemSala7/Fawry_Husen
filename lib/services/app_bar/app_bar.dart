@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../LocalDB/Database/local_storage.dart';
 import '../../LocalDB/Models/CartModel.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../components/button_widget/button_widget.dart';
@@ -31,154 +32,166 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     user_id = UserID;
   }
 
-  // getSizesAndShow() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String savedSize = prefs.getString('size') ?? '';
-  //   List<bool> selectedStates = List.generate(women__sizes.length, (index) {
-  //     String size = women__sizes[index].split(' ')[0];
-  //     return savedSize == size; // Check if the size matches the saved size
-  //   });
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       String getSelectedSizes() {
-  //         List<String> selectedSizes = [];
-  //         for (int index = 0; index < women__sizes.length; index++) {
-  //           if (selectedStates[index]) {
-  //             String size =
-  //                 women__sizes[index].split(' ')[0]; // Extract the size part
-  //             selectedSizes.add(size);
-  //           }
-  //         }
-  //         return selectedSizes
-  //             .join(', '); // Join selected sizes into a single string
-  //       }
-  //
-  //       // Calculate the widths for each Container
-  //       List<double> containerWidths = women__sizes
-  //           .map((text) =>
-  //               getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
-  //               32.0)
-  //           .toList(); // Add padding to the calculated width
-  //       double gridViewHeight = calculateGridViewHeight(women__sizes.length);
-  //       return StatefulBuilder(builder: (context, setState) {
-  //         return AlertDialog(
-  //           backgroundColor: Colors.white,
-  //           title: Row(
-  //             children: [
-  //               Text(
-  //                 'لتجربه أفضل ,',
-  //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-  //               ),
-  //               Text(
-  //                 'الرجاء اختيار الحجم',
-  //                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-  //               ),
-  //             ],
-  //           ),
-  //           content: Container(
-  //             height: gridViewHeight + 130,
-  //             child: Column(
-  //               children: [
-  //                 Wrap(
-  //                   spacing: 15.0, // gap between adjacent chips
-  //                   runSpacing: 15.0, // gap between lines
-  //                   children: <Widget>[
-  //                     for (int index = 0; index < women__sizes.length; index++)
-  //                       InkWell(
-  //                         onTap: () {
-  //                           Vibration.vibrate(duration: 300);
-  //                           setState(() {
-  //                             setState(() {
-  //                               selectedStates[index] = !selectedStates[index];
-  //                             });
-  //                           });
-  //                         },
-  //                         child: Container(
-  //                           width: containerWidths[
-  //                               index], // Use the calculated width
-  //                           decoration: BoxDecoration(
-  //                             boxShadow: [
-  //                               BoxShadow(
-  //                                 color: Colors.grey.withOpacity(0.2),
-  //                                 spreadRadius: 2,
-  //                                 blurRadius: 8,
-  //                               ),
-  //                             ],
-  //                             color: selectedStates[index]
-  //                                 ? Colors.black
-  //                                 : Colors.white,
-  //
-  //                             borderRadius: BorderRadius.circular(
-  //                                 20), // Adjust the border radius
-  //                           ),
-  //                           height: selectedStates[index] ? 50 : 40,
-  //                           child: Center(
-  //                             child: Text(
-  //                               women__sizes[index],
-  //                               style: TextStyle(
-  //                                 fontSize: 15,
-  //                                 color: selectedStates[index]
-  //                                     ? Colors.white
-  //                                     : Colors.black,
-  //                                 fontWeight: FontWeight.bold,
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       )
-  //                   ],
-  //                 ),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(top: 20),
-  //                   child: Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                     children: [
-  //                       ButtonWidget(
-  //                         name: "حفظ",
-  //                         height: 40,
-  //                         width: 120,
-  //                         BorderColor: Colors.black,
-  //                         OnClickFunction: () async {
-  //                           Vibration.vibrate(duration: 300);
-  //                           String selectedSizes = getSelectedSizes();
-  //                           SharedPreferences prefs =
-  //                               await SharedPreferences.getInstance();
-  //                           await prefs.setString('size', selectedSizes);
-  //                           NavigatorFunction(
-  //                               context,
-  //                               ProductsCategories(
-  //                                 category_id: widget.main_Category,
-  //                                 size: selectedSizes,
-  //                               ));
-  //                         },
-  //                         BorderRaduis: 10,
-  //                         ButtonColor: MAIN_COLOR,
-  //                         NameColor: Colors.white,
-  //                       ),
-  //                       ButtonWidget(
-  //                         name: "تخطي",
-  //                         height: 40,
-  //                         width: 120,
-  //                         BorderColor: Colors.black,
-  //                         OnClickFunction: () {
-  //                           Navigator.pop(context);
-  //                         },
-  //                         BorderRaduis: 10,
-  //                         ButtonColor: MAIN_COLOR,
-  //                         NameColor: Colors.white,
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  //     },
-  //   );
-  // }
+  Map sizes = {};
+
+  setSizesArray() {
+    if (widget.main_Category == "ملابس نسائيه") {
+      sizes = LocalStorage().getSize("menSizes");
+    } else if (widget.main_Category == "ملابس رجاليه") {
+      sizes = LocalStorage().getSize("menSizes");
+    } else if (widget.main_Category == "ملابس أطفال") {
+      sizes = LocalStorage().getSize("kidsboysSizes");
+    } else {
+      sizes = LocalStorage().getSize("womenSizes");
+    }
+    setState(() {});
+  }
+
+  getSizesAndShow() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var keys = sizes.keys.toList();
+
+        double gridViewHeight = calculateGridViewHeight(keys.length);
+        // Calculate the widths for each Container
+        List<double> containerWidths = keys
+            .map((text) =>
+                getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
+                32.0)
+            .toList();
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            title: Text(
+              'لتجربة أفضل, الرجاء اختيار الحجم',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            content: Container(
+              height: gridViewHeight + 150,
+              child: Column(
+                children: [
+                  Wrap(
+                    spacing: 15.0, // gap between adjacent chips
+                    runSpacing: 15.0, // gap between lines
+                    children: <Widget>[
+                      for (int index = 0; index < keys.length; index++)
+                        InkWell(
+                          onTap: () {
+                            Vibration.vibrate(duration: 300);
+                            setState(() {
+                              sizes[keys[index]] = !sizes[keys[index]];
+                            });
+                          },
+                          child: Container(
+                            width: containerWidths[
+                                index], // Use the calculated width
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                ),
+                              ],
+                              color: sizes[keys[index]]
+                                  ? Colors.black
+                                  : Colors.white,
+
+                              borderRadius: BorderRadius.circular(
+                                  20), // Adjust the border radius
+                            ),
+                            height: sizes[keys[index]] ? 50 : 40,
+                            child: Center(
+                              child: Text(
+                                keys[index],
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: sizes[keys[index]]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        )
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ButtonWidget(
+                          name: "حفظ",
+                          height: 40,
+                          width: 120,
+                          BorderColor: Colors.black,
+                          OnClickFunction: () async {
+                            if (widget.main_Category == "ملابس نسائيه") {
+                              LocalStorage().editSize("menSizes", sizes);
+                            } else if (widget.main_Category == "ملابس رجاليه") {
+                              LocalStorage().editSize("menSizes", sizes);
+                            } else if (widget.main_Category == "ملابس أطفال") {
+                              LocalStorage().editSize("kidsboysSizes", sizes);
+                            } else {
+                              LocalStorage().editSize("womenSizes", sizes);
+                            }
+                            String sizeApi = "";
+                            List sizeApp = [];
+
+                            sizes.keys.forEach((k) {
+                              if (sizes[k]) {
+                                sizeApi = sizeApi + k;
+                                sizeApp.add(k.split(' ')[0]);
+                              }
+                            });
+                            LocalStorage().setSizeUser(sizeApp);
+
+                            NavigatorFunction(
+                                context,
+                                ProductsCategories(
+                                  category_id: widget.main_Category,
+                                  size: sizeApp.join(', '),
+                                ));
+                          },
+                          BorderRaduis: 10,
+                          ButtonColor: MAIN_COLOR,
+                          NameColor: Colors.white,
+                        ),
+                        ButtonWidget(
+                          name: "تخطي",
+                          height: 40,
+                          width: 120,
+                          BorderColor: Colors.black,
+                          OnClickFunction: () async {
+                            // String selectedSizes = getSelectedSizes();
+                            // SharedPreferences prefs =
+                            //     await SharedPreferences.getInstance();
+                            // await prefs.setString('size', selectedSizes);
+                            // NavigatorFunction(
+                            //     context,
+                            //     ProductsCategories(
+                            //       category_id: widget.main_category,
+                            //       size: selectedSizes,
+                            //     ));
+                          },
+                          BorderRaduis: 10,
+                          ButtonColor: MAIN_COLOR,
+                          NameColor: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+      },
+    );
+  }
 
   double calculateGridViewHeight(int itemCount) {
     final double itemHeight = 30.0; // Height of each item
@@ -201,6 +214,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   void initState() {
     super.initState();
     setUserID();
+    setSizesArray();
   }
 
   Widget build(BuildContext context) {
@@ -208,7 +222,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       backgroundColor: Colors.white,
       leading: InkWell(
         onTap: () {
-          // getSizesAndShow();
+          getSizesAndShow();
         },
         child: Padding(
           padding: const EdgeInsets.all(8.0),

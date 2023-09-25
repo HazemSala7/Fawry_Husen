@@ -40,7 +40,8 @@ class CartProvider extends ChangeNotifier {
   //   print(jsonEncode(productIds));
   // }
   Future<void> addToCart(CartItem item) async {
-    final existingIndex = _cartItems.indexWhere((cartItem) => cartItem.productId == item.productId);
+    final existingIndex = _cartItems
+        .indexWhere((cartItem) => cartItem.productId == item.productId);
 
     if (existingIndex != -1) {
       // Item already exists in the cart, increment the quantity
@@ -76,6 +77,10 @@ class CartProvider extends ChangeNotifier {
     // Refresh _cartItems with the latest data from the database
     _cartItems = await _dbHelper.getCartItems();
     notifyListeners();
+  }
+
+  bool isProductCart(int productId) {
+    return _cartItems.any((item) => item.productId == productId);
   }
 
   Future<CartItem?> getCartItemByProductId(int productId) async {

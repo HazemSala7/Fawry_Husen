@@ -121,8 +121,9 @@ class LocalStorage {
       "5XL": false,
     });
   }
-  void editSize(key,v) async {
-    sizeDataBox.put(key,v);
+
+  void editSize(key, v) async {
+    sizeDataBox.put(key, v);
   }
 
   getSize(type) {
@@ -143,7 +144,6 @@ class LocalStorage {
   setSizeUser(data) {
     sizeDataBox.put('sizeUser', data);
   }
-
 
   void deleteFavorite(String id) async {
     List data = favorites;

@@ -6,6 +6,7 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
+import 'package:vibration/vibration.dart';
 
 import '../../pages/products-category/products-category.dart';
 import '../../services/custom_icons/custom_icons.dart';
@@ -30,8 +31,10 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   Map sizes = {};
 
   setSizesArray() {
+    print("widget.name");
+    print(widget.name);
     if (widget.name == "ملابس نسائيه") {
-      sizes = LocalStorage().getSize("menSizes");
+      sizes = LocalStorage().getSize("womenSizes");
     } else if (widget.name == "ملابس رجاليه") {
       sizes = LocalStorage().getSize("menSizes");
     } else if (widget.name == "ملابس أطفال") {
@@ -40,6 +43,8 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       sizes = LocalStorage().getSize("womenSizes");
     }
     setState(() {});
+    print("|");
+    print(sizes);
   }
 
   @override
@@ -53,7 +58,14 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       context: context,
       builder: (BuildContext context) {
         var keys = sizes.keys.toList();
-        double gridViewHeight = calculateGridViewHeight(sizes.length);
+
+        double gridViewHeight = calculateGridViewHeight(keys.length);
+        // Calculate the widths for each Container
+        List<double> containerWidths = keys
+            .map((text) =>
+                getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
+                32.0)
+            .toList();
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
             backgroundColor: Colors.white,
@@ -62,7 +74,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             content: Container(
-              height: MediaQuery.of(context).size.height,
+              height: gridViewHeight + 150,
               child: Column(
                 children: [
                   Wrap(
@@ -70,50 +82,44 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                     runSpacing: 15.0, // gap between lines
                     children: <Widget>[
                       for (int index = 0; index < keys.length; index++)
-                        Container(
-                          width: 100, // Use the calculated width
-                          height: 40,
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                value: sizes[keys[index]],
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    sizes[keys[index]] = value!;
-                                  });
-                                },
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.2),
-                                        spreadRadius: 2,
-                                        blurRadius: 8,
-                                      ),
-                                    ],
-                                    color: sizes[keys[index]]
-                                        ? Colors.black
-                                        : Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  height: 40,
-                                  child: Center(
-                                    child: Text(
-                                      keys[index],
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: sizes[keys[index]]
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
+                        InkWell(
+                          onTap: () {
+                            Vibration.vibrate(duration: 300);
+                            setState(() {
+                              sizes[keys[index]] = !sizes[keys[index]];
+                            });
+                          },
+                          child: Container(
+                            width: containerWidths[
+                                index], // Use the calculated width
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 8,
+                                ),
+                              ],
+                              color: sizes[keys[index]]
+                                  ? Colors.black
+                                  : Colors.white,
+
+                              borderRadius: BorderRadius.circular(
+                                  20), // Adjust the border radius
+                            ),
+                            height: sizes[keys[index]] ? 50 : 40,
+                            child: Center(
+                              child: Text(
+                                keys[index],
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: sizes[keys[index]]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         )
                     ],
@@ -140,8 +146,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                             }
                             String sizeApi = "";
                             List sizeApp = [];
-                            // return selectedSizes
-                            //     .join(', ');
+
                             sizes.keys.forEach((k) {
                               if (sizes[k]) {
                                 sizeApi = sizeApi + k;
@@ -149,7 +154,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               }
                             });
                             LocalStorage().setSizeUser(sizeApp);
-                            print(sizeApp.join(', '));
+
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(

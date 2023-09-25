@@ -313,8 +313,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductMethod(
-                                          // Sizes: sizeOptions,
-                                          // SelectedSizes: selectedSize,
+                                          inCart: cartProvider.isProductCart(
+                                              widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
@@ -361,8 +361,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductMethod(
-                                          // Sizes: sizeOptions,
-                                          // SelectedSizes: selectedSize,
+                                          inCart: cartProvider.isProductCart(
+                                              widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
@@ -424,6 +424,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   child: ProductMethod(
                                     isLikedProduct: favouriteProvider
                                         .isProductFavorite(item["id"]),
+                                    inCart:
+                                        cartProvider.isProductCart(item["id"]),
                                     name: item["title"] ?? "-",
                                     // Sizes: [],
                                     // SelectedSizes: "اختر الحجم",
@@ -922,22 +924,27 @@ class _ProductScreenState extends State<ProductScreen> {
             children: [
               Container(
                 width: 100,
-                height: 100,
+                height: 50,
                 child: DropdownButton(
                   hint: SelectedSizes == ""
                       ? Text(LocalStorage().sizeUser[0] ?? "")
                       : Text(
                           SelectedSizes,
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(
+                              color: MAIN_COLOR, fontWeight: FontWeight.bold),
                         ),
                   isExpanded: true,
                   iconSize: 30.0,
-                  style: TextStyle(color: Colors.blue),
+                  style:
+                      TextStyle(color: MAIN_COLOR, fontWeight: FontWeight.bold),
                   items: Sizes.map(
                     (val) {
                       return DropdownMenuItem<String>(
                         value: val,
-                        child: Text(val),
+                        child: Text(
+                          val,
+                          style: TextStyle(color: MAIN_COLOR),
+                        ),
                       );
                     },
                   ).toList(),
@@ -988,8 +995,6 @@ class _ProductScreenState extends State<ProductScreen> {
                           type: SelectedSizes,
                         );
 
-                        print("newItem.toJson()");
-                        print(newItem.toJson());
                         cartProvider.addToCart(newItem);
 
                         const snackBar = SnackBar(
