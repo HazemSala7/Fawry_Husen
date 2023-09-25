@@ -30,7 +30,6 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   @override
-  String dropdownValue = 'اختر منطقتك';
   Widget build(BuildContext context) {
     final cartProvider = context.watch<CartProvider>();
     return Consumer<CartProvider>(

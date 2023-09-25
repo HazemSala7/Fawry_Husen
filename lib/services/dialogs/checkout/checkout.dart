@@ -110,6 +110,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 child: TextField(
                   controller: PhoneController,
                   obscureText: false,
+                  keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
@@ -309,6 +310,13 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                           setState(() {
                             loading = true;
                           });
+                          print("dropdownValue");
+                          print(dropdownValue);
+                          print(PhoneController.text);
+                          print(CityController.text);
+                          print(AreaController.text);
+                          print(AddressController.text);
+                         await  addOrder(context:context,address: AddressController.text,city:CityController.text,phone:PhoneController.text,  );
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           String UserID = prefs.getString('user_id') ?? "";
@@ -578,6 +586,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 width: 300,
                 BorderColor: Colors.black,
                 OnClickFunction: () {
+
+
                   if (dropdownValue.toString() == "اختر منطقتك") {
                     showDialog(
                       context: context,
@@ -604,6 +614,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                     _pageController.animateToPage(1,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.ease);
+
                   }
                 },
                 BorderRaduis: 10,
@@ -621,70 +632,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   TextEditingController AddressController = TextEditingController();
   final UserService userService = UserService();
 
-  void _showDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('الرجاء ادخال هذه البيانات'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: PhoneController,
-                decoration: InputDecoration(labelText: 'رقم الهاتف'),
-              ),
-              TextField(
-                controller: CityController,
-                decoration: InputDecoration(labelText: 'المدينه'),
-              ),
-              TextField(
-                controller: AreaController,
-                decoration: InputDecoration(labelText: 'المنطقه'),
-              ),
-              TextField(
-                controller: AddressController,
-                decoration: InputDecoration(labelText: 'العنوان'),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('اغلاق'),
-            ),
-            TextButton(
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                String UserID = prefs.getString('user_id') ?? "";
-                UserItem updatedUser = UserItem(
-                  id: UserID,
-                  email: "test",
-                  phone: PhoneController.text,
-                  city: CityController.text,
-                  area: AreaController.text,
-                  address: AddressController.text,
-                  password: '123',
-                );
-                try {
-                  CartProvider? cartProvider;
-                  await userService.updateUser(updatedUser);
-                  Navigator.of(context).pop();
-                  Fluttertoast.showToast(msg: "تم اضافه الطلبيه بنجاح");
-                  cartProvider!.clearCart();
-                } catch (e) {
-                  print('Error updating user data: $e');
-                }
-              },
-              child: Text('حفظ'),
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   Widget sizeWidget() {
     return Padding(
