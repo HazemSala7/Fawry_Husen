@@ -97,6 +97,9 @@ class CartProvider extends ChangeNotifier {
         'image': item.image,
         'price': item.price,
         'quantity': item.quantity,
+        'sku': item.sku,
+        'vendor_sku': item.vendor_sku,
+        'nickname': item.nickname,
       };
       productsArray.add(productData);
     }

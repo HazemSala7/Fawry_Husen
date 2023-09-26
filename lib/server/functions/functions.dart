@@ -41,12 +41,12 @@ getSpeceficProduct(id) async {
 }
 
 addOrder({context, address, phone, city}) async {
-  SharedPreferences prefs =
-  await SharedPreferences.getInstance();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
 
-  final cartProvider = Provider.of<CartProvider>(context, listen: false).cartItems;
-  List products = [];
+  final cartProvider =
+      Provider.of<CartProvider>(context, listen: false).cartItems;
+  List<Map<String, dynamic>> products = [];
   double totalPrice = 0.0;
   for (var i = 0; i < cartProvider.length; i++) {
     products.add({
@@ -54,13 +54,13 @@ addOrder({context, address, phone, city}) async {
       "image": cartProvider[i].image.toString(),
       "data": [
         {
-          "sku": "U7IBYP",
+          "sku": cartProvider[i].sku.toString(),
           "name": cartProvider[i].name.toString(),
           "price": cartProvider[i].price.toString(),
           "quantity": 1,
           "size": cartProvider[i].type.toString(),
-          "nickname": "TEST",
-          "vendor_sku": "sa2211175146616151",
+          "nickname": cartProvider[i].nickname.toString(),
+          "vendor_sku": cartProvider[i].vendor_sku.toString(),
           "variant_index": 0,
           "place_in_warehouse": "TEST"
         }
@@ -68,6 +68,8 @@ addOrder({context, address, phone, city}) async {
     });
     totalPrice += double.parse(cartProvider[i].price.toString());
   }
+  print("products");
+  print(products.toString());
 
   var headers = {'Content-Type': 'application/json'};
   var request = http.Request(
@@ -75,7 +77,7 @@ addOrder({context, address, phone, city}) async {
       Uri.parse(
           'http://34.227.78.214/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
   request.body = json.encode({
-    "name": "Husen TEST",
+    "name": "Hazem TEST",
     "page": "Fawri App",
     "description": "description Test",
     "phone": phone.toString(),
@@ -83,10 +85,12 @@ addOrder({context, address, phone, city}) async {
     "city": city.toString(),
     "total_price": totalPrice,
     "user_id": UserID.toString(),
-    "products": products
+    "products": products.toString()
   });
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();
+  print("response");
+  print(response.request);
   if (response.statusCode == 200) {
     String stream = await response.stream.bytesToString();
     final decodedMap = json.decode(stream);

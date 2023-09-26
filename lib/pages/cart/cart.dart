@@ -173,24 +173,24 @@ class _CartState extends State<Cart> {
     Fluttertoast.showToast(msg: "تم حذف المنتج بنجاح");
   }
 
-  addToCart(product_ID, name, image, price, cartProvider) async {
-    final newItem = CartItem(
-      productId: product_ID,
-      name: name,
-      image: image.toString(),
-      price: double.parse(price.toString()),
-      quantity: 1,
-      user_id: 0, type: '',
-    );
-    cartProvider.addToCart(newItem);
-    Navigator.pop(context);
-    Fluttertoast.showToast(
-      msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
-    );
-    Timer(Duration(milliseconds: 500), () {
-      Fluttertoast.cancel(); // Dismiss the toast after the specified duration
-    });
-  }
+  // addToCart(product_ID, name, image, price, cartProvider) async {
+  //   final newItem = CartItem(
+  //     productId: product_ID,
+  //     name: name,
+  //     image: image.toString(),
+  //     price: double.parse(price.toString()),
+  //     quantity: 1,
+  //     user_id: 0, type: '',
+  //   );
+  //   cartProvider.addToCart(newItem);
+  //   Navigator.pop(context);
+  //   Fluttertoast.showToast(
+  //     msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
+  //   );
+  //   Timer(Duration(milliseconds: 500), () {
+  //     Fluttertoast.cancel(); // Dismiss the toast after the specified duration
+  //   });
+  // }
 
   Widget CartProductMethod(
       {String image = "",
@@ -198,11 +198,11 @@ class _CartState extends State<Cart> {
       CartProvider? cartProvider,
       Function? removeProduct,
       int product_id = 0,
-        CartItem? item,
+      CartItem? item,
       int index = 0,
       var IDs,
-        int qty = 0,
-        String type = "",
+      int qty = 0,
+      String type = "",
       var products,
       String cart_id = "",
       var price}) {

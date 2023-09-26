@@ -435,6 +435,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                     images: images,
                                     description: item["description"],
                                     SKU: item["sku"] ?? "-",
+                                    vendor_SKU: item["vendor_sku"] ?? "-",
+                                    nickname: item["nickname"] ?? "-",
                                     new_price: item["variants"][0]["price"],
                                     old_price: double.parse(item["variants"][0]
                                                 ["price"]
@@ -466,6 +468,8 @@ class _ProductScreenState extends State<ProductScreen> {
       {String image = "",
       String name = "",
       String SKU = "",
+      String vendor_SKU = "",
+      String nickname = "",
       required List sizesApi,
       // String SelectedSizes = "اختر الحجم",
       List? images,
@@ -988,13 +992,18 @@ class _ProductScreenState extends State<ProductScreen> {
                         listClick(widgetKey);
                         Vibration.vibrate(duration: 300);
                         final newItem = CartItem(
+                          sku: SKU,
+                          vendor_sku: vendor_SKU,
+                          nickname: nickname,
                           productId: id,
                           name: name,
                           image: image.toString(),
                           price: double.parse(new_price.toString()),
                           quantity: 1,
                           user_id: 0,
-                          type: SelectedSizes,
+                          type: SelectedSizes.toString() == ""
+                              ? LocalStorage().sizeUser[0]
+                              : SelectedSizes,
                         );
 
                         cartProvider.addToCart(newItem);

@@ -316,7 +316,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                           print(CityController.text);
                           print(AreaController.text);
                           print(AddressController.text);
-                         await  addOrder(context:context,address: AddressController.text,city:CityController.text,phone:PhoneController.text,  );
+                          await addOrder(
+                            context: context,
+                            address: AddressController.text,
+                            city: CityController.text,
+                            phone: PhoneController.text,
+                          );
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           String UserID = prefs.getString('user_id') ?? "";
@@ -586,8 +591,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 width: 300,
                 BorderColor: Colors.black,
                 OnClickFunction: () {
-
-
                   if (dropdownValue.toString() == "اختر منطقتك") {
                     showDialog(
                       context: context,
@@ -614,7 +617,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                     _pageController.animateToPage(1,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.ease);
-
                   }
                 },
                 BorderRaduis: 10,
@@ -631,8 +633,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   TextEditingController AreaController = TextEditingController();
   TextEditingController AddressController = TextEditingController();
   final UserService userService = UserService();
-
-
 
   Widget sizeWidget() {
     return Padding(

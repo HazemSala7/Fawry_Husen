@@ -39,53 +39,55 @@ class _FavouriteState extends State<Favourite> {
                   children: [
                     Text(
                       "عدد المنتجات بالمفضله : ${favoritesItems.length}",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                     ),
                   ],
                 ),
               ),
               favoritesItems.length != 0
                   ? ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: favoritesItems.length,
-                itemBuilder: (context, index) {
-                  FavoriteItem item = favoritesItems[index];
-                  String productIdsString = favoritesItems.map((item) => item.productId).join(', ');
-                  return cartCard(
-                    price: item.price,
-                    name: item.name,
-                    IDs: productIdsString,
-                    product_id: item.productId,
-                    index: index,
-                    removeProduct: () {
-
-                      Navigator.pop(context);
-                      favoriteProvider.removeFromFavorite(item.productId);
-                      setState(() {});
-                    },
-                    image: item.image,
-                  );
-                },
-              )
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: favoritesItems.length,
+                      itemBuilder: (context, index) {
+                        FavoriteItem item = favoritesItems[index];
+                        String productIdsString = favoritesItems
+                            .map((item) => item.productId)
+                            .join(', ');
+                        return cartCard(
+                          price: item.price,
+                          name: item.name,
+                          IDs: productIdsString,
+                          product_id: item.productId,
+                          index: index,
+                          removeProduct: () {
+                            Navigator.pop(context);
+                            favoriteProvider.removeFromFavorite(item.productId);
+                            setState(() {});
+                          },
+                          image: item.image,
+                        );
+                      },
+                    )
                   : Container(
-                height: MediaQuery.of(context).size.height,
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "لا يوجد منتجات بالمفضله",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17),
+                      height: MediaQuery.of(context).size.height,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "لا يوجد منتجات بالمفضله",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 17),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Icon(Icons.no_accounts_sharp)
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Icon(Icons.no_accounts_sharp)
-                  ],
-                ),
-              ),
               SizedBox(
                 height: 100,
               )
@@ -96,15 +98,19 @@ class _FavouriteState extends State<Favourite> {
     );
   }
 
-  addToCart(
-      product_ID, name, image, price, cartProvider, favoriteProvider) async {
+  addToCart(product_ID, name, image, price, sku, vendorski, nickname,
+      cartProvider, favoriteProvider) async {
     final newItem = CartItem(
       productId: product_ID,
       name: name,
+      sku: sku,
+      vendor_sku: vendorski,
+      nickname: nickname,
       image: image.toString(),
       price: double.parse(price.toString()),
       quantity: 1,
-      user_id: 0, type: '',
+      user_id: 0,
+      type: '',
     );
     cartProvider.addToCart(newItem);
     Navigator.pop(context);
@@ -122,6 +128,9 @@ class _FavouriteState extends State<Favourite> {
       {String image = "",
       var price,
       String name = "",
+      String SKU = "",
+      String vendor_SKU = "",
+      String nickname = "",
       int fav_id = 0,
       int index = 0,
       var IDs,
@@ -152,8 +161,16 @@ class _FavouriteState extends State<Favourite> {
                   onPressed: () async {
                     isDeleteAction
                         ? removeProduct!()
-                        : addToCart(product_id, name, image, price,
-                            cartProvider, favoriteProvider);
+                        : addToCart(
+                            product_id,
+                            name,
+                            image,
+                            price,
+                            SKU,
+                            vendor_SKU,
+                            nickname,
+                            cartProvider,
+                            favoriteProvider);
                   },
                   child: Text(isDeleteAction ? 'حذف' : 'اضافه'),
                 ),
@@ -329,8 +346,16 @@ class _FavouriteState extends State<Favourite> {
                               ),
                               TextButton(
                                 onPressed: () async {
-                                  addToCart(product_id, name, image, price,
-                                      cartProvider, favoriteProvider);
+                                  addToCart(
+                                      product_id,
+                                      name,
+                                      image,
+                                      price,
+                                      SKU,
+                                      vendor_SKU,
+                                      nickname,
+                                      cartProvider,
+                                      favoriteProvider);
                                 },
                                 child: Text('اضافه'),
                               ),

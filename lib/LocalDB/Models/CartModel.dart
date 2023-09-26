@@ -5,17 +5,23 @@ class CartItem {
   final String image;
   final double price;
   final String type;
+  final String sku;
+  final String nickname;
+  final String vendor_sku;
   int quantity;
   int user_id;
 
   CartItem(
       {this.id,
       required this.productId,
-        required this.name,
-        required this.type,
+      required this.name,
+      required this.type,
       required this.image,
       required this.price,
       required this.user_id,
+      required this.sku,
+      required this.nickname,
+      required this.vendor_sku,
       this.quantity = 1});
 
   Map<String, dynamic> toJson() {
@@ -23,6 +29,9 @@ class CartItem {
       'id': id,
       'productId': productId,
       'name': name,
+      'sku': sku,
+      'nickname': nickname,
+      'vendor_sku': vendor_sku,
       'image': image,
       'price': price,
       'type': type,
@@ -37,6 +46,9 @@ class CartItem {
       productId: json['productId'],
       name: json['name'],
       type: json['type'],
+      sku: json['sku'],
+      nickname: json['nickname'],
+      vendor_sku: json['vendor_sku'],
       image: json['image'],
       price: json['price'],
       user_id: json['user_id'],
@@ -49,6 +61,9 @@ class CartItem {
     int? productId,
     String? name,
     String? type,
+    String? sku,
+    String? nickname,
+    String? vendor_sku,
     String? image,
     double? price,
     int? quantity,
@@ -60,6 +75,9 @@ class CartItem {
       name: name ?? this.name,
       price: price ?? this.price,
       type: type ?? this.type,
+      sku: sku ?? this.sku,
+      nickname: nickname ?? this.nickname,
+      vendor_sku: vendor_sku ?? this.vendor_sku,
       image: image ?? this.image,
       quantity: quantity ?? this.quantity,
       user_id: quantity ?? this.user_id,
