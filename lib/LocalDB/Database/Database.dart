@@ -58,6 +58,7 @@ class CartDatabaseHelper {
         name TEXT NOT NULL,
         image TEXT NOT NULL,
         type TEXT NOT NULL,
+        place_in_warehouse TEXT NOT NULL,
         sku TEXT NOT NULL,
         nickname TEXT NOT NULL,
         vendor_sku TEXT NOT NULL,

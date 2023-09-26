@@ -255,7 +255,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final UserService userService = UserService();
   addUser() async {
-    String user_Id = Uuid().v4();
+    String user_Id = "4";
+    print("user_Id");
+    print(user_Id);
     UserItem newItem = UserItem(
       id: user_Id,
       email: "$user_Id@gmail.com",

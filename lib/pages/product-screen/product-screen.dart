@@ -327,7 +327,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                               1.5,
                                           image: widget.Product[i]["image"]
                                               as String,
-                                          sizesApi: []),
+                                          sizesApi: [],
+                                          TypeApi: false,
+                                          placeInWarehouse: {}),
                                     ),
                                   ),
                                 );
@@ -378,7 +380,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                           image: widget.Product[i]
                                                   ["vendor_images_links"][0]
                                               as String,
-                                          sizesApi: []),
+                                          sizesApi: [],
+                                          TypeApi: false, placeInWarehouse: {}),
                                     ),
                                   ),
                                 );
@@ -412,9 +415,14 @@ class _ProductScreenState extends State<ProductScreen> {
                         return Builder(
                           builder: (BuildContext context) {
                             List sizesAPI = widget.sizes;
-                            // for (int i = 0; i < item["variants"].length; i++) {
-                            //   sizesAPI.add(item["variants"][i]["size"]);
-                            // }
+                            sizesAPI = [];
+                           Map placeInWarehouse = {};
+                            bool typeApi = false;
+                            for (int i = 0; i < item["variants"].length; i++) {
+                              sizesAPI.add(item["variants"][i]["size"]);
+                              placeInWarehouse[item["variants"][i]["size"]] = item["variants"][i]["place_in_warehouse"];
+                              typeApi = true;
+                            }
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
@@ -444,6 +452,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         1.5,
                                     image: item["vendor_images_links"][0]
                                         as String,
+                                    TypeApi: typeApi, placeInWarehouse: placeInWarehouse,
                                   ),
                                 ),
                               ),
@@ -462,16 +471,18 @@ class _ProductScreenState extends State<ProductScreen> {
   bool loadingcart = false;
   bool loadingfav = false;
   bool loading = false;
-  String SelectedSizes = "";
   int _currentIndex = 0;
+  String SelectedSizes = "";
   Widget ProductMethod(
       {String image = "",
       String name = "",
       String SKU = "",
       String vendor_SKU = "",
       String nickname = "",
+        required Map placeInWarehouse,
       required List sizesApi,
-      // String SelectedSizes = "اختر الحجم",
+      required bool TypeApi,
+
       List? images,
       int id = 0,
       var description,
@@ -481,6 +492,11 @@ class _ProductScreenState extends State<ProductScreen> {
       var new_price}) {
     // String SelectedSizes = "";
     List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
+    if(SelectedSizes == ""){
+      SelectedSizes = sizesApi.length == 0?"":sizesApi[0];
+    }
+
+
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
@@ -540,8 +556,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 images!.length == 1
                                     ? Container(
                                         height: 450,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        width: MediaQuery.of(context).size.width,
                                         child: FancyShimmerImage(
                                           imageUrl: images[0],
                                         ),
@@ -670,7 +685,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ));
                             },
                           ),
-
                           // LikeButton(
                           //   circleColor:
                           //       CircleColor(start: Colors.red, end: Colors.red),
@@ -933,7 +947,9 @@ class _ProductScreenState extends State<ProductScreen> {
                 height: 50,
                 child: DropdownButton(
                   hint: SelectedSizes == ""
-                      ? Text(LocalStorage().sizeUser[0] ?? "")
+                      ? Text(Sizes.length == 0
+                          ? ""
+                          : Sizes[0])
                       : Text(
                           SelectedSizes,
                           style: TextStyle(
@@ -983,45 +999,48 @@ class _ProductScreenState extends State<ProductScreen> {
                       name: inCart ? "ازاله من السله" : "أضف الى السله",
                       height: 50,
                       width: 150,
-                      BorderColor: Colors.black,
+                      BorderColor: TypeApi ? Colors.black : Colors.black12,
                       OnClickFunction: () async {
-                        setState(() {
-                          loading = true;
-                          clicked = true;
-                        });
-                        listClick(widgetKey);
-                        Vibration.vibrate(duration: 300);
-                        final newItem = CartItem(
-                          sku: SKU,
-                          vendor_sku: vendor_SKU,
-                          nickname: nickname,
-                          productId: id,
-                          name: name,
-                          image: image.toString(),
-                          price: double.parse(new_price.toString()),
-                          quantity: 1,
-                          user_id: 0,
-                          type: SelectedSizes.toString() == ""
-                              ? LocalStorage().sizeUser[0]
-                              : SelectedSizes,
-                        );
-
-                        cartProvider.addToCart(newItem);
-
-                        const snackBar = SnackBar(
-                          content: Text('تم اضافه المنتج الى السله بنجاح!'),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                        Timer(Duration(milliseconds: 500), () {
-                          Fluttertoast.cancel();
-                          // Dismiss the toast after the specified duration
-                        });
-                        Timer(Duration(seconds: 1), () async {
-                          Navigator.pop(context);
-                        });
+                        if (TypeApi) {
+                          setState(() {
+                            loading = true;
+                            clicked = true;
+                          });
+                          listClick(widgetKey);
+                          Vibration.vibrate(duration: 300);
+                          final newItem = CartItem(
+                            sku: SKU,
+                            vendor_sku: vendor_SKU,
+                            nickname: nickname,
+                            productId: id,
+                            name: name,
+                            image: image.toString(),
+                            price: double.parse(new_price.toString()),
+                            quantity: 1,
+                            user_id: 0,
+                            type: SelectedSizes.toString() == ""
+                                ? LocalStorage().sizeUser[0]
+                                : SelectedSizes,
+                            placeInWarehouse:placeInWarehouse[SelectedSizes]
+                          );
+                          print(newItem.toJson());
+                          print("newItem.toJson()");
+                          cartProvider.addToCart(newItem);
+                          const snackBar = SnackBar(
+                            content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Timer(Duration(milliseconds: 500), () {
+                            Fluttertoast.cancel();
+                            // Dismiss the toast after the specified duration
+                          });
+                          Timer(Duration(seconds: 1), () async {
+                            Navigator.pop(context);
+                          });
+                        }
                       },
                       BorderRaduis: 10,
-                      ButtonColor: Colors.black,
+                      ButtonColor: TypeApi ? Colors.black : Colors.black12,
                       NameColor: Colors.white)
             ],
           ),

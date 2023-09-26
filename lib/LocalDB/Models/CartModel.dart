@@ -8,12 +8,14 @@ class CartItem {
   final String sku;
   final String nickname;
   final String vendor_sku;
+  final String placeInWarehouse;
   int quantity;
   int user_id;
 
   CartItem(
       {this.id,
       required this.productId,
+      required this.placeInWarehouse,
       required this.name,
       required this.type,
       required this.image,
@@ -35,6 +37,7 @@ class CartItem {
       'image': image,
       'price': price,
       'type': type,
+      'place_in_warehouse': placeInWarehouse,
       'user_id': user_id,
       'quantity': quantity,
     };
@@ -45,6 +48,7 @@ class CartItem {
       id: json['id'],
       productId: json['productId'],
       name: json['name'],
+      placeInWarehouse: json['place_in_warehouse'],
       type: json['type'],
       sku: json['sku'],
       nickname: json['nickname'],
@@ -65,6 +69,7 @@ class CartItem {
     String? nickname,
     String? vendor_sku,
     String? image,
+    String? placeInWarehouse,
     double? price,
     int? quantity,
     int? user_id,
@@ -81,6 +86,7 @@ class CartItem {
       image: image ?? this.image,
       quantity: quantity ?? this.quantity,
       user_id: quantity ?? this.user_id,
+      placeInWarehouse: '',
     );
   }
 }

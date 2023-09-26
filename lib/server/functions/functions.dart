@@ -43,14 +43,15 @@ getSpeceficProduct(id) async {
 addOrder({context, address, phone, city}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
-
+  print("UserID");
+  print(UserID);
   final cartProvider =
       Provider.of<CartProvider>(context, listen: false).cartItems;
   List<Map<String, dynamic>> products = [];
   double totalPrice = 0.0;
   for (var i = 0; i < cartProvider.length; i++) {
     products.add({
-      "id": cartProvider[i].id.toString(),
+      "id": cartProvider[i].productId.toString(),
       "image": cartProvider[i].image.toString(),
       "data": [
         {
@@ -62,7 +63,7 @@ addOrder({context, address, phone, city}) async {
           "nickname": cartProvider[i].nickname.toString(),
           "vendor_sku": cartProvider[i].vendor_sku.toString(),
           "variant_index": 0,
-          "place_in_warehouse": "TEST"
+          "place_in_warehouse": cartProvider[i].placeInWarehouse.toString()
         }
       ]
     });
@@ -85,7 +86,7 @@ addOrder({context, address, phone, city}) async {
     "city": city.toString(),
     "total_price": totalPrice,
     "user_id": UserID.toString(),
-    "products": products.toString()
+    "products": products
   });
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();

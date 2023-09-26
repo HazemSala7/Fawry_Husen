@@ -111,6 +111,7 @@ class _FavouriteState extends State<Favourite> {
       quantity: 1,
       user_id: 0,
       type: '',
+      placeInWarehouse: '',
     );
     cartProvider.addToCart(newItem);
     Navigator.pop(context);
