@@ -326,7 +326,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   .toString()) *
                                               1.5,
                                           image: widget.Product[i]["image"]
-                                              as String),
+                                              as String,
+                                          sizesApi: []),
                                     ),
                                   ),
                                 );
@@ -376,7 +377,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                               1.5,
                                           image: widget.Product[i]
                                                   ["vendor_images_links"][0]
-                                              as String),
+                                              as String,
+                                          sizesApi: []),
                                     ),
                                   ),
                                 );
@@ -410,9 +412,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         return Builder(
                           builder: (BuildContext context) {
                             List sizesAPI = widget.sizes;
-                            for (int i = 0; i < item["variants"].length; i++) {
-                              sizesAPI.add(item["variants"][i]["size"]);
-                            }
+                            // for (int i = 0; i < item["variants"].length; i++) {
+                            //   sizesAPI.add(item["variants"][i]["size"]);
+                            // }
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
@@ -427,7 +429,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     inCart:
                                         cartProvider.isProductCart(item["id"]),
                                     name: item["title"] ?? "-",
-                                    // Sizes: [],
+                                    sizesApi: sizesAPI,
                                     // SelectedSizes: "اختر الحجم",
                                     id: item["id"],
                                     images: images,
@@ -464,7 +466,7 @@ class _ProductScreenState extends State<ProductScreen> {
       {String image = "",
       String name = "",
       String SKU = "",
-      // required List<String> Sizes,
+      required List sizesApi,
       // String SelectedSizes = "اختر الحجم",
       List? images,
       int id = 0,
@@ -474,7 +476,7 @@ class _ProductScreenState extends State<ProductScreen> {
       var old_price,
       var new_price}) {
     // String SelectedSizes = "";
-    List Sizes = LocalStorage().sizeUser;
+    List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);

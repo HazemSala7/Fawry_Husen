@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fawri_app_refactor/LocalDB/Provider/CartProvider.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
 
@@ -37,6 +38,62 @@ getSpeceficProduct(id) async {
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
+}
+
+addOrder({context, address, phone, city}) async {
+  SharedPreferences prefs =
+  await SharedPreferences.getInstance();
+  String UserID = prefs.getString('user_id') ?? "";
+
+  final cartProvider = Provider.of<CartProvider>(context, listen: false).cartItems;
+  List products = [];
+  double totalPrice = 0.0;
+  for (var i = 0; i < cartProvider.length; i++) {
+    products.add({
+      "id": cartProvider[i].id.toString(),
+      "image": cartProvider[i].image.toString(),
+      "data": [
+        {
+          "sku": "U7IBYP",
+          "name": cartProvider[i].name.toString(),
+          "price": cartProvider[i].price.toString(),
+          "quantity": 1,
+          "size": cartProvider[i].type.toString(),
+          "nickname": "TEST",
+          "vendor_sku": "sa2211175146616151",
+          "variant_index": 0,
+          "place_in_warehouse": "TEST"
+        }
+      ]
+    });
+    totalPrice += double.parse(cartProvider[i].price.toString());
+  }
+
+  var headers = {'Content-Type': 'application/json'};
+  var request = http.Request(
+      'POST',
+      Uri.parse(
+          'http://34.227.78.214/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
+  request.body = json.encode({
+    "name": "Husen TEST",
+    "page": "Fawri App",
+    "description": "description Test",
+    "phone": phone.toString(),
+    "address": address.toString(),
+    "city": city.toString(),
+    "total_price": totalPrice,
+    "user_id": UserID.toString(),
+    "products": products
+  });
+  request.headers.addAll(headers);
+  http.StreamedResponse response = await request.send();
+  if (response.statusCode == 200) {
+    String stream = await response.stream.bytesToString();
+    final decodedMap = json.decode(stream);
+    print(decodedMap["id"]);
+  } else {
+    print(response.reasonPhrase);
+  }
 }
 
 getProductByCategory(
