@@ -81,8 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Padding(
                             padding: EdgeInsets.only(
-                              right: 15,
-                              left: 15,
+                              right: 14,
+                              left: 14,
                             ),
                             child: BouncingWidget(
                               child: InkWell(
@@ -91,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   setState(() {
                                     loading = true;
                                   });
-
                                   addUser();
                                 },
                                 child: Container(
