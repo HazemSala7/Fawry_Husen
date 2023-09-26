@@ -31,8 +31,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
   Map sizes = {};
 
   setSizesArray() {
-    print("widget.name");
-    print(widget.name);
     if (widget.name == "ملابس نسائيه") {
       sizes = LocalStorage().getSize("womenSizes");
     } else if (widget.name == "ملابس رجاليه") {
@@ -43,8 +41,6 @@ class _CategoryWidgetState extends State<CategoryWidget> {
       sizes = LocalStorage().getSize("womenSizes");
     }
     setState(() {});
-    print("|");
-    print(sizes);
   }
 
   @override

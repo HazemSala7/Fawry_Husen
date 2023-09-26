@@ -410,9 +410,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         return Builder(
                           builder: (BuildContext context) {
                             List sizesAPI = widget.sizes;
-                            // for (int i = 0; i < item["variants"].length; i++) {
-                            //   sizesAPI.add(item["variants"][i]["size"]);
-                            // }
+                            for (int i = 0; i < item["variants"].length; i++) {
+                              sizesAPI.add(item["variants"][i]["size"]);
+                            }
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
