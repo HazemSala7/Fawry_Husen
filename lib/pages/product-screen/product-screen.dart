@@ -381,7 +381,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   ["vendor_images_links"][0]
                                               as String,
                                           sizesApi: [],
-                                          TypeApi: false, placeInWarehouse: {}),
+                                          TypeApi: false,
+                                          placeInWarehouse: {}),
                                     ),
                                   ),
                                 );
@@ -416,11 +417,12 @@ class _ProductScreenState extends State<ProductScreen> {
                           builder: (BuildContext context) {
                             List sizesAPI = widget.sizes;
                             sizesAPI = [];
-                           Map placeInWarehouse = {};
+                            Map placeInWarehouse = {};
                             bool typeApi = false;
                             for (int i = 0; i < item["variants"].length; i++) {
                               sizesAPI.add(item["variants"][i]["size"]);
-                              placeInWarehouse[item["variants"][i]["size"]] = item["variants"][i]["place_in_warehouse"];
+                              placeInWarehouse[item["variants"][i]["size"]] =
+                                  item["variants"][i]["place_in_warehouse"];
                               typeApi = true;
                             }
 
@@ -452,7 +454,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                         1.5,
                                     image: item["vendor_images_links"][0]
                                         as String,
-                                    TypeApi: typeApi, placeInWarehouse: placeInWarehouse,
+                                    TypeApi: typeApi,
+                                    placeInWarehouse: placeInWarehouse,
                                   ),
                                 ),
                               ),
@@ -479,10 +482,9 @@ class _ProductScreenState extends State<ProductScreen> {
       String SKU = "",
       String vendor_SKU = "",
       String nickname = "",
-        required Map placeInWarehouse,
+      required Map placeInWarehouse,
       required List sizesApi,
       required bool TypeApi,
-
       List? images,
       int id = 0,
       var description,
@@ -492,10 +494,9 @@ class _ProductScreenState extends State<ProductScreen> {
       var new_price}) {
     // String SelectedSizes = "";
     List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
-    if(SelectedSizes == ""){
-      SelectedSizes = sizesApi.length == 0?"":sizesApi[0];
+    if (SelectedSizes == "") {
+      SelectedSizes = sizesApi.length == 0 ? "" : sizesApi[0];
     }
-
 
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
@@ -556,7 +557,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                 images!.length == 1
                                     ? Container(
                                         height: 450,
-                                        width: MediaQuery.of(context).size.width,
+                                        width:
+                                            MediaQuery.of(context).size.width,
                                         child: FancyShimmerImage(
                                           imageUrl: images[0],
                                         ),
@@ -656,8 +658,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             builder: (context, favoriteProvider, _) {
                               return InkWell(
                                   onTap: () {
-                                    print(LocalStorage()
-                                        .isFavorite(id.toString()));
+                                    Vibration.vibrate(duration: 300);
                                     if (LocalStorage()
                                         .isFavorite(id.toString())) {
                                       LocalStorage()
@@ -947,9 +948,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 height: 50,
                 child: DropdownButton(
                   hint: SelectedSizes == ""
-                      ? Text(Sizes.length == 0
-                          ? ""
-                          : Sizes[0])
+                      ? Text(Sizes.length == 0 ? "" : Sizes[0])
                       : Text(
                           SelectedSizes,
                           style: TextStyle(
@@ -1009,20 +1008,20 @@ class _ProductScreenState extends State<ProductScreen> {
                           listClick(widgetKey);
                           Vibration.vibrate(duration: 300);
                           final newItem = CartItem(
-                            sku: SKU,
-                            vendor_sku: vendor_SKU,
-                            nickname: nickname,
-                            productId: id,
-                            name: name,
-                            image: image.toString(),
-                            price: double.parse(new_price.toString()),
-                            quantity: 1,
-                            user_id: 0,
-                            type: SelectedSizes.toString() == ""
-                                ? LocalStorage().sizeUser[0]
-                                : SelectedSizes,
-                            placeInWarehouse:placeInWarehouse[SelectedSizes]
-                          );
+                              sku: SKU,
+                              vendor_sku: vendor_SKU,
+                              nickname: nickname,
+                              productId: id,
+                              name: name,
+                              image: image.toString(),
+                              price: double.parse(new_price.toString()),
+                              quantity: 1,
+                              user_id: 0,
+                              type: SelectedSizes.toString() == ""
+                                  ? LocalStorage().sizeUser[0]
+                                  : SelectedSizes,
+                              placeInWarehouse:
+                                  placeInWarehouse[SelectedSizes]);
                           print(newItem.toJson());
                           print("newItem.toJson()");
                           cartProvider.addToCart(newItem);
