@@ -1,6 +1,7 @@
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
@@ -171,16 +172,12 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
-                            // String selectedSizes = getSelectedSizes();
-                            // SharedPreferences prefs =
-                            //     await SharedPreferences.getInstance();
-                            // await prefs.setString('size', selectedSizes);
-                            // NavigatorFunction(
-                            //     context,
-                            //     ProductsCategories(
-                            //       category_id: widget.main_category,
-                            //       size: selectedSizes,
-                            //     ));
+                            NavigatorFunction(
+                                context,
+                                ProductsCategories(
+                                  category_id: widget.main_category,
+                                  size: "null",
+                                ));
                           },
                           BorderRaduis: 10,
                           ButtonColor: MAIN_COLOR,

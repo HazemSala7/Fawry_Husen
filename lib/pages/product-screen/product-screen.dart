@@ -544,7 +544,7 @@ class _ProductScreenState extends State<ProductScreen> {
               children: [
                 Container(
                   key: widgetKey,
-                  height: MediaQuery.of(context).size.height * 0.6,
+                  height: 450,
                   width: double.infinity,
                   child: clicked
                       ? Container()
@@ -646,284 +646,286 @@ class _ProductScreenState extends State<ProductScreen> {
                           },
                         ),
                 ),
-                Column(
-                  children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, left: 20, bottom: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Consumer<FavouriteProvider>(
-                            builder: (context, favoriteProvider, _) {
-                              return InkWell(
-                                  onTap: () {
-                                    Vibration.vibrate(duration: 300);
-                                    if (LocalStorage()
-                                        .isFavorite(id.toString())) {
-                                      LocalStorage()
-                                          .deleteFavorite(id.toString());
-                                      favoriteProvider.notifyListeners();
-                                    } else {
-                                      LocalStorage().setFavorite(FavoriteItem(
-                                        productId: id,
-                                        id: id,
-                                        name: name,
-                                        image: image,
-                                        price:
-                                            double.parse(new_price.toString()),
-                                      ));
-                                      favoriteProvider.notifyListeners();
-                                    }
-                                  },
-                                  child: Icon(
-                                    Icons.favorite,
-                                    size: 40,
-                                    color:
-                                        LocalStorage().isFavorite(id.toString())
-                                            ? Colors.red
-                                            : Colors.black26,
-                                  ));
-                            },
-                          ),
-                          // LikeButton(
-                          //   circleColor:
-                          //       CircleColor(start: Colors.red, end: Colors.red),
-                          //   size: 35,
-                          //   onTap: onLikeButtonTapped,
-                          //   isLiked: false,
-                          // ),
-                        ],
+                Container(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(top: 10, left: 20, bottom: 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Consumer<FavouriteProvider>(
+                              builder: (context, favoriteProvider, _) {
+                                return InkWell(
+                                    onTap: () {
+                                      Vibration.vibrate(duration: 300);
+                                      if (LocalStorage()
+                                          .isFavorite(id.toString())) {
+                                        LocalStorage()
+                                            .deleteFavorite(id.toString());
+                                        favoriteProvider.notifyListeners();
+                                      } else {
+                                        LocalStorage().setFavorite(FavoriteItem(
+                                          productId: id,
+                                          id: id,
+                                          name: name,
+                                          image: image,
+                                          price:
+                                              double.parse(new_price.toString()),
+                                        ));
+                                        favoriteProvider.notifyListeners();
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.favorite,
+                                      size: 40,
+                                      color:
+                                          LocalStorage().isFavorite(id.toString())
+                                              ? Colors.red
+                                              : Colors.black26,
+                                    ));
+                              },
+                            ),
+                            // LikeButton(
+                            //   circleColor:
+                            //       CircleColor(start: Colors.red, end: Colors.red),
+                            //   size: 35,
+                            //   onTap: onLikeButtonTapped,
+                            //   isLiked: false,
+                            // ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Text(
-                                "₪${old_price.toString().length > 5 ? old_price.toString().substring(0, 5) : old_price.toString()}",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                ),
-                              ),
-                              Container(
-                                height: 1,
-                                width: 50,
-                                color: Colors.black,
-                              )
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding:
-                                    EdgeInsets.fromLTRB(0.0, 0.0, 190, 0.0),
-                                child: Tooltip(
-                                  triggerMode: TooltipTriggerMode.tap,
-                                  message: "توصيل فوري",
-                                  child: FaIcon(
-                                    FontAwesomeIcons.truck,
-                                    color: Color(0xD9000000),
-                                    size: 16,
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Text(
+                                  "₪${old_price.toString().length > 5 ? old_price.toString().substring(0, 5) : old_price.toString()}",
+                                  style: TextStyle(
+                                    fontSize: 20,
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0.0, 0.0, 10, 0.0),
-                                child: Tooltip(
-                                  triggerMode: TooltipTriggerMode.tap,
-                                  message: "الدفع عند الاستلام",
-                                  child: FaIcon(
-                                    FontAwesomeIcons.moneyBillWaveAlt,
-                                    color: Color(0xD9000000),
-                                    size: 16,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                                child: Tooltip(
-                                  triggerMode: TooltipTriggerMode.tap,
-                                  message: "سياسه الخصوصيه",
-                                  child: FaIcon(
-                                    Icons.handshake,
-                                    color: Color(0xD9000000),
-                                    size: 19,
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: Row(
-                        children: [
-                          Text(
-                            "₪${new_price}",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            "(15%)",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.red,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 8, top: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              name,
-                              style: TextStyle(
-                                  fontSize: 18,
+                                Container(
+                                  height: 1,
+                                  width: 50,
                                   color: Colors.black,
+                                )
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.fromLTRB(0.0, 0.0, 190, 0.0),
+                                  child: Tooltip(
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: "توصيل فوري",
+                                    child: FaIcon(
+                                      FontAwesomeIcons.truck,
+                                      color: Color(0xD9000000),
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 10, 0.0),
+                                  child: Tooltip(
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: "الدفع عند الاستلام",
+                                    child: FaIcon(
+                                      FontAwesomeIcons.moneyBillWaveAlt,
+                                      color: Color(0xD9000000),
+                                      size: 16,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                                  child: Tooltip(
+                                    triggerMode: TooltipTriggerMode.tap,
+                                    message: "سياسه الخصوصيه",
+                                    child: FaIcon(
+                                      Icons.handshake,
+                                      color: Color(0xD9000000),
+                                      size: 19,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Row(
+                          children: [
+                            Text(
+                              "₪${new_price}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red,
                                   fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "(15%)",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: description is List
-                          ? description.isNotEmpty
-                          : description != null && description != '',
-                      child: Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8, top: 8),
                         child: Row(
-                          mainAxisSize: MainAxisSize.max,
                           children: [
                             Expanded(
-                              child: Padding(
-                                padding:
-                                    EdgeInsetsDirectional.fromSTEB(1, 0, 1, 0),
-                                child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                  ),
+                              child: Text(
+                                name,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: description is List
+                            ? description.isNotEmpty
+                            : description != null && description != '',
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding:
+                                      EdgeInsetsDirectional.fromSTEB(1, 0, 1, 0),
                                   child: Container(
                                     width: double.infinity,
-                                    color: Colors.white,
-                                    child: ExpandableNotifier(
-                                      initialExpanded: false,
-                                      child: ExpandablePanel(
-                                        header: Row(
-                                          mainAxisSize: MainAxisSize.max,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsetsDirectional
-                                                  .fromSTEB(0, 0, 12, 0),
-                                              child: Icon(
-                                                Icons.sticky_note_2_outlined,
-                                                color: Colors.black,
-                                                size: 24,
-                                              ),
-                                            ),
-                                            Text(
-                                              "تفاصيل المنتج",
-                                              style: TextStyle(
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        collapsed: Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        expanded: description is List
-                                            ? SingleChildScrollView(
-                                                child: Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.max,
-                                                  children: [
-                                                    Align(
-                                                        alignment:
-                                                            AlignmentDirectional(
-                                                                -1, 0),
-                                                        child: ListView.builder(
-                                                          physics:
-                                                              NeverScrollableScrollPhysics(),
-                                                          shrinkWrap: true,
-                                                          itemCount: description
-                                                              .length,
-                                                          itemBuilder:
-                                                              (context, index) {
-                                                            final item =
-                                                                description[
-                                                                    index];
-                                                            final key =
-                                                                item.keys.first;
-                                                            final value = item
-                                                                .values.first;
-                                                            return Row(
-                                                              children: [
-                                                                Text("$key: "),
-                                                                Expanded(
-                                                                    child: Text(
-                                                                        "$value")),
-                                                              ],
-                                                            );
-                                                          },
-                                                        )),
-                                                  ],
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                    ),
+                                    child: Container(
+                                      width: double.infinity,
+                                      color: Colors.white,
+                                      child: ExpandableNotifier(
+                                        initialExpanded: false,
+                                        child: ExpandablePanel(
+                                          header: Row(
+                                            mainAxisSize: MainAxisSize.max,
+                                            children: [
+                                              Padding(
+                                                padding: EdgeInsetsDirectional
+                                                    .fromSTEB(0, 0, 12, 0),
+                                                child: Icon(
+                                                  Icons.sticky_note_2_outlined,
+                                                  color: Colors.black,
+                                                  size: 24,
                                                 ),
-                                              )
-                                            : description is String
-                                                ? Text(
-                                                    description) // Show the simple string description
-                                                : Container(),
-                                        theme: ExpandableThemeData(
-                                          tapHeaderToExpand: true,
-                                          tapBodyToExpand: false,
-                                          tapBodyToCollapse: false,
-                                          headerAlignment:
-                                              ExpandablePanelHeaderAlignment
-                                                  .center,
-                                          hasIcon: true,
-                                          expandIcon:
-                                              Icons.keyboard_arrow_down_sharp,
-                                          collapseIcon:
-                                              Icons.keyboard_arrow_down_rounded,
-                                          iconSize: 38,
-                                          iconColor: Colors.black,
+                                              ),
+                                              Text(
+                                                "تفاصيل المنتج",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          collapsed: Container(
+                                            width:
+                                                MediaQuery.of(context).size.width,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          expanded: description is List
+                                              ? SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.max,
+                                                    children: [
+                                                      Align(
+                                                          alignment:
+                                                              AlignmentDirectional(
+                                                                  -1, 0),
+                                                          child: ListView.builder(
+                                                            physics:
+                                                                NeverScrollableScrollPhysics(),
+                                                            shrinkWrap: true,
+                                                            itemCount: description
+                                                                .length,
+                                                            itemBuilder:
+                                                                (context, index) {
+                                                              final item =
+                                                                  description[
+                                                                      index];
+                                                              final key =
+                                                                  item.keys.first;
+                                                              final value = item
+                                                                  .values.first;
+                                                              return Row(
+                                                                children: [
+                                                                  Text("$key: "),
+                                                                  Expanded(
+                                                                      child: Text(
+                                                                          "$value")),
+                                                                ],
+                                                              );
+                                                            },
+                                                          )),
+                                                    ],
+                                                  ),
+                                                )
+                                              : description is String
+                                                  ? Text(
+                                                      description) // Show the simple string description
+                                                  : Container(),
+                                          theme: ExpandableThemeData(
+                                            tapHeaderToExpand: true,
+                                            tapBodyToExpand: false,
+                                            tapBodyToCollapse: false,
+                                            headerAlignment:
+                                                ExpandablePanelHeaderAlignment
+                                                    .center,
+                                            hasIcon: true,
+                                            expandIcon:
+                                                Icons.keyboard_arrow_down_sharp,
+                                            collapseIcon:
+                                                Icons.keyboard_arrow_down_rounded,
+                                            iconSize: 38,
+                                            iconColor: Colors.black,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 100,
-                    )
-                  ],
+                      SizedBox(
+                        height: 100,
+                      )
+                    ],
+                  ),
                 )
               ],
             ),

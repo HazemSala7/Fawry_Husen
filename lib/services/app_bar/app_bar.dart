@@ -166,6 +166,12 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
+                            NavigatorFunction(
+                                context,
+                                ProductsCategories(
+                                  category_id: widget.main_Category,
+                                  size: "null",
+                                ));
                             // String selectedSizes = getSelectedSizes();
                             // SharedPreferences prefs =
                             //     await SharedPreferences.getInstance();
