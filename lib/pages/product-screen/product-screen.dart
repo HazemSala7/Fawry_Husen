@@ -1000,9 +1000,9 @@ class _ProductScreenState extends State<ProductScreen> {
                       name: inCart ? "ازاله من السله" : "أضف الى السله",
                       height: 50,
                       width: 150,
-                      BorderColor: TypeApi ? Colors.black : Colors.black12,
+                      BorderColor: Colors.black ,
                       OnClickFunction: () async {
-                        if (TypeApi) {
+                        if (Sizes.length != 0) {
                           setState(() {
                             loading = true;
                             clicked = true;
@@ -1038,10 +1038,48 @@ class _ProductScreenState extends State<ProductScreen> {
                           Timer(Duration(seconds: 1), () async {
                             Navigator.pop(context);
                           });
+                        }else{
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text(
+                                  "الرجاء اختيار المقاسات قبل الدخول للمنتج",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                                actions: <Widget>[
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      width: 100,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: MAIN_COLOR,
+                                          borderRadius:
+                                          BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: Text(
+                                          "حسنا",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
                         }
                       },
                       BorderRaduis: 10,
-                      ButtonColor: TypeApi ? Colors.black : Colors.black12,
+                      ButtonColor: Colors.black,
                       NameColor: Colors.white)
             ],
           ),
