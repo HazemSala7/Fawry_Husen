@@ -650,8 +650,8 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding:
-                            const EdgeInsets.only(top: 10, left: 20, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            top: 10, left: 20, bottom: 11),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -671,8 +671,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                           id: id,
                                           name: name,
                                           image: image,
-                                          price:
-                                              double.parse(new_price.toString()),
+                                          price: double.parse(
+                                              new_price.toString()),
                                         ));
                                         favoriteProvider.notifyListeners();
                                       }
@@ -680,10 +680,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: Icon(
                                       Icons.favorite,
                                       size: 40,
-                                      color:
-                                          LocalStorage().isFavorite(id.toString())
-                                              ? Colors.red
-                                              : Colors.black26,
+                                      color: LocalStorage()
+                                              .isFavorite(id.toString())
+                                          ? Colors.red
+                                          : Colors.black26,
                                     ));
                               },
                             ),
@@ -734,7 +734,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 10, 0.0),
+                                  padding:
+                                      EdgeInsets.fromLTRB(0.0, 0.0, 10, 0.0),
                                   child: Tooltip(
                                     triggerMode: TooltipTriggerMode.tap,
                                     message: "الدفع عند الاستلام",
@@ -814,8 +815,8 @@ class _ProductScreenState extends State<ProductScreen> {
                             children: [
                               Expanded(
                                 child: Padding(
-                                  padding:
-                                      EdgeInsetsDirectional.fromSTEB(1, 0, 1, 0),
+                                  padding: EdgeInsetsDirectional.fromSTEB(
+                                      1, 0, 1, 0),
                                   child: Container(
                                     width: double.infinity,
                                     decoration: BoxDecoration(
@@ -848,8 +849,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                             ],
                                           ),
                                           collapsed: Container(
-                                            width:
-                                                MediaQuery.of(context).size.width,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
                                             decoration: BoxDecoration(
                                               color: Colors.black,
                                             ),
@@ -864,24 +866,28 @@ class _ProductScreenState extends State<ProductScreen> {
                                                           alignment:
                                                               AlignmentDirectional(
                                                                   -1, 0),
-                                                          child: ListView.builder(
+                                                          child:
+                                                              ListView.builder(
                                                             physics:
                                                                 NeverScrollableScrollPhysics(),
                                                             shrinkWrap: true,
-                                                            itemCount: description
-                                                                .length,
+                                                            itemCount:
+                                                                description
+                                                                    .length,
                                                             itemBuilder:
-                                                                (context, index) {
+                                                                (context,
+                                                                    index) {
                                                               final item =
                                                                   description[
                                                                       index];
-                                                              final key =
-                                                                  item.keys.first;
+                                                              final key = item
+                                                                  .keys.first;
                                                               final value = item
                                                                   .values.first;
                                                               return Row(
                                                                 children: [
-                                                                  Text("$key: "),
+                                                                  Text(
+                                                                      "$key: "),
                                                                   Expanded(
                                                                       child: Text(
                                                                           "$value")),
@@ -906,8 +912,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                             hasIcon: true,
                                             expandIcon:
                                                 Icons.keyboard_arrow_down_sharp,
-                                            collapseIcon:
-                                                Icons.keyboard_arrow_down_rounded,
+                                            collapseIcon: Icons
+                                                .keyboard_arrow_down_rounded,
                                             iconSize: 38,
                                             iconColor: Colors.black,
                                           ),
@@ -1000,7 +1006,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       name: inCart ? "ازاله من السله" : "أضف الى السله",
                       height: 50,
                       width: 150,
-                      BorderColor: Colors.black ,
+                      BorderColor: Colors.black,
                       OnClickFunction: () async {
                         if (Sizes.length != 0) {
                           setState(() {
@@ -1038,7 +1044,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           Timer(Duration(seconds: 1), () async {
                             Navigator.pop(context);
                           });
-                        }else{
+                        } else {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -1060,7 +1066,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       decoration: BoxDecoration(
                                           color: MAIN_COLOR,
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                       child: Center(
                                         child: Text(
                                           "حسنا",
@@ -1075,7 +1081,6 @@ class _ProductScreenState extends State<ProductScreen> {
                               );
                             },
                           );
-
                         }
                       },
                       BorderRaduis: 10,
