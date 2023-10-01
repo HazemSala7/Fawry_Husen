@@ -166,6 +166,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
+                            LocalStorage().setSizeUser([]);
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(

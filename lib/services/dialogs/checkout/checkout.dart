@@ -353,7 +353,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                       ButtonColor: Colors.black,
                       NameColor: Colors.white),
                 ),
-              )
+              ),
       ],
     );
   }

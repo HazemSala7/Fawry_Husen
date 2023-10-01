@@ -171,6 +171,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
+                            LocalStorage().setSizeUser([]);
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(

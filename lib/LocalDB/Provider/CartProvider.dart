@@ -60,9 +60,11 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeFromCart(CartItem item) async {
-    await _dbHelper.deleteCartItem(item.id!);
-    _cartItems.remove(item);
+    Future<void> removeFromCart(int productId) async {
+    print("item.id!.toString()");
+    print(productId.toString());
+    await _dbHelper.deleteCartItem(productId);
+    _cartItems.removeWhere((item) => item.productId == productId);
     notifyListeners();
   }
 

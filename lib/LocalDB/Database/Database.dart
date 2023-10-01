@@ -135,7 +135,8 @@ class CartDatabaseHelper {
 
   Future<void> deleteCartItem(int id) async {
     final db = await database;
-    await db!.delete('cart', where: 'id = ?', whereArgs: [id]);
+    print(id);
+    await db!.delete('cart', where: 'productId = ?', whereArgs: [id]);
   }
 
   Future<void> updateCartItem(CartItem item) async {

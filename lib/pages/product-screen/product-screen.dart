@@ -40,6 +40,7 @@ import '../cart/cart.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProductScreen extends StatefulWidget {
   var favourite;
@@ -165,8 +166,9 @@ class _ProductScreenState extends State<ProductScreen> {
       loadingPage = false;
     });
   }
-
-  Future<void> loadAdditionalData() async {
+  int page = 1;
+  Future loadAdditionalData() async {
+    page +=1;
     final uri = Uri.parse(widget.url);
 
     if (uri.host == null) {
@@ -177,14 +179,16 @@ class _ProductScreenState extends State<ProductScreen> {
 
     final updatedQueryParameters =
         Map<String, String>.from(uri.queryParameters);
-    int incrementPage = int.parse(widget.page.toString()) + 1;
+    print("widget.page.toString()");
+    print(page);
+    int incrementPage = page;
     updatedQueryParameters['page'] = incrementPage.toString();
+
 
     final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
     final updatedUrl = updatedUri.toString();
     final response = await http.get(updatedUri);
     var res = json.decode(utf8.decode(response.bodyBytes));
-
     var additionalItems = [];
     if (res != null) {
       additionalItems = res["items"];
@@ -295,11 +299,30 @@ class _ProductScreenState extends State<ProductScreen> {
                             enlargeCenterPage: true,
                             viewportFraction: 1,
                             height: MediaQuery.of(context).size.height,
-                            onPageChanged: (index, reason) {
+                            onPageChanged: (index, reason) async {
                               if (index == orderedItems.length - 1 &&
                                   reason == CarouselPageChangedReason.manual) {
-                                loadAdditionalData();
-                              }
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          LoadingAnimationWidget.discreteCircle(
+                                              color: Colors.teal,
+                                              size: 50,
+                                              secondRingColor:
+                                              Colors.amberAccent,
+                                              thirdRingColor:
+                                              Colors.tealAccent),
+                                        ],
+                                      ),
+                                    ));
+                                await loadAdditionalData();
+                                Navigator.pop(context);                              }
                             },
                           ),
                           items: newArray.map((i) {
@@ -346,10 +369,30 @@ class _ProductScreenState extends State<ProductScreen> {
                             enlargeCenterPage: true,
                             viewportFraction: 1,
                             height: MediaQuery.of(context).size.height,
-                            onPageChanged: (index, reason) {
+                            onPageChanged: (index, reason) async {
                               if (index == orderedItems.length - 1 &&
                                   reason == CarouselPageChangedReason.manual) {
-                                loadAdditionalData();
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        children: [
+                                          LoadingAnimationWidget.discreteCircle(
+                                              color: Colors.teal,
+                                              size: 50,
+                                              secondRingColor:
+                                              Colors.amberAccent,
+                                              thirdRingColor:
+                                              Colors.tealAccent),
+                                        ],
+                                      ),
+                                    ));
+                                await loadAdditionalData();
+                                Navigator.pop(context);
                               }
                             },
                           ),
@@ -400,10 +443,30 @@ class _ProductScreenState extends State<ProductScreen> {
                         viewportFraction: 1,
                         height: MediaQuery.of(context).size.height,
                         initialPage: _currentPage,
-                        onPageChanged: (index, reason) {
+                        onPageChanged: (index, reason) async {
                           if (index == orderedItems.length - 1 &&
                               reason == CarouselPageChangedReason.manual) {
-                            loadAdditionalData();
+                            showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      title: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          LoadingAnimationWidget.discreteCircle(
+                                              color: Colors.teal,
+                                              size: 50,
+                                              secondRingColor:
+                                                  Colors.amberAccent,
+                                              thirdRingColor:
+                                                  Colors.tealAccent),
+                                        ],
+                                      ),
+                                    ));
+                            await loadAdditionalData();
+                            Navigator.pop(context);
                           }
                         },
                       ),
@@ -415,15 +478,22 @@ class _ProductScreenState extends State<ProductScreen> {
 
                         return Builder(
                           builder: (BuildContext context) {
+                            // if(Selected){
+                            //   SelectedSizes = "إختر المقاس";
+                            // }
                             List sizesAPI = widget.sizes;
                             sizesAPI = [];
                             Map placeInWarehouse = {};
                             bool typeApi = false;
                             for (int i = 0; i < item["variants"].length; i++) {
-                              sizesAPI.add(item["variants"][i]["size"]);
-                              placeInWarehouse[item["variants"][i]["size"]] =
-                                  item["variants"][i]["place_in_warehouse"];
-                              typeApi = true;
+                              if(!sizesAPI.contains(item["variants"][i]["size"])){
+                                sizesAPI.add(item["variants"][i]["size"]);
+                                placeInWarehouse[item["variants"][i]["size"]] =
+                                item["variants"][i]["place_in_warehouse"];
+                                typeApi = true;
+
+                              }
+
                             }
 
                             return AnimationConfiguration.staggeredList(
@@ -475,7 +545,8 @@ class _ProductScreenState extends State<ProductScreen> {
   bool loadingfav = false;
   bool loading = false;
   int _currentIndex = 0;
-  String SelectedSizes = "";
+  String SelectedSizes = "إختر المقاس";
+  bool Selected = true;
   Widget ProductMethod(
       {String image = "",
       String name = "",
@@ -494,9 +565,7 @@ class _ProductScreenState extends State<ProductScreen> {
       var new_price}) {
     // String SelectedSizes = "";
     List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
-    if (SelectedSizes == "") {
-      SelectedSizes = sizesApi.length == 0 ? "" : sizesApi[0];
-    }
+
 
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
@@ -544,7 +613,7 @@ class _ProductScreenState extends State<ProductScreen> {
               children: [
                 Container(
                   key: widgetKey,
-                  height: 450,
+                  height: MediaQuery.of(context).size.height * 0.60,
                   width: double.infinity,
                   child: clicked
                       ? Container()
@@ -556,7 +625,7 @@ class _ProductScreenState extends State<ProductScreen> {
                               children: [
                                 images!.length == 1
                                     ? Container(
-                                        height: 450,
+                                  height: MediaQuery.of(context).size.height * 0.60,
                                         width:
                                             MediaQuery.of(context).size.width,
                                         child: FancyShimmerImage(
@@ -569,7 +638,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                             _currentIndex = index;
                                             setState(() {});
                                           },
-                                          height: 450.0,
+                                          height: MediaQuery.of(context).size.height * 0.60,
                                           scrollDirection: Axis.vertical,
                                           viewportFraction: 1,
                                           autoPlayCurve: Curves.fastOutSlowIn,
@@ -580,7 +649,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           return Builder(
                                             builder: (BuildContext context) {
                                               return Container(
-                                                height: 450,
+                                                height: MediaQuery.of(context).size.height * 0.60,
                                                 width: MediaQuery.of(context)
                                                     .size
                                                     .width,
@@ -651,7 +720,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(
-                            top: 10, left: 20, bottom: 11),
+                            top: 10, left: 20, bottom: 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -955,13 +1024,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 width: 100,
                 height: 50,
                 child: DropdownButton(
-                  hint: SelectedSizes == ""
-                      ? Text(Sizes.length == 0 ? "" : Sizes[0])
-                      : Text(
-                          SelectedSizes,
-                          style: TextStyle(
-                              color: MAIN_COLOR, fontWeight: FontWeight.bold),
-                        ),
+                  hint: Text(SelectedSizes),
                   isExpanded: true,
                   iconSize: 30.0,
                   style:
@@ -1008,18 +1071,16 @@ class _ProductScreenState extends State<ProductScreen> {
                       width: 150,
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
-                        if (Sizes.length != 0) {
-                          setState(() {
-                            loading = true;
-                            clicked = true;
-                          });
-                          listClick(widgetKey);
-                          Vibration.vibrate(duration: 300);
+
+                        if(inCart){
+                          print("inCart");
+                          print(inCart);
                           final newItem = CartItem(
                               sku: SKU,
                               vendor_sku: vendor_SKU,
                               nickname: nickname,
                               productId: id,
+                              id: id,
                               name: name,
                               image: image.toString(),
                               price: double.parse(new_price.toString()),
@@ -1029,59 +1090,88 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ? LocalStorage().sizeUser[0]
                                   : SelectedSizes,
                               placeInWarehouse:
-                                  placeInWarehouse[SelectedSizes]);
-                          print(newItem.toJson());
-                          print("newItem.toJson()");
-                          cartProvider.addToCart(newItem);
-                          const snackBar = SnackBar(
-                            content: Text('تم اضافه المنتج الى السله بنجاح!'),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                          Timer(Duration(milliseconds: 500), () {
-                            Fluttertoast.cancel();
-                            // Dismiss the toast after the specified duration
-                          });
-                          Timer(Duration(seconds: 1), () async {
-                            Navigator.pop(context);
-                          });
-                        } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Text(
-                                  "الرجاء اختيار المقاسات قبل الدخول للمنتج",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                actions: <Widget>[
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: 100,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          color: MAIN_COLOR,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                        child: Text(
-                                          "حسنا",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+                              placeInWarehouse[SelectedSizes] ?? "0000");
+
+                          cartProvider.removeFromCart(id);
+                          setState(() {});
+                        }else{
+                          if(SelectedSizes != "إختر المقاس") {
+                            setState(() {
+                              loading = true;
+                              clicked = true;
+                            });
+                            listClick(widgetKey);
+                            Vibration.vibrate(duration: 300);
+                            final newItem = CartItem(
+                                sku: SKU,
+                                vendor_sku: vendor_SKU,
+                                nickname: nickname,
+                                productId: id,
+                                id:id,
+                                name: name,
+                                image: image.toString(),
+                                price: double.parse(new_price.toString()),
+                                quantity: 1,
+                                user_id: 0,
+                                type: SelectedSizes.toString() == ""
+                                    ? LocalStorage().sizeUser[0]
+                                    : SelectedSizes,
+                                placeInWarehouse:
+                                placeInWarehouse[SelectedSizes] ?? "0000");
+                            print(newItem.toJson());
+                            print("newItem.toJson()");
+                            cartProvider.addToCart(newItem);
+                            const snackBar = SnackBar(
+                              content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            Timer(Duration(milliseconds: 500), () {
+                              Fluttertoast.cancel();
+                              // Dismiss the toast after the specified duration
+                            });
+                            Timer(Duration(seconds: 1), () async {
+                              Navigator.pop(context);
+                            });
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: Text(
+                                    "الرجاء اختيار المقاسات قبل إضافة للمنتج",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  actions: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: MAIN_COLOR,
+                                            borderRadius:
+                                            BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            "حسنا",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
+
                       },
                       BorderRaduis: 10,
                       ButtonColor: Colors.black,

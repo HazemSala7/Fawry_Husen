@@ -103,11 +103,12 @@ class _CartState extends State<Cart> {
                                 index: index,
                                 cartProvider: cartProvider,
                                 price: item.price,
+                                product_id:item.productId,
                                 type: item.type,
                                 name: item.name,
                                 qty: item.quantity,
                                 removeProduct: () {
-                                  cartProvider.removeFromCart(item);
+                                  cartProvider.removeFromCart(item.productId);
                                   setState(() {});
                                 },
                                 image: item.image,
@@ -144,7 +145,7 @@ class _CartState extends State<Cart> {
             Material(
               child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: 60,
+                  height: 100,
                   alignment: Alignment.center,
                   child: Padding(
                     padding: const EdgeInsets.all(5),
@@ -381,7 +382,7 @@ class _CartState extends State<Cart> {
                 Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Text(
-                    "₪$price",
+                    "₪$product_id",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,

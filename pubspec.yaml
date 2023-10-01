@@ -71,13 +71,14 @@ dependencies:
   photo_view: ^0.14.0
 
 dependency_overrides:
-  test_api:
+  test_api: ^0.4.18
   firebase_core: ^2.15.0
   firebase_messaging: ^14.6.5
   firebase_auth: ^4.7.1
   firebase_core_platform_interface: ^4.5.1
   cloud_firestore: ^4.8.4
   hive_flutter: ^1.1.0
+  loading_animation_widget: ^1.2.0+4
 
 dev_dependencies:
   flutter_test:
