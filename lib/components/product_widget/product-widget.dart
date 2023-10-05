@@ -206,7 +206,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                     builder: (context, favoriteProvider, _) {
                       return InkWell(
                           onTap: () {
-                            Vibration.vibrate(duration: 300);
+                            Vibration.vibrate(duration: 299);
                             if (LocalStorage()
                                 .isFavorite(widget.id.toString())) {
                               LocalStorage()
