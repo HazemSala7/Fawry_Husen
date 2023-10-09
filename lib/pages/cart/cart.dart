@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/firebase/cart/CartController.dart';
 import 'package:fawri_app_refactor/firebase/cart/cart.dart';
@@ -91,31 +92,78 @@ class _CartState extends State<Cart> {
                       ),
                     ),
                     cartItems.length != 0
-                        ? ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: cartItems.length,
-                            itemBuilder: (context, index) {
-                              CartItem item = cartItems[index];
-                              double total = item.price * item.quantity;
+                        ? Stack(
+                          children: [
+                            ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: cartItems.length,
+                                itemBuilder: (context, index) {
+                                  CartItem item = cartItems[index];
+                                  double total = item.price * item.quantity;
 
-                              return CartProductMethod(
-                                index: index,
-                                cartProvider: cartProvider,
-                                price: item.price,
-                                product_id:item.productId,
-                                type: item.type,
-                                name: item.name,
-                                qty: item.quantity,
-                                removeProduct: () {
-                                  cartProvider.removeFromCart(item.productId);
-                                  setState(() {});
+                                  return CartProductMethod(
+                                    index: index,
+                                    cartProvider: cartProvider,
+                                    price: item.price,
+                                    product_id:item.productId,
+                                    type: item.type,
+                                    name: item.name,
+                                    qty: item.quantity,
+                                    removeProduct: () {
+                                      cartProvider.removeFromCart(item.productId);
+                                      setState(() {});
+                                    },
+                                    image: item.image,
+                                    item: item,
+                                  );
                                 },
-                                image: item.image,
-                                item: item,
-                              );
-                            },
-                          )
+                              ),
+                            !LocalStorage().startCart
+                                ? Container(
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    "assets/images/aw.png",
+                                    fit: BoxFit.cover,
+                                    height: 230,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 20,
+                                  ),
+                                  Text(
+                                    "أسحب يمين أو شمال في حال الحذف",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w900),
+                                  ),
+                                  SizedBox(
+                                    height: 30,
+                                  ),
+                                  ButtonWidget(
+                                      name: "موافق",
+                                      height: 50,
+                                      width: 300,
+                                      BorderColor: Colors.white,
+                                      OnClickFunction: () {
+                                        LocalStorage().setStartCart();
+                                        setState(() {});
+                                      },
+                                      BorderRaduis: 10,
+                                      ButtonColor: Colors.white,
+                                      NameColor: Colors.black)
+                                ],
+                              ),
+                              color: Colors.black54,
+                              height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.height,
+                            )
+                                : SizedBox()
+
+                          ],
+                        )
                         : Container(
                             height: MediaQuery.of(context).size.height,
                             width: double.infinity,

@@ -129,6 +129,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
+                            LocalStorage().setStartSize();
                             if (widget.main_Category == "ملابس نسائيه") {
                               LocalStorage().editSize("menSizes", sizes);
                             } else if (widget.main_Category == "ملابس رجاليه") {
@@ -166,6 +167,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           width: 120,
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
+                            LocalStorage().setStartSize();
                             LocalStorage().setSizeUser([]);
                             NavigatorFunction(
                                 context,

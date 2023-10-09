@@ -37,12 +37,15 @@ class _ButtonWidgetState extends State<ButtonWidget> {
               borderRadius: BorderRadius.circular(widget.BorderRaduis),
               border: Border.all(color: widget.BorderColor)),
           child: Center(
-            child: Text(
-              widget.name,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: widget.NameColor),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 7),
+              child: Text(
+                widget.name,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: widget.NameColor),
+              ),
             ),
           ),
         ),

@@ -26,6 +26,16 @@ class LocalStorage {
     print("favorites");
   }
 
+
+  setStartSize(){
+    sizeDataBox.put('startSize', true);
+  }
+  setStartCart(){
+    sizeDataBox.put('startCart', true);
+  }
+
+
+
   List<String> Men_sizes = [
     "XS 👔",
     "S 👖",
@@ -173,4 +183,9 @@ class LocalStorage {
   List<dynamic> get favorites =>
       favoriteDataBox.get('favorites', defaultValue: []);
   List get sizeUser => sizeDataBox.get('sizeUser', defaultValue: []);
+  bool get startSize => sizeDataBox.get('startSize', defaultValue: false);
+  bool get startCart => sizeDataBox.get('startCart', defaultValue: false);
+
+
+
 }
