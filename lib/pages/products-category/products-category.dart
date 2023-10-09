@@ -235,7 +235,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                 : Expanded(
                     child: Padding(
                       padding:
-                          const EdgeInsets.only(top: 10, right: 10, left: 10),
+                          const EdgeInsets.only(top: 12, right: 10, left: 10),
                       child: AnimationLimiter(
                         child: GridView.builder(
                             controller: _controller,
@@ -265,8 +265,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
-                                      sizes: LocalStorage().sizeUser,
-                                        url: "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                        sizes: LocalStorage().sizeUser,
+                                        url:
+                                            "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
                                         isLiked: isLiked,
                                         Images: AllProducts[index]
                                                 ["vendor_images_links"] ??
