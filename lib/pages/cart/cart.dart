@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:uuid/uuid.dart';
 import '../../LocalDB/Models/CartModel.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
@@ -92,78 +93,31 @@ class _CartState extends State<Cart> {
                       ),
                     ),
                     cartItems.length != 0
-                        ? Stack(
-                          children: [
-                            ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: cartItems.length,
-                                itemBuilder: (context, index) {
-                                  CartItem item = cartItems[index];
-                                  double total = item.price * item.quantity;
+                        ? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: cartItems.length,
+                            itemBuilder: (context, index) {
+                              CartItem item = cartItems[index];
+                              double total = item.price * item.quantity;
 
-                                  return CartProductMethod(
-                                    index: index,
-                                    cartProvider: cartProvider,
-                                    price: item.price,
-                                    product_id:item.productId,
-                                    type: item.type,
-                                    name: item.name,
-                                    qty: item.quantity,
-                                    removeProduct: () {
-                                      cartProvider.removeFromCart(item.productId);
-                                      setState(() {});
-                                    },
-                                    image: item.image,
-                                    item: item,
-                                  );
+                              return CartProductMethod(
+                                index: index,
+                                cartProvider: cartProvider,
+                                price: item.price,
+                                product_id: item.productId,
+                                type: item.type,
+                                name: item.name,
+                                qty: item.quantity,
+                                removeProduct: () {
+                                  cartProvider.removeFromCart(item.productId);
+                                  setState(() {});
                                 },
-                              ),
-                            !LocalStorage().startCart
-                                ? Container(
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    "assets/images/aw.png",
-                                    fit: BoxFit.cover,
-                                    height: 230,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text(
-                                    "أسحب يمين أو شمال في حال الحذف",
-                                    style: TextStyle(
-                                        fontSize: 22,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w900),
-                                  ),
-                                  SizedBox(
-                                    height: 30,
-                                  ),
-                                  ButtonWidget(
-                                      name: "موافق",
-                                      height: 50,
-                                      width: 300,
-                                      BorderColor: Colors.white,
-                                      OnClickFunction: () {
-                                        LocalStorage().setStartCart();
-                                        setState(() {});
-                                      },
-                                      BorderRaduis: 10,
-                                      ButtonColor: Colors.white,
-                                      NameColor: Colors.black)
-                                ],
-                              ),
-                              color: Colors.black54,
-                              height: MediaQuery.of(context).size.height,
-                              width: MediaQuery.of(context).size.height,
-                            )
-                                : SizedBox()
-
-                          ],
-                        )
+                                image: item.image,
+                                item: item,
+                              );
+                            },
+                          )
                         : Container(
                             height: MediaQuery.of(context).size.height,
                             width: double.infinity,
@@ -216,6 +170,38 @@ class _CartState extends State<Cart> {
     );
   }
 
+  GlobalKey _one = GlobalKey();
+  // Function to check if the showcase has been shown before
+  Future<bool> hasShowcaseBeenShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('cart') ?? false;
+  }
+
+  // Function to mark the showcase as shown
+  Future<void> markShowcaseAsShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('cart', true);
+  }
+
+  void startShowCase() async {
+    bool showcaseShown = await hasShowcaseBeenShown();
+
+    if (!showcaseShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([_one]);
+      });
+
+      // Mark the showcase as shown
+      markShowcaseAsShown();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startShowCase();
+  }
+
   deleteCart(removeProduct) async {
     Navigator.pop(context);
     removeProduct();
@@ -257,6 +243,7 @@ class _CartState extends State<Cart> {
       var price}) {
     final cartProvider = Provider.of<CartProvider>(context);
     List<CartItem> cartItems = cartProvider.cartItems;
+
     return Padding(
       padding: const EdgeInsets.only(top: 3, bottom: 3),
       child: Dismissible(
@@ -382,49 +369,54 @@ class _CartState extends State<Cart> {
                 SizedBox(
                   // height: 100,
                   width: double.infinity,
-                  child: Row(
-                    children: [
-                      Container(
-                        // height: 80,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              topLeft: Radius.circular(10)),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(0),
-                          child: FancyShimmerImage(
-                            imageUrl: image,
+                  child: Showcase(
+                    key: _one,
+                    description: 'حرك اصبعك للشمال لحذف المنتج من السله ',
+                    child: Row(
+                      children: [
+                        Container(
+                          // height: 80,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(0),
+                            child: FancyShimmerImage(
+                              imageUrl: image,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, right: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 250,
-                              child: Text(
-                                name.length > 50
-                                    ? name.substring(0, 50) + '...'
-                                    : name,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, bottom: 10, right: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 250,
+                                child: Text(
+                                  name.length > 50
+                                      ? name.substring(0, 50) + '...'
+                                      : name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Text(
+                                type.toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                            ),
-                            Text(
-                              type.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 Padding(

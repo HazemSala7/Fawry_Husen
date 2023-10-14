@@ -8,6 +8,7 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:fawri_app_refactor/services/app_bar/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -45,8 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          child: AppBarWidget(
-            main_Category: "",
+          child: ShowCaseWidget(
+            builder: Builder(
+                builder: (context) => AppBarWidget(
+                      main_Category: "",
+                    )),
           ),
           preferredSize: Size.fromHeight(60)),
       body: _listOfWidget[selectedIndex],

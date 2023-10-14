@@ -23,282 +23,248 @@ class _MainScreenState extends State<MainScreen> {
   @override
   TextEditingController? textController;
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        Column(
+        Row(
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
-                    child: TextFormField(
-                      onTap: () {
-                        // NavigatorFunction(
-                        //     context,
-                        //     SearchScreen(
-                        //       SubCategories: SubCategories,
-                        //     ));
-                      },
-                      controller: textController,
-                      onChanged: (searchInput) {
-                        // Filter the customers based on search input
-                        if (searchInput.isEmpty) {
-                          _firstLoad();
-                        } else {
-                          setState(() {
-                            AllProducts = AllProducts.where((customer) =>
-                                    customer['title']
-                                        .toLowerCase()
-                                        .contains(searchInput.toLowerCase()) ||
-                                    customer['title'].contains(searchInput))
-                                .toList();
-                          });
-                        }
-                      },
-                      obscureText: false,
-                      autofocus: false,
-                      decoration: InputDecoration(
-                        labelText: "ابحث هنا",
-                        // labelStyle:
-                        //     FlutterFlowTheme.of(context).bodyText2,
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        focusedErrorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Color(0x00000000),
-                            width: 1,
-                          ),
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4.0),
-                            topRight: Radius.circular(4.0),
-                          ),
-                        ),
-                        suffixIcon: Icon(
-                          Icons.search,
-                          size: 20,
-                        ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                child: TextFormField(
+                  onTap: () {
+                    // NavigatorFunction(
+                    //     context,
+                    //     SearchScreen(
+                    //       SubCategories: SubCategories,
+                    //     ));
+                  },
+                  controller: textController,
+                  onChanged: (searchInput) {
+                    // Filter the customers based on search input
+                    if (searchInput.isEmpty) {
+                      _firstLoad();
+                    } else {
+                      setState(() {
+                        AllProducts = AllProducts.where((customer) =>
+                            customer['title']
+                                .toLowerCase()
+                                .contains(searchInput.toLowerCase()) ||
+                            customer['title'].contains(searchInput)).toList();
+                      });
+                    }
+                  },
+                  obscureText: false,
+                  autofocus: false,
+                  decoration: InputDecoration(
+                    labelText: "ابحث هنا",
+                    // labelStyle:
+                    //     FlutterFlowTheme.of(context).bodyText2,
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
                       ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    errorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    focusedErrorBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0x00000000),
+                        width: 1,
+                      ),
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4.0),
+                        topRight: Radius.circular(4.0),
+                      ),
+                    ),
+                    suffixIcon: Icon(
+                      Icons.search,
+                      size: 20,
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
-              child: Container(
-                height: 40,
-                width: double.infinity,
-                child: ListView.builder(
-                    itemCount: sub_categories_women_appearel.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 5, left: 5),
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              if (selectedIndexes.contains(index)) {
-                                selectedIndexes.remove(index);
-                              } else {
-                                selectedIndexes.add(index);
-                                _firstLoad();
-                                Sub_Category_Key =
-                                    sub_categories_women_appearel[index]["key"]
-                                        .toString();
-                                Sub_Category_Number = index;
-                              }
-                            });
-                          },
-                          child: Container(
-                            height: 40,
-                            //  width: ,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                    width: 3,
-                                    color: selectedIndexes.contains(index)
-                                        ? Colors.red
-                                        : Colors.black),
-                                color: Colors.black),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(
-                                  sub_categories_women_appearel[index]["name"]
-                                      .toString(),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white),
-                                ),
-                              ),
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
+          child: Container(
+            height: 40,
+            width: double.infinity,
+            child: ListView.builder(
+                itemCount: sub_categories_women_appearel.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 5, left: 5),
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          if (selectedIndexes.contains(index)) {
+                            selectedIndexes.remove(index);
+                          } else {
+                            selectedIndexes.add(index);
+                            _firstLoad();
+                            Sub_Category_Key =
+                                sub_categories_women_appearel[index]["key"]
+                                    .toString();
+                            Sub_Category_Number = index;
+                          }
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        //  width: ,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                width: 3,
+                                color: selectedIndexes.contains(index)
+                                    ? Colors.red
+                                    : Colors.black),
+                            color: Colors.black),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              sub_categories_women_appearel[index]["name"]
+                                  .toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.white),
                             ),
                           ),
                         ),
-                      );
-                    }),
-              ),
-            ),
-            _isFirstLoadRunning
-                ? Container(
-                    width: double.infinity,
-                    height: 400,
-                    child: Center(
-                      child: SpinKitPulse(
-                        color: MAIN_COLOR,
-                        size: 60,
                       ),
                     ),
-                  )
-                : AllProducts.length == 0
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 50),
-                        child: Text(
-                          "لا يوجد أي منتج",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                      )
-                    : Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 15, right: 10, left: 10),
-                          child: AnimationLimiter(
-                            child: GridView.builder(
-                                cacheExtent: 5000,
-                                controller: _controller,
-                                itemCount: AllProducts.length,
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 6,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 0.48,
-                                ),
-                                itemBuilder: (context, int index) {
-                                  final isLiked =
-                                      Provider.of<FavouriteProvider>(context)
-                                          .isProductFavorite(
-                                              AllProducts[index]["id"]);
-                                  return AnimationConfiguration.staggeredList(
-                                    position: index,
-                                    duration: const Duration(milliseconds: 500),
-                                    child: SlideAnimation(
-                                      horizontalOffset: 100.0,
-                                      // verticalOffset: 100.0,
-                                      child: FadeInAnimation(
-                                        curve: Curves.easeOut,
-                                        child: ProductWidget(
-                                            url:
-                                                "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
-                                            isLiked: isLiked,
-                                            Sub_Category_Key: Sub_Category_Key,
-                                            page: _page,
-                                            sizes: [],
-                                            home: true,
-                                            category_id: "",
-                                            size: "",
-                                            Images: AllProducts[index]
-                                                    ["vendor_images_links"] ??
-                                                [],
-                                            Products: AllProducts,
-                                            index: index,
-                                            name: AllProducts[index]["title"],
-                                            thumbnail: AllProducts[index]
-                                                ["thumbnail"],
-                                            id: AllProducts[index]["id"],
-                                            new_price: AllProducts[index]
-                                                ["price"],
-                                            old_price: AllProducts[index]
-                                                    ["price"] ??
-                                                0.0,
-                                            image: AllProducts[index]
-                                                ["vendor_images_links"][0]),
-                                      ),
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                      ),
-            // when the _loadMore function is running
-            if (_isLoadMoreRunning == true)
-              Padding(
-                padding: EdgeInsets.only(top: 10, bottom: 40),
+                  );
+                }),
+          ),
+        ),
+        _isFirstLoadRunning
+            ? Container(
+                width: double.infinity,
+                height: 400,
                 child: Center(
-                  child: CircularProgressIndicator(
+                  child: SpinKitPulse(
                     color: MAIN_COLOR,
+                    size: 60,
                   ),
                 ),
-              ),
-
-            // When nothing else to load
-            if (_hasNextPage == false)
-              Container(
-                padding: const EdgeInsets.only(top: 30, bottom: 40),
-                color: MAIN_COLOR,
-                child: const Center(
-                  child: Text('You have fetched all of the products'),
-                ),
-              ),
-          ],
-        ),
-        !LocalStorage().startSize
-            ? Container(
-                child: Column(
-                  children: [
-                    Image.asset(
-                      "assets/images/moving_arrow.gif",
-                      fit: BoxFit.cover,
-                      height: 230,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      "بأمكانك تحديد المقاسات وأحجام من هنا",
-                      style: TextStyle(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900),
-                    )
-                  ],
-                ),
-                color: Colors.black54,
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.height,
               )
-            : SizedBox()
+            : AllProducts.length == 0
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 50),
+                    child: Text(
+                      "لا يوجد أي منتج",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                  )
+                : Expanded(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 15, right: 10, left: 10),
+                      child: AnimationLimiter(
+                        child: GridView.builder(
+                            cacheExtent: 5000,
+                            controller: _controller,
+                            itemCount: AllProducts.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 6,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 0.48,
+                            ),
+                            itemBuilder: (context, int index) {
+                              final isLiked = Provider.of<FavouriteProvider>(
+                                      context)
+                                  .isProductFavorite(AllProducts[index]["id"]);
+                              return AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: 500),
+                                child: SlideAnimation(
+                                  horizontalOffset: 100.0,
+                                  // verticalOffset: 100.0,
+                                  child: FadeInAnimation(
+                                    curve: Curves.easeOut,
+                                    child: ProductWidget(
+                                        url:
+                                            "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
+                                        isLiked: isLiked,
+                                        Sub_Category_Key: Sub_Category_Key,
+                                        page: _page,
+                                        sizes: [],
+                                        home: true,
+                                        category_id: "",
+                                        size: "",
+                                        Images: AllProducts[index]
+                                                ["vendor_images_links"] ??
+                                            [],
+                                        Products: AllProducts,
+                                        index: index,
+                                        name: AllProducts[index]["title"],
+                                        thumbnail: AllProducts[index]
+                                            ["thumbnail"],
+                                        id: AllProducts[index]["id"],
+                                        new_price: AllProducts[index]["price"],
+                                        old_price:
+                                            AllProducts[index]["price"] ?? 0.0,
+                                        image: AllProducts[index]
+                                            ["vendor_images_links"][0]),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                  ),
+        // when the _loadMore function is running
+        if (_isLoadMoreRunning == true)
+          Padding(
+            padding: EdgeInsets.only(top: 10, bottom: 40),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: MAIN_COLOR,
+              ),
+            ),
+          ),
+
+        // When nothing else to load
+        if (_hasNextPage == false)
+          Container(
+            padding: const EdgeInsets.only(top: 30, bottom: 40),
+            color: MAIN_COLOR,
+            child: const Center(
+              child: Text('You have fetched all of the products'),
+            ),
+          ),
       ],
     );
   }

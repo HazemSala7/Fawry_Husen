@@ -2,6 +2,7 @@ import 'package:fawri_app_refactor/pages/choose_size/choose_size.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:vibration/vibration.dart';
 
 import '../../LocalDB/Database/local_storage.dart';
@@ -152,10 +153,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
 
                             NavigatorFunction(
                                 context,
-                                ProductsCategories(
-                                  category_id: widget.main_Category,
-                                  size: sizeApp.join(', '),
-                                ));
+                                ShowCaseWidget(
+                                    builder: Builder(
+                                        builder: (context) =>
+                                            ProductsCategories(
+                                              category_id: widget.main_Category,
+                                              size: sizeApp.join(', '),
+                                            ))));
                           },
                           BorderRaduis: 10,
                           ButtonColor: MAIN_COLOR,
@@ -171,10 +175,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                             LocalStorage().setSizeUser([]);
                             NavigatorFunction(
                                 context,
-                                ProductsCategories(
-                                  category_id: widget.main_Category,
-                                  size: "null",
-                                ));
+                                ShowCaseWidget(
+                                    builder: Builder(
+                                        builder: (context) =>
+                                            ProductsCategories(
+                                              category_id: widget.main_Category,
+                                              size: "null",
+                                            ))));
                             // String selectedSizes = getSelectedSizes();
                             // SharedPreferences prefs =
                             //     await SharedPreferences.getInstance();
@@ -219,9 +226,37 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     return textPainter.width;
   }
 
+  GlobalKey _one = GlobalKey();
+
+  // Function to check if the showcase has been shown before
+  Future<bool> hasShowcaseBeenShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('showcaseShown') ?? false;
+  }
+
+  // Function to mark the showcase as shown
+  Future<void> markShowcaseAsShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showcaseShown', true);
+  }
+
+  void startShowCase() async {
+    bool showcaseShown = await hasShowcaseBeenShown();
+
+    if (!showcaseShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([_one]);
+      });
+
+      // Mark the showcase as shown
+      markShowcaseAsShown();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    startShowCase();
     setUserID();
     setSizesArray();
   }
@@ -229,17 +264,22 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      leading: InkWell(
-        onTap: () {
-          getSizesAndShow();
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Image.asset(
-            "assets/images/tshirt.png",
-            height: 35,
-            width: 35,
-            color: Colors.black,
+      leading: Showcase(
+        key: _one,
+        title: 'اختيار الحجم',
+        description: 'هنا يتم اختيار الحجم',
+        child: InkWell(
+          onTap: () {
+            getSizesAndShow();
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              "assets/images/tshirt.png",
+              height: 35,
+              width: 35,
+              color: Colors.black,
+            ),
           ),
         ),
       ),
@@ -249,7 +289,10 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           children: [
             InkWell(
               onTap: () {
-                NavigatorFunction(context, Cart());
+                NavigatorFunction(
+                    context,
+                    ShowCaseWidget(
+                        builder: Builder(builder: (context) => Cart())));
               },
               child: Padding(
                 padding: const EdgeInsets.all(6.0),

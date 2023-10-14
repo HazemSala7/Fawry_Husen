@@ -62,7 +62,7 @@ class _FawriState extends State<Fawri> {
       });
     }
   }
-  
+
   FawriFirebaseUser? initialUser;
 
   bool displaySplashImage = true;
@@ -96,7 +96,11 @@ class _FawriState extends State<Fawri> {
               curve: Curves.ease,
             ),
           ),
-          child: FirstScreen ? LoginScreen() : CategorySplash()),
+          child: ShowCaseWidget(
+            builder: Builder(
+                builder: (context) =>
+                    FirstScreen ? LoginScreen() : CategorySplash()),
+          )),
     );
   }
 }
