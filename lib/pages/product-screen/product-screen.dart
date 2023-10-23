@@ -166,9 +166,10 @@ class _ProductScreenState extends State<ProductScreen> {
       loadingPage = false;
     });
   }
+
   int page = 1;
   Future loadAdditionalData() async {
-    page +=1;
+    page += 1;
     final uri = Uri.parse(widget.url);
 
     if (uri.host == null) {
@@ -183,7 +184,6 @@ class _ProductScreenState extends State<ProductScreen> {
     print(page);
     int incrementPage = page;
     updatedQueryParameters['page'] = incrementPage.toString();
-
 
     final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
     final updatedUrl = updatedUri.toString();
@@ -305,24 +305,26 @@ class _ProductScreenState extends State<ProductScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (_) => AlertDialog(
-                                      title: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          LoadingAnimationWidget.discreteCircle(
-                                              color: Colors.teal,
-                                              size: 50,
-                                              secondRingColor:
-                                              Colors.amberAccent,
-                                              thirdRingColor:
-                                              Colors.tealAccent),
-                                        ],
-                                      ),
-                                    ));
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              LoadingAnimationWidget
+                                                  .discreteCircle(
+                                                      color: Colors.teal,
+                                                      size: 50,
+                                                      secondRingColor:
+                                                          Colors.amberAccent,
+                                                      thirdRingColor:
+                                                          Colors.tealAccent),
+                                            ],
+                                          ),
+                                        ));
                                 await loadAdditionalData();
-                                Navigator.pop(context);                              }
+                                Navigator.pop(context);
+                              }
                             },
                           ),
                           items: newArray.map((i) {
@@ -375,22 +377,23 @@ class _ProductScreenState extends State<ProductScreen> {
                                 showDialog(
                                     context: context,
                                     builder: (_) => AlertDialog(
-                                      title: Row(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        children: [
-                                          LoadingAnimationWidget.discreteCircle(
-                                              color: Colors.teal,
-                                              size: 50,
-                                              secondRingColor:
-                                              Colors.amberAccent,
-                                              thirdRingColor:
-                                              Colors.tealAccent),
-                                        ],
-                                      ),
-                                    ));
+                                          title: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              LoadingAnimationWidget
+                                                  .discreteCircle(
+                                                      color: Colors.teal,
+                                                      size: 50,
+                                                      secondRingColor:
+                                                          Colors.amberAccent,
+                                                      thirdRingColor:
+                                                          Colors.tealAccent),
+                                            ],
+                                          ),
+                                        ));
                                 await loadAdditionalData();
                                 Navigator.pop(context);
                               }
@@ -486,14 +489,13 @@ class _ProductScreenState extends State<ProductScreen> {
                             Map placeInWarehouse = {};
                             bool typeApi = false;
                             for (int i = 0; i < item["variants"].length; i++) {
-                              if(!sizesAPI.contains(item["variants"][i]["size"])){
+                              if (!sizesAPI
+                                  .contains(item["variants"][i]["size"])) {
                                 sizesAPI.add(item["variants"][i]["size"]);
                                 placeInWarehouse[item["variants"][i]["size"]] =
-                                item["variants"][i]["place_in_warehouse"];
+                                    item["variants"][i]["place_in_warehouse"];
                                 typeApi = true;
-
                               }
-
                             }
 
                             return AnimationConfiguration.staggeredList(
@@ -566,7 +568,6 @@ class _ProductScreenState extends State<ProductScreen> {
     // String SelectedSizes = "";
     List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
 
-
     final cartProvider = Provider.of<CartProvider>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
@@ -611,119 +612,141 @@ class _ProductScreenState extends State<ProductScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Container(
-                  key: widgetKey,
-                  height: MediaQuery.of(context).size.height * 0.60,
-                  width: double.infinity,
-                  child: clicked
-                      ? Container()
-                      : StatefulBuilder(
-                          builder:
-                              (BuildContext context, StateSetter setState) {
-                            return Stack(
-                              alignment: Alignment.topRight,
-                              children: [
-                                images!.length == 1
-                                    ? Container(
-                                  height: MediaQuery.of(context).size.height * 0.60,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: FancyShimmerImage(
-                                          imageUrl: images[0],
-                                        ),
-                                      )
-                                    : CarouselSlider(
-                                        options: CarouselOptions(
-                                          onPageChanged: (index, reason) {
-                                            _currentIndex = index;
-                                            setState(() {});
-                                          },
-                                          height: MediaQuery.of(context).size.height * 0.60,
-                                          scrollDirection: Axis.vertical,
-                                          viewportFraction: 1,
-                                          autoPlayCurve: Curves.fastOutSlowIn,
-                                          aspectRatio: 2.0,
-                                          autoPlay: true,
-                                        ),
-                                        items: images.map((i) {
-                                          return Builder(
-                                            builder: (BuildContext context) {
-                                              return Container(
-                                                height: MediaQuery.of(context).size.height * 0.60,
-                                                width: MediaQuery.of(context)
+                Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    Container(
+                      key: widgetKey,
+                      height: MediaQuery.of(context).size.height * 0.60,
+                      width: double.infinity,
+                      child: clicked
+                          ? Container()
+                          : StatefulBuilder(
+                              builder:
+                                  (BuildContext context, StateSetter setState) {
+                                return Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    images!.length == 1
+                                        ? Container(
+                                            height: MediaQuery.of(context)
                                                     .size
-                                                    .width,
-                                                child: InteractiveViewer(
-                                                  panEnabled:
-                                                      false, // Set it to false
-                                                  boundaryMargin:
-                                                      EdgeInsets.all(100),
-                                                  minScale: 0.5,
-                                                  maxScale: 2,
-                                                  child: FancyShimmerImage(
-                                                    imageUrl: i,
-                                                  ),
-                                                ),
+                                                    .height *
+                                                0.60,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: FancyShimmerImage(
+                                              imageUrl: images[0],
+                                            ),
+                                          )
+                                        : CarouselSlider(
+                                            options: CarouselOptions(
+                                              onPageChanged: (index, reason) {
+                                                _currentIndex = index;
+                                                setState(() {});
+                                              },
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.60,
+                                              scrollDirection: Axis.vertical,
+                                              viewportFraction: 1,
+                                              autoPlayCurve:
+                                                  Curves.fastOutSlowIn,
+                                              aspectRatio: 2.0,
+                                              autoPlay: true,
+                                            ),
+                                            items: images.map((i) {
+                                              return Builder(
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return Container(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.60,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: InteractiveViewer(
+                                                      panEnabled:
+                                                          false, // Set it to false
+                                                      boundaryMargin:
+                                                          EdgeInsets.all(100),
+                                                      minScale: 0.5,
+                                                      maxScale: 2,
+                                                      child: FancyShimmerImage(
+                                                        imageUrl: i,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
                                               );
-                                            },
-                                          );
-                                        }).toList(),
-                                      ),
-                                Visibility(
-                                  visible: images.length == 1 ? false : true,
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.only(right: 10.0, top: 150),
-                                    width: 20.0,
-                                    child: DotsIndicator(
-                                      dotsCount: images.length == 0
-                                          ? 1
-                                          : images.length,
-                                      position: _currentIndex >= images.length
-                                          ? images.length - 1
-                                          : _currentIndex,
-                                      axis: Axis.vertical,
-                                      decorator: DotsDecorator(
-                                        size: const Size.square(9.0),
-                                        activeSize: const Size(38.0, 15.0),
-                                        activeShape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
+                                            }).toList(),
+                                          ),
+                                    Visibility(
+                                      visible:
+                                          images.length == 1 ? false : true,
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            right: 10.0, top: 150),
+                                        width: 20.0,
+                                        child: DotsIndicator(
+                                          dotsCount: images.length == 0
+                                              ? 1
+                                              : images.length,
+                                          position:
+                                              _currentIndex >= images.length
+                                                  ? images.length - 1
+                                                  : _currentIndex,
+                                          axis: Axis.vertical,
+                                          decorator: DotsDecorator(
+                                            size: const Size.square(9.0),
+                                            activeSize: const Size(38.0, 15.0),
+                                            activeShape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5.0),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 10,
-                                  right: 10,
-                                  child: Tooltip(
-                                    onTriggered: () {
-                                      Clipboard.setData(
-                                          ClipboardData(text: SKU));
-                                      Fluttertoast.showToast(
-                                          msg: "copied successfully!");
-                                    },
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: SKU,
-                                    child: Icon(Icons.info,
-                                        size: 30, color: MAIN_COLOR),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, left: 20, bottom: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                                    Positioned(
+                                      top: 10,
+                                      right: 10,
+                                      child: Tooltip(
+                                        onTriggered: () {
+                                          Clipboard.setData(
+                                              ClipboardData(text: SKU));
+                                          Fluttertoast.showToast(
+                                              msg: "copied successfully!");
+                                        },
+                                        triggerMode: TooltipTriggerMode.tap,
+                                        message: SKU,
+                                        child: Icon(Icons.info,
+                                            size: 30, color: MAIN_COLOR),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.60,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
+                            Icon(
+                              Icons.share,
+                              size: 30,
+                              color: Colors.black,
+                            ),
                             Consumer<FavouriteProvider>(
                               builder: (context, favoriteProvider, _) {
                                 return InkWell(
@@ -746,26 +769,35 @@ class _ProductScreenState extends State<ProductScreen> {
                                         favoriteProvider.notifyListeners();
                                       }
                                     },
-                                    child: Icon(
-                                      Icons.favorite,
-                                      size: 40,
-                                      color: LocalStorage()
-                                              .isFavorite(id.toString())
-                                          ? Colors.red
-                                          : Colors.black26,
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.favorite,
+                                          size: 30,
+                                          color: LocalStorage()
+                                                  .isFavorite(id.toString())
+                                              ? Colors.red
+                                              : Colors.black26,
+                                        ),
+                                      ),
                                     ));
                               },
                             ),
-                            // LikeButton(
-                            //   circleColor:
-                            //       CircleColor(start: Colors.red, end: Colors.red),
-                            //   size: 35,
-                            //   onTap: onLikeButtonTapped,
-                            //   isLiked: false,
-                            // ),
                           ],
                         ),
                       ),
+                    ),
+                  ],
+                ),
+                Container(
+                  child: Column(
+                    children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -1071,8 +1103,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       width: 150,
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
-
-                        if(inCart){
+                        if (inCart) {
                           print("inCart");
                           print(inCart);
                           final newItem = CartItem(
@@ -1090,12 +1121,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                   ? LocalStorage().sizeUser[0]
                                   : SelectedSizes,
                               placeInWarehouse:
-                              placeInWarehouse[SelectedSizes] ?? "0000");
+                                  placeInWarehouse[SelectedSizes] ?? "0000");
 
                           cartProvider.removeFromCart(id);
                           setState(() {});
-                        }else{
-                          if(SelectedSizes != "إختر المقاس") {
+                        } else {
+                          if (SelectedSizes != "إختر المقاس") {
                             setState(() {
                               loading = true;
                               clicked = true;
@@ -1107,7 +1138,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 vendor_sku: vendor_SKU,
                                 nickname: nickname,
                                 productId: id,
-                                id:id,
+                                id: id,
                                 name: name,
                                 image: image.toString(),
                                 price: double.parse(new_price.toString()),
@@ -1117,14 +1148,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                     ? LocalStorage().sizeUser[0]
                                     : SelectedSizes,
                                 placeInWarehouse:
-                                placeInWarehouse[SelectedSizes] ?? "0000");
+                                    placeInWarehouse[SelectedSizes] ?? "0000");
                             print(newItem.toJson());
                             print("newItem.toJson()");
                             cartProvider.addToCart(newItem);
                             const snackBar = SnackBar(
                               content: Text('تم اضافه المنتج الى السله بنجاح!'),
                             );
-                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                             Timer(Duration(milliseconds: 500), () {
                               Fluttertoast.cancel();
                               // Dismiss the toast after the specified duration
@@ -1154,7 +1186,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                         decoration: BoxDecoration(
                                             color: MAIN_COLOR,
                                             borderRadius:
-                                            BorderRadius.circular(10)),
+                                                BorderRadius.circular(10)),
                                         child: Center(
                                           child: Text(
                                             "حسنا",
@@ -1171,7 +1203,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             );
                           }
                         }
-
                       },
                       BorderRaduis: 10,
                       ButtonColor: Colors.black,

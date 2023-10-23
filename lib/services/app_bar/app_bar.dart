@@ -27,10 +27,13 @@ class AppBarWidget extends StatefulWidget {
 class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   String user_id = "";
-  setUserID() async {
+  bool is_selected_size = false;
+  setSharedPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
+    bool is_selected_size_shared = prefs.getBool('is_selected_size') ?? false;
     user_id = UserID;
+    is_selected_size = is_selected_size_shared;
   }
 
   Map sizes = {};
@@ -150,7 +153,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                               }
                             });
                             LocalStorage().setSizeUser(sizeApp);
-
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setBool('is_selected_size', true);
                             NavigatorFunction(
                                 context,
                                 ShowCaseWidget(
@@ -173,6 +178,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                           OnClickFunction: () async {
                             LocalStorage().setStartSize();
                             LocalStorage().setSizeUser([]);
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setBool('is_selected_size', false);
                             NavigatorFunction(
                                 context,
                                 ShowCaseWidget(
@@ -257,7 +265,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   void initState() {
     super.initState();
     startShowCase();
-    setUserID();
+    setSharedPref();
     setSizesArray();
   }
 
@@ -278,7 +286,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               "assets/images/tshirt.png",
               height: 35,
               width: 35,
-              color: Colors.black,
+              color: is_selected_size ? Colors.red : Colors.black,
             ),
           ),
         ),

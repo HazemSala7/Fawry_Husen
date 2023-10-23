@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 
@@ -73,9 +74,11 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
               ],
             ),
             appBar: PreferredSize(
-                child: AppBarWidget(
-                  main_Category: widget.category_id,
-                ),
+                child: ShowCaseWidget(
+                    builder: Builder(
+                        builder: (context) => AppBarWidget(
+                              main_Category: widget.category_id,
+                            ))),
                 preferredSize: Size.fromHeight(50)),
             body: _listOfWidget[selectedIndex]),
       ),

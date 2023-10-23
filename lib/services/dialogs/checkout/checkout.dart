@@ -96,6 +96,44 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
+                    "الأسم",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                child: TextField(
+                  controller: NameController,
+                  obscureText: false,
+                  keyboardType: TextInputType.name,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                    ),
+                    hintText: "الأسم",
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
                     "رقم الهاتف",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -310,17 +348,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                           setState(() {
                             loading = true;
                           });
-                          print("dropdownValue");
-                          print(dropdownValue);
-                          print(PhoneController.text);
-                          print(CityController.text);
-                          print(AreaController.text);
-                          print(AddressController.text);
                           await addOrder(
                             context: context,
                             address: AddressController.text,
                             city: CityController.text,
                             phone: PhoneController.text,
+                            name: NameController.text,
                           );
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
@@ -628,6 +661,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
     );
   }
 
+  TextEditingController NameController = TextEditingController();
   TextEditingController PhoneController = TextEditingController();
   TextEditingController CityController = TextEditingController();
   TextEditingController AreaController = TextEditingController();

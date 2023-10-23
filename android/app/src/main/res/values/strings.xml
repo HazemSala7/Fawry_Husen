@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Fawri</string>
+    <string name="facebook_app_id">3606217462947603</string>
+    <string name="fb_login_protocol_scheme">3d1a3340c422f021691cb150a5a10773</string>
+    <string name="facebook_client_token">56789</string>
+</resources>

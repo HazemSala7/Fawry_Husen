@@ -153,7 +153,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                               }
                             });
                             LocalStorage().setSizeUser(sizeApp);
-
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setBool('is_selected_size', true);
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(
@@ -172,6 +174,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           BorderColor: Colors.black,
                           OnClickFunction: () async {
                             LocalStorage().setSizeUser([]);
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setBool('is_selected_size', false);
                             NavigatorFunction(
                                 context,
                                 ProductsCategories(

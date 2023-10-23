@@ -22,7 +22,7 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
 getProducts(int page) async {
   var response = await http.get(
       Uri.parse(
-          "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$page"),
+          "http://3.84.200.136:3000/api/getAllItems?api_key=$key_bath&page=$page"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
@@ -40,7 +40,7 @@ getSpeceficProduct(id) async {
   return res;
 }
 
-addOrder({context, address, phone, city}) async {
+addOrder({context, address, phone, city, name}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
   print("UserID");
@@ -78,7 +78,7 @@ addOrder({context, address, phone, city}) async {
       Uri.parse(
           'http://34.227.78.214/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
   request.body = json.encode({
-    "name": "Hazem TEST",
+    "name": name.toString(),
     "page": "Fawri App",
     "description": "description Test",
     "phone": phone.toString(),
@@ -105,7 +105,7 @@ getProductByCategory(
     category_id, sub_category_key, String size, int page) async {
   var response = await http.get(
       Uri.parse(
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&${size !="null" ?"size=${size}":""}&season=Summer&page=$page&api_key=$key_bath"),
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&${size != "null" ? "size=${size}" : ""}&season=Summer&page=$page&api_key=$key_bath"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;

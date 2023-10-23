@@ -1,4 +1,4 @@
-var URL = "http://34.227.78.214/api/";
+var URL = "http://3.84.200.136:3000/api/";
 var key_bath = "H93J48593HFNWIEUTR287TG3";
 
 //PUBLIC

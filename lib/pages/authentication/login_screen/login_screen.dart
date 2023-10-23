@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/firebase/user/UserModel.dart';
@@ -9,7 +10,10 @@ import 'package:fawri_app_refactor/pages/category-splash/category-splash.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vibration/vibration.dart';
@@ -87,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: BouncingWidget(
                               child: InkWell(
                                 onTap: () {
-                                  Vibration.vibrate(duration: 300);
+                                  Vibration.vibrate(duration: 100);
                                   setState(() {
                                     loading = true;
                                   });
@@ -182,7 +186,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: MAIN_COLOR),
                                       child: Center(
                                         child: IconButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await signInWithFacebook();
+                                            },
                                             icon: Icon(
                                               FontAwesome.facebook,
                                               color: Colors.white,
@@ -201,7 +207,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: MAIN_COLOR),
                                       child: Center(
                                         child: IconButton(
-                                            onPressed: () {},
+                                            onPressed: () async {
+                                              await signInWithGoogle();
+                                            },
                                             icon: Icon(
                                               Icons.mail,
                                               color: Colors.white,
@@ -243,6 +251,82 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    var data = await FirebaseAuth.instance.signInWithCredential(credential);
+    // Convert the user data to a JSON string
+    // String userDataJson = json.encode(data);
+    // print("email");
+    // print(data["email"]);
+    String user_Id = Uuid().v4();
+    print("user_Id");
+    print(user_Id);
+    UserItem newItem = UserItem(
+      id: user_Id,
+      email: data.user!.email.toString(),
+      password: "",
+      address: 'address',
+      area: '',
+      city: '',
+      phone: '',
+    );
+    userService.addUser(newItem).then((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_id', user_Id);
+      await prefs.setBool('login', true);
+      NavigatorFunction(context, CategorySplash());
+    }).catchError((error) {
+      Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
+    });
+
+    // Once signed in, return the UserCredential
+    return data;
+  }
+
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance
+        .login(permissions: ['email', 'public_profile', 'user_birthday']);
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(loginResult.accessToken!.token);
+    var userDate = await FacebookAuth.instance.getUserData();
+    // Convert the user data to a JSON string
+    String userDataJson = json.encode(userDate);
+    String user_Id = Uuid().v4();
+    UserItem newItem = UserItem(
+      id: user_Id,
+      email: userDate["email"],
+      password: "",
+      address: '',
+      area: '',
+      city: '',
+      phone: '',
+    );
+    userService.addUser(newItem).then((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('user_id', user_Id);
+      await prefs.setBool('login', true);
+      NavigatorFunction(context, CategorySplash());
+    }).catchError((error) {
+      Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
+    });
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
   void _showBottomDialog(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -254,9 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final UserService userService = UserService();
   addUser() async {
-    String user_Id = "4";
-    print("user_Id");
-    print(user_Id);
+    String user_Id = Uuid().v4();
     UserItem newItem = UserItem(
       id: user_Id,
       email: "$user_Id@gmail.com",
