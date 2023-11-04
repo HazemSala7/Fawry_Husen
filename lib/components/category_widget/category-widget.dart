@@ -2,6 +2,8 @@ import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
+import 'package:fawri_app_refactor/components/category_widget/kids_category_dialog/kids_category_dialog.dart';
+import 'package:fawri_app_refactor/components/category_widget/shoes_category_dialog/shoes_category_dialog.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -225,140 +227,9 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         bool Men = false;
         bool Kids = false;
         if (widget.name == "الأحذيه") {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  return AlertDialog(
-                      content: SizedBox(
-                    height: 280,
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              value: All,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  All = value!;
-                                  Women = value;
-                                  Men = value;
-                                  Kids = value;
-                                });
-                              },
-                            ),
-                            ButtonWidget(
-                                name: "الجميع",
-                                height: 50,
-                                width: 200,
-                                BorderColor: MAIN_COLOR,
-                                OnClickFunction: () {
-                                  getSizesAndShow();
-                                },
-                                BorderRaduis: 4,
-                                ButtonColor: MAIN_COLOR,
-                                NameColor: Colors.white),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              value: Women,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  Women = value!;
-                                });
-                              },
-                            ),
-                            ButtonWidget(
-                                name: "الأحذيه الستاتيه",
-                                height: 50,
-                                width: 200,
-                                BorderColor: MAIN_COLOR,
-                                OnClickFunction: () {
-                                  getSizesAndShow();
-                                },
-                                BorderRaduis: 4,
-                                ButtonColor: MAIN_COLOR,
-                                NameColor: Colors.white),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              value: Men,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  Men = value!;
-                                });
-                              },
-                            ),
-                            ButtonWidget(
-                                name: "الأحذيه الرجاليه",
-                                height: 50,
-                                width: 200,
-                                BorderColor: MAIN_COLOR,
-                                OnClickFunction: () {
-                                  getSizesAndShow();
-                                },
-                                BorderRaduis: 4,
-                                ButtonColor: MAIN_COLOR,
-                                NameColor: Colors.white),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Checkbox(
-                              checkColor: Colors.white,
-                              value: Kids,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  Kids = value!;
-                                });
-                              },
-                            ),
-                            ButtonWidget(
-                                name: "أحذيه أطفال",
-                                height: 50,
-                                width: 200,
-                                BorderColor: MAIN_COLOR,
-                                OnClickFunction: () {
-                                  getSizesAndShow();
-                                },
-                                BorderRaduis: 4,
-                                ButtonColor: MAIN_COLOR,
-                                NameColor: Colors.white),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ButtonWidget(
-                                name: "التالي",
-                                height: 40,
-                                width: 100,
-                                BorderColor: MAIN_COLOR,
-                                OnClickFunction: () {
-                                  getSizesAndShow();
-                                },
-                                BorderRaduis: 4,
-                                ButtonColor: MAIN_COLOR,
-                                NameColor: Colors.white),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ));
-                },
-              );
-            },
-          );
+          NavigatorFunction(context, ShoesCategoryDialog());
+        } else if (widget.name == "ملابس أطفال") {
+          NavigatorFunction(context, KidsCategoryDialog());
         } else {
           getSizesAndShow();
         }

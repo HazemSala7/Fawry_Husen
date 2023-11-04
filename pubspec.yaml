@@ -59,6 +59,7 @@ dependencies:
   like_button: ^2.0.5
   flutter_cache_manager: ^3.3.1
   dots_indicator: ^3.0.0
+  confetti: ^0.7.0
   swipe_to: ^1.0.2
   shimmer: ^3.0.0
   fancy_shimmer_image: ^2.0.3
@@ -69,6 +70,9 @@ dependencies:
   add_to_cart_animation: ^2.0.3
   bouncerwidget: ^0.0.5
   photo_view: ^0.14.0
+  share: ^2.0.4
+  firebase_remote_config: ^4.3.1
+  crypto: ^3.0.1
 
 dependency_overrides:
   test_api: ^0.4.18

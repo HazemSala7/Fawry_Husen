@@ -369,54 +369,49 @@ class _CartState extends State<Cart> {
                 SizedBox(
                   // height: 100,
                   width: double.infinity,
-                  child: Showcase(
-                    key: _one,
-                    description: 'حرك اصبعك للشمال لحذف المنتج من السله ',
-                    child: Row(
-                      children: [
-                        Container(
-                          // height: 80,
-                          width: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                topLeft: Radius.circular(10)),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(0),
-                            child: FancyShimmerImage(
-                              imageUrl: image,
-                            ),
+                  child: Row(
+                    children: [
+                      Container(
+                        // height: 80,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              topLeft: Radius.circular(10)),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(0),
+                          child: FancyShimmerImage(
+                            imageUrl: image,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, bottom: 10, right: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 250,
-                                child: Text(
-                                  name.length > 50
-                                      ? name.substring(0, 50) + '...'
-                                      : name,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                              ),
-                              Text(
-                                type.toString(),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 10, bottom: 10, right: 20),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 250,
+                              child: Text(
+                                name.length > 50
+                                    ? name.substring(0, 50) + '...'
+                                    : name,
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+                            ),
+                            Text(
+                              type.toString(),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 Padding(

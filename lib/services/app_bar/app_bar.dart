@@ -283,10 +283,11 @@ class _AppBarWidgetState extends State<AppBarWidget> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset(
-              "assets/images/tshirt.png",
+              is_selected_size
+                  ? "assets/images/full_tshirt.png"
+                  : "assets/images/tshirt.png",
               height: 35,
               width: 35,
-              color: is_selected_size ? Colors.red : Colors.black,
             ),
           ),
         ),

@@ -18,6 +18,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
@@ -742,11 +743,12 @@ class _ProductScreenState extends State<ProductScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.share,
-                              size: 30,
-                              color: Colors.black,
-                            ),
+                            IconButton(
+                                onPressed: () {
+                                  Share.share(
+                                      "http://3.84.200.136/product-details-one/${widget.id}?offset=1");
+                                },
+                                icon: Icon(Icons.share)),
                             Consumer<FavouriteProvider>(
                               builder: (context, favoriteProvider, _) {
                                 return InkWell(

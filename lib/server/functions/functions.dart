@@ -1,3 +1,4 @@
+import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,7 @@ getSpeceficProduct(id) async {
   if (id.toString().endsWith(',')) {
     id = id.toString().substring(0, id.toString().length - 1);
   }
-  print("$URL_SINGLE_PRODUCT?id=$id&api_key=$key_bath");
+
   var response = await http.get(
       Uri.parse("$URL_SINGLE_PRODUCT?id=$id&api_key=$key_bath"),
       headers: headers);
@@ -43,8 +44,6 @@ getSpeceficProduct(id) async {
 addOrder({context, address, phone, city, name}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
-  print("UserID");
-  print(UserID);
   final cartProvider =
       Provider.of<CartProvider>(context, listen: false).cartItems;
   List<Map<String, dynamic>> products = [];
@@ -69,14 +68,12 @@ addOrder({context, address, phone, city, name}) async {
     });
     totalPrice += double.parse(cartProvider[i].price.toString());
   }
-  print("products");
-  print(products.toString());
 
   var headers = {'Content-Type': 'application/json'};
   var request = http.Request(
       'POST',
       Uri.parse(
-          'http://34.227.78.214/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
+          'http://3.84.200.136:3000/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
   request.body = json.encode({
     "name": name.toString(),
     "page": "Fawri App",
@@ -90,12 +87,9 @@ addOrder({context, address, phone, city, name}) async {
   });
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();
-  print("response");
-  print(response.request);
   if (response.statusCode == 200) {
     String stream = await response.stream.bytesToString();
     final decodedMap = json.decode(stream);
-    print(decodedMap["id"]);
   } else {
     print(response.reasonPhrase);
   }
@@ -103,9 +97,10 @@ addOrder({context, address, phone, city, name}) async {
 
 getProductByCategory(
     category_id, sub_category_key, String size, int page) async {
+  var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
   var response = await http.get(
       Uri.parse(
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&${size != "null" ? "size=${size}" : ""}&season=Summer&page=$page&api_key=$key_bath"),
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&${size != "null" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;

@@ -1,4 +1,6 @@
 import 'package:fawri_app_refactor/constants/constants.dart';
+import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
+import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -76,6 +78,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => HomeScreen()));
+                    }),
+                lineMethod(),
+                profileCard(
+                    name: "طلبياتي",
+                    iconornot: true,
+                    image: "assets/images/heart.png",
+                    icon: Icons.request_quote,
+                    NavigatorFunction: () {
+                      NavigatorFunction(context, OrderDetails());
                     }),
                 lineMethod(),
               ],

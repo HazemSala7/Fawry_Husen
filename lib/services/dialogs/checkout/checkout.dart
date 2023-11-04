@@ -1,4 +1,5 @@
 import 'package:bouncerwidget/bouncerwidget.dart';
+import 'package:confetti/confetti.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
@@ -25,6 +26,8 @@ class CheckoutBottomDialog extends StatefulWidget {
 class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   @override
   String dropdownValue = 'اختر منطقتك';
+  ConfettiController? _confettiController;
+
   bool status = false;
   bool clicked = false;
   late PageController _pageController;
@@ -37,6 +40,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           _progress = _pageController.page ?? 0;
         });
       });
+    _confettiController = ConfettiController(duration: Duration(seconds: 2));
+
     super.initState();
   }
 
@@ -60,7 +65,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: 550 - _progress * 104,
+                    height: 500 - _progress * 25,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
@@ -75,13 +80,28 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                         FirstScreen(),
                         SecondScreen(),
                       ],
-                    ))
+                    )),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String? validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter a phone number';
+    }
+    if (value.length != 10) {
+      return 'يجب أن يكون مجموع خانات الهاتف 10 أرقام';
+    }
+    if (!value.startsWith('05')) {
+      return 'رقم الهاتف يجب ان يبدأ ب 05';
+    }
+    return null; // Return null if the input is valid
   }
 
   Widget SecondScreen() {
@@ -140,24 +160,27 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                child: TextField(
-                  controller: PhoneController,
-                  obscureText: false,
-                  keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  child: TextFormField(
+                    controller: PhoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                      ),
+                      hintText: "رقم الهاتف",
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                    ),
-                    hintText: "رقم الهاتف",
+                    validator: validatePhoneNumber,
                   ),
                 ),
               ),
@@ -344,41 +367,113 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               );
                             },
                           );
-                        } else {
-                          setState(() {
-                            loading = true;
-                          });
-                          await addOrder(
-                            context: context,
-                            address: AddressController.text,
-                            city: CityController.text,
-                            phone: PhoneController.text,
-                            name: NameController.text,
-                          );
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          String UserID = prefs.getString('user_id') ?? "";
-                          UserItem updatedUser = UserItem(
-                            id: UserID,
-                            email: "$UserID@email.com",
-                            phone: PhoneController.text,
-                            city: CityController.text,
-                            area: AreaController.text,
-                            address: AddressController.text,
-                            password: '123',
-                          );
-                          try {
-                            final cartProvider = Provider.of<CartProvider>(
-                                context,
-                                listen: false);
-                            await userService.updateUser(updatedUser);
-                            Navigator.of(context).pop();
-                            Fluttertoast.showToast(
-                                msg: "تم اضافه الطلبيه بنجاح");
-                            cartProvider.clearCart();
-                            NavigatorFunction(context, HomeScreen());
-                          } catch (e) {
-                            print('Error updating user data: $e');
+                        }
+                        // else if (PhoneController.text.length != 10 &&
+                        //     PhoneController.text.startsWith('05')) {
+                        //   showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return AlertDialog(
+                        //         content: Text(
+                        //           "رقم الهاتف يجب ان يبدأ ب 05 و مجموع خاناته فقط 10",
+                        //           style: TextStyle(
+                        //               fontWeight: FontWeight.bold,
+                        //               fontSize: 16),
+                        //         ),
+                        //         actions: <Widget>[
+                        //           InkWell(
+                        //             onTap: () {
+                        //               Navigator.pop(context);
+                        //             },
+                        //             child: Container(
+                        //               width: 100,
+                        //               height: 40,
+                        //               decoration: BoxDecoration(
+                        //                   color: MAIN_COLOR,
+                        //                   borderRadius:
+                        //                       BorderRadius.circular(10)),
+                        //               child: Center(
+                        //                 child: Text(
+                        //                   "حسنا",
+                        //                   style: TextStyle(
+                        //                       color: Colors.white,
+                        //                       fontWeight: FontWeight.bold),
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ),
+                        //         ],
+                        //       );
+                        //     },
+                        //   );
+                        // }
+                        else {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              loading = true;
+                            });
+                            await addOrder(
+                              context: context,
+                              address: AddressController.text,
+                              city: CityController.text,
+                              phone: PhoneController.text,
+                              name: NameController.text,
+                            );
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String UserID = prefs.getString('user_id') ?? "";
+                            UserItem updatedUser = UserItem(
+                              id: UserID,
+                              email: "$UserID@email.com",
+                              phone: PhoneController.text,
+                              city: CityController.text,
+                              area: AreaController.text,
+                              address: AddressController.text,
+                              password: '123',
+                            );
+                            try {
+                              final cartProvider = Provider.of<CartProvider>(
+                                  context,
+                                  listen: false);
+                              await userService.updateUser(updatedUser);
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  _confettiController!.play();
+
+                                  return Container(
+                                    height: MediaQuery.of(context).size.height,
+                                    width: double.infinity,
+                                    child: Column(
+                                      children: [
+                                        ConfettiWidget(
+                                          confettiController:
+                                              _confettiController!,
+                                          blastDirection:
+                                              3.14, // Explosion direction
+                                          particleDrag:
+                                              0.05, // Apply drag to particles
+                                          emissionFrequency:
+                                              0.05, // How often should confetti appear
+                                          numberOfParticles:
+                                              20, // Number of particles to display
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                              await Future.delayed(Duration(seconds: 2));
+                              Fluttertoast.showToast(
+                                  msg: "تم اضافه الطلبيه بنجاح");
+
+                              cartProvider.clearCart();
+                              NavigatorFunction(context, HomeScreen());
+                            } catch (e) {
+                              print('Error updating user data: $e');
+                            }
                           }
                         }
                       },

@@ -85,6 +85,29 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     );
   }
 
+  Future<void> _refreshData() async {
+    // Add your refresh logic here, for example, fetching new data
+    await Future.delayed(Duration(seconds: 2)); // Simulate a delay
+    _page += 1; // Increase _page by 1
+    try {
+      var _products = await getProductByCategory(
+          widget.category_id, Sub_Category_Key, widget.size, _page);
+      if (_products.isNotEmpty) {
+        setState(() {
+          AllProducts = [];
+
+          AllProducts = _products["items"];
+        });
+      } else {
+        print("_hasNextPage = false");
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print('Something went wrong!');
+      }
+    }
+  }
+
   Widget ProductsCategoryMethod() {
     return Column(
       children: [
@@ -240,61 +263,67 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                       padding:
                           const EdgeInsets.only(top: 12, right: 10, left: 10),
                       child: AnimationLimiter(
-                        child: GridView.builder(
-                            controller: _controller,
-                            cacheExtent: 5000,
-                            // scrollDirection: Axis.vertical,
-                            // physics: NeverScrollableScrollPhysics(),
-                            // shrinkWrap: true,
-                            // primary: false,
-                            itemCount: AllProducts.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 6,
-                              mainAxisSpacing: 6,
-                              childAspectRatio: 0.5,
-                            ),
-                            itemBuilder: (context, int index) {
-                              final isLiked = Provider.of<FavouriteProvider>(
-                                      context)
-                                  .isProductFavorite(AllProducts[index]["id"]);
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: 500),
-                                child: SlideAnimation(
-                                  horizontalOffset: 100.0,
-                                  // verticalOffset: 100.0,
-                                  child: FadeInAnimation(
-                                    curve: Curves.easeOut,
-                                    child: ProductWidget(
-                                        sizes: LocalStorage().sizeUser,
-                                        url:
-                                            "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
-                                        isLiked: isLiked,
-                                        Images: AllProducts[index]
-                                                ["vendor_images_links"] ??
-                                            [],
-                                        Products: AllProducts,
-                                        index: index,
-                                        name: AllProducts[index]["title"],
-                                        thumbnail: AllProducts[index]
-                                            ["thumbnail"],
-                                        id: AllProducts[index]["id"],
-                                        new_price: AllProducts[index]["price"],
-                                        old_price:
-                                            AllProducts[index]["price"] ?? 0.0,
-                                        image: AllProducts[index]
-                                            ["vendor_images_links"][0],
-                                        Sub_Category_Key: Sub_Category_Key,
-                                        page: _page,
-                                        home: false,
-                                        category_id: widget.category_id,
-                                        size: widget.size),
+                        child: RefreshIndicator(
+                          onRefresh: _refreshData,
+                          child: GridView.builder(
+                              controller: _controller,
+                              cacheExtent: 5000,
+                              // scrollDirection: Axis.vertical,
+                              // physics: NeverScrollableScrollPhysics(),
+                              // shrinkWrap: true,
+                              // primary: false,
+                              itemCount: AllProducts.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 6,
+                                mainAxisSpacing: 6,
+                                childAspectRatio: 0.5,
+                              ),
+                              itemBuilder: (context, int index) {
+                                final isLiked =
+                                    Provider.of<FavouriteProvider>(context)
+                                        .isProductFavorite(
+                                            AllProducts[index]["id"]);
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: 500),
+                                  child: SlideAnimation(
+                                    horizontalOffset: 100.0,
+                                    // verticalOffset: 100.0,
+                                    child: FadeInAnimation(
+                                      curve: Curves.easeOut,
+                                      child: ProductWidget(
+                                          sizes: LocalStorage().sizeUser,
+                                          url:
+                                              "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                          isLiked: isLiked,
+                                          Images: AllProducts[index]
+                                                  ["vendor_images_links"] ??
+                                              [],
+                                          Products: AllProducts,
+                                          index: index,
+                                          name: AllProducts[index]["title"],
+                                          thumbnail: AllProducts[index]
+                                              ["thumbnail"],
+                                          id: AllProducts[index]["id"],
+                                          new_price: AllProducts[index]
+                                              ["price"],
+                                          old_price: AllProducts[index]
+                                                  ["price"] ??
+                                              0.0,
+                                          image: AllProducts[index]
+                                              ["vendor_images_links"][0],
+                                          Sub_Category_Key: Sub_Category_Key,
+                                          page: _page,
+                                          home: false,
+                                          category_id: widget.category_id,
+                                          size: widget.size),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       ),
                     ),
                   ),
