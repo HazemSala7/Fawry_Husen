@@ -270,15 +270,12 @@ class _LoginScreenState extends State<LoginScreen> {
       idToken: googleAuth?.idToken,
     );
     var data = await FirebaseAuth.instance.signInWithCredential(credential);
-    // Convert the user data to a JSON string
-    // String userDataJson = json.encode(data);
-    // print("email");
-    // print(data["email"]);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? TOKEN = await prefs.getString('device_token');
     String user_Id = Uuid().v4();
-    print("user_Id");
-    print(user_Id);
     UserItem newItem = UserItem(
       id: user_Id,
+      token: TOKEN.toString(),
       email: data.user!.email.toString(),
       password: "",
       address: 'address',
@@ -311,8 +308,11 @@ class _LoginScreenState extends State<LoginScreen> {
     // Convert the user data to a JSON string
     String userDataJson = json.encode(userDate);
     String user_Id = Uuid().v4();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? TOKEN = await prefs.getString('device_token');
     UserItem newItem = UserItem(
       id: user_Id,
+      token: TOKEN.toString(),
       email: userDate["email"],
       password: "",
       address: '',
@@ -343,9 +343,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final UserService userService = UserService();
   addUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? TOKEN = await prefs.getString('device_token');
     String user_Id = Uuid().v4();
     UserItem newItem = UserItem(
       id: user_Id,
+      token: TOKEN.toString(),
       email: "$user_Id@gmail.com",
       password: "",
       address: '',

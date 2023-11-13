@@ -1,5 +1,4 @@
 import 'package:fawri_app_refactor/constants/constants.dart';
-import 'package:fawri_app_refactor/pages/cart/cart.dart';
 import 'package:fawri_app_refactor/pages/home_screen/category-screen/category-screen.dart';
 import 'package:fawri_app_refactor/pages/home_screen/favourite-screen/favourite-screen.dart';
 import 'package:fawri_app_refactor/pages/home_screen/main-screen/main-screen.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: selectedIndex);
+    showDelayedDialog(context);
   }
 
   void onButtonPressed(int index) {

@@ -422,8 +422,11 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             String UserID = prefs.getString('user_id') ?? "";
+                            String? TOKEN =
+                                await prefs.getString('device_token');
                             UserItem updatedUser = UserItem(
                               id: UserID,
+                              token: TOKEN.toString(),
                               email: "$UserID@email.com",
                               phone: PhoneController.text,
                               city: CityController.text,

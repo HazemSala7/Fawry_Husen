@@ -1,5 +1,6 @@
 class UserItem {
   final String id;
+  final String token;
   final String email;
   final String password;
   final String phone;
@@ -9,6 +10,7 @@ class UserItem {
 
   UserItem({
     required this.id,
+    required this.token,
     required this.email,
     required this.password,
     required this.phone,
@@ -20,6 +22,7 @@ class UserItem {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'token': token,
       'email': email,
       'password': password,
       'phone': phone,
@@ -32,6 +35,7 @@ class UserItem {
   factory UserItem.fromMap(Map<String, dynamic>? map) {
     return UserItem(
       id: map?['id'] ?? '',
+      token: map?['token'] ?? '',
       email: map?['email'] ?? '',
       password: map?['password'] ?? "",
       phone: map?['phone'] ?? "",

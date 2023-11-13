@@ -2,6 +2,7 @@ import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
+import 'package:fawri_app_refactor/services/notifications/notifications.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'LocalDB/Provider/FavouriteProvider.dart';
 import 'firebase/cart/CartProvider.dart';
 import 'pages/category-splash/category-splash.dart';
 import 'services/auth/firebase_user_provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 // PushNotificationService _pushNotificationService = PushNotificationService();
 void main() async {
@@ -43,11 +45,47 @@ class _FawriState extends State<Fawri> {
   int TypeFirstScreen = 1;
 
   String Type = "";
+  String notificationTitle = 'No Title';
+  String notificationBody = 'No Body';
+  String notificationData = 'No Data';
+  ios_push() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  void initState() {
-    super.initState();
-    checkFirstSeen();
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: true,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
   }
+
+  @override
+  void initState() {
+    ios_push();
+    final firebaseMessaging = FCM();
+    firebaseMessaging.setNotifications(context);
+    firebaseMessaging.streamCtlr.stream.listen(_changeData);
+    firebaseMessaging.bodyCtlr.stream.listen(_changeBody);
+    firebaseMessaging.titleCtlr.stream.listen(_changeTitle);
+    checkFirstSeen();
+    super.initState();
+  }
+
+  _changeData(String msg) => setState(() => notificationData = msg);
+  _changeBody(String msg) => setState(() => notificationBody = msg);
+  _changeTitle(String msg) => setState(() => notificationTitle = msg);
 
   checkFirstSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

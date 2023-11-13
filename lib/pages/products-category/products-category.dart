@@ -448,6 +448,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     setStaticSubCategories();
     super.initState();
     _firstLoad();
+    showDelayedDialog(context);
     _controller = ScrollController()..addListener(_loadMore);
   }
 

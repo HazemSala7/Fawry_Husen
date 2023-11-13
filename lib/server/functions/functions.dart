@@ -2,6 +2,7 @@ import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/CartProvider.dart';
@@ -23,7 +24,7 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
 getProducts(int page) async {
   var response = await http.get(
       Uri.parse(
-          "http://3.84.200.136:3000/api/getAllItems?api_key=$key_bath&page=$page"),
+          "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$page"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
@@ -73,7 +74,7 @@ addOrder({context, address, phone, city, name}) async {
   var request = http.Request(
       'POST',
       Uri.parse(
-          'http://3.84.200.136:3000/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
+          'http://54.91.80.40:3000/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
   request.body = json.encode({
     "name": name.toString(),
     "page": "Fawri App",
@@ -84,6 +85,33 @@ addOrder({context, address, phone, city, name}) async {
     "total_price": totalPrice,
     "user_id": UserID.toString(),
     "products": products
+  });
+  request.headers.addAll(headers);
+  http.StreamedResponse response = await request.send();
+  if (response.statusCode == 200) {
+    String stream = await response.stream.bytesToString();
+    final decodedMap = json.decode(stream);
+  } else {
+    print(response.reasonPhrase);
+  }
+}
+
+sendNotification({context}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? TOKEN = await prefs.getString('device_token') ?? "-";
+  var headers = {
+    'Content-Type': 'application/json',
+    'Authorization':
+        'key=AAAACwl5eY0:APA91bHHuJ0hAZrN5X9Pxmygq8He3SwM0_2wXsUMC0JaPT3R12FWQnc3A0E9LaDEDieuwHa4lRCeYSObgT5nroTscoUjUA9CX3a6cYG9fa0L0sB-YPvVEqdk5ekMOyb24b8COE_rsuCz'
+  };
+  var request =
+      http.Request('POST', Uri.parse('https://fcm.googleapis.com/fcm/send'));
+  request.body = json.encode({
+    "notification": {
+      "title": "Fawri App",
+      "body": "الامنتج الذي تم اضافته الى السله لم يتبقى منه الا 2"
+    },
+    "to": TOKEN
   });
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();
@@ -115,4 +143,57 @@ getSizesByCategory(category_id, context) async {
   Navigator.of(context, rootNavigator: true).pop();
 
   return res["sizes"];
+}
+
+showDelayedDialog(context) {
+  Future.delayed(Duration(seconds: 2), () {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.all(0),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                      "assets/lottie_animations/Animation - 1699360987745.json",
+                      height: 300,
+                      reverse: true,
+                      repeat: true,
+                      fit: BoxFit.cover),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "مفاجأة",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 26,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      "تم ارسال هديه اليك  و هي كوبون بقيمة خصم 30% من قيمة الطلبية و هو 1551",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ));
+      },
+    );
+  });
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:fawri_app_refactor/firebase/cart/CartProvider.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:auto_size_text/auto_size_text.dart';
@@ -28,7 +29,7 @@ import '../../LocalDB/Models/FavoriteItem.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../constants/constants.dart';
-import '../../firebase/cart/cart.dart';
+import '../../firebase/cart/CartFirebaseModel.dart';
 import '../../firebase/cart/CartController.dart';
 import '../../firebase/favourites/FavouriteControler.dart';
 import '../../firebase/favourites/favourite.dart';
@@ -181,8 +182,6 @@ class _ProductScreenState extends State<ProductScreen> {
 
     final updatedQueryParameters =
         Map<String, String>.from(uri.queryParameters);
-    print("widget.page.toString()");
-    print(page);
     int incrementPage = page;
     updatedQueryParameters['page'] = incrementPage.toString();
 
@@ -517,6 +516,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     id: item["id"],
                                     images: images,
                                     description: item["description"],
+                                    variants: item["variants"],
                                     SKU: item["sku"] ?? "-",
                                     vendor_SKU: item["vendor_sku"] ?? "-",
                                     nickname: item["nickname"] ?? "-",
@@ -556,6 +556,7 @@ class _ProductScreenState extends State<ProductScreen> {
       String SKU = "",
       String vendor_SKU = "",
       String nickname = "",
+      var variants,
       required Map placeInWarehouse,
       required List sizesApi,
       required bool TypeApi,
@@ -570,6 +571,7 @@ class _ProductScreenState extends State<ProductScreen> {
     List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
 
     final cartProvider = Provider.of<CartProvider>(context);
+    // final cartFirebaseProvider = Provider.of<CartProviderFirebase>(context);
     final favoriteProvider =
         Provider.of<FavouriteProvider>(context, listen: false);
     Future<bool> onLikeButtonTapped(bool liked) async {
@@ -1106,8 +1108,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
                         if (inCart) {
-                          print("inCart");
-                          print(inCart);
                           final newItem = CartItem(
                               sku: SKU,
                               vendor_sku: vendor_SKU,
@@ -1151,8 +1151,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                     : SelectedSizes,
                                 placeInWarehouse:
                                     placeInWarehouse[SelectedSizes] ?? "0000");
-                            print(newItem.toJson());
-                            print("newItem.toJson()");
                             cartProvider.addToCart(newItem);
                             const snackBar = SnackBar(
                               content: Text('تم اضافه المنتج الى السله بنجاح!'),
@@ -1161,11 +1159,34 @@ class _ProductScreenState extends State<ProductScreen> {
                                 .showSnackBar(snackBar);
                             Timer(Duration(milliseconds: 500), () {
                               Fluttertoast.cancel();
-                              // Dismiss the toast after the specified duration
                             });
                             Timer(Duration(seconds: 1), () async {
                               Navigator.pop(context);
                             });
+                            final CartService cartFirebaseProvider =
+                                CartService();
+                            String idCart = Uuid().v4();
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String? USER_ID =
+                                await prefs.getString('user_id') ?? "-";
+
+                            CartFirebaseModel cartFirebaseItem =
+                                CartFirebaseModel(
+                              id: idCart,
+                              user_id: USER_ID.toString(),
+                              product_id: id.toString(),
+                            );
+                            cartFirebaseProvider.addToCart(cartFirebaseItem);
+                            final selectedSizeItem = variants.firstWhere(
+                              (variant) => variant['size'] == SelectedSizes,
+                              orElse: () => null,
+                            );
+                            if (int.parse(
+                                    selectedSizeItem["quantity"].toString()) <
+                                2) {
+                              sendNotification(context: context);
+                            }
                           } else {
                             showDialog(
                               context: context,

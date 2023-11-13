@@ -11,7 +11,7 @@ import '../../LocalDB/Provider/CartProvider.dart';
 import '../../components/button_widget/button_widget.dart';
 import '../../constants/constants.dart';
 import '../../firebase/cart/CartController.dart';
-import '../../firebase/cart/cart.dart';
+import '../../firebase/cart/CartFirebaseModel.dart';
 import '../../pages/cart/cart.dart';
 import '../../pages/products-category/products-category.dart';
 import '../../server/functions/functions.dart';
