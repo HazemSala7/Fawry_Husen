@@ -45,6 +45,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                 ),
                 statusOrderMethod(
                     first_text: "تم تقديم طلبك",
+                    lines: true,
                     check_image: "assets/images/icons8-check-mark-50 (1).png",
                     second_text: "تم استلام طلبك لدينا 2/8/2023",
                     image: "assets/images/icons8-received-96.png"),
@@ -52,6 +53,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                   height: 10,
                 ),
                 statusOrderMethod(
+                    lines: true,
                     first_text: "تجهيز الطلب",
                     second_text: "تم نقل طلبك 03/08/2023",
                     check_image: "assets/images/icons8-check-mark-50 (1).png",
@@ -60,6 +62,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                   height: 10,
                 ),
                 statusOrderMethod(
+                    lines: true,
                     first_text: "جاهز للنقل",
                     second_text: "تم تجهيز الطلب 03/08/2023",
                     check_image: "assets/images/icons8-check-mark-50 (1).png",
@@ -68,6 +71,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                   height: 10,
                 ),
                 statusOrderMethod(
+                    lines: true,
                     first_text: "تم الشحن",
                     second_text: "جاري شحن طلبك الأن الى العنوان المطلوب",
                     check_image: "assets/images/icons8-check-mark-50.png",
@@ -76,6 +80,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                   height: 10,
                 ),
                 statusOrderMethod(
+                    lines: false,
                     first_text: "تم التوصيل",
                     check_image: "assets/images/icons8-check-mark-50.png",
                     second_text: "تم توصيل طلبك , تجربة ممتعة!",
@@ -86,7 +91,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
         ),
         Material(
           child: Padding(
-            padding: const EdgeInsets.only(right: 25, left: 25, bottom: 15),
+            padding: const EdgeInsets.only(right: 25, left: 25, bottom: 40),
             child: Container(
               width: double.infinity,
               height: 180,
@@ -149,7 +154,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                                 height: 5,
                               ),
                               Text(
-                                "05/08/2023",
+                                "SN6784VC",
                                 style: TextStyle(
                                   color: MAIN_COLOR,
                                   fontSize: 16,
@@ -174,6 +179,13 @@ class Oorder_detaDsState extends State<OrderDetails> {
                               width: 50,
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle, color: Colors.white),
+                              child: Center(
+                                child: Image.asset(
+                                  "assets/images/icons8-paid-30.png",
+                                  height: 35,
+                                  width: 35,
+                                ),
+                              ),
                             ),
                             SizedBox(
                               width: 10,
@@ -203,7 +215,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                           "120₪",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 25,
+                              fontSize: 28,
                               color: Colors.white),
                         ),
                       ],
@@ -211,8 +223,13 @@ class Oorder_detaDsState extends State<OrderDetails> {
                   )
                 ],
               ),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20), color: MAIN_COLOR),
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 7,
+                  blurRadius: 5,
+                ),
+              ], borderRadius: BorderRadius.circular(20), color: MAIN_COLOR),
             ),
           ),
         )
@@ -232,7 +249,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Image.asset(
                 check_image,
@@ -286,12 +303,12 @@ class Oorder_detaDsState extends State<OrderDetails> {
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: const Color.fromARGB(255, 87, 86, 86),
-                        fontSize: 16),
+                        fontSize: 18),
                   ),
                 ],
               ),
               SizedBox(
-                height: 15,
+                height: 10,
               ),
               Row(
                 children: [

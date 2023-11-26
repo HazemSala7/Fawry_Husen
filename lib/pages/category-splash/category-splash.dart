@@ -27,7 +27,11 @@ class _CategorySplashState extends State<CategorySplash> {
             actions: [
               InkWell(
                 onTap: () {
-                  NavigatorFunction(context, HomeScreen());
+                  NavigatorFunction(
+                      context,
+                      HomeScreen(
+                        selectedIndex: 0,
+                      ));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

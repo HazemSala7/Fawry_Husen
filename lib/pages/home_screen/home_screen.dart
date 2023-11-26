@@ -11,7 +11,11 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  int selectedIndex = 0;
+  HomeScreen({
+    Key? key,
+    required this.selectedIndex,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -20,18 +24,18 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   late PageController _pageController;
-  int selectedIndex = 0;
+
   bool _colorful = false;
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: selectedIndex);
+    _pageController = PageController(initialPage: widget.selectedIndex);
     showDelayedDialog(context);
   }
 
   void onButtonPressed(int index) {
     setState(() {
-      selectedIndex = index;
+      widget.selectedIndex = index;
     });
   }
 
@@ -52,13 +56,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
           ),
           preferredSize: Size.fromHeight(60)),
-      body: _listOfWidget[selectedIndex],
+      body: _listOfWidget[widget.selectedIndex],
       bottomNavigationBar: SlidingClippedNavBar(
         backgroundColor: Colors.white,
         onButtonPressed: onButtonPressed,
         iconSize: 30,
         activeColor: MAIN_COLOR,
-        selectedIndex: selectedIndex,
+        selectedIndex: widget.selectedIndex,
         barItems: <BarItem>[
           BarItem(
             icon: Icons.home,

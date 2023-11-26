@@ -1,5 +1,7 @@
 import 'package:fawri_app_refactor/constants/constants.dart';
+import 'package:fawri_app_refactor/pages/cart/cart.dart';
 import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
+import 'package:fawri_app_refactor/pages/orders/orders.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,10 +64,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     image: "assets/images/shopping-cart.png",
                     iconornot: false,
                     NavigatorFunction: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Cart()));
                     }),
                 lineMethod(),
                 profileCard(
@@ -77,16 +77,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
+                              builder: (context) => HomeScreen(
+                                    selectedIndex: 2,
+                                  )));
                     }),
                 lineMethod(),
                 profileCard(
-                    name: "طلبياتي",
+                    name: "تتبع حالة الطلبية",
                     iconornot: true,
                     image: "assets/images/heart.png",
                     icon: Icons.request_quote,
                     NavigatorFunction: () {
                       NavigatorFunction(context, OrderDetails());
+                    }),
+                lineMethod(),
+                profileCard(
+                    name: "طلباتي السابقة",
+                    iconornot: true,
+                    image: "assets/images/heart.png",
+                    icon: Icons.request_quote,
+                    NavigatorFunction: () {
+                      NavigatorFunction(context, Orders());
                     }),
                 lineMethod(),
               ],

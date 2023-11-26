@@ -257,6 +257,7 @@ class _FavouriteState extends State<Favourite> {
                 NavigatorFunction(
                   context,
                   ProductScreen(
+                    Sub_Category_Key: "",
                     index: index,
                     sizes: [],
                     url: "",
@@ -266,7 +267,7 @@ class _FavouriteState extends State<Favourite> {
                     Images: [image],
                     Product: products,
                     IDs: productIdsString,
-                    id: 10,
+                    id: product_id,
                   ),
                 );
               },

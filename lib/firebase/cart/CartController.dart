@@ -14,6 +14,15 @@ class CartService {
     return cartCollection.doc(cartItem.id).update(cartItem.toMap());
   }
 
+  Future<List<String>> getUserIdsByProductId(String productId) async {
+    QuerySnapshot snapshot =
+        await cartCollection.where('product_id', isEqualTo: productId).get();
+
+    List<String> userIds =
+        snapshot.docs.map((doc) => doc['user_token'] as String).toList();
+    return userIds;
+  }
+
   Future<void> deleteCartItemFunction(String cartItemId) {
     return cartCollection.doc(cartItemId).delete();
   }
@@ -80,11 +89,11 @@ class CartService {
         if (productDetails.isNotEmpty) {
           items.add(
             CartFirebaseModel(
-              id: docSnapshot.id, product_id: '', user_id: '',
+                id: docSnapshot.id, product_id: '', user_id: '', user_token: ""
 
-              // Store other details from the productDetails map
-              // ...
-            ),
+                // Store other details from the productDetails map
+                // ...
+                ),
           );
         }
       }

@@ -10,4 +10,13 @@ class FirebaseRemoteConfigClass {
     var temp = remoteConfig.getString("season");
     return temp;
   }
+
+  Future getDomain() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 1),
+        minimumFetchInterval: Duration(seconds: 1)));
+    await remoteConfig.fetchAndActivate();
+    var temp = remoteConfig.getString("domain");
+    return temp;
+  }
 }

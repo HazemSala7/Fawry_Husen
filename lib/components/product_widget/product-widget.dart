@@ -103,6 +103,7 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget build(BuildContext context) {
+    var OLD_PRICE = double.parse(widget.old_price.toString()) * 1.5;
     return InkWell(
       onTap: () {
         var result = [];
@@ -126,6 +127,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                 builder: (context) => ProductScreen(
                       url: widget.url,
                       page: widget.page,
+                      Sub_Category_Key: widget.Sub_Category_Key,
                       sizes: widget.sizes,
                       index: widget.index,
                       cart_fav: false,
@@ -181,7 +183,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                         alignment: Alignment.center,
                         children: [
                           Text(
-                            "₪${double.parse(widget.old_price.toString()) * 1.5}",
+                            "₪${OLD_PRICE.toString().length > 5 ? OLD_PRICE.toString().substring(0, 5) : OLD_PRICE.toString()}",
                             style: TextStyle(
                               fontSize: 16,
                             ),

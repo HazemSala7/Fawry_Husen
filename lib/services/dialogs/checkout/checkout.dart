@@ -7,6 +7,7 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -443,37 +444,81 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               Navigator.of(context).pop();
                               showDialog(
                                 context: context,
-                                builder: (BuildContext context) {
-                                  _confettiController!.play();
-
-                                  return Container(
-                                    height: MediaQuery.of(context).size.height,
-                                    width: double.infinity,
-                                    child: Column(
-                                      children: [
-                                        ConfettiWidget(
-                                          confettiController:
-                                              _confettiController!,
-                                          blastDirection:
-                                              3.14, // Explosion direction
-                                          particleDrag:
-                                              0.05, // Apply drag to particles
-                                          emissionFrequency:
-                                              0.05, // How often should confetti appear
-                                          numberOfParticles:
-                                              20, // Number of particles to display
+                                builder: (context) {
+                                  return Dialog(
+                                      backgroundColor: Colors.transparent,
+                                      insetPadding: EdgeInsets.all(0),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Lottie.asset(
+                                                "assets/lottie_animations/Animation - 1700471629534.json",
+                                                height: 300,
+                                                reverse: true,
+                                                repeat: true,
+                                                fit: BoxFit.cover),
+                                            SizedBox(
+                                              height: 20,
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10),
+                                              child: Text(
+                                                "تم طلب الطلبية بنجاح!",
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 40,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                NavigatorFunction(
+                                                    context,
+                                                    HomeScreen(
+                                                        selectedIndex: 0));
+                                              },
+                                              child: Container(
+                                                width: 200,
+                                                height: 40,
+                                                child: Center(
+                                                    child: Text(
+                                                  "الصفحة الرئيسية",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                )),
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    color: Colors.black),
+                                              ),
+                                            )
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                  );
+                                      ));
                                 },
                               );
-                              await Future.delayed(Duration(seconds: 2));
-                              Fluttertoast.showToast(
-                                  msg: "تم اضافه الطلبيه بنجاح");
+                              // await Future.delayed(Duration(seconds: 2));
+                              // Fluttertoast.showToast(
+                              //     msg: "تم اضافه الطلبيه بنجاح");
 
                               cartProvider.clearCart();
-                              NavigatorFunction(context, HomeScreen());
+                              // NavigatorFunction(
+                              //     context, HomeScreen(selectedIndex: 0));
                             } catch (e) {
                               print('Error updating user data: $e');
                             }
@@ -504,41 +549,51 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 "المنطقه : ",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
-              Container(
-                width: 150,
-                height: 50,
-                decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: BorderRadius.circular(10)),
-                child: DropdownButton<String>(
-                  underline: Container(),
-                  isExpanded: true,
-                  value: dropdownValue,
-                  items: <String>[
-                    "اختر منطقتك",
-                    'القدس',
-                    'الداخل',
-                    'الضفه الغربيه'
-                  ].map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          value,
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
+              AnimatedContainer(
+                duration: Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                transform: _hasError
+                    ? Matrix4.translationValues(5, 0, 0)
+                    : Matrix4.identity(),
+                child: Container(
+                  width: 150,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _hasError ? Colors.red : Colors.black,
+                        width: 2.0,
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      dropdownValue = newValue!;
-                    });
-                  },
+                      borderRadius: BorderRadius.circular(10)),
+                  child: DropdownButton<String>(
+                    underline: Container(),
+                    isExpanded: true,
+                    value: dropdownValue,
+                    items: <String>[
+                      "اختر منطقتك",
+                      'القدس',
+                      'الداخل',
+                      'الضفه الغربيه'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            value,
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                      });
+                    },
+                  ),
                 ),
               )
             ],
@@ -723,24 +778,16 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 BorderColor: Colors.black,
                 OnClickFunction: () {
                   if (dropdownValue.toString() == "اختر منطقتك") {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: Colors.white,
-                          title: Text("خطأ"),
-                          content: Text("الرجاء اختيار المنطقه"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text("موافق"),
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    setState(() {
+                      _hasError = true;
+
+                      // Resetting error state after a short duration
+                      Future.delayed(Duration(milliseconds: 1000), () {
+                        setState(() {
+                          _hasError = false;
+                        });
+                      });
+                    });
                   } else {
                     setState(() {
                       clicked = true;
@@ -758,6 +805,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
       ],
     );
   }
+
+  bool _hasError = false;
 
   TextEditingController NameController = TextEditingController();
   TextEditingController PhoneController = TextEditingController();

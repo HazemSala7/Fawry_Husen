@@ -1,6 +1,8 @@
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +13,7 @@ import 'dart:convert';
 
 import '../../LocalDB/Models/FavoriteItem.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
+import '../../constants/constants.dart';
 import '../../firebase/favourites/FavouriteControler.dart';
 import '../../firebase/favourites/favourite.dart';
 import '../domain/domain.dart';
@@ -22,12 +25,26 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
 }
 
 getProducts(int page) async {
-  var response = await http.get(
-      Uri.parse(
-          "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$page"),
-      headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res;
+  try {
+    var response = await http.get(
+        Uri.parse(
+            "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$page"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+    var response = await http.get(
+        Uri.parse(
+            "http://$DomainName/api/getAllItems?api_key=$key_bath&page=$page"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    if (response.statusCode != 200) {
+      return false;
+    } else {
+      return res;
+    }
+  }
 }
 
 getSpeceficProduct(id) async {
@@ -96,7 +113,7 @@ addOrder({context, address, phone, city, name}) async {
   }
 }
 
-sendNotification({context}) async {
+sendNotification({context, USER_TOKENS}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? TOKEN = await prefs.getString('device_token') ?? "-";
   var headers = {
@@ -104,14 +121,15 @@ sendNotification({context}) async {
     'Authorization':
         'key=AAAACwl5eY0:APA91bHHuJ0hAZrN5X9Pxmygq8He3SwM0_2wXsUMC0JaPT3R12FWQnc3A0E9LaDEDieuwHa4lRCeYSObgT5nroTscoUjUA9CX3a6cYG9fa0L0sB-YPvVEqdk5ekMOyb24b8COE_rsuCz'
   };
+  List<String> registrationTokens = USER_TOKENS;
   var request =
       http.Request('POST', Uri.parse('https://fcm.googleapis.com/fcm/send'));
   request.body = json.encode({
     "notification": {
       "title": "Fawri App",
-      "body": "الامنتج الذي تم اضافته الى السله لم يتبقى منه الا 2"
+      "body": "المنتج الذي تم اضافته الى السله لم يتبقى منه الا 2"
     },
-    "to": TOKEN
+    "registration_ids": registrationTokens
   });
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();
@@ -146,7 +164,7 @@ getSizesByCategory(category_id, context) async {
 }
 
 showDelayedDialog(context) {
-  Future.delayed(Duration(seconds: 2), () {
+  Future.delayed(Duration(seconds: 15), () {
     showDialog(
       context: context,
       builder: (context) {
@@ -181,13 +199,39 @@ showDelayedDialog(context) {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
-                      "تم ارسال هديه اليك  و هي كوبون بقيمة خصم 30% من قيمة الطلبية و هو 1551",
+                      "لقد حصلت على كوبون خصم بقيمة 20% يمكنك استخدامه عند شرائك لأحد منتجاتنا",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 18,
                       ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    "Fawri2024",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.white),
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Clipboard.setData(ClipboardData(text: "Fawri2024"));
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "اضغط للنسخ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white),
                     ),
                   ),
                 ],
@@ -196,4 +240,150 @@ showDelayedDialog(context) {
       },
     );
   });
+}
+
+TextEditingController searchController = TextEditingController();
+
+void showSearchDialog(BuildContext context) async {
+  List<dynamic> searchResults = [];
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          return Container(
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 44, 44, 44),
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: MAIN_COLOR,
+                          blurRadius: 5.0,
+                          offset: Offset(0, 1),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
+                      controller: searchController,
+                      onChanged: (value) async {
+                        // searchResults = await searchProductByKey(value);
+                        // setState(() {});
+                      },
+                      decoration: InputDecoration(
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          ),
+                          hintStyle: TextStyle(
+                            color: const Color.fromARGB(255, 196, 195, 195),
+                            fontSize: 12,
+                          ),
+                          hintText: "ابحث من خلال رقم أو أسم المنتج"),
+                    ),
+                  ),
+                  Visibility(
+                    visible: searchController.text == "" ? false : true,
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      width: double.infinity,
+                      color: Colors.white,
+                      child: ListView.builder(
+                        itemCount: 5,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return InkWell(
+                            onTap: () {},
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Text(
+                                            "ملابس",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          Text("ملابس",
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 13)),
+                                        ],
+                                      ),
+                                      InkWell(
+                                        onTap: () {},
+                                        child: Container(
+                                          width: 20,
+                                          height: 20,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: MAIN_COLOR)),
+                                          child: Center(
+                                            child: FaIcon(
+                                              FontAwesomeIcons.plus,
+                                              color: MAIN_COLOR,
+                                              size: 10,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  height: 1,
+                                  color:
+                                      const Color.fromARGB(255, 236, 236, 236),
+                                )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
 }

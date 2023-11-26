@@ -341,6 +341,7 @@ class _CartState extends State<Cart> {
             NavigatorFunction(
               context,
               ProductScreen(
+                Sub_Category_Key: "",
                 index: index,
                 url: "",
                 page: 1,
@@ -350,7 +351,7 @@ class _CartState extends State<Cart> {
                 Images: [image],
                 Product: products,
                 IDs: productIdsString,
-                id: 10,
+                id: product_id,
               ),
             );
           },
@@ -417,7 +418,7 @@ class _CartState extends State<Cart> {
                 Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: Text(
-                    "₪$product_id",
+                    "₪$price",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,

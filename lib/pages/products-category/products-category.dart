@@ -119,11 +119,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: TextFormField(
                   onTap: () {
-                    NavigatorFunction(
-                        context,
-                        SearchScreen(
-                          SubCategories: SubCategories,
-                        ));
+                    showSearchDialog(context);
                   },
                   controller: textController,
                   onFieldSubmitted: (_) {},
@@ -201,6 +197,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             selectedIndexes.remove(index);
                           } else {
                             selectedIndexes.add(index);
+                            Map<String, dynamic> tappedCategory =
+                                SubCategories.removeAt(index);
+                            SubCategories.insert(1, tappedCategory);
                             _firstLoad();
                             Sub_Category_Key =
                                 SubCategories[index]["key"].toString();

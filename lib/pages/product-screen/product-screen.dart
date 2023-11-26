@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
-import 'package:fawri_app_refactor/firebase/cart/CartProvider.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:expandable/expandable.dart';
@@ -13,15 +10,12 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:like_button/like_button.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vibration/vibration.dart';
 import '../../LocalDB/Models/CartModel.dart';
@@ -31,17 +25,8 @@ import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../constants/constants.dart';
 import '../../firebase/cart/CartFirebaseModel.dart';
 import '../../firebase/cart/CartController.dart';
-import '../../firebase/favourites/FavouriteControler.dart';
-import '../../firebase/favourites/favourite.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
-import '../../services/animation_info/animation_info.dart';
-import '../../services/json/json-services.dart';
-import '../authentication/login_screen/login_screen.dart';
 import '../cart/cart.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProductScreen extends StatefulWidget {
@@ -49,6 +34,7 @@ class ProductScreen extends StatefulWidget {
   int id;
   int index;
   var Product;
+  var Sub_Category_Key;
   bool cart_fav;
   List Images;
   List sizes;
@@ -60,6 +46,7 @@ class ProductScreen extends StatefulWidget {
     required this.url,
     required this.page,
     required this.index,
+    required this.Sub_Category_Key,
     required this.sizes,
     required this.favourite,
     required this.cart_fav,
@@ -154,6 +141,8 @@ class _ProductScreenState extends State<ProductScreen> {
     }
   }
 
+  var initSubKey = "";
+
   Future<void> loadInitialData() async {
     setState(() {
       loadingPage = true;
@@ -161,6 +150,7 @@ class _ProductScreenState extends State<ProductScreen> {
     var InitialData = await getSpeceficProduct(widget.IDs);
     setState(() {
       orderedItems = InitialData["item"];
+      initSubKey = InitialData["item"][0]["categories"][2][0];
     });
     moveItemToFront(orderedItems, widget.id);
 
@@ -172,8 +162,9 @@ class _ProductScreenState extends State<ProductScreen> {
   int page = 1;
   Future loadAdditionalData() async {
     page += 1;
+    String modifiedUrl = widget.url
+        .replaceAll("sub_category=${widget.url}", "sub_category=$initSubKey");
     final uri = Uri.parse(widget.url);
-
     if (uri.host == null) {
       // Handle the case where the URL does not contain a host
       print("Invalid URL: No host specified");
@@ -447,29 +438,29 @@ class _ProductScreenState extends State<ProductScreen> {
                         height: MediaQuery.of(context).size.height,
                         initialPage: _currentPage,
                         onPageChanged: (index, reason) async {
-                          if (index == orderedItems.length - 1 &&
+                          if (index == orderedItems.length - 8 &&
                               reason == CarouselPageChangedReason.manual) {
-                            showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                      title: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          LoadingAnimationWidget.discreteCircle(
-                                              color: Colors.teal,
-                                              size: 50,
-                                              secondRingColor:
-                                                  Colors.amberAccent,
-                                              thirdRingColor:
-                                                  Colors.tealAccent),
-                                        ],
-                                      ),
-                                    ));
+                            // showDialog(
+                            //     context: context,
+                            //     builder: (_) => AlertDialog(
+                            //           title: Row(
+                            //             mainAxisAlignment:
+                            //                 MainAxisAlignment.center,
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.center,
+                            //             children: [
+                            //               LoadingAnimationWidget.discreteCircle(
+                            //                   color: Colors.teal,
+                            //                   size: 50,
+                            //                   secondRingColor:
+                            //                       Colors.amberAccent,
+                            //                   thirdRingColor:
+                            //                       Colors.tealAccent),
+                            //             ],
+                            //           ),
+                            //         ));
                             await loadAdditionalData();
-                            Navigator.pop(context);
+                            // Navigator.pop(context);
                           }
                         },
                       ),
@@ -748,7 +739,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             IconButton(
                                 onPressed: () {
                                   Share.share(
-                                      "http://3.84.200.136/product-details-one/${widget.id}?offset=1");
+                                      "http://54.91.80.40//product-details-one/${widget.id}?offset=1");
                                 },
                                 icon: Icon(Icons.share)),
                             Consumer<FavouriteProvider>(
@@ -931,99 +922,122 @@ class _ProductScreenState extends State<ProductScreen> {
                                       width: double.infinity,
                                       color: Colors.white,
                                       child: ExpandableNotifier(
-                                        initialExpanded: false,
-                                        child: ExpandablePanel(
-                                          header: Row(
-                                            mainAxisSize: MainAxisSize.max,
-                                            children: [
-                                              Padding(
-                                                padding: EdgeInsetsDirectional
-                                                    .fromSTEB(0, 0, 12, 0),
-                                                child: Icon(
-                                                  Icons.sticky_note_2_outlined,
-                                                  color: Colors.black,
-                                                  size: 24,
-                                                ),
-                                              ),
-                                              Text(
-                                                "تفاصيل المنتج",
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          collapsed: Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            decoration: BoxDecoration(
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          expanded: description is List
-                                              ? SingleChildScrollView(
-                                                  child: Column(
+                                          initialExpanded: false,
+                                          child: description is List
+                                              ? ExpandablePanel(
+                                                  header: Row(
                                                     mainAxisSize:
                                                         MainAxisSize.max,
                                                     children: [
-                                                      Align(
-                                                          alignment:
-                                                              AlignmentDirectional(
-                                                                  -1, 0),
-                                                          child:
-                                                              ListView.builder(
-                                                            physics:
-                                                                NeverScrollableScrollPhysics(),
-                                                            shrinkWrap: true,
-                                                            itemCount:
-                                                                description
-                                                                    .length,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              final item =
-                                                                  description[
-                                                                      index];
-                                                              final key = item
-                                                                  .keys.first;
-                                                              final value = item
-                                                                  .values.first;
-                                                              return Row(
-                                                                children: [
-                                                                  Text(
-                                                                      "$key: "),
-                                                                  Expanded(
-                                                                      child: Text(
-                                                                          "$value")),
-                                                                ],
-                                                              );
-                                                            },
-                                                          )),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsetsDirectional
+                                                                .fromSTEB(0, 0,
+                                                                    12, 0),
+                                                        child: Icon(
+                                                          Icons
+                                                              .sticky_note_2_outlined,
+                                                          color: Colors.black,
+                                                          size: 24,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "تفاصيل المنتج",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                        ),
+                                                      ),
                                                     ],
+                                                  ),
+                                                  collapsed: Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  expanded:
+                                                      SingleChildScrollView(
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      children: [
+                                                        Align(
+                                                            alignment:
+                                                                AlignmentDirectional(
+                                                                    -1, 0),
+                                                            child: ListView
+                                                                .builder(
+                                                              physics:
+                                                                  NeverScrollableScrollPhysics(),
+                                                              shrinkWrap: true,
+                                                              itemCount:
+                                                                  description
+                                                                      .length,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                final item =
+                                                                    description[
+                                                                        index];
+                                                                // print("item");
+                                                                // print(item);
+                                                                final key = item
+                                                                    .keys.first;
+                                                                // print("key");
+                                                                // print(key);
+                                                                final value =
+                                                                    item.values
+                                                                        .first;
+                                                                // print("value");
+                                                                // print(value);
+                                                                return Row(
+                                                                  children: [
+                                                                    Text(
+                                                                        "$key: "),
+                                                                    Expanded(
+                                                                        child: Text(
+                                                                            "$value")),
+                                                                  ],
+                                                                );
+                                                              },
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  theme: ExpandableThemeData(
+                                                    tapHeaderToExpand: true,
+                                                    tapBodyToExpand: false,
+                                                    tapBodyToCollapse: false,
+                                                    headerAlignment:
+                                                        ExpandablePanelHeaderAlignment
+                                                            .center,
+                                                    hasIcon: true,
+                                                    expandIcon: Icons
+                                                        .keyboard_arrow_down_sharp,
+                                                    collapseIcon: Icons
+                                                        .keyboard_arrow_down_rounded,
+                                                    iconSize: 38,
+                                                    iconColor: Colors.black,
                                                   ),
                                                 )
                                               : description is String
-                                                  ? Text(
-                                                      description) // Show the simple string description
-                                                  : Container(),
-                                          theme: ExpandableThemeData(
-                                            tapHeaderToExpand: true,
-                                            tapBodyToExpand: false,
-                                            tapBodyToCollapse: false,
-                                            headerAlignment:
-                                                ExpandablePanelHeaderAlignment
-                                                    .center,
-                                            hasIcon: true,
-                                            expandIcon:
-                                                Icons.keyboard_arrow_down_sharp,
-                                            collapseIcon: Icons
-                                                .keyboard_arrow_down_rounded,
-                                            iconSize: 38,
-                                            iconColor: Colors.black,
-                                          ),
-                                        ),
-                                      ),
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Text(
+                                                        description.isNotEmpty
+                                                            ? description
+                                                            : 'No description available',
+                                                        // You might format the text differently or provide a default message
+                                                        style: TextStyle(
+                                                            fontSize: 16),
+                                                      ),
+                                                    )
+                                                  : Container()),
                                     ),
                                   ),
                                 ),
@@ -1056,32 +1070,45 @@ class _ProductScreenState extends State<ProductScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Container(
-                width: 100,
-                height: 50,
-                child: DropdownButton(
-                  hint: Text(SelectedSizes),
-                  isExpanded: true,
-                  iconSize: 30.0,
-                  style:
-                      TextStyle(color: MAIN_COLOR, fontWeight: FontWeight.bold),
-                  items: Sizes.map(
-                    (val) {
-                      return DropdownMenuItem<String>(
-                        value: val,
-                        child: Text(
-                          val,
-                          style: TextStyle(color: MAIN_COLOR),
-                        ),
-                      );
+              AnimatedContainer(
+                duration: Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                transform: _hasError
+                    ? Matrix4.translationValues(5, 0, 0)
+                    : Matrix4.identity(),
+                child: Container(
+                  width: 100,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _hasError ? Colors.red : Colors.transparent,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: DropdownButton(
+                    hint: Text(SelectedSizes),
+                    isExpanded: true,
+                    iconSize: 30.0,
+                    underline: Container(),
+                    style: TextStyle(
+                        color: MAIN_COLOR, fontWeight: FontWeight.bold),
+                    items: Sizes.map(
+                      (val) {
+                        return DropdownMenuItem<String>(
+                          value: val,
+                          child: Text(
+                            val,
+                            style: TextStyle(color: MAIN_COLOR),
+                          ),
+                        );
+                      },
+                    ).toList(),
+                    onChanged: (val) {
+                      setState(() {
+                        SelectedSizes = val.toString();
+                      });
                     },
-                  ).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      SelectedSizes = val.toString();
-                      print("SelectedSizes");
-                    });
-                  },
+                  ),
                 ),
               ),
               loading
@@ -1170,60 +1197,40 @@ class _ProductScreenState extends State<ProductScreen> {
                                 await SharedPreferences.getInstance();
                             String? USER_ID =
                                 await prefs.getString('user_id') ?? "-";
+                            String? TOKEN =
+                                await prefs.getString('device_token') ?? "-";
 
                             CartFirebaseModel cartFirebaseItem =
                                 CartFirebaseModel(
                               id: idCart,
                               user_id: USER_ID.toString(),
                               product_id: id.toString(),
+                              user_token: TOKEN,
                             );
                             cartFirebaseProvider.addToCart(cartFirebaseItem);
                             final selectedSizeItem = variants.firstWhere(
                               (variant) => variant['size'] == SelectedSizes,
                               orElse: () => null,
                             );
+                            List<String> userIds = await cartFirebaseProvider
+                                .getUserIdsByProductId(id.toString());
+                            userIds.removeWhere((token) => token == TOKEN);
+
                             if (int.parse(
                                     selectedSizeItem["quantity"].toString()) <
                                 2) {
-                              sendNotification(context: context);
+                              sendNotification(
+                                  context: context, USER_TOKENS: userIds);
                             }
                           } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  content: Text(
-                                    "الرجاء اختيار المقاسات قبل إضافة للمنتج",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16),
-                                  ),
-                                  actions: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Container(
-                                        width: 100,
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                            color: MAIN_COLOR,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Center(
-                                          child: Text(
-                                            "حسنا",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                            setState(() {
+                              _hasError = true;
+                              Future.delayed(Duration(milliseconds: 1000), () {
+                                setState(() {
+                                  _hasError = false;
+                                });
+                              });
+                            });
                           }
                         }
                       },
@@ -1237,6 +1244,7 @@ class _ProductScreenState extends State<ProductScreen> {
     );
   }
 
+  bool _hasError = false;
   bool clicked = false;
 
   Widget desceiptionMethod({String key = "", String value = ""}) {
