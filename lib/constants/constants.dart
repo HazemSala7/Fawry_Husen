@@ -31,7 +31,7 @@ var categories = [
   {
     "name": "للرضيع و الأم",
     "image": "assets/images/Pregcat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Women Apparel Baby",
     "icon": "assets/categories_icons/mother.png"
   },
   {
@@ -49,19 +49,19 @@ var categories = [
   {
     "name": "للمنزل",
     "image": "assets/images/Homecat.jpg",
-    "main_category": "Home & Living",
+    "main_category": "Home & Living",
     "icon": "assets/categories_icons/house.png"
   },
   {
     "name": "مجوهرات و ساعات",
     "image": "assets/images/Jwelerycat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Jewelry & Watches",
     "icon": "assets/categories_icons/jewelry.png"
   },
   {
     "name": "اكسسوارات",
     "image": "assets/images/ALanding.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Apparel Accessories",
     "icon": "assets/categories_icons/bags.png"
   },
   {
@@ -73,7 +73,7 @@ var categories = [
   {
     "name": "للحيوانات الاليفة",
     "image": "assets/images/Petcat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Pet Supplies",
     "icon": "assets/categories_icons/rabbit.png"
   },
   {
@@ -85,40 +85,36 @@ var categories = [
   {
     "name": "مستحضرات تجميلية",
     "image": "assets/images/Beautycat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Beauty & Health",
     "icon": "assets/categories_icons/cosmetics.png"
   },
   {
     "name": "الكترونيات",
     "image": "assets/images/ElectCat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Electronics",
     "icon": "assets/categories_icons/responsive.png"
   },
   {
     "name": "حقائب",
     "image": "assets/images/Bagcat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Bags & Luggage",
     "icon": "assets/categories_icons/travel.png"
   },
   {
     "name": "مستلزمات اعراس",
     "image": "assets/images/Weddingcat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Weddings & Events",
     "icon": "assets/categories_icons/wedding-arch.png"
   },
   {
     "name": "مستلزمات رياضية",
     "image": "assets/images/Sportcat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Sports & Outdoor",
     "icon": "assets/categories_icons/dumbbell.png"
   },
 ];
 //the main cat will be "Men Apparel"
 var sub_categories_Men__sizes = [
-  {
-    "name": "جميع الأقسام",
-    "key": "all",
-  },
   {
     "name": "بلايز",
     "key": "Men Tops",
@@ -268,10 +264,6 @@ var sub_categories_women_plus_sizes = [
 ];
 
 var sub_categories_kids_sizes = [
-  {
-    "name": "جميع الأقسام",
-    "key": "all",
-  },
   {
     "name": "بلايز",
     "key": "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops",
@@ -816,5 +808,191 @@ var sub_categories_HomeLiving = [
   {
     "name": " معدات وادوات",
     "key": "Hardware,Hand Tools",
+  },
+];
+
+var sub_categories_SportsOutdoor = [
+  {
+    "name": "بلايز رياضية للرجال",
+    "key": "Men Active Tops",
+  },
+  {
+    "name": "أطقم رياضة رجالية",
+    "key": "Men Active Sets",
+  },
+  {
+    "name": "سراويل رياضية للرجال",
+    "key": "Men Active Bottoms",
+  },
+  {
+    "name": "أطقم رياضة نسائية",
+    "key": "Women Active Sets",
+  },
+  {
+    "name": "ملابس علوية رياضية نسائية",
+    "key": "Women Active Tops",
+  },
+  {
+    "name": "سراويل رياضية نسائية",
+    "key": "Women Active Bottoms",
+  },
+  {
+    "name": "بوديسوت & جمبسوت رياضية نسائية",
+    "key": "Women Sports Bodysuits & Jumpsuits",
+  },
+  {
+    "name": "لانجري رياضية نسائية",
+    "key": "Women Sports Bras,Women Sports Intimates"
+  },
+];
+
+var sub_categories_JewelryWatches = [
+  {
+    "name": "أقراط واحلق نسائية",
+    "key": "Women's Earrings",
+  },
+  {
+    "name": "قلادات وسناسيل نسائية",
+    "key": "Women's Necklaces",
+  },
+  {
+    "name": "أساور نسائية",
+    "key": "Women's Bracelets",
+  },
+  {
+    "name": "خواتم نسائية",
+    "key": "Women's Rings",
+  },
+  {
+    "name": "مجوهرات قدم نسائية",
+    "key": "Women's Foot Jewelry",
+  },
+  {
+    "name": "أطقم مجوهرات نسائية",
+    "key": "Women's Jewelry Sets, Women's Body Jewelry, Women's Body Chains",
+  },
+  {
+    "name": "أطقم مجوهرات نسائية",
+    "key":
+        "Women's Jewelry Sets, Women's Body Jewelry, Women's Body Chains, Women's Watches,Jewelry Making",
+  },
+  {
+    "name": "ساعات نسائية",
+    "key": "Women's Watches",
+  },
+  {
+    "name": "أساور وخواتم رجالية",
+    "key": "Men's Bracelets, Men's Rings",
+  },
+  {
+    "name": "قلادات وسناسيل رجالية",
+    "key": "Men's Necklaces",
+  },
+];
+
+var sub_categories_Accessories = [
+  {
+    "name": " أوشحة وشالات نسائي",
+    "key":
+        "Women Scarves Accessories, Women Scarves & Scarf Accessories,Women Collar & Accessories",
+  },
+  {
+    "name": "قبعات و قفازات نسائية",
+    "key": "Women Hats, Women Gloves",
+  },
+  {
+    "name": "أحزمة نسائية",
+    "key": "Women Belts & Belts Accessories,Women Keychains & Accessories",
+  },
+  {
+    "name": "إكسسوارات شعر نسائية   ",
+    "key": "Women Hair Accessories ",
+  },
+  {
+    "name": "نظارات نسائية وإكسسوارات نظارات",
+    "key": "Women Glasses & Eyewear Accessories",
+  },
+  {
+    "name": "احزمة واوشحة رجالية ",
+    "key":
+        "Men Belts & Belts Accessories, Men Scarves & Scarf Accessories, Men Keychains & Accessories",
+  },
+  {
+    "name": "نظارات  شمسية رجالية ",
+    "key": "Men Fashion Glasses, Men Glasses & Eyewear Accessories",
+  },
+  {
+    "name": "قبعات وقفازات رجالية",
+    "key": "Men Hats, Men Gloves",
+  },
+];
+
+var sub_categories_BeautyHealth = [
+  {
+    "name": " شعر مستعار وبواريك",
+    "key": "Wigs & Accs",
+  },
+  {
+    "name": "إكسسوارات الاظافر ",
+    "key": "Nail Art & Tools",
+  },
+  {
+    "name": "أدوات المكياج",
+    "key": "Makeup Tools,Makeup, Makeup Brushes, Makeup Bags",
+  },
+  {
+    "name": "وشم وفنون الجسم",
+    "key": "Tattoos & Body Art",
+  },
+  {
+    "name": " أدوات العناية بالجسم وبالبشرة",
+    "key": "Body Care Tools,Skin Care Tools",
+  },
+  {
+    "name": " أدوات العناية بالشعر",
+    "key": "Hair Tools",
+  },
+  {
+    "name": " أدوات العناية بالرموش",
+    "key": "Eyelashes",
+  },
+];
+
+var sub_categories_Electronics = [
+  {
+    "name": " اغلفة وإكسسوارات الهاتف",
+    "key": "Cases,Cell Phones & Accessories",
+  },
+  {
+    "name": "سماعات رأس وأذن",
+    "key": "Consumer Electronic,Earphone Cases",
+  },
+  {
+    "name": "أدوات كومبيوتر والمكتب",
+    "key": "Computer & Office",
+  },
+];
+
+var sub_categories_BagsLuggage = [
+  {
+    "name": " حقائب يد وكتف نسائية",
+    "key":
+        "Women Satchels, Women Bag Sets, Women Crossbody, Women Shoulder Bags, Women Wristlet Bags, Women Evening Bags, Women Clutches,Women Tote Bags, Women Waist Bags, ",
+  },
+  {
+    "name": " حقائب ظهر نسائية",
+    "key": "Women Backpacks",
+  },
+  {
+    "name": "حقائب وإكسسوارات سفر ",
+    "key": "Luggage & Travel Bags",
+  },
+  {
+    "name": "محافظ وحاملات بطاقات",
+    "key": "Wallets & Cardholders",
+  },
+  {
+    "name": "حقائب رجالية",
+    "key": "Men Bags",
   },
 ];

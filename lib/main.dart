@@ -15,6 +15,7 @@ import 'LocalDB/Provider/CartProvider.dart';
 import 'LocalDB/Provider/FavouriteProvider.dart';
 import 'firebase/cart/CartProvider.dart';
 import 'pages/category-splash/category-splash.dart';
+import 'server/functions/functions.dart';
 import 'services/auth/firebase_user_provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 

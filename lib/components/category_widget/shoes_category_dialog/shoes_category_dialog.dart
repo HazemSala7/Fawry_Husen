@@ -1,7 +1,11 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../LocalDB/Database/local_storage.dart';
 import '../../../constants/constants.dart';
+import '../../../pages/products-category/products-category.dart';
+import '../../../server/functions/functions.dart';
+import '../sizes_page/sizes_page.dart';
 
 class ShoesCategoryDialog extends StatefulWidget {
   ShoesCategoryDialog({super.key});
@@ -22,6 +26,7 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
     CategoryItem(
         name: "الجميع", image: "assets/images/icons8-select-all-100.png"),
   ];
+  bool isAnyItemSelected = false;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,20 +75,69 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
                     isSelected: categoryItems[index].isSelected,
                     onTaped: () {
                       setState(() {
-                        categoryItems[index].isSelected =
-                            !categoryItems[index].isSelected;
+                        if (categoryItems[index].name == "الجميع") {
+                          NavigatorFunction(
+                              context,
+                              ProductsCategories(
+                                category_id: "Shoes,Kids",
+                                size: "",
+                              ));
+                        } else {
+                          categoryItems[index].isSelected =
+                              !categoryItems[index].isSelected;
+                          // Check if any button is selected
+                          isAnyItemSelected =
+                              categoryItems.any((item) => item.isSelected);
+                        }
                       });
                     },
                   ),
-                ButtonWidget(
+                if (isAnyItemSelected)
+                  ButtonWidget(
                     name: "التالي",
                     height: 50,
                     width: 200,
                     BorderColor: MAIN_COLOR,
-                    OnClickFunction: () {},
+                    OnClickFunction: () {
+                      Map sizes = {};
+                      String Main_Category = "";
+                      if (categoryItems[0].isSelected) {
+                        sizes = LocalStorage().getSize("Women_shoes_sizes");
+                        Main_Category = "Women Shoes";
+                      } else if (categoryItems[1].isSelected) {
+                        sizes = LocalStorage().getSize("Men_shoes_sizes");
+                        Main_Category = "Men Shoes";
+                      } else if (categoryItems[2].isSelected) {
+                        sizes = LocalStorage().getSize("Kids_shoes_sizes");
+                        Main_Category = "Kids Shoes";
+                      } else {
+                        sizes = {};
+                        Main_Category = "all";
+                      }
+                      var keys = sizes.keys.toList();
+
+                      double gridViewHeight =
+                          calculateGridViewHeight(keys.length);
+                      List<double> containerWidths = keys
+                          .map((text) =>
+                              getTextWidth(text,
+                                  TextStyle(fontWeight: FontWeight.bold)) +
+                              100.0)
+                          .toList();
+                      NavigatorFunction(
+                          context,
+                          SizesPage(
+                            sizes: sizes,
+                            main_category: Main_Category,
+                            name: "الأحذيه",
+                            containerWidths: containerWidths,
+                            keys: keys,
+                          ));
+                    },
                     BorderRaduis: 40,
                     ButtonColor: MAIN_COLOR,
-                    NameColor: Colors.white),
+                    NameColor: Colors.white,
+                  ),
                 Text(
                   "تخطي الأن",
                   style: TextStyle(
@@ -97,6 +151,23 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
         ),
       ),
     );
+  }
+
+  double calculateGridViewHeight(int itemCount) {
+    final double itemHeight = 30.0; // Height of each item
+    final int itemsPerRow = 3; // Number of items per row
+    final int rowCount = (itemCount / itemsPerRow).ceil();
+    final double gridHeight = itemHeight * rowCount;
+    final double spacingHeight = 30.0 * (rowCount - 1); // Adjust for spacing
+    return gridHeight + spacingHeight;
+  }
+
+  double getTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.width;
   }
 
   Widget categoryMethodForShoes(

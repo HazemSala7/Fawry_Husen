@@ -4,6 +4,7 @@ import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/components/category_widget/kids_category_dialog/kids_category_dialog.dart';
 import 'package:fawri_app_refactor/components/category_widget/shoes_category_dialog/shoes_category_dialog.dart';
+import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -33,175 +34,6 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   @override
-  Map sizes = {};
-
-  setSizesArray() {
-    if (widget.name == "ملابس نسائيه") {
-      sizes = LocalStorage().getSize("womenSizes");
-    } else if (widget.name == "ملابس رجاليه") {
-      sizes = LocalStorage().getSize("menSizes");
-    } else if (widget.name == "ملابس أطفال") {
-      sizes = LocalStorage().getSize("kidsboysSizes");
-    } else {
-      sizes = LocalStorage().getSize("womenSizes");
-    }
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setSizesArray();
-  }
-
-  getSizesAndShow() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        var keys = sizes.keys.toList();
-
-        double gridViewHeight = calculateGridViewHeight(keys.length);
-        // Calculate the widths for each Container
-        List<double> containerWidths = keys
-            .map((text) =>
-                getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
-                32.0)
-            .toList();
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Text(
-              'لتجربة أفضل, الرجاء اختيار الحجم',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            content: Container(
-              height: gridViewHeight + 150,
-              child: Column(
-                children: [
-                  Wrap(
-                    spacing: 15.0, // gap between adjacent chips
-                    runSpacing: 15.0, // gap between lines
-                    children: <Widget>[
-                      for (int index = 0; index < keys.length; index++)
-                        InkWell(
-                          onTap: () {
-                            Vibration.vibrate(duration: 300);
-                            setState(() {
-                              sizes[keys[index]] = !sizes[keys[index]];
-                            });
-                          },
-                          child: Container(
-                            width: containerWidths[
-                                index], // Use the calculated width
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 8,
-                                ),
-                              ],
-                              color: sizes[keys[index]]
-                                  ? Colors.black
-                                  : Colors.white,
-
-                              borderRadius: BorderRadius.circular(
-                                  20), // Adjust the border radius
-                            ),
-                            height: sizes[keys[index]] ? 50 : 40,
-                            child: Center(
-                              child: Text(
-                                keys[index],
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: sizes[keys[index]]
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ButtonWidget(
-                          name: "حفظ",
-                          height: 40,
-                          width: 120,
-                          BorderColor: Colors.black,
-                          OnClickFunction: () async {
-                            if (widget.name == "ملابس نسائيه") {
-                              LocalStorage().editSize("menSizes", sizes);
-                            } else if (widget.name == "ملابس رجاليه") {
-                              LocalStorage().editSize("menSizes", sizes);
-                            } else if (widget.name == "ملابس أطفال") {
-                              LocalStorage().editSize("kidsboysSizes", sizes);
-                            } else {
-                              LocalStorage().editSize("womenSizes", sizes);
-                            }
-                            String sizeApi = "";
-                            List sizeApp = [];
-
-                            sizes.keys.forEach((k) {
-                              if (sizes[k]) {
-                                sizeApi = sizeApi + k;
-                                sizeApp.add(k.split(' ')[0]);
-                              }
-                            });
-                            LocalStorage().setSizeUser(sizeApp);
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setBool('is_selected_size', true);
-                            NavigatorFunction(
-                                context,
-                                ProductsCategories(
-                                  category_id: widget.main_category,
-                                  size: sizeApp.join(', '),
-                                ));
-                          },
-                          BorderRaduis: 10,
-                          ButtonColor: MAIN_COLOR,
-                          NameColor: Colors.white,
-                        ),
-                        ButtonWidget(
-                          name: "تخطي",
-                          height: 40,
-                          width: 120,
-                          BorderColor: Colors.black,
-                          OnClickFunction: () async {
-                            LocalStorage().setSizeUser([]);
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setBool('is_selected_size', false);
-                            NavigatorFunction(
-                                context,
-                                ProductsCategories(
-                                  category_id: widget.main_category,
-                                  size: "null",
-                                ));
-                          },
-                          BorderRaduis: 10,
-                          ButtonColor: MAIN_COLOR,
-                          NameColor: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-      },
-    );
-  }
-
   double calculateGridViewHeight(int itemCount) {
     final double itemHeight = 30.0; // Height of each item
     final int itemsPerRow = 3; // Number of items per row
@@ -230,8 +62,101 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(context, ShoesCategoryDialog());
         } else if (widget.name == "ملابس أطفال") {
           NavigatorFunction(context, KidsCategoryDialog());
+        } else if (widget.name == "مستلزمات رياضية") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "للمنزل") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "للرضيع و الأم") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "مجوهرات و ساعات") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "اكسسوارات") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "مستحضرات تجميلية") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "الكترونيات") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "حقائب") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
+        } else if (widget.name == "للحيوانات الاليفة") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                category_id: widget.main_category,
+                size: "",
+              ));
         } else {
-          getSizesAndShow();
+          Map sizes = {};
+          if (widget.name == "ملابس نسائيه") {
+            sizes = LocalStorage().getSize("womenSizes");
+          } else if (widget.name == "ملابس رجاليه") {
+            sizes = LocalStorage().getSize("menSizes");
+          } else if (widget.name == "ملابس نسائيه مقاس كبير") {
+            sizes = LocalStorage().getSize("womenPlusSizes");
+          } else if (widget.name == "مستلزمات اعراس") {
+            sizes = LocalStorage().getSize("Weddings & Events");
+          } else if (widget.name == "ملابس داخليه") {
+            sizes = LocalStorage().getSize("Underwear_Sleepwear_sizes");
+          }
+
+          var keys = sizes.keys.toList();
+
+          double gridViewHeight = calculateGridViewHeight(keys.length);
+          // Calculate the widths for each Container
+          List<double> containerWidths = keys
+              .map((text) =>
+                  getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
+                  100.0)
+              .toList();
+          NavigatorFunction(
+              context,
+              SizesPage(
+                sizes: sizes,
+                main_category: widget.main_category,
+                name: widget.name,
+                containerWidths: containerWidths,
+                keys: keys,
+              ));
         }
       },
       child: Stack(

@@ -1,3 +1,4 @@
+import 'package:fawri_app_refactor/firebase/order/OrderController.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,6 +17,7 @@ import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../constants/constants.dart';
 import '../../firebase/favourites/FavouriteControler.dart';
 import '../../firebase/favourites/favourite.dart';
+import '../../firebase/order/OrderFirebaseModel.dart';
 import '../domain/domain.dart';
 
 var headers = {'ContentType': 'application/json', "Connection": "Keep-Alive"};
@@ -100,7 +102,7 @@ addOrder({context, address, phone, city, name}) async {
     "address": address.toString(),
     "city": city.toString(),
     "total_price": totalPrice,
-    "user_id": UserID.toString(),
+    "user_id": 1,
     "products": products
   });
   request.headers.addAll(headers);
@@ -108,6 +110,17 @@ addOrder({context, address, phone, city, name}) async {
   if (response.statusCode == 200) {
     String stream = await response.stream.bytesToString();
     final decodedMap = json.decode(stream);
+    final OrderController orderService = OrderController();
+    String Order_ID = Uuid().v4();
+    OrderFirebaseModel newItem = OrderFirebaseModel(
+      id: Order_ID,
+      tracking_number: "123456",
+      number_of_products: cartProvider.length.toString(),
+      sum: totalPrice.toString(),
+      order_id: Order_ID,
+      user_id: UserID.toString(),
+    );
+    orderService.addUser(newItem);
   } else {
     print(response.reasonPhrase);
   }
@@ -143,12 +156,16 @@ sendNotification({context, USER_TOKENS}) async {
 
 getProductByCategory(
     category_id, sub_category_key, String size, int page) async {
+  var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
   var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
+
   var response = await http.get(
       Uri.parse(
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&${size != "null" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath"),
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
+  print(
+      "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath");
   return res;
 }
 
@@ -164,7 +181,7 @@ getSizesByCategory(category_id, context) async {
 }
 
 showDelayedDialog(context) {
-  Future.delayed(Duration(seconds: 15), () {
+  Future.delayed(Duration(seconds: 2), () {
     showDialog(
       context: context,
       builder: (context) {

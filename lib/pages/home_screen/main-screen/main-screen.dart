@@ -219,6 +219,7 @@ class _MainScreenState extends State<MainScreen> {
                                             "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
                                         isLiked: isLiked,
                                         Sub_Category_Key: Sub_Category_Key,
+                                        SubCategories: [],
                                         page: _page,
                                         sizes: [],
                                         home: true,

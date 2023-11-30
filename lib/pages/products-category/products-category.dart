@@ -179,62 +179,79 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
-          child: Container(
-            height: 40,
-            width: double.infinity,
-            child: ListView.builder(
-                itemCount: SubCategories.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 5, left: 5),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (selectedIndexes.contains(index)) {
-                            selectedIndexes.remove(index);
-                          } else {
-                            selectedIndexes.add(index);
-                            Map<String, dynamic> tappedCategory =
-                                SubCategories.removeAt(index);
-                            SubCategories.insert(1, tappedCategory);
-                            _firstLoad();
-                            Sub_Category_Key =
-                                SubCategories[index]["key"].toString();
-                            Sub_Category_Number = index;
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        //  width: ,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              width: 2,
-                              color: selectedIndexes.contains(index)
-                                  ? Colors.red
-                                  : Colors.black,
-                            ),
-                            color: Colors.black),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              SubCategories[index]["name"].toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Colors.white),
+        Visibility(
+          visible: SubCategories.length == 0 ? false : true,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
+            child: Container(
+              height: 40,
+              width: double.infinity,
+              child: ListView.builder(
+                  itemCount: SubCategories.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 5, left: 5),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (selectedIndexes.contains(index)) {
+                              if (Sub_Category_Key.length == 1) {
+                              } else {
+                                int removeIndex = Sub_Category_Key.indexWhere(
+                                    (key) =>
+                                        key ==
+                                        SubCategories[index]["key"].toString());
+
+                                if (removeIndex != -1) {
+                                  // Remove elements based on the found index
+                                  selectedIndexes.remove(index);
+                                  Sub_Category_Key.removeAt(removeIndex);
+                                  _firstLoad();
+                                }
+                              }
+                            } else {
+                              if (Sub_Category_Key[0].toString() ==
+                                  "Women Clothing") {
+                                selectedIndexes.removeAt(0);
+                                Sub_Category_Key.removeAt(0);
+                              }
+                              selectedIndexes.add(index);
+                              Sub_Category_Key.add(
+                                  SubCategories[index]["key"].toString());
+                              _firstLoad();
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: 40,
+                          //  width: ,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                width: 2,
+                                color: selectedIndexes.contains(index)
+                                    ? Colors.red
+                                    : Colors.black,
+                              ),
+                              color: Colors.black),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Text(
+                                SubCategories[index]["name"].toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  }),
+            ),
           ),
         ),
         _isFirstLoadRunning
@@ -280,6 +297,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                 childAspectRatio: 0.5,
                               ),
                               itemBuilder: (context, int index) {
+                                String concatenatedNames =
+                                    Sub_Category_Key.join('.')
+                                        .replaceAll('.', ',');
                                 final isLiked =
                                     Provider.of<FavouriteProvider>(context)
                                         .isProductFavorite(
@@ -293,9 +313,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeOut,
                                       child: ProductWidget(
+                                          SubCategories: SubCategories,
                                           sizes: LocalStorage().sizeUser,
                                           url:
-                                              "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id}&sub_category=$Sub_Category_Key&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                              "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
                                           isLiked: isLiked,
                                           Images: AllProducts[index]
                                                   ["vendor_images_links"] ??
@@ -352,7 +373,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
 
   List<int> selectedIndexes = [0];
   int Sub_Category_Number = 0;
-  String Sub_Category_Key = "";
+  List<String> Sub_Category_Key = [];
 
   var AllProducts;
   // At the beginning, we fetch the first 20 posts
@@ -371,14 +392,46 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       _isFirstLoadRunning = true;
     });
     try {
+      String concatenatedNames =
+          Sub_Category_Key.join('.').replaceAll('.', ',');
       var _products = await getProductByCategory(
-          widget.category_id, Sub_Category_Key, widget.size, _page);
+          widget.category_id == "Women Shoes" ||
+                  widget.category_id == "Men Shoes" ||
+                  widget.category_id == "Kids Shoes"
+              ? "Shoes"
+              : widget.category_id == "Underwear & Sleepwear"
+                  ? "Underwear %26 Sleepwear"
+                  : widget.category_id == "Home & Living"
+                      ? "Home %26 Living"
+                      : widget.category_id == "Sports & Outdoor"
+                          ? "Sports %26 Outdoor"
+                          : widget.category_id == "Women Apparel Baby"
+                              ? "Women Apparel"
+                              : widget.category_id == "Jewelry & Watches"
+                                  ? "Jewelry %26 Watches"
+                                  : widget.category_id == "Beauty & Health"
+                                      ? "Beauty %26 Health"
+                                      : widget.category_id == "Bags & Luggage"
+                                          ? "Bags %26 Luggage"
+                                          : widget.category_id ==
+                                                  "Weddings & Events"
+                                              ? "Women Apparel"
+                                              : widget.category_id ==
+                                                      "Kids Boys"
+                                                  ? "Kids"
+                                                  : widget.category_id ==
+                                                          "Kids Girls"
+                                                      ? "Kids"
+                                                      : widget.category_id,
+          concatenatedNames,
+          widget.size,
+          _page);
       setState(() {
         AllProducts = _products["items"];
       });
     } catch (err) {
       if (kDebugMode) {
-        print('Something went wrong');
+        print('Something went wrong . $err');
       }
     }
 
@@ -399,8 +452,23 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       });
       _page += 1; // Increase _page by 1
       try {
+        String concatenatedNames =
+            Sub_Category_Key.join('.').replaceAll('.', ',');
         var _products = await getProductByCategory(
-            widget.category_id, Sub_Category_Key, widget.size, _page);
+            widget.category_id == "Women Shoes" ||
+                    widget.category_id == "Men Shoes" ||
+                    widget.category_id == "Kids Shoes"
+                ? "Shoes"
+                : widget.category_id == "Underwear & Sleepwear"
+                    ? "Underwear %26 Sleepwear"
+                    : widget.category_id == "Home & Living"
+                        ? "Home %26 Living"
+                        : widget.category_id == "Women Apparel Baby"
+                            ? "Women Apparel"
+                            : widget.category_id,
+            concatenatedNames,
+            widget.size,
+            _page);
         if (_products.isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products["items"]);
@@ -429,14 +497,65 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   setStaticSubCategories() {
     if (widget.category_id.toString() == "Women Apparel") {
       SubCategories = sub_categories_women_appearel;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Men Apparel") {
       SubCategories = sub_categories_Men__sizes;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Kids") {
       SubCategories = sub_categories_kids_sizes;
-    } else {
-      SubCategories = sub_categories_women_appearel;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Home & Living") {
+      SubCategories = sub_categories_HomeLiving;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Weddings & Events") {
+      SubCategories = [];
+    } else if (widget.category_id.toString() == "Sports & Outdoor") {
+      SubCategories = sub_categories_SportsOutdoor;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Underwear & Sleepwear") {
+      SubCategories = sub_categories_Underware;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Women Shoes") {
+      SubCategories = sub_categories_WomenShoes;
+      Sub_Category_Key.add("Women Shoes");
+    } else if (widget.category_id.toString() == "Men Shoes") {
+      SubCategories = sub_categories_MenShoes;
+      Sub_Category_Key.add("Men Shoes");
+    } else if (widget.category_id.toString() == "Kids Shoes") {
+      SubCategories = sub_categories_KidsShoes;
+      Sub_Category_Key.add("Kids Shoes");
+    } else if (widget.category_id.toString() == "Women Apparel Baby") {
+      SubCategories = sub_categories_MaternityBaby;
+      Sub_Category_Key.add("Maternity Clothing, Baby");
+    } else if (widget.category_id.toString() == "Jewelry & Watches") {
+      SubCategories = sub_categories_JewelryWatches;
+      Sub_Category_Key.add("Women's Fashion Jewelry");
+    } else if (widget.category_id.toString() == "Apparel Accessories") {
+      SubCategories = sub_categories_Accessories;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Beauty & Health") {
+      SubCategories = sub_categories_BeautyHealth;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Electronics") {
+      SubCategories = sub_categories_Electronics;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Bags & Luggage") {
+      SubCategories = sub_categories_BagsLuggage;
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
+    } else if (widget.category_id.toString() == "Pet Supplies") {
+      SubCategories = [];
+      Sub_Category_Key.add("Weddings %26 Events");
+    } else if (widget.category_id.toString() == "Shoes,Kids") {
+      SubCategories = sub_categories_ALLShoes;
+      Sub_Category_Key.add("Kids Shoes, Men Shoes, Women Shoes");
+    } else if (widget.category_id.toString() == "Kids Boys") {
+      SubCategories = sub_categories_Boys;
+      Sub_Category_Key.add("Young Boys Clothing,Tween Boys Clothing");
+    } else if (widget.category_id.toString() == "Kids Girls") {
+      SubCategories = sub_categories_Girls;
+      Sub_Category_Key.add("Young Girls Clothing,Tween Girls Clothing");
     }
-    Sub_Category_Key = SubCategories[0]["key"].toString();
+
     setState(() {});
   }
 
@@ -447,7 +566,6 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     setStaticSubCategories();
     super.initState();
     _firstLoad();
-    showDelayedDialog(context);
     _controller = ScrollController()..addListener(_loadMore);
   }
 

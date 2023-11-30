@@ -2,6 +2,7 @@ import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
+import 'package:fawri_app_refactor/firebase/order/OrderFirebaseModel.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+import 'package:vibration/vibration.dart';
 
 import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../firebase/cart/CartController.dart';
@@ -66,7 +69,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: 500 - _progress * 25,
+                    height: 520 - _progress * 25,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
@@ -233,43 +236,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "المنطقة",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                child: TextField(
-                  controller: AreaController,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                    ),
-                    hintText: "المنطقة",
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
                     "العنوان",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   )
@@ -329,7 +295,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
                         if (PhoneController.text == "" ||
-                            AreaController.text == "" ||
                             AddressController.text == "" ||
                             CityController.text == "") {
                           showDialog(
@@ -368,47 +333,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               );
                             },
                           );
-                        }
-                        // else if (PhoneController.text.length != 10 &&
-                        //     PhoneController.text.startsWith('05')) {
-                        //   showDialog(
-                        //     context: context,
-                        //     builder: (BuildContext context) {
-                        //       return AlertDialog(
-                        //         content: Text(
-                        //           "رقم الهاتف يجب ان يبدأ ب 05 و مجموع خاناته فقط 10",
-                        //           style: TextStyle(
-                        //               fontWeight: FontWeight.bold,
-                        //               fontSize: 16),
-                        //         ),
-                        //         actions: <Widget>[
-                        //           InkWell(
-                        //             onTap: () {
-                        //               Navigator.pop(context);
-                        //             },
-                        //             child: Container(
-                        //               width: 100,
-                        //               height: 40,
-                        //               decoration: BoxDecoration(
-                        //                   color: MAIN_COLOR,
-                        //                   borderRadius:
-                        //                       BorderRadius.circular(10)),
-                        //               child: Center(
-                        //                 child: Text(
-                        //                   "حسنا",
-                        //                   style: TextStyle(
-                        //                       color: Colors.white,
-                        //                       fontWeight: FontWeight.bold),
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       );
-                        //     },
-                        //   );
-                        // }
-                        else {
+                        } else {
                           if (_formKey.currentState!.validate()) {
                             setState(() {
                               loading = true;
@@ -512,9 +437,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                       ));
                                 },
                               );
-                              // await Future.delayed(Duration(seconds: 2));
-                              // Fluttertoast.showToast(
-                              //     msg: "تم اضافه الطلبيه بنجاح");
 
                               cartProvider.clearCart();
                               // NavigatorFunction(
@@ -780,7 +702,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   if (dropdownValue.toString() == "اختر منطقتك") {
                     setState(() {
                       _hasError = true;
-
+                      Vibration.vibrate(duration: 100);
                       // Resetting error state after a short duration
                       Future.delayed(Duration(milliseconds: 1000), () {
                         setState(() {

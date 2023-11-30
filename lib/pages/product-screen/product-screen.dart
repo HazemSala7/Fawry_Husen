@@ -37,6 +37,7 @@ class ProductScreen extends StatefulWidget {
   var Sub_Category_Key;
   bool cart_fav;
   List Images;
+  List SubCategories;
   List sizes;
   var IDs;
   final url;
@@ -44,6 +45,7 @@ class ProductScreen extends StatefulWidget {
   ProductScreen({
     Key? key,
     required this.url,
+    required this.SubCategories,
     required this.page,
     required this.index,
     required this.Sub_Category_Key,
@@ -152,6 +154,8 @@ class _ProductScreenState extends State<ProductScreen> {
       orderedItems = InitialData["item"];
       initSubKey = InitialData["item"][0]["categories"][2][0];
     });
+    print("initSubKey");
+    print(initSubKey);
     moveItemToFront(orderedItems, widget.id);
 
     setState(() {
@@ -162,27 +166,39 @@ class _ProductScreenState extends State<ProductScreen> {
   int page = 1;
   Future loadAdditionalData() async {
     page += 1;
-    String modifiedUrl = widget.url
-        .replaceAll("sub_category=${widget.url}", "sub_category=$initSubKey");
     final uri = Uri.parse(widget.url);
     if (uri.host == null) {
       // Handle the case where the URL does not contain a host
       print("Invalid URL: No host specified");
       return;
     }
-
+    print("widget.SubCategories");
+    print(widget.SubCategories);
     final updatedQueryParameters =
         Map<String, String>.from(uri.queryParameters);
     int incrementPage = page;
     updatedQueryParameters['page'] = incrementPage.toString();
+    updatedQueryParameters['sub_category'] = initSubKey.toString();
 
     final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
     final updatedUrl = updatedUri.toString();
-    final response = await http.get(updatedUri);
+    String FinalUrl = updatedUrl.replaceAll('+', ' ');
+    print("FinalUrl");
+    print(FinalUrl);
+    final response = await http.get(Uri.parse(FinalUrl));
     var res = json.decode(utf8.decode(response.bodyBytes));
     var additionalItems = [];
     if (res != null) {
-      additionalItems = res["items"];
+      if (res["items"].length != 0) {
+        additionalItems = res["items"];
+      } else {
+        updatedQueryParameters['page'] = "1";
+        updatedQueryParameters['sub_category'] =
+            widget.SubCategories[2]["key"].toString();
+        final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
+        final updatedUrl = updatedUri.toString();
+        String FinalUrl = updatedUrl.replaceAll('+', ' ');
+      }
     }
 
     List<String> idsList =
@@ -293,28 +309,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             onPageChanged: (index, reason) async {
                               if (index == orderedItems.length - 1 &&
                                   reason == CarouselPageChangedReason.manual) {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              LoadingAnimationWidget
-                                                  .discreteCircle(
-                                                      color: Colors.teal,
-                                                      size: 50,
-                                                      secondRingColor:
-                                                          Colors.amberAccent,
-                                                      thirdRingColor:
-                                                          Colors.tealAccent),
-                                            ],
-                                          ),
-                                        ));
                                 await loadAdditionalData();
-                                Navigator.pop(context);
                               }
                             },
                           ),
@@ -363,30 +358,9 @@ class _ProductScreenState extends State<ProductScreen> {
                             viewportFraction: 1,
                             height: MediaQuery.of(context).size.height,
                             onPageChanged: (index, reason) async {
-                              if (index == orderedItems.length - 1 &&
+                              if (index == orderedItems.length - 4 &&
                                   reason == CarouselPageChangedReason.manual) {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                          title: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              LoadingAnimationWidget
-                                                  .discreteCircle(
-                                                      color: Colors.teal,
-                                                      size: 50,
-                                                      secondRingColor:
-                                                          Colors.amberAccent,
-                                                      thirdRingColor:
-                                                          Colors.tealAccent),
-                                            ],
-                                          ),
-                                        ));
                                 await loadAdditionalData();
-                                Navigator.pop(context);
                               }
                             },
                           ),
@@ -435,32 +409,14 @@ class _ProductScreenState extends State<ProductScreen> {
                         autoPlay: false,
                         enlargeCenterPage: true,
                         viewportFraction: 1,
+                        reverse: false,
+                        scrollDirection: Axis.horizontal,
                         height: MediaQuery.of(context).size.height,
                         initialPage: _currentPage,
                         onPageChanged: (index, reason) async {
                           if (index == orderedItems.length - 8 &&
                               reason == CarouselPageChangedReason.manual) {
-                            // showDialog(
-                            //     context: context,
-                            //     builder: (_) => AlertDialog(
-                            //           title: Row(
-                            //             mainAxisAlignment:
-                            //                 MainAxisAlignment.center,
-                            //             crossAxisAlignment:
-                            //                 CrossAxisAlignment.center,
-                            //             children: [
-                            //               LoadingAnimationWidget.discreteCircle(
-                            //                   color: Colors.teal,
-                            //                   size: 50,
-                            //                   secondRingColor:
-                            //                       Colors.amberAccent,
-                            //                   thirdRingColor:
-                            //                       Colors.tealAccent),
-                            //             ],
-                            //           ),
-                            //         ));
                             await loadAdditionalData();
-                            // Navigator.pop(context);
                           }
                         },
                       ),
@@ -674,6 +630,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       maxScale: 2,
                                                       child: FancyShimmerImage(
                                                         imageUrl: i,
+                                                        errorWidget:
+                                                            Icon(Icons.error),
                                                       ),
                                                     ),
                                                   );
@@ -739,7 +697,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             IconButton(
                                 onPressed: () {
                                   Share.share(
-                                      "http://54.91.80.40//product-details-one/${widget.id}?offset=1");
+                                      "http://54.91.80.40/product-details-one/${widget.id}?offset=1");
                                 },
                                 icon: Icon(Icons.share)),
                             Consumer<FavouriteProvider>(
@@ -979,27 +937,17 @@ class _ProductScreenState extends State<ProductScreen> {
                                                               itemBuilder:
                                                                   (context,
                                                                       index) {
-                                                                final item =
-                                                                    description[
-                                                                        index];
-                                                                // print("item");
-                                                                // print(item);
-                                                                final key = item
-                                                                    .keys.first;
-                                                                // print("key");
-                                                                // print(key);
-                                                                final value =
-                                                                    item.values
-                                                                        .first;
-                                                                // print("value");
-                                                                // print(value);
                                                                 return Row(
                                                                   children: [
-                                                                    Text(
-                                                                        "$key: "),
                                                                     Expanded(
-                                                                        child: Text(
-                                                                            "$value")),
+                                                                      child:
+                                                                          Text(
+                                                                        description[index].toString().startsWith("{") &&
+                                                                                description[index].toString().endsWith("}")
+                                                                            ? description[index].toString().substring(1, description[index].toString().length - 1)
+                                                                            : description[index].toString(),
+                                                                      ),
+                                                                    ),
                                                                   ],
                                                                 );
                                                               },
@@ -1224,6 +1172,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             }
                           } else {
                             setState(() {
+                              Vibration.vibrate(duration: 100);
                               _hasError = true;
                               Future.delayed(Duration(milliseconds: 1000), () {
                                 setState(() {

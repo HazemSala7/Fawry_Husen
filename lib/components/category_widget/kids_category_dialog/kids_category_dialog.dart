@@ -1,7 +1,10 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../../../LocalDB/Database/local_storage.dart';
 import '../../../constants/constants.dart';
+import '../../../server/functions/functions.dart';
+import '../sizes_page/sizes_page.dart';
 
 class KidsCategoryDialog extends StatefulWidget {
   KidsCategoryDialog({super.key});
@@ -20,6 +23,7 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
     CategoryItem(
         name: "كلاهما", image: "assets/images/icons8-select-all-100.png"),
   ];
+  bool isAnyItemSelected = false;
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +76,32 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                         setState(() {
                           categoryItems[0].isSelected =
                               !categoryItems[0].isSelected;
+                          isAnyItemSelected =
+                              categoryItems.any((item) => item.isSelected);
                         });
+                        Map sizes = {};
+                        String Main_Category = "";
+                        sizes = LocalStorage().getSize("kidsboysSizes");
+                        Main_Category = "Kids Boys";
+                        var keys = sizes.keys.toList();
+
+                        double gridViewHeight =
+                            calculateGridViewHeight(keys.length);
+                        List<double> containerWidths = keys
+                            .map((text) =>
+                                getTextWidth(text,
+                                    TextStyle(fontWeight: FontWeight.bold)) +
+                                100.0)
+                            .toList();
+                        NavigatorFunction(
+                            context,
+                            SizesPage(
+                              sizes: sizes,
+                              main_category: Main_Category,
+                              name: "قسم الأولاد",
+                              containerWidths: containerWidths,
+                              keys: keys,
+                            ));
                       },
                     ),
                     categoryMethodForShoes(
@@ -83,7 +112,32 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                         setState(() {
                           categoryItems[1].isSelected =
                               !categoryItems[1].isSelected;
+                          isAnyItemSelected =
+                              categoryItems.any((item) => item.isSelected);
                         });
+                        Map sizes = {};
+                        String Main_Category = "";
+                        sizes = LocalStorage().getSize("girls_kids_sizes");
+                        Main_Category = "Kids Girls";
+                        var keys = sizes.keys.toList();
+
+                        double gridViewHeight =
+                            calculateGridViewHeight(keys.length);
+                        List<double> containerWidths = keys
+                            .map((text) =>
+                                getTextWidth(text,
+                                    TextStyle(fontWeight: FontWeight.bold)) +
+                                100.0)
+                            .toList();
+                        NavigatorFunction(
+                            context,
+                            SizesPage(
+                              sizes: sizes,
+                              main_category: Main_Category,
+                              name: "قسم البنات",
+                              containerWidths: containerWidths,
+                              keys: keys,
+                            ));
                       },
                     ),
                   ],
@@ -102,12 +156,78 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                     },
                   ),
                 ),
+                // SizedBox(
+                //   height: 30,
+                // ),
+                // if (isAnyItemSelected)
+                //   ButtonWidget(
+                //     name: "التالي",
+                //     width: 180,
+                //     height: 60,
+                //     BorderColor: MAIN_COLOR,
+                //     OnClickFunction: () {
+                //       Map sizes = {};
+                //       String Main_Category = "";
+                //       if (categoryItems[0].isSelected) {
+                //         sizes = LocalStorage().getSize("Women_shoes_sizes");
+                //         Main_Category = "Women Shoes";
+                //       } else if (categoryItems[1].isSelected) {
+                //         sizes = LocalStorage().getSize("Men_shoes_sizes");
+                //         Main_Category = "Men Shoes";
+                //       } else if (categoryItems[2].isSelected) {
+                //         sizes = LocalStorage().getSize("Kids_shoes_sizes");
+                //         Main_Category = "Kids Shoes";
+                //       } else {
+                //         sizes = {};
+                //         Main_Category = "all";
+                //       }
+                //       var keys = sizes.keys.toList();
+
+                //       double gridViewHeight =
+                //           calculateGridViewHeight(keys.length);
+                //       List<double> containerWidths = keys
+                //           .map((text) =>
+                //               getTextWidth(text,
+                //                   TextStyle(fontWeight: FontWeight.bold)) +
+                //               100.0)
+                //           .toList();
+                //       NavigatorFunction(
+                //           context,
+                //           SizesPage(
+                //             sizes: sizes,
+                //             main_category: Main_Category,
+                //             name: "الأحذيه",
+                //             containerWidths: containerWidths,
+                //             keys: keys,
+                //           ));
+                //     },
+                //     BorderRaduis: 40,
+                //     ButtonColor: MAIN_COLOR,
+                //     NameColor: Colors.white,
+                //   ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  double calculateGridViewHeight(int itemCount) {
+    final double itemHeight = 30.0; // Height of each item
+    final int itemsPerRow = 3; // Number of items per row
+    final int rowCount = (itemCount / itemsPerRow).ceil();
+    final double gridHeight = itemHeight * rowCount;
+    final double spacingHeight = 30.0 * (rowCount - 1); // Adjust for spacing
+    return gridHeight + spacingHeight;
+  }
+
+  double getTextWidth(String text, TextStyle style) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return textPainter.width;
   }
 
   Widget categoryMethodForShoes(

@@ -1,4 +1,5 @@
 import 'package:fawri_app_refactor/constants/constants.dart';
+import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/cart/cart.dart';
 import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
 import 'package:fawri_app_refactor/pages/orders/orders.dart';
@@ -83,9 +84,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     }),
                 lineMethod(),
                 profileCard(
-                    name: "تتبع حالة الطلبية",
-                    iconornot: true,
-                    image: "assets/images/heart.png",
+                    name: "طلباتي الحالية",
+                    iconornot: false,
+                    image: "assets/images/order-delivery.png",
                     icon: Icons.request_quote,
                     NavigatorFunction: () {
                       NavigatorFunction(context, OrderDetails());
@@ -118,12 +119,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                 addressMethod(name: "حسابي"),
-                // lineMethod(),
-                // profileCard(
-                //   name: "المعلومات الشخصيه",
-                //   icon: Icons.person,
-                //   iconornot: true,
-                // ),
+                lineMethod(),
+                profileCard(
+                    name: "المعلومات الشخصيه",
+                    icon: Icons.person,
+                    iconornot: true,
+                    NavigatorFunction: () {
+                      NavigatorFunction(context, AccountInformation());
+                    }),
                 lineMethod(),
                 Login
                     ? profileCard(

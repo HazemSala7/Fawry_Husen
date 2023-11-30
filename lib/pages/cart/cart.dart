@@ -342,6 +342,7 @@ class _CartState extends State<Cart> {
               context,
               ProductScreen(
                 Sub_Category_Key: "",
+                SubCategories: [],
                 index: index,
                 url: "",
                 page: 1,
