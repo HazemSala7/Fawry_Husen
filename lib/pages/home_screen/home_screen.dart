@@ -53,6 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
             builder: Builder(
                 builder: (context) => AppBarWidget(
                       main_Category: "",
+                      containerWidths: "",
+                      keys: "",
+                      name: "",
+                      sizes: "",
                     )),
           ),
           preferredSize: Size.fromHeight(60)),

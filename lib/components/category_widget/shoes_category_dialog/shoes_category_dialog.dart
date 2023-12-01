@@ -81,6 +81,11 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
                               ProductsCategories(
                                 category_id: "Shoes,Kids",
                                 size: "",
+                                containerWidths: "",
+                                main_category: "Shoes,Kids",
+                                keys: "",
+                                sizes: "",
+                                name: "",
                               ));
                         } else {
                           categoryItems[index].isSelected =

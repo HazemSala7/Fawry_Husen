@@ -68,6 +68,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "للمنزل") {
           NavigatorFunction(
@@ -75,6 +80,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "للرضيع و الأم") {
           NavigatorFunction(
@@ -82,6 +92,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "مجوهرات و ساعات") {
           NavigatorFunction(
@@ -89,6 +104,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "اكسسوارات") {
           NavigatorFunction(
@@ -96,6 +116,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "مستحضرات تجميلية") {
           NavigatorFunction(
@@ -103,6 +128,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "الكترونيات") {
           NavigatorFunction(
@@ -110,6 +140,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "حقائب") {
           NavigatorFunction(
@@ -117,6 +152,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else if (widget.name == "للحيوانات الاليفة") {
           NavigatorFunction(
@@ -124,6 +164,11 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               ProductsCategories(
                 category_id: widget.main_category,
                 size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
               ));
         } else {
           Map sizes = {};

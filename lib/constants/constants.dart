@@ -116,6 +116,10 @@ var categories = [
 //the main cat will be "Men Apparel"
 var sub_categories_Men__sizes = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "بلايز",
     "key": "Men Tops",
   },
@@ -214,6 +218,10 @@ var sub_categories_women_appearel = [
 
 var sub_categories_women_plus_sizes = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "فساتين",
     "key": "Plus Size Dresses",
   },
@@ -264,6 +272,10 @@ var sub_categories_women_plus_sizes = [
 ];
 
 var sub_categories_kids_sizes = [
+  {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
   {
     "name": "بلايز",
     "key": "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops",
@@ -337,6 +349,10 @@ List<String> women__sizes = [
 var women_Plus_sizes = ["0XL", "1XL", "2XL", "3XL", "4XL", "5XL"];
 
 var sub_categories_Girls = [
+  {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
   {
     "name": "فساتين",
     "key": "Tween Girls Dresses, Young Girls Dresses, Teen Girls Dresses",
@@ -425,6 +441,10 @@ var girls_kids_sizes = [
 
 var sub_categories_Boys = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "بلايز",
     "key": "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops",
   },
@@ -491,6 +511,10 @@ var kids_boys_sizes = [
 
 var sub_categories_MaternityBaby = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "ملابس حجم كبير",
     "key": "Plus Size Tops",
   },
@@ -547,6 +571,10 @@ var sub_categories_MaternityBaby = [
 ];
 
 var sub_categories_WomenShoes = [
+  {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
   {
     "name": " Boots ",
     "key": "Women Boots",
@@ -605,6 +633,10 @@ var Women_shoes_sizes = [
 
 var sub_categories_MenShoes = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "حفايات",
     "key": "Men Loafers",
   },
@@ -653,6 +685,10 @@ var Men_shoes_sizes = [
 
 var sub_categories_KidsShoes = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "حفايات",
     "key": "Kids Flats",
   },
@@ -698,6 +734,10 @@ var Kids_shoes_sizes = [
 
 var sub_categories_ALLShoes = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "حفايات",
     "key": "Kids Flats,Women Flats,Men Loafers",
   },
@@ -731,6 +771,10 @@ var sub_categories_ALLShoes = [
 ];
 
 var sub_categories_Underware = [
+  {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
   {
     "name": "لانجري",
     "key":
@@ -777,6 +821,10 @@ var Underwear_Sleepwear_sizes = [
 
 var sub_categories_HomeLiving = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "ادوات للمطبخ",
     "key": "Kitchen & Dining, Kitchen Fixtures, Plumbing",
   },
@@ -813,6 +861,10 @@ var sub_categories_HomeLiving = [
 
 var sub_categories_SportsOutdoor = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": "بلايز رياضية للرجال",
     "key": "Men Active Tops",
   },
@@ -847,6 +899,10 @@ var sub_categories_SportsOutdoor = [
 ];
 
 var sub_categories_JewelryWatches = [
+  {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
   {
     "name": "أقراط واحلق نسائية",
     "key": "Women's Earrings",
@@ -892,6 +948,10 @@ var sub_categories_JewelryWatches = [
 
 var sub_categories_Accessories = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": " أوشحة وشالات نسائي",
     "key":
         "Women Scarves Accessories, Women Scarves & Scarf Accessories,Women Collar & Accessories",
@@ -929,6 +989,10 @@ var sub_categories_Accessories = [
 
 var sub_categories_BeautyHealth = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": " شعر مستعار وبواريك",
     "key": "Wigs & Accs",
   },
@@ -960,6 +1024,10 @@ var sub_categories_BeautyHealth = [
 
 var sub_categories_Electronics = [
   {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
+  {
     "name": " اغلفة وإكسسوارات الهاتف",
     "key": "Cases,Cell Phones & Accessories",
   },
@@ -974,6 +1042,10 @@ var sub_categories_Electronics = [
 ];
 
 var sub_categories_BagsLuggage = [
+  {
+    "name": "جميع الأقسام",
+    "key": "",
+  },
   {
     "name": " حقائب يد وكتف نسائية",
     "key":

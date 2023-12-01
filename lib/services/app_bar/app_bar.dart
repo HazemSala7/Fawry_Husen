@@ -1,3 +1,4 @@
+import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
 import 'package:fawri_app_refactor/pages/choose_size/choose_size.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,8 +18,14 @@ import '../../pages/products-category/products-category.dart';
 import '../../server/functions/functions.dart';
 
 class AppBarWidget extends StatefulWidget {
-  String main_Category;
-  AppBarWidget({super.key, required this.main_Category});
+  var sizes, containerWidths, keys, main_Category, name;
+  AppBarWidget(
+      {super.key,
+      required this.sizes,
+      required this.name,
+      required this.main_Category,
+      required this.keys,
+      required this.containerWidths});
 
   @override
   State<AppBarWidget> createState() => _AppBarWidgetState();
@@ -163,7 +170,14 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                         builder: (context) =>
                                             ProductsCategories(
                                               category_id: widget.main_Category,
+                                              containerWidths:
+                                                  widget.containerWidths,
+                                              keys: widget.keys,
+                                              name: widget.name,
+                                              sizes: widget.sizes,
                                               size: sizeApp.join(', '),
+                                              main_category:
+                                                  widget.main_Category,
                                             ))));
                           },
                           BorderRaduis: 10,
@@ -189,6 +203,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                             ProductsCategories(
                                               category_id: widget.main_Category,
                                               size: "null",
+                                              containerWidths:
+                                                  widget.containerWidths,
+                                              keys: widget.keys,
+                                              name: widget.name,
+                                              sizes: widget.sizes,
+                                              main_category:
+                                                  widget.main_Category,
                                             ))));
                             // String selectedSizes = getSelectedSizes();
                             // SharedPreferences prefs =
@@ -272,22 +293,32 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      leading: Showcase(
-        key: _one,
-        title: 'اختيار الحجم',
-        description: 'هنا يتم اختيار الحجم',
-        child: InkWell(
-          onTap: () {
-            getSizesAndShow();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Image.asset(
-              is_selected_size
-                  ? "assets/images/full_tshirt.png"
-                  : "assets/images/tshirt.png",
-              height: 35,
-              width: 35,
+      leading: Visibility(
+        visible: widget.sizes == "" || widget.sizes == "null" ? false : true,
+        child: Showcase(
+          key: _one,
+          title: 'اختيار الحجم',
+          description: 'هنا يتم اختيار الحجم',
+          child: InkWell(
+            onTap: () {
+              NavigatorFunction(
+                  context,
+                  SizesPage(
+                      sizes: widget.sizes,
+                      name: widget.name,
+                      main_category: widget.main_Category,
+                      keys: widget.keys,
+                      containerWidths: widget.containerWidths));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image.asset(
+                is_selected_size
+                    ? "assets/images/full_tshirt.png"
+                    : "assets/images/tshirt.png",
+                height: 35,
+                width: 35,
+              ),
             ),
           ),
         ),

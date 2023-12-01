@@ -63,24 +63,23 @@ class _SizesPageState extends State<SizesPage> {
           width: double.infinity,
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 25, left: 25),
+                  padding: const EdgeInsets.only(right: 25, left: 25, top: 25),
                   child: Row(
                     children: [
                       Expanded(
                         child: Text(
-                          "لتجربة أفضل, الرجاء اختيار الحجم",
+                          "الرجاء اختيار مقاسك , لتجربه افضل",
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 23),
+                              fontWeight: FontWeight.bold, fontSize: 25),
                         ),
                       )
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 25, left: 25),
+                  padding: const EdgeInsets.only(right: 25, left: 25, top: 25),
                   child: Wrap(
                     spacing: 30.0,
                     runSpacing: 25.0,
@@ -153,7 +152,7 @@ class _SizesPageState extends State<SizesPage> {
                   children: [
                     Padding(
                       padding:
-                          const EdgeInsets.only(right: 25, left: 25, top: 15),
+                          const EdgeInsets.only(right: 25, left: 25, top: 100),
                       child: ButtonWidget(
                         name: "حفظ",
                         height: 60,
@@ -198,6 +197,11 @@ class _SizesPageState extends State<SizesPage> {
                                 ProductsCategories(
                                   category_id: widget.main_category,
                                   size: sizeApp.join(', '),
+                                  containerWidths: widget.containerWidths,
+                                  main_category: widget.main_category,
+                                  keys: widget.keys,
+                                  sizes: widget.sizes,
+                                  name: widget.name,
                                 ));
                           } else {
                             null;
@@ -226,6 +230,11 @@ class _SizesPageState extends State<SizesPage> {
                             ProductsCategories(
                               category_id: widget.main_category,
                               size: "null",
+                              containerWidths: widget.containerWidths,
+                              main_category: widget.main_category,
+                              keys: widget.keys,
+                              sizes: widget.sizes,
+                              name: widget.name,
                             ));
                       },
                       child: Text(
@@ -235,6 +244,9 @@ class _SizesPageState extends State<SizesPage> {
                             fontSize: 18,
                             color: Colors.black87),
                       ),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                   ],
                 )

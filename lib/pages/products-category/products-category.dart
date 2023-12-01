@@ -22,7 +22,16 @@ import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
   final category_id, size;
-  const ProductsCategories({super.key, this.category_id, this.size});
+  var sizes, containerWidths, keys, main_category, name;
+  ProductsCategories(
+      {super.key,
+      this.category_id,
+      this.size,
+      required this.sizes,
+      required this.name,
+      required this.main_category,
+      required this.keys,
+      required this.containerWidths});
 
   @override
   State<ProductsCategories> createState() => _ProductsCategoriesState();
@@ -78,6 +87,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                     builder: Builder(
                         builder: (context) => AppBarWidget(
                               main_Category: widget.category_id,
+                              containerWidths: widget.containerWidths,
+                              keys: widget.keys,
+                              name: widget.name,
+                              sizes: widget.sizes,
                             ))),
                 preferredSize: Size.fromHeight(50)),
             body: _listOfWidget[selectedIndex]),
@@ -207,18 +220,21 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                   // Remove elements based on the found index
                                   selectedIndexes.remove(index);
                                   Sub_Category_Key.removeAt(removeIndex);
+                                  _page = 1;
                                   _firstLoad();
                                 }
                               }
                             } else {
                               if (Sub_Category_Key[0].toString() ==
-                                  "Women Clothing") {
+                                      "Women Clothing" ||
+                                  Sub_Category_Key[0].toString() == "") {
                                 selectedIndexes.removeAt(0);
                                 Sub_Category_Key.removeAt(0);
                               }
                               selectedIndexes.add(index);
                               Sub_Category_Key.add(
                                   SubCategories[index]["key"].toString());
+                              _page = 1;
                               _firstLoad();
                             }
                           });
@@ -463,9 +479,26 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                     ? "Underwear %26 Sleepwear"
                     : widget.category_id == "Home & Living"
                         ? "Home %26 Living"
-                        : widget.category_id == "Women Apparel Baby"
-                            ? "Women Apparel"
-                            : widget.category_id,
+                        : widget.category_id == "Sports & Outdoor"
+                            ? "Sports %26 Outdoor"
+                            : widget.category_id == "Women Apparel Baby"
+                                ? "Women Apparel"
+                                : widget.category_id == "Jewelry & Watches"
+                                    ? "Jewelry %26 Watches"
+                                    : widget.category_id == "Beauty & Health"
+                                        ? "Beauty %26 Health"
+                                        : widget.category_id == "Bags & Luggage"
+                                            ? "Bags %26 Luggage"
+                                            : widget.category_id ==
+                                                    "Weddings & Events"
+                                                ? "Women Apparel"
+                                                : widget.category_id ==
+                                                        "Kids Boys"
+                                                    ? "Kids"
+                                                    : widget.category_id ==
+                                                            "Kids Girls"
+                                                        ? "Kids"
+                                                        : widget.category_id,
             concatenatedNames,
             widget.size,
             _page);
@@ -509,6 +542,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Weddings & Events") {
       SubCategories = [];
+      Sub_Category_Key.add("Weddings & Events");
     } else if (widget.category_id.toString() == "Sports & Outdoor") {
       SubCategories = sub_categories_SportsOutdoor;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
@@ -544,7 +578,6 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Pet Supplies") {
       SubCategories = [];
-      Sub_Category_Key.add("Weddings %26 Events");
     } else if (widget.category_id.toString() == "Shoes,Kids") {
       SubCategories = sub_categories_ALLShoes;
       Sub_Category_Key.add("Kids Shoes, Men Shoes, Women Shoes");
