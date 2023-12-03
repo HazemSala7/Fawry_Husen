@@ -1,21 +1,21 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
+import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
+import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../../components/button_widget/button_widget.dart';
 import '../../constants/constants.dart';
 import '../../firebase/order/OrderFirebaseModel.dart';
-import '../../server/functions/functions.dart';
-import '../order_details/order_details.dart';
 
-class Orders extends StatefulWidget {
-  const Orders({super.key});
+class NewestOrders extends StatefulWidget {
+  const NewestOrders({super.key});
 
   @override
-  State<Orders> createState() => _OrdersState();
+  State<NewestOrders> createState() => _NewestOrdersState();
 }
 
-class _OrdersState extends State<Orders> {
+class _NewestOrdersState extends State<NewestOrders> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -385,7 +385,7 @@ class _OrdersState extends State<Orders> {
                                                             NavigatorFunction(
                                                                 context,
                                                                 OrderDetails(
-                                                                  done: true,
+                                                                  done: false,
                                                                   expected_date:
                                                                       "05/08/2023",
                                                                   sku: "0VK249",

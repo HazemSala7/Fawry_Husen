@@ -30,7 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: widget.selectedIndex);
-    showDelayedDialog(context);
   }
 
   void onButtonPressed(int index) {

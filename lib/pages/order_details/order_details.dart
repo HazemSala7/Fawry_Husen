@@ -4,7 +4,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../constants/constants.dart';
 
 class OrderDetails extends StatefulWidget {
-  const OrderDetails({super.key});
+  final sku, sun, expected_date;
+  bool done;
+  OrderDetails(
+      {super.key, this.sku, this.sun, this.expected_date, required this.done});
 
   @override
   State<OrderDetails> createState() => Oorder_detaDsState();
@@ -46,7 +49,9 @@ class Oorder_detaDsState extends State<OrderDetails> {
                 statusOrderMethod(
                     first_text: "تم تقديم طلبك",
                     lines: true,
-                    check_image: "assets/images/icons8-check-mark-50 (1).png",
+                    check_image: widget.done
+                        ? "assets/images/icons8-check-mark-50 (1).png"
+                        : "assets/images/icons8-check-mark-50.png",
                     second_text: "تم استلام طلبك لدينا 2/8/2023",
                     image: "assets/images/icons8-received-96.png"),
                 SizedBox(
@@ -56,7 +61,9 @@ class Oorder_detaDsState extends State<OrderDetails> {
                     lines: true,
                     first_text: "تجهيز الطلب",
                     second_text: "تم نقل طلبك 03/08/2023",
-                    check_image: "assets/images/icons8-check-mark-50 (1).png",
+                    check_image: widget.done
+                        ? "assets/images/icons8-check-mark-50 (1).png"
+                        : "assets/images/icons8-check-mark-50.png",
                     image: "assets/images/icons8-shipping-to-door-64.png"),
                 SizedBox(
                   height: 10,
@@ -65,7 +72,9 @@ class Oorder_detaDsState extends State<OrderDetails> {
                     lines: true,
                     first_text: "جاهز للنقل",
                     second_text: "تم تجهيز الطلب 03/08/2023",
-                    check_image: "assets/images/icons8-check-mark-50 (1).png",
+                    check_image: widget.done
+                        ? "assets/images/icons8-check-mark-50 (1).png"
+                        : "assets/images/icons8-check-mark-50.png",
                     image: "assets/images/icons8-shopping-bag-50 (2).png"),
                 SizedBox(
                   height: 10,
@@ -74,7 +83,9 @@ class Oorder_detaDsState extends State<OrderDetails> {
                     lines: true,
                     first_text: "تم الشحن",
                     second_text: "جاري شحن طلبك الأن الى العنوان المطلوب",
-                    check_image: "assets/images/icons8-check-mark-50.png",
+                    check_image: widget.done
+                        ? "assets/images/icons8-check-mark-50 (1).png"
+                        : "assets/images/icons8-check-mark-50.png",
                     image: "assets/images/icons8-shipping-50.png"),
                 SizedBox(
                   height: 10,
@@ -82,7 +93,9 @@ class Oorder_detaDsState extends State<OrderDetails> {
                 statusOrderMethod(
                     lines: false,
                     first_text: "تم التوصيل",
-                    check_image: "assets/images/icons8-check-mark-50.png",
+                    check_image: widget.done
+                        ? "assets/images/icons8-check-mark-50 (1).png"
+                        : "assets/images/icons8-check-mark-50.png",
                     second_text: "تم توصيل طلبك , تجربة ممتعة!",
                     image: "assets/images/icons8-delivery-64.png"),
               ],
@@ -154,7 +167,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                                 height: 5,
                               ),
                               Text(
-                                "SN6784VC",
+                                widget.sku.toString(),
                                 style: TextStyle(
                                   color: MAIN_COLOR,
                                   fontSize: 16,
@@ -212,7 +225,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                           ],
                         ),
                         Text(
-                          "120₪",
+                          "${widget.sun}₪",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 28,

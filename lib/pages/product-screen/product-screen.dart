@@ -42,9 +42,11 @@ class ProductScreen extends StatefulWidget {
   var IDs;
   final url;
   int page;
+  bool ALL;
   ProductScreen({
     Key? key,
     required this.url,
+    required this.ALL,
     required this.SubCategories,
     required this.page,
     required this.index,
@@ -144,23 +146,66 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   var initSubKey = "";
+  var initMAINKey = "";
 
   Future<void> loadInitialData() async {
     setState(() {
       loadingPage = true;
     });
-    var InitialData = await getSpeceficProduct(widget.IDs);
+    var InitialData = await getSpeceficProduct(widget.id);
     setState(() {
-      orderedItems = InitialData["item"];
-      initSubKey = InitialData["item"][0]["categories"][2][0];
+      orderedItems.add(InitialData["item"]);
+      removeDuplicatesById(orderedItems);
+      initSubKey = InitialData["item"]["categories"][2][0];
+      initMAINKey = InitialData["item"]["categories"][0][0];
     });
-    print("initSubKey");
-    print(initSubKey);
+    var main_category_key_final = initMAINKey.replaceAll('&', '%26');
+    final uri = Uri.parse(widget.url);
+    final updatedQueryParameters =
+        Map<String, String>.from(uri.queryParameters);
+    int incrementPage = page;
+    updatedQueryParameters['page'] = "1";
+    updatedQueryParameters['sub_category'] = initSubKey.toString();
+    var _products =
+        await getProductByCategory(main_category_key_final, initSubKey, "", 1);
+    var additionalItems = [];
+    if (_products != null) {
+      if (_products["items"].length != 0) {
+        additionalItems = _products["items"];
+        removeDuplicatesById(additionalItems);
+      } else {}
+    }
+    List<String> idsList =
+        additionalItems.map((item) => item['id'].toString()).toList();
+
+    String commaSeparatedIds = idsList.join(', ');
+
+    var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
+
+    if (additionalItems != null) {
+      setState(() {
+        orderedItems.addAll(ProductsApiData["item"]);
+      });
+    }
     moveItemToFront(orderedItems, widget.id);
 
     setState(() {
       loadingPage = false;
     });
+  }
+
+  removeDuplicatesById(items) {
+    Set<int> seen = Set<int>();
+    var uniqueItems = [];
+
+    for (var item in items) {
+      if (!seen.contains(item['id'])) {
+        uniqueItems.add(item);
+        seen.add(item['id']);
+      }
+    }
+
+    return uniqueItems;
   }
 
   int page = 1;
@@ -172,32 +217,28 @@ class _ProductScreenState extends State<ProductScreen> {
       print("Invalid URL: No host specified");
       return;
     }
-    print("widget.SubCategories");
-    print(widget.SubCategories);
-    final updatedQueryParameters =
-        Map<String, String>.from(uri.queryParameters);
-    int incrementPage = page;
-    updatedQueryParameters['page'] = incrementPage.toString();
-    updatedQueryParameters['sub_category'] = initSubKey.toString();
-
-    final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
-    final updatedUrl = updatedUri.toString();
-    String FinalUrl = updatedUrl.replaceAll('+', ' ');
-    print("FinalUrl");
-    print(FinalUrl);
-    final response = await http.get(Uri.parse(FinalUrl));
-    var res = json.decode(utf8.decode(response.bodyBytes));
     var additionalItems = [];
-    if (res != null) {
-      if (res["items"].length != 0) {
-        additionalItems = res["items"];
+    var main_category_key_final = initMAINKey.replaceAll('&', '%26');
+    var _products = await getProductByCategory(
+        main_category_key_final, initSubKey, "", page);
+    if (_products != null) {
+      if (_products["items"].length != 0) {
+        additionalItems = _products["items"];
+      } else {}
+    }
+
+    if (_products != null) {
+      if (_products["items"].length != 0) {
+        additionalItems = _products["items"];
       } else {
-        updatedQueryParameters['page'] = "1";
-        updatedQueryParameters['sub_category'] =
-            widget.SubCategories[2]["key"].toString();
-        final updatedUri = uri.replace(queryParameters: updatedQueryParameters);
-        final updatedUrl = updatedUri.toString();
-        String FinalUrl = updatedUrl.replaceAll('+', ' ');
+        var main_category_key_final = initMAINKey.replaceAll('&', '%26');
+        var _products = await getProductByCategory(
+            main_category_key_final, initSubKey, "", 1);
+        if (_products != null) {
+          if (_products["items"].length != 0) {
+            additionalItems = _products["items"];
+          } else {}
+        }
       }
     }
 
@@ -358,7 +399,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             viewportFraction: 1,
                             height: MediaQuery.of(context).size.height,
                             onPageChanged: (index, reason) async {
-                              if (index == orderedItems.length - 4 &&
+                              if (index == orderedItems.length - 5 &&
                                   reason == CarouselPageChangedReason.manual) {
                                 await loadAdditionalData();
                               }

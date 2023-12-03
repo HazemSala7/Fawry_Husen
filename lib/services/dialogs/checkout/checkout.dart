@@ -383,7 +383,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Lottie.asset(
-                                                "assets/lottie_animations/Animation - 1700471629534.json",
+                                                "assets/lottie_animations/Animation - 1701597212878.json",
                                                 height: 300,
                                                 reverse: true,
                                                 repeat: true,
@@ -395,7 +395,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                               padding: EdgeInsets.symmetric(
                                                   horizontal: 10),
                                               child: Text(
-                                                "تم طلب الطلبية بنجاح!",
+                                                "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.bold,

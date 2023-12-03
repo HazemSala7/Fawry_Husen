@@ -110,62 +110,62 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
-          child: Container(
-            height: 40,
-            width: double.infinity,
-            child: ListView.builder(
-                itemCount: sub_categories_women_appearel.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 5, left: 5),
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (selectedIndexes.contains(index)) {
-                            selectedIndexes.remove(index);
-                          } else {
-                            selectedIndexes.add(index);
-                            _firstLoad();
-                            Sub_Category_Key =
-                                sub_categories_women_appearel[index]["key"]
-                                    .toString();
-                            Sub_Category_Number = index;
-                          }
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        //  width: ,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                width: 3,
-                                color: selectedIndexes.contains(index)
-                                    ? Colors.red
-                                    : Colors.black),
-                            color: Colors.black),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              sub_categories_women_appearel[index]["name"]
-                                  .toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
+        //   child: Container(
+        //     height: 40,
+        //     width: double.infinity,
+        //     child: ListView.builder(
+        //         itemCount: sub_categories_women_appearel.length,
+        //         scrollDirection: Axis.horizontal,
+        //         itemBuilder: (BuildContext context, int index) {
+        //           return Padding(
+        //             padding: const EdgeInsets.only(right: 5, left: 5),
+        //             child: InkWell(
+        //               onTap: () {
+        //                 setState(() {
+        //                   if (selectedIndexes.contains(index)) {
+        //                     selectedIndexes.remove(index);
+        //                   } else {
+        //                     selectedIndexes.add(index);
+        //                     _firstLoad();
+        //                     Sub_Category_Key =
+        //                         sub_categories_women_appearel[index]["key"]
+        //                             .toString();
+        //                     Sub_Category_Number = index;
+        //                   }
+        //                 });
+        //               },
+        //               child: Container(
+        //                 height: 40,
+        //                 //  width: ,
+        //                 decoration: BoxDecoration(
+        //                     borderRadius: BorderRadius.circular(20),
+        //                     border: Border.all(
+        //                         width: 3,
+        //                         color: selectedIndexes.contains(index)
+        //                             ? Colors.red
+        //                             : Colors.black),
+        //                     color: Colors.black),
+        //                 child: Center(
+        //                   child: Padding(
+        //                     padding: const EdgeInsets.all(10.0),
+        //                     child: Text(
+        //                       sub_categories_women_appearel[index]["name"]
+        //                           .toString(),
+        //                       style: TextStyle(
+        //                           fontWeight: FontWeight.bold,
+        //                           fontSize: 14,
+        //                           color: Colors.white),
+        //                     ),
+        //                   ),
+        //                 ),
+        //               ),
+        //             ),
+        //           );
+        //         }),
+        //   ),
+        // ),
         _isFirstLoadRunning
             ? Container(
                 width: double.infinity,
@@ -215,8 +215,9 @@ class _MainScreenState extends State<MainScreen> {
                                   child: FadeInAnimation(
                                     curve: Curves.easeOut,
                                     child: ProductWidget(
+                                        ALL: true,
                                         url:
-                                            "http://34.227.78.214/api/getAllItems?api_key=$key_bath&page=$_page",
+                                            "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",
                                         isLiked: isLiked,
                                         Sub_Category_Key: Sub_Category_Key,
                                         SubCategories: [],

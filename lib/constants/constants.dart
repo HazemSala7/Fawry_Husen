@@ -49,7 +49,7 @@ var categories = [
   {
     "name": "للمنزل",
     "image": "assets/images/Homecat.jpg",
-    "main_category": "Home & Living",
+    "main_category": "Home %26 Living,Tools %26 Home Improvement",
     "icon": "assets/categories_icons/house.png"
   },
   {

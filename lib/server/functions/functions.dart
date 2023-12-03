@@ -61,6 +61,15 @@ getSpeceficProduct(id) async {
   return res;
 }
 
+getOrderDetails(id) async {
+  print("$URL_ORDER_DETAILS?id=$id&api_key=$key_bath");
+  var response = await http.get(
+      Uri.parse("$URL_ORDER_DETAILS?id=$id&api_key=$key_bath"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res;
+}
+
 addOrder({context, address, phone, city, name}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
@@ -117,7 +126,7 @@ addOrder({context, address, phone, city, name}) async {
       tracking_number: "123456",
       number_of_products: cartProvider.length.toString(),
       sum: totalPrice.toString(),
-      order_id: Order_ID,
+      order_id: decodedMap["id"].toString(),
       user_id: UserID.toString(),
     );
     orderService.addUser(newItem);
@@ -168,8 +177,6 @@ getProductByCategory(
   }
   var response = await http.get(Uri.parse(URL), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
-  print("URl");
-  print(URL);
   return res;
 }
 
@@ -185,7 +192,7 @@ getSizesByCategory(category_id, context) async {
 }
 
 showDelayedDialog(context) {
-  Future.delayed(Duration(seconds: 2), () {
+  Future.delayed(Duration(seconds: 120), () {
     showDialog(
       context: context,
       builder: (context) {

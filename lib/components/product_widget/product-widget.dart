@@ -34,10 +34,12 @@ class ProductWidget extends StatefulWidget {
   List Images;
   bool home = false;
   bool isLiked = false;
+  bool ALL;
   ProductWidget({
     super.key,
     this.image,
     this.name,
+    required this.ALL,
     required this.sizes,
     required this.SubCategories,
     required this.id,
@@ -127,6 +129,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      ALL: widget.ALL,
                       SubCategories: widget.SubCategories,
                       url: widget.url,
                       page: widget.page,

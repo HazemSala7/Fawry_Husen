@@ -1,6 +1,7 @@
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/cart/cart.dart';
+import 'package:fawri_app_refactor/pages/newest_orders/newest_orders.dart';
 import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
 import 'package:fawri_app_refactor/pages/orders/orders.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
@@ -89,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     image: "assets/images/order-delivery.png",
                     icon: Icons.request_quote,
                     NavigatorFunction: () {
-                      NavigatorFunction(context, OrderDetails());
+                      NavigatorFunction(context, NewestOrders());
                     }),
                 lineMethod(),
                 profileCard(
