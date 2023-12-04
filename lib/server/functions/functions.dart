@@ -1,4 +1,5 @@
 import 'package:fawri_app_refactor/firebase/order/OrderController.dart';
+import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -53,18 +54,18 @@ getSpeceficProduct(id) async {
   if (id.toString().endsWith(',')) {
     id = id.toString().substring(0, id.toString().length - 1);
   }
-
   var response = await http.get(
-      Uri.parse("$URL_SINGLE_PRODUCT?id=$id&api_key=$key_bath"),
+      Uri.parse(
+          "http://54.91.80.40:3000/api/getItemData?api_key=H93J48593HFNWIEUTR287TG3&id=$id"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
 }
 
 getOrderDetails(id) async {
-  print("$URL_ORDER_DETAILS?id=$id&api_key=$key_bath");
   var response = await http.get(
-      Uri.parse("$URL_ORDER_DETAILS?id=$id&api_key=$key_bath"),
+      Uri.parse(
+          "http://54.91.80.40:3000/api/getOrderData?id=$id&api_key=$key_bath"),
       headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
@@ -171,25 +172,52 @@ getProductByCategory(
     category_id, sub_category_key, String size, int page) async {
   var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
   var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
-  var URL = "";
+  var Final_URL = "";
   if (size != null && size.isNotEmpty && size.toString() != "null") {
-    URL =
+    Final_URL =
         "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
   } else {
-    URL =
+    Final_URL =
         "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
   }
-  var response = await http.get(Uri.parse(URL), headers: headers);
+  var response = await http.get(Uri.parse(Final_URL), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res;
+}
+
+getSearchResults(category_id, sub_category_key, title, type, int page) async {
+  var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
+  var Final_URL = "";
+  if (type.toString() != "title") {
+    Final_URL =
+        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+  } else {
+    Final_URL =
+        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&title=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+  }
+  var response = await http.get(Uri.parse(Final_URL), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
 }
 
 checkProductAvailability(prodct_id, size) async {
-  URL =
+  var Final_URL =
       "$URL_CHECK_PRODUCT_AVAILABILITY?id=$prodct_id&size=$size&api_key=$key_bath";
-  var response = await http.get(Uri.parse(URL), headers: headers);
+  print("|");
+  print(Final_URL);
+  var response = await http.get(Uri.parse(Final_URL), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res["availabilty"];
+}
+
+getSimilarWords(main_category, query_word) async {
+  var Final_URL =
+      "$URL_SIMILAR_WORDS?main_category=$main_category&query_word=$query_word&api_key=$key_bath";
+  print("URL");
+  print(Final_URL);
+  var response = await http.get(Uri.parse(Final_URL), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res;
 }
 
 getSizesByCategory(category_id, context) async {
@@ -282,11 +310,12 @@ showDelayedDialog(context) {
   });
 }
 
-TextEditingController searchController = TextEditingController();
-
-void showSearchDialog(BuildContext context) async {
+void showSearchDialog(
+  BuildContext context,
+  main_category,
+) async {
   List<dynamic> searchResults = [];
-
+  TextEditingController searchController = TextEditingController();
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -334,8 +363,9 @@ void showSearchDialog(BuildContext context) async {
                       ),
                       controller: searchController,
                       onChanged: (value) async {
-                        // searchResults = await searchProductByKey(value);
-                        // setState(() {});
+                        searchResults = await getSimilarWords(
+                            main_category, searchController.text);
+                        setState(() {});
                       },
                       decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -356,12 +386,47 @@ void showSearchDialog(BuildContext context) async {
                       width: double.infinity,
                       color: Colors.white,
                       child: ListView.builder(
-                        itemCount: 5,
+                        itemCount: searchResults.length,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              print(searchController.text);
+                              if (searchResults[index]["type"] == "title") {
+                                NavigatorFunction(
+                                    context,
+                                    ProductsCategories(
+                                        sizes: "",
+                                        name: main_category,
+                                        category_id: main_category,
+                                        size: "",
+                                        title: searchResults[index]["word"]
+                                            .toString(),
+                                        type: searchResults[index]["type"]
+                                            .toString(),
+                                        main_category: main_category,
+                                        keys: "",
+                                        search: true,
+                                        containerWidths: ""));
+                              } else {
+                                NavigatorFunction(
+                                    context,
+                                    ProductsCategories(
+                                        sizes: "",
+                                        name: main_category,
+                                        category_id: main_category,
+                                        size: "",
+                                        title: searchResults[index]["word"]
+                                            .toString(),
+                                        type: searchResults[index]["type"]
+                                            .toString(),
+                                        main_category: main_category,
+                                        keys: "",
+                                        search: true,
+                                        containerWidths: ""));
+                              }
+                            },
                             child: Column(
                               children: [
                                 Padding(
@@ -373,35 +438,39 @@ void showSearchDialog(BuildContext context) async {
                                       Column(
                                         children: [
                                           Text(
-                                            "ملابس",
+                                            searchResults[index]["word"]
+                                                        .toString()
+                                                        .length >
+                                                    35
+                                                ? searchResults[index]["word"]
+                                                    .toString()
+                                                    .substring(0, 35)
+                                                : searchResults[index]["word"]
+                                                    .toString(),
                                             style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16),
                                           ),
-                                          Text("ملابس",
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 13)),
                                         ],
                                       ),
-                                      InkWell(
-                                        onTap: () {},
-                                        child: Container(
-                                          width: 20,
-                                          height: 20,
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(
-                                                  color: MAIN_COLOR)),
-                                          child: Center(
-                                            child: FaIcon(
-                                              FontAwesomeIcons.plus,
-                                              color: MAIN_COLOR,
-                                              size: 10,
-                                            ),
-                                          ),
-                                        ),
-                                      )
+                                      // InkWell(
+                                      //   onTap: () {},
+                                      //   child: Container(
+                                      //     width: 20,
+                                      //     height: 20,
+                                      //     decoration: BoxDecoration(
+                                      //         shape: BoxShape.circle,
+                                      //         border: Border.all(
+                                      //             color: MAIN_COLOR)),
+                                      //     child: Center(
+                                      //       child: FaIcon(
+                                      //         FontAwesomeIcons.plus,
+                                      //         color: MAIN_COLOR,
+                                      //         size: 10,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // )
                                     ],
                                   ),
                                 ),

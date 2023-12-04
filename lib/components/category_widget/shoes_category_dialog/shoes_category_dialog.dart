@@ -79,6 +79,7 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
                           NavigatorFunction(
                               context,
                               ProductsCategories(
+                                search: false,
                                 category_id: "Shoes,Kids",
                                 size: "",
                                 containerWidths: "",

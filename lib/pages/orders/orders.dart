@@ -97,7 +97,7 @@ class _OrdersState extends State<Orders> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "طللباتك الحالية",
+                                  "طللباتك السابقة",
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 20),
@@ -122,7 +122,7 @@ class _OrdersState extends State<Orders> {
                             onTap: () {
                               setState(() {
                                 _heightList[index] =
-                                    _heightList[index] == 100.0 ? 550.0 : 100.0;
+                                    _heightList[index] == 110.0 ? 550.0 : 110.0;
                               });
                             },
                             child: Padding(
@@ -391,5 +391,5 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  List<double> _heightList = List.generate(6, (index) => 100.0);
+  List<double> _heightList = List.generate(6, (index) => 110.0);
 }

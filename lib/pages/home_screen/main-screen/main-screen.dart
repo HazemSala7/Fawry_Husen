@@ -33,26 +33,7 @@ class _MainScreenState extends State<MainScreen> {
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: TextFormField(
                   onTap: () {
-                    // NavigatorFunction(
-                    //     context,
-                    //     SearchScreen(
-                    //       SubCategories: SubCategories,
-                    //     ));
-                  },
-                  controller: textController,
-                  onChanged: (searchInput) {
-                    // Filter the customers based on search input
-                    if (searchInput.isEmpty) {
-                      _firstLoad();
-                    } else {
-                      setState(() {
-                        AllProducts = AllProducts.where((customer) =>
-                            customer['title']
-                                .toLowerCase()
-                                .contains(searchInput.toLowerCase()) ||
-                            customer['title'].contains(searchInput)).toList();
-                      });
-                    }
+                    showSearchDialog(context, "Women Apparel");
                   },
                   obscureText: false,
                   autofocus: false,

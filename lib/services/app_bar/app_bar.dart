@@ -169,6 +169,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                     builder: Builder(
                                         builder: (context) =>
                                             ProductsCategories(
+                                              search: false,
                                               category_id: widget.main_Category,
                                               containerWidths:
                                                   widget.containerWidths,
@@ -201,6 +202,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                                     builder: Builder(
                                         builder: (context) =>
                                             ProductsCategories(
+                                              search: false,
                                               category_id: widget.main_Category,
                                               size: "null",
                                               containerWidths:

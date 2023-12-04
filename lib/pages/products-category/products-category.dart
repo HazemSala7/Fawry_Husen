@@ -22,13 +22,17 @@ import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
   final category_id, size;
-  var sizes, containerWidths, keys, main_category, name;
+  var sizes, containerWidths, keys, main_category, name, title, type;
+  bool search;
   ProductsCategories(
       {super.key,
       this.category_id,
       this.size,
+      this.title,
+      this.type,
       required this.sizes,
       required this.name,
+      required this.search,
       required this.main_category,
       required this.keys,
       required this.containerWidths});
@@ -132,7 +136,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                 padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                 child: TextFormField(
                   onTap: () {
-                    showSearchDialog(context);
+                    showSearchDialog(context, widget.category_id);
                   },
                   controller: textController,
                   onFieldSubmitted: (_) {},
@@ -413,72 +417,49 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       _isFirstLoadRunning = true;
     });
     try {
+      var _products;
       String concatenatedNames =
           Sub_Category_Key.join('.').replaceAll('.', ',');
-      var _products = await getProductByCategory(
-          widget.category_id == "Women Shoes" ||
-                  widget.category_id == "Men Shoes"
-              ? "Shoes"
-              : widget.category_id == "Underwear & Sleepwear"
-                  ? "Underwear %26 Sleepwear"
-                  : widget.category_id ==
-                          "Home %26 Living,Tools %26 Home Improvement"
-                      ? "Home %26 Living,Tools %26 Home Improvement"
-                      : widget.category_id == "Sports & Outdoor"
-                          ? "Sports %26 Outdoor"
-                          : widget.category_id == "Women Apparel Baby"
-                              ? "Women Apparel"
-                              : widget.category_id == "Jewelry & Watches"
-                                  ? "Jewelry %26 Watches"
-                                  : widget.category_id == "Beauty & Health"
-                                      ? "Beauty %26 Health"
-                                      : widget.category_id == "Bags & Luggage"
-                                          ? "Bags %26 Luggage"
-                                          : widget.category_id ==
-                                                  "Weddings & Events"
-                                              ? "Women Apparel"
-                                              : widget.category_id ==
-                                                      "Kids Boys"
-                                                  ? "Kids"
-                                                  : widget.category_id ==
-                                                          "Kids Girls"
-                                                      ? "Kids"
-                                                      : widget.category_id ==
-                                                              "Kids Shoes"
-                                                          ? "Kids"
-                                                          : widget.category_id,
-          concatenatedNames,
-          widget.size,
-          _page);
-      setState(() {
-        AllProducts = _products["items"];
-      });
-    } catch (err) {
-      if (kDebugMode) {
-        print('Something went wrong . $err');
-      }
-    }
-
-    setState(() {
-      _isFirstLoadRunning = false;
-    });
-  }
-
-  // This function will be triggered whenver the user scroll
-  // to near the bottom of the list view
-  void _loadMore() async {
-    if (_hasNextPage == true &&
-        _isFirstLoadRunning == false &&
-        _isLoadMoreRunning == false &&
-        _controller!.position.extentAfter < 300) {
-      setState(() {
-        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
-      });
-      _page += 1; // Increase _page by 1
-      try {
-        String concatenatedNames =
-            Sub_Category_Key.join('.').replaceAll('.', ',');
-        var _products = await getProductByCategory(
+      if (widget.search == true) {
+        _products = await getSearchResults(
+            widget.category_id == "Women Shoes" ||
+                    widget.category_id == "Men Shoes"
+                ? "Shoes"
+                : widget.category_id == "Underwear & Sleepwear"
+                    ? "Underwear %26 Sleepwear"
+                    : widget.category_id ==
+                            "Home %26 Living,Tools %26 Home Improvement"
+                        ? "Home %26 Living,Tools %26 Home Improvement"
+                        : widget.category_id == "Sports & Outdoor"
+                            ? "Sports %26 Outdoor"
+                            : widget.category_id == "Women Apparel Baby"
+                                ? "Women Apparel"
+                                : widget.category_id == "Jewelry & Watches"
+                                    ? "Jewelry %26 Watches"
+                                    : widget.category_id == "Beauty & Health"
+                                        ? "Beauty %26 Health"
+                                        : widget.category_id == "Bags & Luggage"
+                                            ? "Bags %26 Luggage"
+                                            : widget.category_id ==
+                                                    "Weddings & Events"
+                                                ? "Women Apparel"
+                                                : widget.category_id ==
+                                                        "Kids Boys"
+                                                    ? "Kids"
+                                                    : widget.category_id ==
+                                                            "Kids Girls"
+                                                        ? "Kids"
+                                                        : widget.category_id ==
+                                                                "Kids Shoes"
+                                                            ? "Kids"
+                                                            : widget
+                                                                .category_id,
+            concatenatedNames,
+            widget.title,
+            widget.type,
+            _page);
+      } else {
+        _products = await getProductByCategory(
             widget.category_id == "Women Shoes" ||
                     widget.category_id == "Men Shoes"
                 ? "Shoes"
@@ -514,6 +495,113 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
             concatenatedNames,
             widget.size,
             _page);
+      }
+
+      setState(() {
+        AllProducts = _products["items"];
+      });
+    } catch (err) {
+      if (kDebugMode) {
+        print('Something went wrong . $err');
+      }
+    }
+
+    setState(() {
+      _isFirstLoadRunning = false;
+    });
+  }
+
+  void _loadMore() async {
+    if (_hasNextPage == true &&
+        _isFirstLoadRunning == false &&
+        _isLoadMoreRunning == false &&
+        _controller!.position.extentAfter < 300) {
+      setState(() {
+        _isLoadMoreRunning = true;
+      });
+      _page += 1;
+      try {
+        var _products;
+        String concatenatedNames =
+            Sub_Category_Key.join('.').replaceAll('.', ',');
+        if (widget.search == true) {
+          _products = await getSearchResults(
+              widget.category_id == "Women Shoes" ||
+                      widget.category_id == "Men Shoes"
+                  ? "Shoes"
+                  : widget.category_id == "Underwear & Sleepwear"
+                      ? "Underwear %26 Sleepwear"
+                      : widget.category_id ==
+                              "Home %26 Living,Tools %26 Home Improvement"
+                          ? "Home %26 Living,Tools %26 Home Improvement"
+                          : widget.category_id == "Sports & Outdoor"
+                              ? "Sports %26 Outdoor"
+                              : widget.category_id == "Women Apparel Baby"
+                                  ? "Women Apparel"
+                                  : widget.category_id == "Jewelry & Watches"
+                                      ? "Jewelry %26 Watches"
+                                      : widget.category_id == "Beauty & Health"
+                                          ? "Beauty %26 Health"
+                                          : widget.category_id ==
+                                                  "Bags & Luggage"
+                                              ? "Bags %26 Luggage"
+                                              : widget.category_id ==
+                                                      "Weddings & Events"
+                                                  ? "Women Apparel"
+                                                  : widget.category_id ==
+                                                          "Kids Boys"
+                                                      ? "Kids"
+                                                      : widget.category_id ==
+                                                              "Kids Girls"
+                                                          ? "Kids"
+                                                          : widget.category_id ==
+                                                                  "Kids Shoes"
+                                                              ? "Kids"
+                                                              : widget
+                                                                  .category_id,
+              concatenatedNames,
+              widget.title,
+              widget.type,
+              _page);
+        } else {
+          _products = await getProductByCategory(
+              widget.category_id == "Women Shoes" ||
+                      widget.category_id == "Men Shoes"
+                  ? "Shoes"
+                  : widget.category_id == "Underwear & Sleepwear"
+                      ? "Underwear %26 Sleepwear"
+                      : widget.category_id ==
+                              "Home %26 Living,Tools %26 Home Improvement"
+                          ? "Home %26 Living,Tools %26 Home Improvement"
+                          : widget.category_id == "Sports & Outdoor"
+                              ? "Sports %26 Outdoor"
+                              : widget.category_id == "Women Apparel Baby"
+                                  ? "Women Apparel"
+                                  : widget.category_id == "Jewelry & Watches"
+                                      ? "Jewelry %26 Watches"
+                                      : widget.category_id == "Beauty & Health"
+                                          ? "Beauty %26 Health"
+                                          : widget.category_id ==
+                                                  "Bags & Luggage"
+                                              ? "Bags %26 Luggage"
+                                              : widget.category_id ==
+                                                      "Weddings & Events"
+                                                  ? "Women Apparel"
+                                                  : widget.category_id ==
+                                                          "Kids Boys"
+                                                      ? "Kids"
+                                                      : widget.category_id ==
+                                                              "Kids Girls"
+                                                          ? "Kids"
+                                                          : widget.category_id ==
+                                                                  "Kids Shoes"
+                                                              ? "Kids"
+                                                              : widget
+                                                                  .category_id,
+              concatenatedNames,
+              widget.size,
+              _page);
+        }
         if (_products.isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products["items"]);

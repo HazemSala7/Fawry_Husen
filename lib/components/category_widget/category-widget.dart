@@ -67,6 +67,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -79,6 +80,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -91,6 +93,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -103,6 +106,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -115,6 +119,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -127,6 +132,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -139,6 +145,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -151,6 +158,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",
@@ -163,6 +171,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
               context,
               ProductsCategories(
                 category_id: widget.main_category,
+                search: false,
                 size: "",
                 containerWidths: "null",
                 keys: "null",

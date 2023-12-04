@@ -182,6 +182,7 @@ class _SizesPageState extends State<SizesPage> {
                             context,
                             ProductsCategories(
                               category_id: widget.main_category,
+                              search: false,
                               size: sizeApp.join(', '),
                               containerWidths: widget.containerWidths,
                               main_category: widget.main_category,
@@ -215,6 +216,7 @@ class _SizesPageState extends State<SizesPage> {
                         context,
                         ProductsCategories(
                           category_id: widget.main_category,
+                          search: false,
                           size: "null",
                           containerWidths: widget.containerWidths,
                           main_category: widget.main_category,
