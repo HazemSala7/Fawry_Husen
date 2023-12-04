@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/CartProvider.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import '../../LocalDB/Models/FavoriteItem.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../constants/constants.dart';
@@ -121,14 +121,18 @@ addOrder({context, address, phone, city, name}) async {
     final decodedMap = json.decode(stream);
     final OrderController orderService = OrderController();
     String Order_ID = Uuid().v4();
+    var now = new DateTime.now();
+    var formatter = new DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+
     OrderFirebaseModel newItem = OrderFirebaseModel(
-      id: Order_ID,
-      tracking_number: "123456",
-      number_of_products: cartProvider.length.toString(),
-      sum: totalPrice.toString(),
-      order_id: decodedMap["id"].toString(),
-      user_id: UserID.toString(),
-    );
+        id: Order_ID,
+        tracking_number: "123456",
+        number_of_products: cartProvider.length.toString(),
+        sum: totalPrice.toString(),
+        order_id: decodedMap["id"].toString(),
+        user_id: UserID.toString(),
+        created_at: formattedDate.toString());
     orderService.addUser(newItem);
   } else {
     print(response.reasonPhrase);
@@ -178,6 +182,14 @@ getProductByCategory(
   var response = await http.get(Uri.parse(URL), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
+}
+
+checkProductAvailability(prodct_id, size) async {
+  URL =
+      "$URL_CHECK_PRODUCT_AVAILABILITY?id=$prodct_id&size=$size&api_key=$key_bath";
+  var response = await http.get(Uri.parse(URL), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res["availabilty"];
 }
 
 getSizesByCategory(category_id, context) async {

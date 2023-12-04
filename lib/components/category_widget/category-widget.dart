@@ -191,7 +191,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           List<double> containerWidths = keys
               .map((text) =>
                   getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
-                  100.0)
+                  120.0)
               .toList();
           NavigatorFunction(
               context,

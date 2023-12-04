@@ -5,6 +5,7 @@ class OrderFirebaseModel {
   final String number_of_products;
   final String sum;
   final String tracking_number;
+  final String created_at;
 
   OrderFirebaseModel({
     required this.id,
@@ -13,6 +14,7 @@ class OrderFirebaseModel {
     required this.tracking_number,
     required this.sum,
     required this.number_of_products,
+    required this.created_at,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class OrderFirebaseModel {
       'tracking_number': tracking_number,
       'sum': sum,
       'number_of_products': number_of_products,
+      'created_at': created_at,
     };
   }
 
@@ -34,6 +37,7 @@ class OrderFirebaseModel {
       tracking_number: map?['tracking_number'] ?? "",
       number_of_products: map?['number_of_products'] ?? "",
       sum: map?['sum'] ?? "",
+      created_at: map?['created_at'] ?? "",
     );
   }
 }

@@ -23,18 +23,18 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   bool Login = false;
+  String user_id = "";
   setControllers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? login = prefs.getBool('login');
+    String UserID = prefs.getString('user_id') ?? "";
+    user_id = UserID;
     if (login == true) {
-      setState(() {
-        Login = true;
-      });
+      Login = true;
     } else {
-      setState(() {
-        Login = false;
-      });
+      Login = false;
     }
+    setState(() {});
   }
 
   void initState() {
@@ -44,165 +44,188 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 7,
-                blurRadius: 5,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 7,
+                  blurRadius: 5,
+                ),
+              ], borderRadius: BorderRadius.circular(4), color: Colors.white),
+              child: Column(
+                children: [
+                  addressMethod(name: "الملخص"),
+                  lineMethod(),
+                  profileCard(
+                      name: "السله",
+                      image: "assets/images/shopping-cart.png",
+                      iconornot: false,
+                      NavigatorFunction: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Cart()));
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "المفضله",
+                      iconornot: false,
+                      image: "assets/images/heart.png",
+                      icon: Icons.request_quote,
+                      NavigatorFunction: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen(
+                                      selectedIndex: 2,
+                                    )));
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "طلباتي الحالية",
+                      iconornot: false,
+                      image: "assets/images/order-delivery.png",
+                      icon: Icons.request_quote,
+                      NavigatorFunction: () {
+                        NavigatorFunction(
+                            context,
+                            NewestOrders(
+                              user_id: user_id,
+                            ));
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "طلباتي السابقة",
+                      iconornot: true,
+                      image: "assets/images/heart.png",
+                      icon: Icons.request_quote,
+                      NavigatorFunction: () {
+                        NavigatorFunction(context, Orders());
+                      }),
+                  lineMethod(),
+                ],
               ),
-            ], borderRadius: BorderRadius.circular(4), color: Colors.white),
-            child: Column(
-              children: [
-                addressMethod(name: "الملخص"),
-                lineMethod(),
-                profileCard(
-                    name: "السله",
-                    image: "assets/images/shopping-cart.png",
-                    iconornot: false,
-                    NavigatorFunction: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Cart()));
-                    }),
-                lineMethod(),
-                profileCard(
-                    name: "المفضله",
-                    iconornot: false,
-                    image: "assets/images/heart.png",
-                    icon: Icons.request_quote,
-                    NavigatorFunction: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreen(
-                                    selectedIndex: 2,
-                                  )));
-                    }),
-                lineMethod(),
-                profileCard(
-                    name: "طلباتي الحالية",
-                    iconornot: false,
-                    image: "assets/images/order-delivery.png",
-                    icon: Icons.request_quote,
-                    NavigatorFunction: () {
-                      NavigatorFunction(context, NewestOrders());
-                    }),
-                lineMethod(),
-                profileCard(
-                    name: "طلباتي السابقة",
-                    iconornot: true,
-                    image: "assets/images/heart.png",
-                    icon: Icons.request_quote,
-                    NavigatorFunction: () {
-                      NavigatorFunction(context, Orders());
-                    }),
-                lineMethod(),
-              ],
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 7,
-                blurRadius: 5,
+          Padding(
+            padding: const EdgeInsets.only(top: 20, right: 15, left: 15),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 7,
+                  blurRadius: 5,
+                ),
+              ], borderRadius: BorderRadius.circular(4), color: Colors.white),
+              child: Column(
+                children: [
+                  addressMethod(name: "حسابي"),
+                  lineMethod(),
+                  profileCard(
+                      name: "المعلومات الشخصيه",
+                      icon: Icons.person,
+                      iconornot: true,
+                      NavigatorFunction: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String name = prefs.getString('name') ?? "";
+                        String phone = prefs.getString('phone') ?? "";
+                        String address = prefs.getString('address') ?? "";
+                        String area = prefs.getString('area') ?? "";
+                        String city = prefs.getString('city') ?? "";
+                        NavigatorFunction(
+                            context,
+                            AccountInformation(
+                              address: address,
+                              area: area,
+                              city: city,
+                              name: name,
+                              phone: phone,
+                            ));
+                      }),
+                  lineMethod(),
+                  Login
+                      ? profileCard(
+                          name: "تسجيل خروج",
+                          icon: Icons.logout,
+                          iconornot: true,
+                          NavigatorFunction: () async {
+                            SharedPreferences preferences =
+                                await SharedPreferences.getInstance();
+                            await preferences.clear();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          })
+                      : profileCard(
+                          name: "تسجيل دخول",
+                          icon: Icons.login,
+                          iconornot: true,
+                          NavigatorFunction: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginScreen()));
+                          }),
+                  lineMethod(),
+                ],
               ),
-            ], borderRadius: BorderRadius.circular(4), color: Colors.white),
-            child: Column(
-              children: [
-                addressMethod(name: "حسابي"),
-                lineMethod(),
-                profileCard(
-                    name: "المعلومات الشخصيه",
-                    icon: Icons.person,
-                    iconornot: true,
-                    NavigatorFunction: () {
-                      NavigatorFunction(context, AccountInformation());
-                    }),
-                lineMethod(),
-                Login
-                    ? profileCard(
-                        name: "تسجيل خروج",
-                        icon: Icons.logout,
-                        iconornot: true,
-                        NavigatorFunction: () async {
-                          SharedPreferences preferences =
-                              await SharedPreferences.getInstance();
-                          await preferences.clear();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
-                        })
-                    : profileCard(
-                        name: "تسجيل دخول",
-                        icon: Icons.login,
-                        iconornot: true,
-                        NavigatorFunction: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => LoginScreen()));
-                        }),
-                lineMethod(),
-              ],
             ),
           ),
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(top: 20, right: 15, left: 15, bottom: 30),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 7,
-                blurRadius: 5,
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 20, right: 15, left: 15, bottom: 30),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.1),
+                  spreadRadius: 7,
+                  blurRadius: 5,
+                ),
+              ], borderRadius: BorderRadius.circular(4), color: Colors.white),
+              child: Column(
+                children: [
+                  addressMethod(name: "المزيد"),
+                  // lineMethod(),
+                  // profileCard(
+                  //   name: "للمساعده & التواصل",
+                  //   icon: Icons.person,
+                  //   iconornot: true,
+                  // ),
+                  lineMethod(),
+                  profileCard(
+                      name: "معلومات عنا",
+                      icon: Icons.info,
+                      iconornot: true,
+                      NavigatorFunction: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WhoWeAre()));
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "سياسه الخصوصيه",
+                      icon: Icons.privacy_tip,
+                      iconornot: true,
+                      NavigatorFunction: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Privacy()));
+                      }),
+                  lineMethod(),
+                ],
               ),
-            ], borderRadius: BorderRadius.circular(4), color: Colors.white),
-            child: Column(
-              children: [
-                addressMethod(name: "المزيد"),
-                // lineMethod(),
-                // profileCard(
-                //   name: "للمساعده & التواصل",
-                //   icon: Icons.person,
-                //   iconornot: true,
-                // ),
-                lineMethod(),
-                profileCard(
-                    name: "معلومات عنا",
-                    icon: Icons.info,
-                    iconornot: true,
-                    NavigatorFunction: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => WhoWeAre()));
-                    }),
-                lineMethod(),
-                profileCard(
-                    name: "سياسه الخصوصيه",
-                    icon: Icons.privacy_tip,
-                    iconornot: true,
-                    NavigatorFunction: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Privacy()));
-                    }),
-                lineMethod(),
-              ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

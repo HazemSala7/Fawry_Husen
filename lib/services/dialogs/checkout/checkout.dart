@@ -109,71 +109,34 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   }
 
   Widget SecondScreen() {
-    return Column(
-      key: Key("1"),
-      children: [
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "الأسم",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                child: TextField(
-                  controller: NameController,
-                  obscureText: false,
-                  keyboardType: TextInputType.name,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+    return SingleChildScrollView(
+      child: Column(
+        key: Key("1"),
+        children: [
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "الأسم",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                    ),
-                    hintText: "الأسم",
-                  ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "رقم الهاتف",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
-            Form(
-              key: _formKey,
-              child: Padding(
+              Padding(
                 padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
                 child: Container(
                   height: 50,
                   width: double.infinity,
-                  child: TextFormField(
-                    controller: PhoneController,
-                    keyboardType: TextInputType.phone,
+                  child: TextField(
+                    controller: NameController,
+                    obscureText: false,
+                    keyboardType: TextInputType.name,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
@@ -182,277 +145,331 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                         borderSide:
                             BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
                       ),
-                      hintText: "رقم الهاتف",
+                      hintText: "الأسم",
                     ),
-                    validator: validatePhoneNumber,
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "المدينة",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  )
-                ],
+            ],
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "رقم الهاتف",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                child: TextField(
-                  controller: CityController,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
+                  child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    child: TextFormField(
+                      controller: PhoneController,
+                      keyboardType: TextInputType.phone,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                        ),
+                        hintText: "رقم الهاتف",
+                      ),
+                      validator: validatePhoneNumber,
                     ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                    ),
-                    hintText: "المدينة",
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    "العنوان",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                child: TextField(
-                  controller: AddressController,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                    ),
-                    hintText: "العنوان",
-                  ),
+            ],
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "المدينة",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-        loading
-            ? Padding(
-                padding: EdgeInsets.only(top: 30),
+              Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
                 child: Container(
                   height: 50,
-                  width: 300,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(40),
-                      border: Border.all(color: Colors.black)),
-                  child: Center(
-                      child: Container(
-                    height: 15,
-                    width: 15,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
+                  width: double.infinity,
+                  child: TextField(
+                    controller: CityController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                      ),
+                      hintText: "المدينة",
                     ),
-                  )),
+                  ),
                 ),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: BouncingWidget(
-                  child: ButtonWidget(
-                      name: "تأكيد عمليه الشراء",
-                      height: 50,
-                      width: 300,
-                      BorderColor: Colors.black,
-                      OnClickFunction: () async {
-                        if (PhoneController.text == "" ||
-                            AddressController.text == "" ||
-                            CityController.text == "") {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Text(
-                                  "الرجاء تعبئه جميع البيانات",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16),
-                                ),
-                                actions: <Widget>[
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      width: 100,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          color: MAIN_COLOR,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                        child: Text(
-                                          "حسنا",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "العنوان",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
+                child: Container(
+                  height: 50,
+                  width: double.infinity,
+                  child: TextField(
+                    controller: AddressController,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                      ),
+                      hintText: "العنوان",
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          loading
+              ? Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Container(
+                    height: 50,
+                    width: 300,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(color: Colors.black)),
+                    child: Center(
+                        child: Container(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(top: 30),
+                  child: BouncingWidget(
+                    child: ButtonWidget(
+                        name: "تأكيد عمليه الشراء",
+                        height: 50,
+                        width: 300,
+                        BorderColor: Colors.black,
+                        OnClickFunction: () async {
+                          if (PhoneController.text == "" ||
+                              AddressController.text == "" ||
+                              CityController.text == "") {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: Text(
+                                    "الرجاء تعبئه جميع البيانات",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  actions: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: MAIN_COLOR,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            "حسنا",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        } else {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              loading = true;
-                            });
-                            await addOrder(
-                              context: context,
-                              address: AddressController.text,
-                              city: CityController.text,
-                              phone: PhoneController.text,
-                              name: NameController.text,
+                                  ],
+                                );
+                              },
                             );
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            String UserID = prefs.getString('user_id') ?? "";
-                            String? TOKEN =
-                                await prefs.getString('device_token');
-                            UserItem updatedUser = UserItem(
-                              id: UserID,
-                              token: TOKEN.toString(),
-                              email: "$UserID@email.com",
-                              phone: PhoneController.text,
-                              city: CityController.text,
-                              area: AreaController.text,
-                              address: AddressController.text,
-                              password: '123',
-                            );
-                            try {
-                              final cartProvider = Provider.of<CartProvider>(
-                                  context,
-                                  listen: false);
-                              await userService.updateUser(updatedUser);
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                              showDialog(
+                          } else {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              await addOrder(
                                 context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                      backgroundColor: Colors.transparent,
-                                      insetPadding: EdgeInsets.all(0),
-                                      child: Container(
-                                        height:
-                                            MediaQuery.of(context).size.height,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Lottie.asset(
-                                                "assets/lottie_animations/Animation - 1701597212878.json",
-                                                height: 300,
-                                                reverse: true,
-                                                repeat: true,
-                                                fit: BoxFit.cover),
-                                            SizedBox(
-                                              height: 20,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  horizontal: 10),
-                                              child: Text(
-                                                "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                  fontSize: 20,
+                                address: AddressController.text,
+                                city: CityController.text,
+                                phone: PhoneController.text,
+                                name: NameController.text,
+                              );
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String UserID = prefs.getString('user_id') ?? "";
+                              String? TOKEN =
+                                  await prefs.getString('device_token');
+                              await prefs.setString(
+                                  'name', NameController.text);
+                              await prefs.setString(
+                                  'city', CityController.text);
+                              await prefs.setString(
+                                  'area', AreaController.text);
+                              await prefs.setString(
+                                  'phone', PhoneController.text);
+                              await prefs.setString(
+                                  'address', AddressController.text);
+                              UserItem updatedUser = UserItem(
+                                id: UserID,
+                                token: TOKEN.toString(),
+                                email: "$UserID@email.com",
+                                phone: PhoneController.text,
+                                city: CityController.text,
+                                area: AreaController.text,
+                                address: AddressController.text,
+                                password: '123',
+                              );
+                              try {
+                                final cartProvider = Provider.of<CartProvider>(
+                                    context,
+                                    listen: false);
+                                await userService.updateUser(updatedUser);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: EdgeInsets.all(0),
+                                        child: Container(
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Lottie.asset(
+                                                  "assets/lottie_animations/Animation - 1701597212878.json",
+                                                  height: 300,
+                                                  reverse: true,
+                                                  repeat: true,
+                                                  fit: BoxFit.cover),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 10),
+                                                child: Text(
+                                                  "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                            SizedBox(
-                                              height: 40,
-                                            ),
-                                            InkWell(
-                                              onTap: () {
-                                                NavigatorFunction(
-                                                    context,
-                                                    HomeScreen(
-                                                        selectedIndex: 0));
-                                              },
-                                              child: Container(
-                                                width: 200,
+                                              SizedBox(
                                                 height: 40,
-                                                child: Center(
-                                                    child: Text(
-                                                  "الصفحة الرئيسية",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.white),
-                                                )),
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    color: Colors.black),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ));
-                                },
-                              );
+                                              InkWell(
+                                                onTap: () {
+                                                  NavigatorFunction(
+                                                      context,
+                                                      HomeScreen(
+                                                          selectedIndex: 0));
+                                                },
+                                                child: Container(
+                                                  width: 200,
+                                                  height: 40,
+                                                  child: Center(
+                                                      child: Text(
+                                                    "الصفحة الرئيسية",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  )),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Colors.black),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ));
+                                  },
+                                );
 
-                              cartProvider.clearCart();
-                              // NavigatorFunction(
-                              //     context, HomeScreen(selectedIndex: 0));
-                            } catch (e) {
-                              print('Error updating user data: $e');
+                                cartProvider.clearCart();
+                                // NavigatorFunction(
+                                //     context, HomeScreen(selectedIndex: 0));
+                              } catch (e) {
+                                print('Error updating user data: $e');
+                              }
                             }
                           }
-                        }
-                      },
-                      BorderRaduis: 10,
-                      ButtonColor: Colors.black,
-                      NameColor: Colors.white),
+                        },
+                        BorderRaduis: 10,
+                        ButtonColor: Colors.black,
+                        NameColor: Colors.white),
+                  ),
                 ),
-              ),
-      ],
+        ],
+      ),
     );
   }
 

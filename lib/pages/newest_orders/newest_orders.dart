@@ -5,19 +5,25 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/constants.dart';
 import '../../firebase/order/OrderFirebaseModel.dart';
 
 class NewestOrders extends StatefulWidget {
-  const NewestOrders({super.key});
+  final user_id;
+  const NewestOrders({super.key, this.user_id});
 
   @override
   State<NewestOrders> createState() => _NewestOrdersState();
 }
 
 class _NewestOrdersState extends State<NewestOrders> {
-  @override
+  DateTime fourDaysAgo = DateTime.now().subtract(Duration(days: 4));
+
   Widget build(BuildContext context) {
+    String formattedDate = fourDaysAgo.toIso8601String().substring(0, 10);
+    print("formattedDate");
+    print(formattedDate);
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
@@ -43,7 +49,11 @@ class _NewestOrdersState extends State<NewestOrders> {
             ),
           ),
           body: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('orders').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('orders')
+                .where('user_id', isEqualTo: widget.user_id)
+                .where('created_at', isGreaterThan: "2023-11-29")
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Container(
@@ -75,6 +85,8 @@ class _NewestOrdersState extends State<NewestOrders> {
                 return OrderFirebaseModel.fromMap(
                     doc.data() as Map<String, dynamic>?);
               }).toList();
+              print("orders");
+              print(orders);
               return Container(
                 height: MediaQuery.of(context).size.height,
                 width: double.infinity,

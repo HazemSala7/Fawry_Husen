@@ -156,8 +156,20 @@ class _CartState extends State<Cart> {
                         height: 50,
                         width: 300,
                         BorderColor: Colors.black,
-                        OnClickFunction: () {
-                          showCheckoutDialog().showBottomDialog(context, total);
+                        OnClickFunction: () async {
+                          for (var i = 0; i < cartItems.length; i++) {
+                            bool availability = await checkProductAvailability(
+                                cartItems[i].productId, cartItems[i].type);
+                            if (availability == false) {
+                              Fluttertoast.showToast(
+                                  msg:
+                                      "المنتج :${cartItems[i].name} لم يتبقى أي كميه منه , الرجاء حذف المنتج من الطلبية",
+                                  backgroundColor: Colors.red);
+                            } else {
+                              showCheckoutDialog()
+                                  .showBottomDialog(context, total);
+                            }
+                          }
                         },
                         BorderRaduis: 10,
                         ButtonColor: Colors.black,

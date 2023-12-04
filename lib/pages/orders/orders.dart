@@ -299,110 +299,73 @@ class _OrdersState extends State<Orders> {
                                               } else {
                                                 var products = snapshot
                                                     .data["data"]["data"];
-                                                return Stack(
-                                                  alignment:
-                                                      Alignment.bottomRight,
+                                                return Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SizedBox(
-                                                          height: 450.0,
-                                                          width:
-                                                              double.infinity,
-                                                          child:
-                                                              ListView.builder(
-                                                                  itemCount:
-                                                                      products
-                                                                          .length,
-                                                                  itemBuilder:
-                                                                      (BuildContext
-                                                                              context,
-                                                                          int indexProducts) {
-                                                                    return Padding(
-                                                                      padding:
-                                                                          const EdgeInsets.all(
-                                                                              8.0),
-                                                                      child:
-                                                                          Container(
-                                                                        width: double
-                                                                            .infinity,
+                                                    SizedBox(
+                                                      height: 450.0,
+                                                      width: double.infinity,
+                                                      child: ListView.builder(
+                                                          itemCount:
+                                                              products.length,
+                                                          itemBuilder: (BuildContext
+                                                                  context,
+                                                              int indexProducts) {
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: 70,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    color: Color(
+                                                                        0xffE1DEDE)),
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                              .all(
+                                                                          8.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      FancyShimmerImage(
+                                                                        imageUrl: snapshot
+                                                                            .data["data"]["data"][indexProducts]["image"]
+                                                                            .toString(),
                                                                         height:
-                                                                            70,
-                                                                        decoration: BoxDecoration(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                            color: Color(0xffE1DEDE)),
-                                                                        child:
-                                                                            Padding(
-                                                                          padding:
-                                                                              const EdgeInsets.all(8.0),
-                                                                          child:
-                                                                              Row(
-                                                                            mainAxisAlignment:
-                                                                                MainAxisAlignment.spaceBetween,
-                                                                            children: [
-                                                                              FancyShimmerImage(
-                                                                                imageUrl: snapshot.data["data"]["data"][indexProducts]["image"].toString(),
-                                                                                height: 50,
-                                                                                width: 50,
-                                                                              ),
-                                                                              Column(
-                                                                                children: [
-                                                                                  Text(
-                                                                                    "SKU : ${snapshot.data["data"]["data"][indexProducts]["data"][0]["sku"]}",
-                                                                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                                                                                  ),
-                                                                                  Text(
-                                                                                    "size : ${snapshot.data["data"]["data"][indexProducts]["data"][0]["size"]}",
-                                                                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                                                                                  )
-                                                                                ],
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                        ),
+                                                                            50,
+                                                                        width:
+                                                                            50,
                                                                       ),
-                                                                    );
-                                                                  }),
-                                                        ),
-                                                      ],
+                                                                      Column(
+                                                                        children: [
+                                                                          Text(
+                                                                            "SKU : ${snapshot.data["data"]["data"][indexProducts]["data"][0]["sku"]}",
+                                                                            style:
+                                                                                TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                                                                          ),
+                                                                          Text(
+                                                                            "size : ${snapshot.data["data"]["data"][indexProducts]["data"][0]["size"]}",
+                                                                            style:
+                                                                                TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                                                                          )
+                                                                        ],
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
                                                     ),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: ButtonWidget(
-                                                          name:
-                                                              "تتبع حالة طلبك",
-                                                          height: 50,
-                                                          width: 150,
-                                                          BorderColor:
-                                                              MAIN_COLOR,
-                                                          OnClickFunction: () {
-                                                            NavigatorFunction(
-                                                                context,
-                                                                OrderDetails(
-                                                                  done: true,
-                                                                  expected_date:
-                                                                      "05/08/2023",
-                                                                  sku: "0VK249",
-                                                                  sun: snapshot
-                                                                      .data[
-                                                                          "data"]
-                                                                          [
-                                                                          "total_price"]
-                                                                      .toString(),
-                                                                ));
-                                                          },
-                                                          BorderRaduis: 40,
-                                                          ButtonColor:
-                                                              MAIN_COLOR,
-                                                          NameColor:
-                                                              Colors.white),
-                                                    )
                                                   ],
                                                 );
                                               }

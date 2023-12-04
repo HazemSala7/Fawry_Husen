@@ -12,6 +12,7 @@ var URL_SHOPS = URL + "shops";
 var URL_CATEGORIES = URL + "categories";
 var URL_SINGLE_PRODUCT = URL + "getItemData";
 var URL_ORDER_DETAILS = URL + "getOrderData";
+var URL_CHECK_PRODUCT_AVAILABILITY = URL + "checkProductAvailability";
 var URL_SINGLE_COMPANY = URL + "single_company";
 var URL_ADD_CART = URL + "add_cart";
 var URL_ADD_ORDER = URL + "add_order";
