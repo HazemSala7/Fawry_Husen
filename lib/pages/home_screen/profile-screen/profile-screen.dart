@@ -104,7 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       image: "assets/images/heart.png",
                       icon: Icons.request_quote,
                       NavigatorFunction: () {
-                        NavigatorFunction(context, Orders());
+                        NavigatorFunction(
+                            context,
+                            Orders(
+                              user_id: user_id,
+                            ));
                       }),
                   lineMethod(),
                 ],

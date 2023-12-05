@@ -3,7 +3,7 @@
      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/> 
      <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
-        android:label="fawri_app_refactor"
+        android:label="Fawri"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity

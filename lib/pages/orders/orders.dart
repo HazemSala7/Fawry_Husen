@@ -9,7 +9,8 @@ import '../../server/functions/functions.dart';
 import '../order_details/order_details.dart';
 
 class Orders extends StatefulWidget {
-  const Orders({super.key});
+  final user_id;
+  const Orders({super.key, this.user_id});
 
   @override
   State<Orders> createState() => _OrdersState();
@@ -43,7 +44,10 @@ class _OrdersState extends State<Orders> {
             ),
           ),
           body: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('orders').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('orders')
+                .where('user_id', isEqualTo: widget.user_id)
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Container(
@@ -122,7 +126,7 @@ class _OrdersState extends State<Orders> {
                             onTap: () {
                               setState(() {
                                 _heightList[index] =
-                                    _heightList[index] == 110.0 ? 550.0 : 110.0;
+                                    _heightList[index] == 120.0 ? 550.0 : 120.0;
                               });
                             },
                             child: Padding(
@@ -157,7 +161,7 @@ class _OrdersState extends State<Orders> {
                                                   padding:
                                                       const EdgeInsets.all(8.0),
                                                   child: Container(
-                                                    height: 100,
+                                                    height: 110,
                                                     width: 4,
                                                     color: Color(0xff036A6A),
                                                   ),
@@ -214,7 +218,7 @@ class _OrdersState extends State<Orders> {
                                                         ),
                                                         Icon(
                                                           _heightList[index] ==
-                                                                  100.0
+                                                                  120.0
                                                               ? Icons
                                                                   .keyboard_arrow_down
                                                               : Icons
@@ -391,5 +395,5 @@ class _OrdersState extends State<Orders> {
     );
   }
 
-  List<double> _heightList = List.generate(6, (index) => 110.0);
+  List<double> _heightList = List.generate(6, (index) => 120.0);
 }

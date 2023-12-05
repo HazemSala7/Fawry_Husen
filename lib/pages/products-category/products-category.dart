@@ -107,8 +107,43 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     await Future.delayed(Duration(seconds: 2)); // Simulate a delay
     _page += 1; // Increase _page by 1
     try {
+      String concatenatedNames =
+          Sub_Category_Key.join('.').replaceAll('.', ',');
       var _products = await getProductByCategory(
-          widget.category_id, Sub_Category_Key, widget.size, _page);
+          widget.category_id == "Women Shoes" ||
+                  widget.category_id == "Men Shoes"
+              ? "Shoes"
+              : widget.category_id == "Underwear & Sleepwear"
+                  ? "Underwear %26 Sleepwear"
+                  : widget.category_id ==
+                          "Home %26 Living,Tools %26 Home Improvement"
+                      ? "Home %26 Living,Tools %26 Home Improvement"
+                      : widget.category_id == "Sports & Outdoor"
+                          ? "Sports %26 Outdoor"
+                          : widget.category_id == "Women Apparel Baby"
+                              ? "Women Apparel"
+                              : widget.category_id == "Jewelry & Watches"
+                                  ? "Jewelry %26 Watches"
+                                  : widget.category_id == "Beauty & Health"
+                                      ? "Beauty %26 Health"
+                                      : widget.category_id == "Bags & Luggage"
+                                          ? "Bags %26 Luggage"
+                                          : widget.category_id ==
+                                                  "Weddings & Events"
+                                              ? "Women Apparel"
+                                              : widget.category_id ==
+                                                      "Kids Boys"
+                                                  ? "Kids"
+                                                  : widget.category_id ==
+                                                          "Kids Girls"
+                                                      ? "Kids"
+                                                      : widget.category_id ==
+                                                              "Kids Shoes"
+                                                          ? "Kids"
+                                                          : widget.category_id,
+          concatenatedNames,
+          widget.size,
+          _page);
       if (_products.isNotEmpty) {
         setState(() {
           AllProducts = [];
@@ -652,18 +687,23 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Women Shoes") {
       SubCategories = sub_categories_WomenShoes;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Women Shoes");
     } else if (widget.category_id.toString() == "Men Shoes") {
       SubCategories = sub_categories_MenShoes;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Men Shoes");
     } else if (widget.category_id.toString() == "Kids Shoes") {
       SubCategories = sub_categories_KidsShoes;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Kids Shoes");
     } else if (widget.category_id.toString() == "Women Apparel Baby") {
       SubCategories = sub_categories_MaternityBaby;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Maternity Clothing, Baby");
     } else if (widget.category_id.toString() == "Jewelry & Watches") {
       SubCategories = sub_categories_JewelryWatches;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Women's Fashion Jewelry");
     } else if (widget.category_id.toString() == "Apparel Accessories") {
       SubCategories = sub_categories_Accessories;
@@ -681,15 +721,17 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       SubCategories = [];
     } else if (widget.category_id.toString() == "Shoes,Kids") {
       SubCategories = sub_categories_ALLShoes;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Kids Shoes, Men Shoes, Women Shoes");
     } else if (widget.category_id.toString() == "Kids Boys") {
       SubCategories = sub_categories_Boys;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Young Boys Clothing,Tween Boys Clothing");
     } else if (widget.category_id.toString() == "Kids Girls") {
       SubCategories = sub_categories_Girls;
+      Sub_Category_Key.add("");
       Sub_Category_Key.add("Young Girls Clothing,Tween Girls Clothing");
     }
-
     setState(() {});
   }
 

@@ -738,7 +738,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             IconButton(
                                 onPressed: () {
                                   Share.share(
-                                      "http://54.91.80.40/product-details-one/${widget.id}?offset=1");
+                                      "http://54.91.80.40/product-details-one/${id}?offset=1");
                                 },
                                 icon: Icon(Icons.share)),
                             Consumer<FavouriteProvider>(

@@ -172,59 +172,65 @@ class _MainScreenState extends State<MainScreen> {
                       padding:
                           const EdgeInsets.only(top: 15, right: 10, left: 10),
                       child: AnimationLimiter(
-                        child: GridView.builder(
-                            cacheExtent: 5000,
-                            controller: _controller,
-                            itemCount: AllProducts.length,
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 6,
-                              mainAxisSpacing: 10,
-                              childAspectRatio: 0.48,
-                            ),
-                            itemBuilder: (context, int index) {
-                              final isLiked = Provider.of<FavouriteProvider>(
-                                      context)
-                                  .isProductFavorite(AllProducts[index]["id"]);
-                              return AnimationConfiguration.staggeredList(
-                                position: index,
-                                duration: const Duration(milliseconds: 500),
-                                child: SlideAnimation(
-                                  horizontalOffset: 100.0,
-                                  // verticalOffset: 100.0,
-                                  child: FadeInAnimation(
-                                    curve: Curves.easeOut,
-                                    child: ProductWidget(
-                                        ALL: true,
-                                        url:
-                                            "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",
-                                        isLiked: isLiked,
-                                        Sub_Category_Key: Sub_Category_Key,
-                                        SubCategories: [],
-                                        page: _page,
-                                        sizes: [],
-                                        home: true,
-                                        category_id: "",
-                                        size: "",
-                                        Images: AllProducts[index]
-                                                ["vendor_images_links"] ??
-                                            [],
-                                        Products: AllProducts,
-                                        index: index,
-                                        name: AllProducts[index]["title"],
-                                        thumbnail: AllProducts[index]
-                                            ["thumbnail"],
-                                        id: AllProducts[index]["id"],
-                                        new_price: AllProducts[index]["price"],
-                                        old_price:
-                                            AllProducts[index]["price"] ?? 0.0,
-                                        image: AllProducts[index]
-                                            ["vendor_images_links"][0]),
+                        child: RefreshIndicator(
+                          onRefresh: _refreshData,
+                          child: GridView.builder(
+                              cacheExtent: 5000,
+                              controller: _controller,
+                              itemCount: AllProducts.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 6,
+                                mainAxisSpacing: 10,
+                                childAspectRatio: 0.48,
+                              ),
+                              itemBuilder: (context, int index) {
+                                final isLiked =
+                                    Provider.of<FavouriteProvider>(context)
+                                        .isProductFavorite(
+                                            AllProducts[index]["id"]);
+                                return AnimationConfiguration.staggeredList(
+                                  position: index,
+                                  duration: const Duration(milliseconds: 500),
+                                  child: SlideAnimation(
+                                    horizontalOffset: 100.0,
+                                    // verticalOffset: 100.0,
+                                    child: FadeInAnimation(
+                                      curve: Curves.easeOut,
+                                      child: ProductWidget(
+                                          ALL: true,
+                                          url:
+                                              "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",
+                                          isLiked: isLiked,
+                                          Sub_Category_Key: Sub_Category_Key,
+                                          SubCategories: [],
+                                          page: _page,
+                                          sizes: [],
+                                          home: true,
+                                          category_id: "",
+                                          size: "",
+                                          Images: AllProducts[index]
+                                                  ["vendor_images_links"] ??
+                                              [],
+                                          Products: AllProducts,
+                                          index: index,
+                                          name: AllProducts[index]["title"],
+                                          thumbnail: AllProducts[index]
+                                              ["thumbnail"],
+                                          id: AllProducts[index]["id"],
+                                          new_price: AllProducts[index]
+                                              ["price"],
+                                          old_price: AllProducts[index]
+                                                  ["price"] ??
+                                              0.0,
+                                          image: AllProducts[index]
+                                              ["vendor_images_links"][0]),
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       ),
                     ),
                   ),
@@ -250,6 +256,28 @@ class _MainScreenState extends State<MainScreen> {
           ),
       ],
     );
+  }
+
+  Future<void> _refreshData() async {
+    // Add your refresh logic here, for example, fetching new data
+    await Future.delayed(Duration(seconds: 2)); // Simulate a delay
+    _page += 1; // Increase _page by 1
+    try {
+      var _products = await getProducts(_page);
+      if (_products.isNotEmpty) {
+        setState(() {
+          AllProducts = [];
+
+          AllProducts = _products["items"];
+        });
+      } else {
+        print("_hasNextPage = false");
+      }
+    } catch (err) {
+      if (kDebugMode) {
+        print('Something went wrong!');
+      }
+    }
   }
 
   List<int> selectedIndexes = [];

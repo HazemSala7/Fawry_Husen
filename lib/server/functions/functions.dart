@@ -112,7 +112,7 @@ addOrder({context, address, phone, city, name}) async {
     "address": address.toString(),
     "city": city.toString(),
     "total_price": totalPrice,
-    "user_id": 1,
+    "user_id": 38,
     "products": products
   });
   request.headers.addAll(headers);
@@ -190,7 +190,7 @@ getSearchResults(category_id, sub_category_key, title, type, int page) async {
   var Final_URL = "";
   if (type.toString() != "title") {
     Final_URL =
-        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
   } else {
     Final_URL =
         "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&title=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
@@ -213,8 +213,6 @@ checkProductAvailability(prodct_id, size) async {
 getSimilarWords(main_category, query_word) async {
   var Final_URL =
       "$URL_SIMILAR_WORDS?main_category=$main_category&query_word=$query_word&api_key=$key_bath";
-  print("URL");
-  print(Final_URL);
   var response = await http.get(Uri.parse(Final_URL), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
@@ -329,19 +327,8 @@ void showSearchDialog(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: <Widget>[
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 25,
-                        ),
-                      ),
-                    ],
+                  SizedBox(
+                    height: 50,
                   ),
                   Container(
                     height: 40,
@@ -368,6 +355,17 @@ void showSearchDialog(
                         setState(() {});
                       },
                       decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              searchController.text = "";
+                              setState(() {});
+                            },
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                              size: 25,
+                            ),
+                          ),
                           prefixIcon: Icon(
                             Icons.search,
                             color: Colors.white,
@@ -376,7 +374,7 @@ void showSearchDialog(
                             color: const Color.fromARGB(255, 196, 195, 195),
                             fontSize: 12,
                           ),
-                          hintText: "ابحث من خلال رقم أو أسم المنتج"),
+                          hintText: "ابحث من خلال أسم المنتج"),
                     ),
                   ),
                   Visibility(
@@ -387,8 +385,8 @@ void showSearchDialog(
                       color: Colors.white,
                       child: ListView.builder(
                         itemCount: searchResults.length,
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        // shrinkWrap: true,
+                        // physics: NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () {
