@@ -162,7 +162,6 @@ class _CartState extends State<Cart> {
                           for (var i = 0; i < cartItems.length; i++) {
                             bool availability = await checkProductAvailability(
                                 cartItems[i].productId, cartItems[i].type);
-
                             if (availability == false) {
                               Fluttertoast.showToast(
                                   msg:

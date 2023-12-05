@@ -22,8 +22,6 @@ class _NewestOrdersState extends State<NewestOrders> {
 
   Widget build(BuildContext context) {
     String formattedDate = fourDaysAgo.toIso8601String().substring(0, 10);
-    print("formattedDate");
-    print(formattedDate);
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
@@ -348,7 +346,7 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                                           width:
                                                                               double.infinity,
                                                                           height:
-                                                                              70,
+                                                                              80,
                                                                           decoration: BoxDecoration(
                                                                               borderRadius: BorderRadius.circular(10),
                                                                               color: Color(0xffE1DEDE)),
