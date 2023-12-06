@@ -200,6 +200,17 @@ getSearchResults(category_id, sub_category_key, title, type, int page) async {
   return res;
 }
 
+getCoupun(code) async {
+  var Final_URL = "$URL_COPUN?code=$code&redeem=false&api_key=$key_bath";
+  var response = await http.post(Uri.parse(Final_URL), headers: headers);
+  if (response.statusCode == 200) {
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res["discount_amount"];
+  } else {
+    return "false";
+  }
+}
+
 checkProductAvailability(prodct_id, size) async {
   var Final_URL =
       "$URL_CHECK_PRODUCT_AVAILABILITY?id=$prodct_id&size=$size&api_key=$key_bath";

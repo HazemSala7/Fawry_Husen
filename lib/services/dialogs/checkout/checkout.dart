@@ -20,8 +20,11 @@ import '../../../firebase/user/UserController.dart';
 import '../../../firebase/user/UserModel.dart';
 
 class CheckoutBottomDialog extends StatefulWidget {
-  final total;
-  const CheckoutBottomDialog({Key? key, this.total}) : super(key: key);
+  var total;
+  CheckoutBottomDialog({
+    Key? key,
+    required this.total,
+  }) : super(key: key);
 
   @override
   State<CheckoutBottomDialog> createState() => _CheckoutBottomDialogState();
@@ -589,9 +592,25 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   height: 50,
                   width: double.infinity,
                   child: TextField(
-                    // controller: valueafterController,
+                    controller: CoponController,
+                    onSubmitted: (_) async {
+                      var res = await getCoupun(CoponController.text) ?? null;
+                      if (res.toString() == "null" ||
+                          res.toString() == "false") {
+                        Fluttertoast.showToast(
+                            msg:
+                                "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد",
+                            backgroundColor: Colors.red);
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "تم خصم قيمة الكوبون من مجموع الطلبية",
+                            backgroundColor: Colors.green);
+                        setState(() {
+                          widget.total = widget.total * (1 - res);
+                        });
+                      }
+                    },
                     obscureText: false,
-                    readOnly: true,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
@@ -747,6 +766,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
 
   bool _hasError = false;
 
+  TextEditingController CoponController = TextEditingController();
   TextEditingController NameController = TextEditingController();
   TextEditingController PhoneController = TextEditingController();
   TextEditingController CityController = TextEditingController();
