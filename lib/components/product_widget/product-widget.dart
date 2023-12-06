@@ -27,6 +27,7 @@ class ProductWidget extends StatefulWidget {
       size,
       page,
       url;
+  var SIZES;
   int index, id;
   List Products;
   List SubCategories;
@@ -41,6 +42,7 @@ class ProductWidget extends StatefulWidget {
     this.name,
     required this.ALL,
     required this.sizes,
+    required this.SIZES,
     required this.SubCategories,
     required this.id,
     required this.Images,
@@ -129,6 +131,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      SIZES: widget.SIZES,
                       ALL: widget.ALL,
                       SubCategories: widget.SubCategories,
                       url: widget.url,

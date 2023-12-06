@@ -199,6 +199,7 @@ class _MainScreenState extends State<MainScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeOut,
                                       child: ProductWidget(
+                                          SIZES: [],
                                           ALL: true,
                                           url:
                                               "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",

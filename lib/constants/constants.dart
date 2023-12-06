@@ -351,7 +351,7 @@ var women_Plus_sizes = ["0XL", "1XL", "2XL", "3XL", "4XL", "5XL"];
 var sub_categories_Girls = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Young Girls Clothing,Tween Girls Clothing",
   },
   {
     "name": "فساتين",
@@ -442,7 +442,7 @@ var girls_kids_sizes = [
 var sub_categories_Boys = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Young Boys Clothing,Tween Boys Clothing",
   },
   {
     "name": "بلايز",
@@ -512,7 +512,7 @@ var kids_boys_sizes = [
 var sub_categories_MaternityBaby = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Maternity Clothing, Baby",
   },
   {
     "name": "ملابس حجم كبير",
@@ -573,7 +573,7 @@ var sub_categories_MaternityBaby = [
 var sub_categories_WomenShoes = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Women Shoes",
   },
   {
     "name": " Boots ",
@@ -634,7 +634,7 @@ var Women_shoes_sizes = [
 var sub_categories_MenShoes = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Men Shoes",
   },
   {
     "name": "حفايات",
@@ -686,7 +686,7 @@ var Men_shoes_sizes = [
 var sub_categories_KidsShoes = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Kids Shoes",
   },
   {
     "name": "حفايات",
@@ -735,7 +735,7 @@ var Kids_shoes_sizes = [
 var sub_categories_ALLShoes = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Kids Shoes, Men Shoes, Women Shoes",
   },
   {
     "name": "حفايات",
@@ -901,7 +901,7 @@ var sub_categories_SportsOutdoor = [
 var sub_categories_JewelryWatches = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key": "Women's Fashion Jewelry",
   },
   {
     "name": "أقراط واحلق نسائية",

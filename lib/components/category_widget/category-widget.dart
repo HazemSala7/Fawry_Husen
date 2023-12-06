@@ -66,6 +66,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -79,6 +80,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -92,6 +94,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -105,6 +108,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -118,6 +122,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -131,6 +136,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -144,6 +150,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -157,6 +164,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",
@@ -170,6 +178,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(
               context,
               ProductsCategories(
+                SIZES: [],
                 category_id: widget.main_category,
                 search: false,
                 size: "",

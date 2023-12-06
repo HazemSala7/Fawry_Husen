@@ -39,13 +39,14 @@ class ProductScreen extends StatefulWidget {
   List Images;
   List SubCategories;
   List sizes;
-  var IDs;
+  var IDs, SIZES;
   final url;
   int page;
   bool ALL;
   ProductScreen({
     Key? key,
     required this.url,
+    required this.SIZES,
     required this.ALL,
     required this.SubCategories,
     required this.page,
@@ -72,6 +73,11 @@ class _ProductScreenState extends State<ProductScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
     user_id = UserID;
+    if (widget.SIZES!.length == 0) {
+      SelectedSizes = "اختر مقاسك";
+    } else {
+      SelectedSizes = widget.SIZES[0].toString();
+    }
   }
 
   List<int> _extractIds(String idsString) {
@@ -181,6 +187,8 @@ class _ProductScreenState extends State<ProductScreen> {
     String commaSeparatedIds = idsList.join(', ');
 
     var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
+    print("commaSeparatedIds");
+    print(commaSeparatedIds);
 
     if (additionalItems != null) {
       setState(() {

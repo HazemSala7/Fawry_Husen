@@ -366,6 +366,7 @@ class _CartState extends State<Cart> {
             NavigatorFunction(
               context,
               ProductScreen(
+                SIZES: [],
                 ALL: false,
                 Sub_Category_Key: "",
                 SubCategories: [],

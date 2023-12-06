@@ -257,6 +257,7 @@ class _FavouriteState extends State<Favourite> {
                 NavigatorFunction(
                   context,
                   ProductScreen(
+                    SIZES: [],
                     ALL: false,
                     SubCategories: [],
                     Sub_Category_Key: "",

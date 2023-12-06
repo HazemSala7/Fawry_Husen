@@ -165,7 +165,7 @@ class _SizesPageState extends State<SizesPage> {
                               .editSize("Weddings & Events", widget.sizes);
                         }
                         String sizeApi = "";
-                        List sizeApp = [];
+                        List<String> sizeApp = [];
 
                         widget.sizes.keys.forEach((k) {
                           if (widget.sizes[k]) {
@@ -181,6 +181,7 @@ class _SizesPageState extends State<SizesPage> {
                         NavigatorFunction(
                             context,
                             ProductsCategories(
+                              SIZES: sizeApp,
                               category_id: widget.main_category,
                               search: false,
                               size: sizeApp.join(', '),
@@ -215,6 +216,7 @@ class _SizesPageState extends State<SizesPage> {
                     NavigatorFunction(
                         context,
                         ProductsCategories(
+                          SIZES: [],
                           category_id: widget.main_category,
                           search: false,
                           size: "null",

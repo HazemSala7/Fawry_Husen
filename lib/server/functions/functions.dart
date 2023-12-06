@@ -357,8 +357,7 @@ void showSearchDialog(
                       decoration: InputDecoration(
                           suffixIcon: IconButton(
                             onPressed: () {
-                              searchController.text = "";
-                              setState(() {});
+                              Navigator.pop(context);
                             },
                             icon: Icon(
                               Icons.close,
@@ -396,6 +395,7 @@ void showSearchDialog(
                                     context,
                                     ProductsCategories(
                                         sizes: "",
+                                        SIZES: [],
                                         name: main_category,
                                         category_id: main_category,
                                         size: "",
@@ -412,6 +412,7 @@ void showSearchDialog(
                                     context,
                                     ProductsCategories(
                                         sizes: "",
+                                        SIZES: [],
                                         name: main_category,
                                         category_id: main_category,
                                         size: "",

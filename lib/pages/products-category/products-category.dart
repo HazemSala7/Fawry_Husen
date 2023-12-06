@@ -22,7 +22,7 @@ import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
   final category_id, size;
-  var sizes, containerWidths, keys, main_category, name, title, type;
+  var sizes, containerWidths, keys, main_category, name, title, type, SIZES;
   bool search;
   ProductsCategories(
       {super.key,
@@ -31,6 +31,7 @@ class ProductsCategories extends StatefulWidget {
       this.title,
       this.type,
       required this.sizes,
+      required this.SIZES,
       required this.name,
       required this.search,
       required this.main_category,
@@ -266,7 +267,24 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             } else {
                               if (Sub_Category_Key[0].toString() ==
                                       "Women Clothing" ||
-                                  Sub_Category_Key[0].toString() == "") {
+                                  Sub_Category_Key[0].toString() ==
+                                      "Weddings & Events" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Kids Shoes" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Men Shoes" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Women Shoes" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Maternity Clothing, Baby" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Women's Fashion Jewelry" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Kids Shoes, Men Shoes, Women Shoes" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Young Boys Clothing,Tween Boys Clothing" ||
+                                  Sub_Category_Key[0].toString() ==
+                                      "Young Girls Clothing,Tween Girls Clothing") {
                                 selectedIndexes.removeAt(0);
                                 Sub_Category_Key.removeAt(0);
                               }
@@ -276,10 +294,6 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                               _page = 1;
                               _firstLoad();
                             }
-
-                            // print("Sub_Category_Key");
-                            // print(Sub_Category_Key);
-                            // print(selectedIndexes);
                           });
                         },
                         child: Container(
@@ -372,6 +386,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeOut,
                                       child: ProductWidget(
+                                          SIZES: widget.SIZES,
                                           ALL: false,
                                           SubCategories: SubCategories,
                                           sizes: LocalStorage().sizeUser,
@@ -687,24 +702,19 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Women Shoes") {
       SubCategories = sub_categories_WomenShoes;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Women Shoes");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Men Shoes") {
       SubCategories = sub_categories_MenShoes;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Men Shoes");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Kids Shoes") {
       SubCategories = sub_categories_KidsShoes;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Kids Shoes");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Women Apparel Baby") {
       SubCategories = sub_categories_MaternityBaby;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Maternity Clothing, Baby");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Jewelry & Watches") {
       SubCategories = sub_categories_JewelryWatches;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Women's Fashion Jewelry");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Apparel Accessories") {
       SubCategories = sub_categories_Accessories;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
@@ -721,22 +731,20 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       SubCategories = [];
     } else if (widget.category_id.toString() == "Shoes,Kids") {
       SubCategories = sub_categories_ALLShoes;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Kids Shoes, Men Shoes, Women Shoes");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Kids Boys") {
       SubCategories = sub_categories_Boys;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Young Boys Clothing,Tween Boys Clothing");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Kids Girls") {
       SubCategories = sub_categories_Girls;
-      Sub_Category_Key.add("");
-      Sub_Category_Key.add("Young Girls Clothing,Tween Girls Clothing");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
     }
     setState(() {});
   }
 
   // The controller for the ListView
   ScrollController? _controller;
+
   @override
   void initState() {
     setStaticSubCategories();
