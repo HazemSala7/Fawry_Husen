@@ -72,7 +72,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: 530 - _progress * 25,
+                    height: 535 - _progress * 25,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(

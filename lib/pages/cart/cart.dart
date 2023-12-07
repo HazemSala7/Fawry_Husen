@@ -144,50 +144,55 @@ class _CartState extends State<Cart> {
                 ),
               ),
             ),
-            Material(
-              child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 100,
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: ButtonWidget(
-                        name: "تأكيد عمليه الشراء",
-                        height: 50,
-                        width: 300,
-                        BorderColor: Colors.black,
-                        OnClickFunction: () async {
-                          bool allAvailable = true;
+            Visibility(
+              visible: cartItems.length == 0 ? false : true,
+              child: Material(
+                child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 100,
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: ButtonWidget(
+                          name: "تأكيد عمليه الشراء",
+                          height: 50,
+                          width: 300,
+                          BorderColor: Colors.black,
+                          OnClickFunction: () async {
+                            bool allAvailable = true;
 
-                          for (var i = 0; i < cartItems.length; i++) {
-                            bool availability = await checkProductAvailability(
-                                cartItems[i].productId, cartItems[i].type);
-                            if (availability == false) {
+                            for (var i = 0; i < cartItems.length; i++) {
+                              bool availability =
+                                  await checkProductAvailability(
+                                      cartItems[i].productId,
+                                      cartItems[i].type);
+                              if (availability == false) {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "المنتج :${cartItems[i].name} لم يتبقى أي كمية منه , الرجاء حذف المنتج من الطلبية",
+                                    backgroundColor: Colors.red);
+                                allAvailable = false;
+                                break; // No need to continue checking if any item is unavailable
+                              }
+                            }
+
+                            if (allAvailable) {
+                              // All items are available, show checkout dialog
+                              showCheckoutDialog()
+                                  .showBottomDialog(context, total);
+                            } else {
+                              // If any item is unavailable, show a failed toast
                               Fluttertoast.showToast(
                                   msg:
-                                      "المنتج :${cartItems[i].name} لم يتبقى أي كمية منه , الرجاء حذف المنتج من الطلبية",
+                                      "فشلت عملية الشراء بسبب توفر كمية غير كافية لبعض المنتجات",
                                   backgroundColor: Colors.red);
-                              allAvailable = false;
-                              break; // No need to continue checking if any item is unavailable
                             }
-                          }
-
-                          if (allAvailable) {
-                            // All items are available, show checkout dialog
-                            showCheckoutDialog()
-                                .showBottomDialog(context, total);
-                          } else {
-                            // If any item is unavailable, show a failed toast
-                            Fluttertoast.showToast(
-                                msg:
-                                    "فشلت عملية الشراء بسبب توفر كمية غير كافية لبعض المنتجات",
-                                backgroundColor: Colors.red);
-                          }
-                        },
-                        BorderRaduis: 10,
-                        ButtonColor: Colors.black,
-                        NameColor: Colors.white),
-                  )),
+                          },
+                          BorderRaduis: 10,
+                          ButtonColor: Colors.black,
+                          NameColor: Colors.white),
+                    )),
+              ),
             ),
           ],
         );
