@@ -17,8 +17,10 @@ class Orders extends StatefulWidget {
 }
 
 class _OrdersState extends State<Orders> {
+  DateTime fourDaysAgo = DateTime.now().subtract(Duration(days: 4));
   @override
   Widget build(BuildContext context) {
+    String formattedDate = fourDaysAgo.toIso8601String().substring(0, 10);
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
@@ -47,6 +49,7 @@ class _OrdersState extends State<Orders> {
             stream: FirebaseFirestore.instance
                 .collection('orders')
                 .where('user_id', isEqualTo: widget.user_id)
+                .where('created_at', isLessThan: formattedDate)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {

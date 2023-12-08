@@ -73,10 +73,10 @@ class _ProductScreenState extends State<ProductScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
     user_id = UserID;
-    if (widget.SIZES!.length == 0) {
-      SelectedSizes = "اختر مقاسك";
-    } else {
+    if (widget.SIZES!.length == 1) {
       SelectedSizes = widget.SIZES[0].toString();
+    } else {
+      SelectedSizes = "اختر مقاسك";
     }
   }
 

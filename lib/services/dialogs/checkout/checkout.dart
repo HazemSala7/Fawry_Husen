@@ -72,7 +72,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: 535 - _progress * 25,
+                    height: 560 - _progress * 25,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
@@ -476,6 +476,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
     );
   }
 
+  String CoponMessage = "";
+
   bool loading = false;
 
   Widget FirstScreen() {
@@ -593,25 +595,47 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   width: double.infinity,
                   child: TextField(
                     controller: CoponController,
-                    onSubmitted: (_) async {
-                      var res = await getCoupun(CoponController.text) ?? null;
-                      if (res.toString() == "null" ||
-                          res.toString() == "false") {
-                        Fluttertoast.showToast(
-                            msg:
-                                "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد",
-                            backgroundColor: Colors.red);
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "تم خصم قيمة الكوبون من مجموع الطلبية",
-                            backgroundColor: Colors.green);
-                        setState(() {
-                          widget.total = widget.total * (1 - res);
-                        });
-                      }
-                    },
                     obscureText: false,
                     decoration: InputDecoration(
+                      suffix: Visibility(
+                        visible: CoponController.text == "" ? false : true,
+                        child: InkWell(
+                          onTap: () async {
+                            var res =
+                                await getCoupun(CoponController.text) ?? null;
+                            if (res.toString() == "null" ||
+                                res.toString() == "false") {
+                              CoponMessage =
+                                  "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
+                              setState(() {});
+                            } else {
+                              CoponMessage =
+                                  "تم خصم قيمة الكوبون من مجموع الطلبية";
+                              setState(() {
+                                widget.total = widget.total * (1 - res);
+                              });
+                            }
+                            print("CoponMessage");
+                            print(CoponMessage);
+                          },
+                          child: Container(
+                            width: 70,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: MAIN_COLOR),
+                            child: Center(
+                              child: Text(
+                                "فحص",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
                       ),
@@ -624,6 +648,20 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   ),
                 ),
               ),
+              Visibility(
+                visible: CoponMessage == "" ? false : true,
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        CoponMessage,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              )
             ],
           ),
         ),

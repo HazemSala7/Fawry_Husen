@@ -50,6 +50,7 @@ class _NewestOrdersState extends State<NewestOrders> {
             stream: FirebaseFirestore.instance
                 .collection('orders')
                 .where('user_id', isEqualTo: widget.user_id)
+                .where('created_at', isGreaterThanOrEqualTo: formattedDate)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
