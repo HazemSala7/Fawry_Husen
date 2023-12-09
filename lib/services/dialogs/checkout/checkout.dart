@@ -479,6 +479,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   String CoponMessage = "";
 
   bool loading = false;
+  bool coponed = false;
 
   Widget FirstScreen() {
     return Column(
@@ -611,12 +612,13 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                             } else {
                               CoponMessage =
                                   "تم خصم قيمة الكوبون من مجموع الطلبية";
-                              setState(() {
+
+                              if (!coponed) {
                                 widget.total = widget.total * (1 - res);
-                              });
+                              }
+                              coponed = true;
+                              setState(() {});
                             }
-                            print("CoponMessage");
-                            print(CoponMessage);
                           },
                           child: Container(
                             width: 70,
@@ -678,7 +680,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${widget.total}",
+                "₪${widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()}",
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,
@@ -700,7 +702,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${widget.total}",
+                "₪${widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()}",
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,
@@ -755,7 +757,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${dropdownValue.toString() == "الداخل" ? 60.0 + double.parse(widget.total.toString()) : dropdownValue.toString() == "القدس" ? 30.0 + double.parse(widget.total.toString()) : dropdownValue.toString() == "الضفه الغربيه" ? 20.0 + double.parse(widget.total.toString()) : double.parse(widget.total.toString())}",
+                "₪${dropdownValue.toString() == "الداخل" ? 60.0 + double.parse(widget.total.toString()) : dropdownValue.toString() == "القدس" ? 30.0 + double.parse(widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()) : dropdownValue.toString() == "الضفه الغربيه" ? 20.0 + double.parse(widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()) : widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()}",
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,

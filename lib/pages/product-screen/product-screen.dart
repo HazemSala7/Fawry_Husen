@@ -1152,7 +1152,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           cartProvider.removeFromCart(id);
                           setState(() {});
                         } else {
-                          if (SelectedSizes != "إختر المقاس") {
+                          if (SelectedSizes != "اختر مقاسك") {
                             setState(() {
                               loading = true;
                               clicked = true;
