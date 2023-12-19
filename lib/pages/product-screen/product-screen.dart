@@ -218,6 +218,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   int page = 1;
   Future loadAdditionalData() async {
+    String sizesString = widget.SIZES.join(',');
     page += 1;
     final uri = Uri.parse(widget.url);
     if (uri.host == null) {
@@ -228,7 +229,7 @@ class _ProductScreenState extends State<ProductScreen> {
     var additionalItems = [];
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
     var _products = await getProductByCategory(
-        main_category_key_final, initSubKey, "", page);
+        main_category_key_final, initSubKey, sizesString, page);
     if (_products != null) {
       if (_products["items"].length != 0) {
         additionalItems = _products["items"];
@@ -1085,6 +1086,15 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: DropdownButton(
                     hint: Text(SelectedSizes),
                     isExpanded: true,
+                    icon: loadingPage
+                        ? SizedBox(
+                            width: 15,
+                            height: 15,
+                            child: CircularProgressIndicator(
+                              color: MAIN_COLOR,
+                            ),
+                          )
+                        : Icon(Icons.arrow_drop_down),
                     iconSize: 30.0,
                     underline: Container(),
                     style: TextStyle(

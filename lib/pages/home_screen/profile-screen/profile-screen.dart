@@ -1,3 +1,4 @@
+import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/cart/cart.dart';
@@ -6,8 +7,10 @@ import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
 import 'package:fawri_app_refactor/pages/orders/orders.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../firebase/user/UserController.dart';
 import '../../authentication/login_screen/login_screen.dart';
 import '../../privacy_policy/privacy_policy.dart';
 import '../../who/who.dart';
@@ -41,6 +44,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // TODO: implement initState
     super.initState();
     setControllers();
+  }
+
+  final UserService userService = UserService();
+  deleteUser() async {
+    try {
+      await userService.deleteUserById(user_id);
+      Fluttertoast.showToast(msg: "تم حذف حسابك بنجاح!");
+    } catch (e) {
+      // Handle errors, show alerts, etc.
+      print('Error deleting user: $e');
+    }
+  }
+
+  _confirmDeleteUser() async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text("هل تريد بالتأكيد حذف هذا حسابك"),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    Navigator.pop(context);
+                    SharedPreferences preferences =
+                        await SharedPreferences.getInstance();
+                    await preferences.clear();
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()));
+                    deleteUser();
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: MAIN_COLOR),
+                    child: Center(
+                      child: Text(
+                        "نعم",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: MAIN_COLOR),
+                    child: Center(
+                      child: Text(
+                        "لا",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
+        );
+      },
+    );
   }
 
   Widget build(BuildContext context) {
@@ -222,6 +302,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       NavigatorFunction: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) => Privacy()));
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "سياسه التبديل",
+                      icon: Icons.privacy_tip,
+                      iconornot: true,
+                      NavigatorFunction: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Privacy()));
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "حذف حسابي",
+                      icon: Icons.delete,
+                      iconornot: true,
+                      NavigatorFunction: () {
+                        _confirmDeleteUser();
                       }),
                   lineMethod(),
                 ],

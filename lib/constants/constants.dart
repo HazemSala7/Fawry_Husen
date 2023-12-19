@@ -67,7 +67,7 @@ var categories = [
   {
     "name": "مستلزمات سيارات",
     "image": "assets/images/carcat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Automotive",
     "icon": "assets/categories_icons/car.png"
   },
   {
@@ -79,7 +79,7 @@ var categories = [
   {
     "name": "مستلزمات مكاتب",
     "image": "assets/images/Officecat.jpg",
-    "main_category": "Women Apparel",
+    "main_category": "Office School Supplies, Office & School Supplies",
     "icon": "assets/categories_icons/worker.png"
   },
   {

@@ -74,6 +74,7 @@ dependencies:
   firebase_remote_config: ^4.3.1
   crypto: ^3.0.1
   lottie: ^2.4.0
+  easy_date_timeline: ^1.0.2
 
 dependency_overrides:
   test_api: ^0.4.18

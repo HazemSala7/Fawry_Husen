@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fawri_app_refactor/firebase/order/OrderController.dart';
 import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
@@ -71,7 +72,7 @@ getOrderDetails(id) async {
   return res;
 }
 
-addOrder({context, address, phone, city, name}) async {
+addOrder({context, address, phone, city, name, total}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
   final cartProvider =
@@ -111,7 +112,7 @@ addOrder({context, address, phone, city, name}) async {
     "phone": phone.toString(),
     "address": address.toString(),
     "city": city.toString(),
-    "total_price": totalPrice,
+    "total_price": double.parse(total.toString()),
     "user_id": 38,
     "products": products
   });
@@ -180,6 +181,8 @@ getProductByCategory(
     Final_URL =
         "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
   }
+  print("Final_URL");
+  print(Final_URL);
   var response = await http.get(Uri.parse(Final_URL), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
@@ -209,6 +212,17 @@ getCoupun(code) async {
   } else {
     return "false";
   }
+}
+
+Future<bool> checkInternetConnectivity() async {
+  var connectivityResult = await Connectivity().checkConnectivity();
+  return connectivityResult != ConnectivityResult.none;
+}
+
+getCoupunRedeem(code) async {
+  var Final_URL = "$URL_COPUN?code=$code&redeem=true&api_key=$key_bath";
+  var response = await http.post(Uri.parse(Final_URL), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
 }
 
 checkProductAvailability(prodct_id, size) async {

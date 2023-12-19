@@ -1,7 +1,9 @@
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
+import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
+import 'package:fawri_app_refactor/pages/remain_birthdate/remain_birthdate.dart';
 import 'package:fawri_app_refactor/services/notifications/notifications.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -135,7 +137,9 @@ class _FawriState extends State<Fawri> {
               curve: Curves.ease,
             ),
           ),
-          child: ShowCaseWidget(
+          child:
+              //  ChooseBirthdate()
+              ShowCaseWidget(
             builder: Builder(
                 builder: (context) =>
                     FirstScreen ? LoginScreen() : CategorySplash()),

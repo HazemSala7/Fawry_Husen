@@ -1,4 +1,4 @@
-package FAWRI.APP
+package fawri.app.shop
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -15,13 +15,49 @@
       },
       "oauth_client": [
         {
-          "client_id": "47403596173-bagh8srq4rhg58gdf1b54evfoq2vdhfa.apps.googleusercontent.com",
+          "client_id": "47403596173-kfge39ttsvgdbnflh2k0u55m10dbfdt7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "FAWRI.APP",
-            "certificate_hash": "b4d2cec4f37a1a78c3aafe6401c0a132914855b8"
+            "certificate_hash": "f21a58fcc4c2e57efbbbfb3fd82c013c427a783d"
           }
         },
+        {
+          "client_id": "47403596173-mg5h4finji3klok358irsb7vnkfm1srk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7ierkb6f3OJ94clfcUZv32vPKsty8HfQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47403596173-mg5h4finji3klok358irsb7vnkfm1srk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "47403596173-eqbcujdul6083mdtco1t7pto2h0nijmu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "FAWRI.APP"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47403596173:android:78a191904799560e6a25c4",
+        "android_client_info": {
+          "package_name": "fawri.app.shop"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "47403596173-mg5h4finji3klok358irsb7vnkfm1srk.apps.googleusercontent.com",
           "client_type": 3

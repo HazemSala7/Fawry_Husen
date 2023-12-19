@@ -338,90 +338,101 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                   ),
                 ),
               )
-            : AllProducts.length == 0
+            : no_internet
                 ? Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Text(
-                      "لا يوجد أي منتج",
+                      "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   )
-                : Expanded(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 12, right: 10, left: 10),
-                      child: AnimationLimiter(
-                        child: RefreshIndicator(
-                          onRefresh: _refreshData,
-                          child: GridView.builder(
-                              controller: _controller,
-                              cacheExtent: 5000,
-                              // scrollDirection: Axis.vertical,
-                              // physics: NeverScrollableScrollPhysics(),
-                              // shrinkWrap: true,
-                              // primary: false,
-                              itemCount: AllProducts.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 6,
-                                mainAxisSpacing: 6,
-                                childAspectRatio: 0.5,
-                              ),
-                              itemBuilder: (context, int index) {
-                                String concatenatedNames =
-                                    Sub_Category_Key.join('.')
-                                        .replaceAll('.', ',');
-                                final isLiked =
-                                    Provider.of<FavouriteProvider>(context)
-                                        .isProductFavorite(
-                                            AllProducts[index]["id"]);
-                                return AnimationConfiguration.staggeredList(
-                                  position: index,
-                                  duration: const Duration(milliseconds: 500),
-                                  child: SlideAnimation(
-                                    horizontalOffset: 100.0,
-                                    // verticalOffset: 100.0,
-                                    child: FadeInAnimation(
-                                      curve: Curves.easeOut,
-                                      child: ProductWidget(
-                                          SIZES: widget.SIZES,
-                                          ALL: false,
-                                          SubCategories: SubCategories,
-                                          sizes: LocalStorage().sizeUser,
-                                          url:
-                                              "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
-                                          isLiked: isLiked,
-                                          Images: AllProducts[index]
-                                                  ["vendor_images_links"] ??
-                                              [],
-                                          Products: AllProducts,
-                                          index: index,
-                                          name: AllProducts[index]["title"],
-                                          thumbnail: AllProducts[index]
-                                              ["thumbnail"],
-                                          id: AllProducts[index]["id"],
-                                          new_price: AllProducts[index]
-                                              ["price"],
-                                          old_price: AllProducts[index]
-                                                  ["price"] ??
-                                              0.0,
-                                          image: AllProducts[index]
-                                              ["vendor_images_links"][0],
-                                          Sub_Category_Key: Sub_Category_Key,
-                                          page: _page,
-                                          home: false,
-                                          category_id: widget.category_id,
-                                          size: widget.size),
-                                    ),
+                : AllProducts.length == 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: Text(
+                          "لا يوجد أي منتج",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 12, right: 10, left: 10),
+                          child: AnimationLimiter(
+                            child: RefreshIndicator(
+                              onRefresh: _refreshData,
+                              child: GridView.builder(
+                                  controller: _controller,
+                                  cacheExtent: 5000,
+                                  // scrollDirection: Axis.vertical,
+                                  // physics: NeverScrollableScrollPhysics(),
+                                  // shrinkWrap: true,
+                                  // primary: false,
+                                  itemCount: AllProducts.length,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 6,
+                                    mainAxisSpacing: 6,
+                                    childAspectRatio: 0.5,
                                   ),
-                                );
-                              }),
+                                  itemBuilder: (context, int index) {
+                                    String concatenatedNames =
+                                        Sub_Category_Key.join('.')
+                                            .replaceAll('.', ',');
+                                    final isLiked =
+                                        Provider.of<FavouriteProvider>(context)
+                                            .isProductFavorite(
+                                                AllProducts[index]["id"]);
+                                    return AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      child: SlideAnimation(
+                                        horizontalOffset: 100.0,
+                                        // verticalOffset: 100.0,
+                                        child: FadeInAnimation(
+                                          curve: Curves.easeOut,
+                                          child: ProductWidget(
+                                              SIZES: widget.SIZES,
+                                              ALL: false,
+                                              SubCategories: SubCategories,
+                                              sizes: LocalStorage().sizeUser,
+                                              url:
+                                                  "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                              isLiked: isLiked,
+                                              Images: AllProducts[index]
+                                                      ["vendor_images_links"] ??
+                                                  [],
+                                              Products: AllProducts,
+                                              index: index,
+                                              name: AllProducts[index]["title"],
+                                              thumbnail: AllProducts[index]
+                                                  ["thumbnail"],
+                                              id: AllProducts[index]["id"],
+                                              new_price: AllProducts[index]
+                                                  ["price"],
+                                              old_price: AllProducts[index]
+                                                      ["price"] ??
+                                                  0.0,
+                                              image: AllProducts[index]
+                                                  ["vendor_images_links"][0],
+                                              Sub_Category_Key:
+                                                  Sub_Category_Key,
+                                              page: _page,
+                                              home: false,
+                                              category_id: widget.category_id,
+                                              size: widget.size),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
         // when the _loadMore function is running
         if (_isLoadMoreRunning == true)
           Padding(
@@ -461,104 +472,120 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   bool _isFirstLoadRunning = false;
   // Used to display loading indicators when _loadMore function is running
   bool _isLoadMoreRunning = false;
+  bool no_internet = false;
 
   void _firstLoad() async {
     setState(() {
       _isFirstLoadRunning = true;
     });
-    try {
-      var _products;
-      String concatenatedNames =
-          Sub_Category_Key.join('.').replaceAll('.', ',');
-      if (widget.search == true) {
-        _products = await getSearchResults(
-            widget.category_id == "Women Shoes" ||
-                    widget.category_id == "Men Shoes"
-                ? "Shoes"
-                : widget.category_id == "Underwear & Sleepwear"
-                    ? "Underwear %26 Sleepwear"
-                    : widget.category_id ==
-                            "Home %26 Living,Tools %26 Home Improvement"
-                        ? "Home %26 Living,Tools %26 Home Improvement"
-                        : widget.category_id == "Sports & Outdoor"
-                            ? "Sports %26 Outdoor"
-                            : widget.category_id == "Women Apparel Baby"
-                                ? "Women Apparel"
-                                : widget.category_id == "Jewelry & Watches"
-                                    ? "Jewelry %26 Watches"
-                                    : widget.category_id == "Beauty & Health"
-                                        ? "Beauty %26 Health"
-                                        : widget.category_id == "Bags & Luggage"
-                                            ? "Bags %26 Luggage"
-                                            : widget.category_id ==
-                                                    "Weddings & Events"
-                                                ? "Women Apparel"
-                                                : widget.category_id ==
-                                                        "Kids Boys"
-                                                    ? "Kids"
-                                                    : widget.category_id ==
-                                                            "Kids Girls"
-                                                        ? "Kids"
-                                                        : widget.category_id ==
-                                                                "Kids Shoes"
-                                                            ? "Kids"
-                                                            : widget
-                                                                .category_id,
-            concatenatedNames,
-            widget.title,
-            widget.type,
-            _page);
-      } else {
-        _products = await getProductByCategory(
-            widget.category_id == "Women Shoes" ||
-                    widget.category_id == "Men Shoes"
-                ? "Shoes"
-                : widget.category_id == "Underwear & Sleepwear"
-                    ? "Underwear %26 Sleepwear"
-                    : widget.category_id ==
-                            "Home %26 Living,Tools %26 Home Improvement"
-                        ? "Home %26 Living,Tools %26 Home Improvement"
-                        : widget.category_id == "Sports & Outdoor"
-                            ? "Sports %26 Outdoor"
-                            : widget.category_id == "Women Apparel Baby"
-                                ? "Women Apparel"
-                                : widget.category_id == "Jewelry & Watches"
-                                    ? "Jewelry %26 Watches"
-                                    : widget.category_id == "Beauty & Health"
-                                        ? "Beauty %26 Health"
-                                        : widget.category_id == "Bags & Luggage"
-                                            ? "Bags %26 Luggage"
-                                            : widget.category_id ==
-                                                    "Weddings & Events"
-                                                ? "Women Apparel"
-                                                : widget.category_id ==
-                                                        "Kids Boys"
-                                                    ? "Kids"
-                                                    : widget.category_id ==
-                                                            "Kids Girls"
-                                                        ? "Kids"
-                                                        : widget.category_id ==
-                                                                "Kids Shoes"
-                                                            ? "Kids"
-                                                            : widget
-                                                                .category_id,
-            concatenatedNames,
-            widget.size,
-            _page);
-      }
-
-      setState(() {
-        AllProducts = _products["items"];
-      });
-    } catch (err) {
-      if (kDebugMode) {
-        print('Something went wrong . $err');
-      }
-    }
-
-    setState(() {
+    bool isConnected = await checkInternetConnectivity();
+    if (!isConnected) {
+      no_internet = true;
       _isFirstLoadRunning = false;
-    });
+      setState(() {});
+      return;
+    } else {
+      try {
+        var _products;
+        String concatenatedNames =
+            Sub_Category_Key.join('.').replaceAll('.', ',');
+        if (widget.search == true) {
+          _products = await getSearchResults(
+              widget.category_id == "Women Shoes" ||
+                      widget.category_id == "Men Shoes"
+                  ? "Shoes"
+                  : widget.category_id == "Underwear & Sleepwear"
+                      ? "Underwear %26 Sleepwear"
+                      : widget.category_id ==
+                              "Home %26 Living,Tools %26 Home Improvement"
+                          ? "Home %26 Living,Tools %26 Home Improvement"
+                          : widget.category_id == "Sports & Outdoor"
+                              ? "Sports %26 Outdoor"
+                              : widget.category_id == "Women Apparel Baby"
+                                  ? "Women Apparel"
+                                  : widget.category_id == "Jewelry & Watches"
+                                      ? "Jewelry %26 Watches"
+                                      : widget.category_id == "Beauty & Health"
+                                          ? "Beauty %26 Health"
+                                          : widget.category_id ==
+                                                  "Bags & Luggage"
+                                              ? "Bags %26 Luggage"
+                                              : widget.category_id ==
+                                                      "Weddings & Events"
+                                                  ? "Women Apparel"
+                                                  : widget.category_id ==
+                                                          "Kids Boys"
+                                                      ? "Kids"
+                                                      : widget.category_id ==
+                                                              "Kids Girls"
+                                                          ? "Kids"
+                                                          : widget.category_id ==
+                                                                  "Kids Shoes"
+                                                              ? "Kids"
+                                                              : widget.category_id ==
+                                                                      "Office School Supplies, Office & School Supplies"
+                                                                  ? "Office School Supplies, Office %26 School Supplies"
+                                                                  : widget
+                                                                      .category_id,
+              concatenatedNames,
+              widget.title,
+              widget.type,
+              _page);
+        } else {
+          _products = await getProductByCategory(
+              widget.category_id == "Women Shoes" ||
+                      widget.category_id == "Men Shoes"
+                  ? "Shoes"
+                  : widget.category_id == "Underwear & Sleepwear"
+                      ? "Underwear %26 Sleepwear"
+                      : widget.category_id ==
+                              "Home %26 Living,Tools %26 Home Improvement"
+                          ? "Home %26 Living,Tools %26 Home Improvement"
+                          : widget.category_id == "Sports & Outdoor"
+                              ? "Sports %26 Outdoor"
+                              : widget.category_id == "Women Apparel Baby"
+                                  ? "Women Apparel"
+                                  : widget.category_id == "Jewelry & Watches"
+                                      ? "Jewelry %26 Watches"
+                                      : widget.category_id == "Beauty & Health"
+                                          ? "Beauty %26 Health"
+                                          : widget.category_id ==
+                                                  "Bags & Luggage"
+                                              ? "Bags %26 Luggage"
+                                              : widget.category_id ==
+                                                      "Weddings & Events"
+                                                  ? "Women Apparel"
+                                                  : widget.category_id ==
+                                                          "Kids Boys"
+                                                      ? "Kids"
+                                                      : widget.category_id ==
+                                                              "Kids Girls"
+                                                          ? "Kids"
+                                                          : widget.category_id ==
+                                                                  "Kids Shoes"
+                                                              ? "Kids"
+                                                              : widget.category_id ==
+                                                                      "Office School Supplies, Office & School Supplies"
+                                                                  ? "Office School Supplies, Office %26 School Supplies"
+                                                                  : widget
+                                                                      .category_id,
+              concatenatedNames,
+              widget.size,
+              _page);
+        }
+
+        setState(() {
+          AllProducts = _products["items"];
+        });
+      } catch (err) {
+        if (kDebugMode) {
+          print('Something went wrong . $err');
+        }
+      }
+      setState(() {
+        _isFirstLoadRunning = false;
+      });
+    }
   }
 
   void _loadMore() async {
@@ -607,8 +634,11 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                           : widget.category_id ==
                                                                   "Kids Shoes"
                                                               ? "Kids"
-                                                              : widget
-                                                                  .category_id,
+                                                              : widget.category_id ==
+                                                                      "Office School Supplies, Office & School Supplies"
+                                                                  ? "Office School Supplies, Office %26 School Supplies"
+                                                                  : widget
+                                                                      .category_id,
               concatenatedNames,
               widget.title,
               widget.type,
@@ -646,8 +676,11 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                           : widget.category_id ==
                                                                   "Kids Shoes"
                                                               ? "Kids"
-                                                              : widget
-                                                                  .category_id,
+                                                              : widget.category_id ==
+                                                                      "Office School Supplies, Office & School Supplies"
+                                                                  ? "Office School Supplies, Office %26 School Supplies"
+                                                                  : widget
+                                                                      .category_id,
               concatenatedNames,
               widget.size,
               _page);
@@ -678,7 +711,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   var SubCategories;
 
   setStaticSubCategories() {
-    if (widget.category_id.toString() == "Women Apparel") {
+    if (widget.name == "ملابس نسائيه مقاس كبير") {
+      SubCategories = sub_categories_women_plus_sizes;
+      Sub_Category_Key.add("Women Plus Clothing");
+    } else if (widget.category_id.toString() == "Women Apparel") {
       SubCategories = sub_categories_women_appearel;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Men Apparel") {
@@ -728,6 +764,11 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       SubCategories = sub_categories_BagsLuggage;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Pet Supplies") {
+      SubCategories = [];
+    } else if (widget.category_id.toString() ==
+        "Office School Supplies, Office & School Supplies") {
+      SubCategories = [];
+    } else if (widget.category_id.toString() == "Automotive") {
       SubCategories = [];
     } else if (widget.category_id.toString() == "Shoes,Kids") {
       SubCategories = sub_categories_ALLShoes;

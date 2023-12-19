@@ -158,83 +158,94 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               )
-            : AllProducts.length == 0
+            : no_internet
                 ? Padding(
                     padding: const EdgeInsets.only(top: 50),
                     child: Text(
-                      "لا يوجد أي منتج",
+                      "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                   )
-                : Expanded(
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 15, right: 10, left: 10),
-                      child: AnimationLimiter(
-                        child: RefreshIndicator(
-                          onRefresh: _refreshData,
-                          child: GridView.builder(
-                              cacheExtent: 5000,
-                              controller: _controller,
-                              itemCount: AllProducts.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 6,
-                                mainAxisSpacing: 10,
-                                childAspectRatio: 0.48,
-                              ),
-                              itemBuilder: (context, int index) {
-                                final isLiked =
-                                    Provider.of<FavouriteProvider>(context)
-                                        .isProductFavorite(
-                                            AllProducts[index]["id"]);
-                                return AnimationConfiguration.staggeredList(
-                                  position: index,
-                                  duration: const Duration(milliseconds: 500),
-                                  child: SlideAnimation(
-                                    horizontalOffset: 100.0,
-                                    // verticalOffset: 100.0,
-                                    child: FadeInAnimation(
-                                      curve: Curves.easeOut,
-                                      child: ProductWidget(
-                                          SIZES: [],
-                                          ALL: true,
-                                          url:
-                                              "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",
-                                          isLiked: isLiked,
-                                          Sub_Category_Key: Sub_Category_Key,
-                                          SubCategories: [],
-                                          page: _page,
-                                          sizes: [],
-                                          home: true,
-                                          category_id: "",
-                                          size: "",
-                                          Images: AllProducts[index]
-                                                  ["vendor_images_links"] ??
-                                              [],
-                                          Products: AllProducts,
-                                          index: index,
-                                          name: AllProducts[index]["title"],
-                                          thumbnail: AllProducts[index]
-                                              ["thumbnail"],
-                                          id: AllProducts[index]["id"],
-                                          new_price: AllProducts[index]
-                                              ["price"],
-                                          old_price: AllProducts[index]
-                                                  ["price"] ??
-                                              0.0,
-                                          image: AllProducts[index]
-                                              ["vendor_images_links"][0]),
-                                    ),
+                : AllProducts.length == 0
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: Text(
+                          "لا يوجد أي منتج",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                      )
+                    : Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 15, right: 10, left: 10),
+                          child: AnimationLimiter(
+                            child: RefreshIndicator(
+                              onRefresh: _refreshData,
+                              child: GridView.builder(
+                                  cacheExtent: 5000,
+                                  controller: _controller,
+                                  itemCount: AllProducts.length,
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 6,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 0.48,
                                   ),
-                                );
-                              }),
+                                  itemBuilder: (context, int index) {
+                                    final isLiked =
+                                        Provider.of<FavouriteProvider>(context)
+                                            .isProductFavorite(
+                                                AllProducts[index]["id"]);
+                                    return AnimationConfiguration.staggeredList(
+                                      position: index,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      child: SlideAnimation(
+                                        horizontalOffset: 100.0,
+                                        // verticalOffset: 100.0,
+                                        child: FadeInAnimation(
+                                          curve: Curves.easeOut,
+                                          child: ProductWidget(
+                                              SIZES: [],
+                                              ALL: true,
+                                              url:
+                                                  "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",
+                                              isLiked: isLiked,
+                                              Sub_Category_Key:
+                                                  Sub_Category_Key,
+                                              SubCategories: [],
+                                              page: _page,
+                                              sizes: [],
+                                              home: true,
+                                              category_id: "",
+                                              size: "",
+                                              Images: AllProducts[index]
+                                                      ["vendor_images_links"] ??
+                                                  [],
+                                              Products: AllProducts,
+                                              index: index,
+                                              name: AllProducts[index]["title"],
+                                              thumbnail: AllProducts[index]
+                                                  ["thumbnail"],
+                                              id: AllProducts[index]["id"],
+                                              new_price: AllProducts[index]
+                                                  ["price"],
+                                              old_price: AllProducts[index]
+                                                      ["price"] ??
+                                                  0.0,
+                                              image: AllProducts[index]
+                                                  ["vendor_images_links"][0]),
+                                        ),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
         // when the _loadMore function is running
         if (_isLoadMoreRunning == true)
           Padding(
@@ -296,36 +307,45 @@ class _MainScreenState extends State<MainScreen> {
   // Used to display loading indicators when _loadMore function is running
   bool _isLoadMoreRunning = false;
 
+  bool no_internet = false;
+
   void _firstLoad() async {
     setState(() {
       _isFirstLoadRunning = true;
     });
 
-    try {
-      // Check if data for the current sub-category key exists in the cache
-      if (cache.containsKey("all_products")) {
-        // Use the cached data
-        setState(() {
-          AllProducts = cache["all_products"];
-        });
-      } else {
-        // Fetch data from the API
-        var _products = await getProducts(_page);
-        setState(() {
-          AllProducts = _products["items"];
-          // Store the fetched data in the cache
-          cache["all_products"] = AllProducts;
-        });
-      }
-    } catch (err) {
-      if (kDebugMode) {
-        print('Something went wrong');
-      }
-    }
-
-    setState(() {
+    bool isConnected = await checkInternetConnectivity();
+    if (!isConnected) {
+      no_internet = true;
       _isFirstLoadRunning = false;
-    });
+      setState(() {});
+      return;
+    } else {
+      try {
+        // Check if data for the current sub-category key exists in the cache
+        if (cache.containsKey("all_products")) {
+          // Use the cached data
+          setState(() {
+            AllProducts = cache["all_products"];
+          });
+        } else {
+          // Fetch data from the API
+          var _products = await getProducts(_page);
+          setState(() {
+            AllProducts = _products["items"];
+            // Store the fetched data in the cache
+            cache["all_products"] = AllProducts;
+          });
+        }
+      } catch (err) {
+        if (kDebugMode) {
+          print('Something went wrong');
+        }
+      }
+      setState(() {
+        _isFirstLoadRunning = false;
+      });
+    }
   }
 
   // This function will be triggered whenver the user scroll

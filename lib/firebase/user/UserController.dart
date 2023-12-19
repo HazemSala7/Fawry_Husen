@@ -9,6 +9,10 @@ class UserService {
     return cartCollection.doc(cartItem.id).set(cartItem.toMap());
   }
 
+  Future<void> deleteUserById(String userId) {
+    return cartCollection.doc(userId).delete();
+  }
+
   Future<void> updateUser(UserItem cartItem) {
     return cartCollection.doc(cartItem.id).update(cartItem.toMap());
   }

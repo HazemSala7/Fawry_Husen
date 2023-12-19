@@ -346,13 +346,40 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               setState(() {
                                 loading = true;
                               });
+                              var TOTALFINAL = dropdownValue.toString() ==
+                                      "الداخل"
+                                  ? 60.0 + double.parse(widget.total.toString())
+                                  : dropdownValue.toString() == "القدس"
+                                      ? 30.0 +
+                                          double.parse(
+                                              widget.total.toString().length > 5
+                                                  ? widget.total
+                                                      .toString()
+                                                      .substring(0, 5)
+                                                  : widget.total.toString())
+                                      : dropdownValue.toString() ==
+                                              "الضفه الغربيه"
+                                          ? 20.0 +
+                                              double.parse(widget.total
+                                                          .toString()
+                                                          .length >
+                                                      5
+                                                  ? widget.total
+                                                      .toString()
+                                                      .substring(0, 5)
+                                                  : widget.total.toString())
+                                          : widget.total.toString().length > 5
+                                              ? widget.total
+                                                  .toString()
+                                                  .substring(0, 5)
+                                              : widget.total.toString();
                               await addOrder(
-                                context: context,
-                                address: AddressController.text,
-                                city: CityController.text,
-                                phone: PhoneController.text,
-                                name: NameController.text,
-                              );
+                                  context: context,
+                                  address: AddressController.text,
+                                  city: CityController.text,
+                                  phone: PhoneController.text,
+                                  name: NameController.text,
+                                  total: TOTALFINAL.toString());
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               String UserID = prefs.getString('user_id') ?? "";
@@ -385,6 +412,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                 await userService.updateUser(updatedUser);
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pop();
+                                getCoupunRedeem(CoponController.text);
                                 showDialog(
                                   context: context,
                                   builder: (context) {
@@ -787,9 +815,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                       });
                     });
                   } else {
-                    setState(() {
-                      clicked = true;
-                    });
                     _pageController.animateToPage(1,
                         duration: Duration(milliseconds: 200),
                         curve: Curves.ease);

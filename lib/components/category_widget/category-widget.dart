@@ -188,6 +188,34 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                 sizes: "null",
                 main_category: widget.main_category,
               ));
+        } else if (widget.name == "مستلزمات سيارات") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                SIZES: [],
+                category_id: widget.main_category,
+                search: false,
+                size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
+              ));
+        } else if (widget.name == "مستلزمات مكاتب") {
+          NavigatorFunction(
+              context,
+              ProductsCategories(
+                SIZES: [],
+                category_id: widget.main_category,
+                search: false,
+                size: "",
+                containerWidths: "null",
+                keys: "null",
+                name: widget.name,
+                sizes: "null",
+                main_category: widget.main_category,
+              ));
         } else {
           Map sizes = {};
           if (widget.name == "ملابس نسائيه") {
