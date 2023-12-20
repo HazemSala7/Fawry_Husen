@@ -2,6 +2,7 @@ import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
 import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
+import 'package:fawri_app_refactor/pages/code_birthdate/code_birthdate.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/pages/remain_birthdate/remain_birthdate.dart';
 import 'package:fawri_app_refactor/services/notifications/notifications.dart';
@@ -138,7 +139,7 @@ class _FawriState extends State<Fawri> {
             ),
           ),
           child:
-              //  ChooseBirthdate()
+              // CodeBirthdate()
               ShowCaseWidget(
             builder: Builder(
                 builder: (context) =>

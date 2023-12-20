@@ -2,6 +2,7 @@ import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseBirthdate extends StatefulWidget {
   const ChooseBirthdate({super.key});
@@ -93,14 +94,24 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                         height: 40,
                         width: 80,
                         BorderColor: MAIN_COLOR,
-                        OnClickFunction: () {},
+                        OnClickFunction: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setBool('show_birthday', false);
+                          Navigator.pop(context);
+                        },
                         BorderRaduis: 10,
                         ButtonColor: MAIN_COLOR,
                         NameColor: Colors.white),
-                    Text(
-                      "تخطي",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "تخطي",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     )
                   ],
                 ),

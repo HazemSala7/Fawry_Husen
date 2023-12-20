@@ -3,6 +3,7 @@ import 'package:confetti/confetti.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/firebase/order/OrderFirebaseModel.dart';
+import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
@@ -455,11 +456,23 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                                 height: 40,
                                               ),
                                               InkWell(
-                                                onTap: () {
+                                                onTap: () async {
                                                   NavigatorFunction(
                                                       context,
                                                       HomeScreen(
                                                           selectedIndex: 0));
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                                  bool? show =
+                                                      await prefs.getBool(
+                                                              'show_birthday') ??
+                                                          true;
+                                                  show
+                                                      ? NavigatorFunction(
+                                                          context,
+                                                          ChooseBirthdate())
+                                                      : null;
                                                 },
                                                 child: Container(
                                                   width: 200,
@@ -486,8 +499,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                 );
 
                                 cartProvider.clearCart();
-                                // NavigatorFunction(
-                                //     context, HomeScreen(selectedIndex: 0));
                               } catch (e) {
                                 print('Error updating user data: $e');
                               }
