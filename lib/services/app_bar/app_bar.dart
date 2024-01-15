@@ -1,6 +1,7 @@
 import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
 import 'package:fawri_app_refactor/pages/choose_size/choose_size.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -44,202 +45,31 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   }
 
   Map sizes = {};
+  String sizesOutput = "";
 
   setSizesArray() {
     if (widget.main_Category == "ملابس نسائيه") {
-      sizes = LocalStorage().getSize("menSizes");
+      sizes = LocalStorage().getSize("womenSizes");
     } else if (widget.main_Category == "ملابس رجاليه") {
       sizes = LocalStorage().getSize("menSizes");
-    } else if (widget.main_Category == "ملابس أطفال") {
-      sizes = LocalStorage().getSize("kidsboysSizes");
-    } else {
-      sizes = LocalStorage().getSize("womenSizes");
+    } else if (widget.main_Category == "ملابس نسائيه مقاس كبير") {
+      sizes = LocalStorage().getSize("womenPlusSizes");
+    } else if (widget.main_Category == "مستلزمات اعراس") {
+      sizes = LocalStorage().getSize("Weddings & Events");
+    } else if (widget.main_Category == "ملابس داخليه") {
+      sizes = LocalStorage().getSize("Underwear_Sleepwear_sizes");
     }
-    setState(() {});
-  }
+    if (widget.sizes is Map) {
+      // Check if widget.sizes is a Map
+      List trueSizes = (widget.sizes as Map)
+          .entries // Cast widget.sizes to Map
+          .where((entry) => entry.value == true)
+          .map((entry) => entry.key)
+          .toList();
 
-  getSizesAndShow() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        var keys = sizes.keys.toList();
-
-        double gridViewHeight = calculateGridViewHeight(keys.length);
-        // Calculate the widths for each Container
-        List<double> containerWidths = keys
-            .map((text) =>
-                getTextWidth(text, TextStyle(fontWeight: FontWeight.bold)) +
-                32.0)
-            .toList();
-        return StatefulBuilder(builder: (context, setState) {
-          return AlertDialog(
-            backgroundColor: Colors.white,
-            title: Text(
-              'لتجربة أفضل, الرجاء اختيار الحجم',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            content: Container(
-              height: gridViewHeight + 150,
-              child: Column(
-                children: [
-                  Wrap(
-                    spacing: 15.0, // gap between adjacent chips
-                    runSpacing: 15.0, // gap between lines
-                    children: <Widget>[
-                      for (int index = 0; index < keys.length; index++)
-                        InkWell(
-                          onTap: () {
-                            Vibration.vibrate(duration: 300);
-                            setState(() {
-                              sizes[keys[index]] = !sizes[keys[index]];
-                            });
-                          },
-                          child: Container(
-                            width: containerWidths[
-                                index], // Use the calculated width
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.2),
-                                  spreadRadius: 2,
-                                  blurRadius: 8,
-                                ),
-                              ],
-                              color: sizes[keys[index]]
-                                  ? Colors.black
-                                  : Colors.white,
-
-                              borderRadius: BorderRadius.circular(
-                                  20), // Adjust the border radius
-                            ),
-                            height: sizes[keys[index]] ? 50 : 40,
-                            child: Center(
-                              child: Text(
-                                keys[index],
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: sizes[keys[index]]
-                                      ? Colors.white
-                                      : Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ButtonWidget(
-                          name: "حفظ",
-                          height: 40,
-                          width: 120,
-                          BorderColor: Colors.black,
-                          OnClickFunction: () async {
-                            LocalStorage().setStartSize();
-                            if (widget.main_Category == "ملابس نسائيه") {
-                              LocalStorage().editSize("menSizes", sizes);
-                            } else if (widget.main_Category == "ملابس رجاليه") {
-                              LocalStorage().editSize("menSizes", sizes);
-                            } else if (widget.main_Category == "ملابس أطفال") {
-                              LocalStorage().editSize("kidsboysSizes", sizes);
-                            } else {
-                              LocalStorage().editSize("womenSizes", sizes);
-                            }
-                            String sizeApi = "";
-                            List sizeApp = [];
-
-                            sizes.keys.forEach((k) {
-                              if (sizes[k]) {
-                                sizeApi = sizeApi + k;
-                                sizeApp.add(k.split(' ')[0]);
-                              }
-                            });
-                            LocalStorage().setSizeUser(sizeApp);
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setBool('is_selected_size', true);
-                            NavigatorFunction(
-                                context,
-                                ShowCaseWidget(
-                                    builder: Builder(
-                                        builder: (context) =>
-                                            ProductsCategories(
-                                              SIZES: [],
-                                              search: false,
-                                              category_id: widget.main_Category,
-                                              containerWidths:
-                                                  widget.containerWidths,
-                                              keys: widget.keys,
-                                              name: widget.name,
-                                              sizes: widget.sizes,
-                                              size: sizeApp.join(', '),
-                                              main_category:
-                                                  widget.main_Category,
-                                            ))));
-                          },
-                          BorderRaduis: 10,
-                          ButtonColor: MAIN_COLOR,
-                          NameColor: Colors.white,
-                        ),
-                        ButtonWidget(
-                          name: "تخطي",
-                          height: 40,
-                          width: 120,
-                          BorderColor: Colors.black,
-                          OnClickFunction: () async {
-                            LocalStorage().setStartSize();
-                            LocalStorage().setSizeUser([]);
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setBool('is_selected_size', false);
-                            NavigatorFunction(
-                                context,
-                                ShowCaseWidget(
-                                    builder: Builder(
-                                        builder: (context) =>
-                                            ProductsCategories(
-                                              SIZES: [],
-                                              search: false,
-                                              category_id: widget.main_Category,
-                                              size: "null",
-                                              containerWidths:
-                                                  widget.containerWidths,
-                                              keys: widget.keys,
-                                              name: widget.name,
-                                              sizes: widget.sizes,
-                                              main_category:
-                                                  widget.main_Category,
-                                            ))));
-                            // String selectedSizes = getSelectedSizes();
-                            // SharedPreferences prefs =
-                            //     await SharedPreferences.getInstance();
-                            // await prefs.setString('size', selectedSizes);
-                            // NavigatorFunction(
-                            //     context,
-                            //     ProductsCategories(
-                            //       category_id: widget.main_category,
-                            //       size: selectedSizes,
-                            //     ));
-                          },
-                          BorderRaduis: 10,
-                          ButtonColor: MAIN_COLOR,
-                          NameColor: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-      },
-    );
+      sizesOutput = trueSizes.join(', ');
+      setState(() {});
+    }
   }
 
   double calculateGridViewHeight(int itemCount) {
@@ -316,13 +146,32 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                is_selected_size
-                    ? "assets/images/full_tshirt.png"
-                    : "assets/images/tshirt.png",
-                height: 35,
-                width: 35,
-              ),
+              child: is_selected_size
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Marquee(
+                        text: "$sizesOutput",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 17),
+                        scrollAxis: Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        blankSpace: 40.0,
+                        velocity: 50.0,
+                        pauseAfterRound: Duration(seconds: 1),
+                        startPadding: 10.0,
+                        accelerationDuration: Duration(milliseconds: 500),
+                        decelerationDuration: Duration(milliseconds: 500),
+                        accelerationCurve: Curves.linear,
+                        decelerationCurve: Curves.easeOut,
+                      ),
+                    )
+                  : Image.asset(
+                      is_selected_size
+                          ? "assets/images/full_tshirt.png"
+                          : "assets/images/tshirt.png",
+                      height: 35,
+                      width: 35,
+                    ),
             ),
           ),
         ),

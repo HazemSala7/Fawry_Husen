@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
+import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../../constants/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -23,6 +24,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   TextEditingController? textController;
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
     return Column(
       children: [
         Row(
@@ -209,6 +211,9 @@ class _MainScreenState extends State<MainScreen> {
                                         child: FadeInAnimation(
                                           curve: Curves.easeOut,
                                           child: ProductWidget(
+                                              inCart:
+                                                  cartProvider.isProductCart(
+                                                      AllProducts[index]["id"]),
                                               SIZES: [],
                                               ALL: true,
                                               url:

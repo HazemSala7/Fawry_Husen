@@ -1,5 +1,6 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../constants/constants.dart';
 
@@ -53,17 +54,6 @@ class AaccounIinformationState extends State<AccountInformation> {
                 padding: const EdgeInsets.only(top: 35, right: 25, left: 25),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          "معلوماتي",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 22,
-                              color: MAIN_COLOR),
-                        )
-                      ],
-                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40),
                       child: Row(
@@ -79,65 +69,28 @@ class AaccounIinformationState extends State<AccountInformation> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
-                                          color: Color(0xff979797)),
+                                          color: MAIN_COLOR),
                                     ),
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 15,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xffF0F0F0)),
-                                  height: 50,
-                                  child: Center(
-                                    child: Text(
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                    ),
+                                    Text(
                                       widget.name,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          color:
+                                              Color.fromARGB(255, 83, 83, 83),
                                           fontSize: 20),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "المنطقة",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Color(0xff979797)),
                                     ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xffF0F0F0)),
-                                  height: 50,
-                                  child: Center(
-                                    child: Text(
-                                      widget.area,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                  ),
-                                )
                               ],
                             ),
                           ),
@@ -145,91 +98,7 @@ class AaccounIinformationState extends State<AccountInformation> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "المدينة",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Color(0xff979797)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xffF0F0F0)),
-                                  height: 50,
-                                  child: Center(
-                                    child: Text(
-                                      widget.city,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "العنوان",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: Color(0xff979797)),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xffF0F0F0)),
-                                  height: 50,
-                                  child: Center(
-                                    child: Text(
-                                      widget.address,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
+                      padding: const EdgeInsets.only(top: 40),
                       child: Row(
                         children: [
                           Expanded(
@@ -243,27 +112,199 @@ class AaccounIinformationState extends State<AccountInformation> {
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
-                                          color: Color(0xff979797)),
+                                          color: MAIN_COLOR),
                                     ),
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 10,
+                                  height: 15,
                                 ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Color(0xffF0F0F0)),
-                                  height: 50,
-                                  child: Center(
-                                    child: Text(
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                    ),
+                                    Text(
                                       widget.phone,
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
+                                          color:
+                                              Color.fromARGB(255, 83, 83, 83),
                                           fontSize: 20),
                                     ),
-                                  ),
-                                )
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "تاريخ الميلاد",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: MAIN_COLOR),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 40,
+                                        ),
+                                        Text(
+                                          "00/00/0000",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(
+                                                  255, 83, 83, 83),
+                                              fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        FaIcon(
+                                          FontAwesomeIcons.plus,
+                                          size: 15,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          "اضافة تاريخ ميلاد",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "العنوان",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: MAIN_COLOR),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: MAIN_COLOR)),
+                                  child: ListView.builder(
+                                      itemCount: 1,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 40,
+                                                  ),
+                                                  Text(
+                                                    widget.city,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 83, 83, 83),
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  SizedBox(
+                                                    width: 40,
+                                                  ),
+                                                  Text(
+                                                    widget.address,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Color.fromARGB(
+                                                            255, 83, 83, 83),
+                                                        fontSize: 16),
+                                                  ),
+                                                ],
+                                              ),
+                                              // Container(
+                                              //   width: double.infinity,
+                                              //   height: 1,
+                                              //   color: const Color.fromARGB(
+                                              //       255, 104, 104, 104),
+                                              // )
+                                            ],
+                                          ),
+                                        );
+                                      }),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.plus,
+                                      size: 15,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      "اضافه عنوان جديد",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
@@ -273,7 +314,7 @@ class AaccounIinformationState extends State<AccountInformation> {
                     Padding(
                       padding: const EdgeInsets.only(top: 50),
                       child: ButtonWidget(
-                          name: "طلباتي السابقة",
+                          name: "حفظ",
                           height: 50,
                           width: double.infinity,
                           BorderColor: MAIN_COLOR,

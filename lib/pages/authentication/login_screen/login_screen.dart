@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return data;
   }
 
-  Future<UserCredential> signInWithFacebook() async {
+  signInWithFacebook() async {
     // Trigger the sign-in flow
     final LoginResult loginResult = await FacebookAuth.instance
         .login(permissions: ['email', 'public_profile', 'user_birthday']);
@@ -328,8 +328,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }).catchError((error) {
       Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
     });
-    // Once signed in, return the UserCredential
-    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    try {
+      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } catch (e) {
+      Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
+    }
   }
 
   void _showBottomDialog(BuildContext context) {

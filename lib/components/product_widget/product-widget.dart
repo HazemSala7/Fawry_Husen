@@ -7,6 +7,7 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:like_button/like_button.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
@@ -35,12 +36,14 @@ class ProductWidget extends StatefulWidget {
   List Images;
   bool home = false;
   bool isLiked = false;
+  bool inCart = false;
   bool ALL;
   ProductWidget({
     super.key,
     this.image,
     this.name,
     required this.ALL,
+    required this.inCart,
     required this.sizes,
     required this.SIZES,
     required this.SubCategories,
@@ -157,29 +160,68 @@ class _ProductWidgetState extends State<ProductWidget> {
         ], color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 260,
-                child: ImageSlideshow(
-                  width: double.infinity,
-                  initialPage: 0,
-                  indicatorColor: widget.Images.length == 1
-                      ? Colors.transparent
-                      : MAIN_COLOR,
-                  indicatorBackgroundColor: Colors.grey,
-                  children: widget.Images.map((e) => FancyShimmerImage(
-                        imageUrl: e,
-                      )).toList(),
-                  onPageChanged: (value) {},
-                  autoPlayInterval: 0,
-                  isLoop: false,
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: 260,
+                    child: ImageSlideshow(
+                      width: double.infinity,
+                      initialPage: 0,
+                      indicatorColor: widget.Images.length == 1
+                          ? Colors.transparent
+                          : MAIN_COLOR,
+                      indicatorBackgroundColor: Colors.grey,
+                      children: widget.Images.map((e) {
+                        try {
+                          return FancyShimmerImage(
+                            imageUrl: e,
+                          );
+                        } catch (e) {
+                          print('Error loading image: $e');
+                          return Container(); // or an alternative widget to display when image loading fails
+                        }
+                      }).toList(),
+                      onPageChanged: (value) {},
+                      autoPlayInterval: 0,
+                      isLoop: false,
+                    ),
+                  ),
                 ),
-              ),
+                Visibility(
+                  visible: widget.inCart,
+                  child: Container(
+                    width: double.infinity,
+                    height: 260,
+                    color: Color.fromARGB(169, 0, 0, 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "تم اضافته للسله",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Image.asset(
+                            "assets/images/in-cart.png",
+                            height: 40,
+                            width: 40,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
             Padding(
               padding: const EdgeInsets.only(top: 5, left: 5, right: 5),

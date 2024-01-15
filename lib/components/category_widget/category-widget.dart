@@ -298,6 +298,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                           widget.name,
                           style: TextStyle(
                             color: Colors.white,
+                            fontWeight: FontWeight.bold,
                             fontSize: widget.name.length >= 13 ? 16 : 18,
                           ),
                         ),

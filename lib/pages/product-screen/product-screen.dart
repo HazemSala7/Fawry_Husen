@@ -468,6 +468,8 @@ class _ProductScreenState extends State<ProductScreen> {
                               reason == CarouselPageChangedReason.manual) {
                             await loadAdditionalData();
                           }
+                          SelectedSizes = "إختر المقاس";
+                          setState(() {});
                         },
                       ),
                       items: orderedItems.map((item) {
@@ -681,7 +683,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                                       child: FancyShimmerImage(
                                                         imageUrl: i,
                                                         errorWidget:
-                                                            Icon(Icons.error),
+                                                            Icon(Icons.delete),
                                                       ),
                                                     ),
                                                   );
@@ -1086,15 +1088,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: DropdownButton(
                     hint: Text(SelectedSizes),
                     isExpanded: true,
-                    icon: loadingPage
-                        ? SizedBox(
-                            width: 15,
-                            height: 15,
-                            child: CircularProgressIndicator(
-                              color: MAIN_COLOR,
-                            ),
-                          )
-                        : Icon(Icons.arrow_drop_down),
+                    icon: Icon(Icons.arrow_drop_down),
                     iconSize: 30.0,
                     underline: Container(),
                     style: TextStyle(
@@ -1141,34 +1135,18 @@ class _ProductScreenState extends State<ProductScreen> {
                       width: 150,
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
-                        if (inCart) {
-                          final newItem = CartItem(
-                              sku: SKU,
-                              vendor_sku: vendor_SKU,
-                              nickname: nickname,
-                              productId: id,
-                              id: id,
-                              name: name,
-                              image: image.toString(),
-                              price: double.parse(new_price.toString()),
-                              quantity: 1,
-                              user_id: 0,
-                              type: SelectedSizes.toString() == ""
-                                  ? LocalStorage().sizeUser[0]
-                                  : SelectedSizes,
-                              placeInWarehouse:
-                                  placeInWarehouse[SelectedSizes] ?? "0000");
-
-                          cartProvider.removeFromCart(id);
-                          setState(() {});
-                        } else {
-                          if (SelectedSizes != "اختر مقاسك") {
-                            setState(() {
-                              loading = true;
-                              clicked = true;
+                        if (SKU.toString() == "" || SKU == null) {
+                          setState(() {
+                            Vibration.vibrate(duration: 100);
+                            _hasError = true;
+                            Future.delayed(Duration(milliseconds: 1000), () {
+                              setState(() {
+                                _hasError = false;
+                              });
                             });
-                            listClick(widgetKey);
-                            Vibration.vibrate(duration: 300);
+                          });
+                        } else {
+                          if (inCart) {
                             final newItem = CartItem(
                                 sku: SKU,
                                 vendor_sku: vendor_SKU,
@@ -1185,60 +1163,91 @@ class _ProductScreenState extends State<ProductScreen> {
                                     : SelectedSizes,
                                 placeInWarehouse:
                                     placeInWarehouse[SelectedSizes] ?? "0000");
-                            cartProvider.addToCart(newItem);
-                            const snackBar = SnackBar(
-                              content: Text('تم اضافه المنتج الى السله بنجاح!'),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                            Timer(Duration(milliseconds: 500), () {
-                              Fluttertoast.cancel();
-                            });
-                            Timer(Duration(seconds: 1), () async {
-                              Navigator.pop(context);
-                            });
-                            final CartService cartFirebaseProvider =
-                                CartService();
-                            String idCart = Uuid().v4();
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            String? USER_ID =
-                                await prefs.getString('user_id') ?? "-";
-                            String? TOKEN =
-                                await prefs.getString('device_token') ?? "-";
 
-                            CartFirebaseModel cartFirebaseItem =
-                                CartFirebaseModel(
-                              id: idCart,
-                              user_id: USER_ID.toString(),
-                              product_id: id.toString(),
-                              user_token: TOKEN,
-                            );
-                            cartFirebaseProvider.addToCart(cartFirebaseItem);
-                            final selectedSizeItem = variants.firstWhere(
-                              (variant) => variant['size'] == SelectedSizes,
-                              orElse: () => null,
-                            );
-                            List<String> userIds = await cartFirebaseProvider
-                                .getUserIdsByProductId(id.toString());
-                            userIds.removeWhere((token) => token == TOKEN);
-
-                            if (int.parse(
-                                    selectedSizeItem["quantity"].toString()) <
-                                2) {
-                              sendNotification(
-                                  context: context, USER_TOKENS: userIds);
-                            }
+                            cartProvider.removeFromCart(id);
+                            setState(() {});
                           } else {
-                            setState(() {
-                              Vibration.vibrate(duration: 100);
-                              _hasError = true;
-                              Future.delayed(Duration(milliseconds: 1000), () {
-                                setState(() {
-                                  _hasError = false;
+                            if (SelectedSizes != "اختر مقاسك") {
+                              setState(() {
+                                loading = true;
+                                clicked = true;
+                              });
+                              listClick(widgetKey);
+                              Vibration.vibrate(duration: 300);
+                              final newItem = CartItem(
+                                  sku: SKU,
+                                  vendor_sku: vendor_SKU,
+                                  nickname: nickname,
+                                  productId: id,
+                                  id: id,
+                                  name: name,
+                                  image: image.toString(),
+                                  price: double.parse(new_price.toString()),
+                                  quantity: 1,
+                                  user_id: 0,
+                                  type: SelectedSizes.toString() == ""
+                                      ? LocalStorage().sizeUser[0]
+                                      : SelectedSizes,
+                                  placeInWarehouse:
+                                      placeInWarehouse[SelectedSizes] ??
+                                          "0000");
+                              cartProvider.addToCart(newItem);
+                              const snackBar = SnackBar(
+                                content:
+                                    Text('تم اضافه المنتج الى السله بنجاح!'),
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(snackBar);
+                              Timer(Duration(milliseconds: 500), () {
+                                Fluttertoast.cancel();
+                              });
+                              Timer(Duration(seconds: 1), () async {
+                                Navigator.pop(context);
+                              });
+                              final CartService cartFirebaseProvider =
+                                  CartService();
+                              String idCart = Uuid().v4();
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String? USER_ID =
+                                  await prefs.getString('user_id') ?? "-";
+                              String? TOKEN =
+                                  await prefs.getString('device_token') ?? "-";
+
+                              CartFirebaseModel cartFirebaseItem =
+                                  CartFirebaseModel(
+                                id: idCart,
+                                user_id: USER_ID.toString(),
+                                product_id: id.toString(),
+                                user_token: TOKEN,
+                              );
+                              cartFirebaseProvider.addToCart(cartFirebaseItem);
+                              final selectedSizeItem = variants.firstWhere(
+                                (variant) => variant['size'] == SelectedSizes,
+                                orElse: () => null,
+                              );
+                              List<String> userIds = await cartFirebaseProvider
+                                  .getUserIdsByProductId(id.toString());
+                              userIds.removeWhere((token) => token == TOKEN);
+
+                              if (int.parse(
+                                      selectedSizeItem["quantity"].toString()) <
+                                  2) {
+                                sendNotification(
+                                    context: context, USER_TOKENS: userIds);
+                              }
+                            } else {
+                              setState(() {
+                                Vibration.vibrate(duration: 100);
+                                _hasError = true;
+                                Future.delayed(Duration(milliseconds: 1000),
+                                    () {
+                                  setState(() {
+                                    _hasError = false;
+                                  });
                                 });
                               });
-                            });
+                            }
                           }
                         }
                       },

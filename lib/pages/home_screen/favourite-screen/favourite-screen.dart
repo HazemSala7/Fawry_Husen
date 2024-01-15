@@ -98,6 +98,63 @@ class _FavouriteState extends State<Favourite> {
     );
   }
 
+  NavigatorProduct(favItems, index, image, product_id) {
+    List<Map<String, dynamic>> products = [];
+
+    for (int i = 0; i < favItems.length; i++) {
+      Map<String, dynamic> product = {
+        'id': favItems[i].productId,
+        'title': favItems[i].name,
+        'image': favItems[i].image,
+        'price': favItems[i].price,
+      };
+      products.add(product);
+    }
+    List<T> reorderListBasedOnIndex<T>(List<T> list, int index) {
+      if (index >= 0 && index < list.length) {
+        var firstPart = list.sublist(index);
+        var secondPart = list.sublist(0, index);
+        return [...firstPart, ...secondPart];
+      }
+      return list; // Return the original list if the index is out of bounds
+    }
+
+    String productIdsString = reorderListBasedOnIndex(
+            favItems.map((item) => item.productId).toList(), index)
+        .join(', ');
+
+// Create a map for the first object you want to insert
+    Map<String, dynamic> firstProduct = {
+      'id': favItems[index].productId,
+      'title': favItems[index].name,
+      'image': favItems[index].image,
+      'price': favItems[index].price,
+    };
+
+// Insert the first object at the specified index
+    products.insert(0, firstProduct);
+
+    NavigatorFunction(
+      context,
+      ProductScreen(
+        SIZES: [],
+        ALL: false,
+        SubCategories: [],
+        Sub_Category_Key: "",
+        index: index,
+        sizes: [],
+        url: "",
+        page: 1,
+        cart_fav: true,
+        favourite: false,
+        Images: [image],
+        Product: products,
+        IDs: productIdsString,
+        id: product_id,
+      ),
+    );
+  }
+
   addToCart(product_ID, name, image, price, sku, vendorski, nickname,
       cartProvider, favoriteProvider) async {
     final newItem = CartItem(
@@ -162,16 +219,7 @@ class _FavouriteState extends State<Favourite> {
                   onPressed: () async {
                     isDeleteAction
                         ? removeProduct!()
-                        : addToCart(
-                            product_id,
-                            name,
-                            image,
-                            price,
-                            SKU,
-                            vendor_SKU,
-                            nickname,
-                            cartProvider,
-                            favoriteProvider);
+                        : NavigatorProduct(favItems, index, image, product_id);
                   },
                   child: Text(isDeleteAction ? 'حذف' : 'اضافه'),
                 ),

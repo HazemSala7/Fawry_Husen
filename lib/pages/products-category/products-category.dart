@@ -8,6 +8,7 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 
+import '../../LocalDB/Provider/CartProvider.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../components/product_widget/product-widget.dart';
 import '../../constants/constants.dart';
@@ -103,10 +104,11 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     );
   }
 
+  List<String> selectedCategoryKeys = [];
+
   Future<void> _refreshData() async {
-    // Add your refresh logic here, for example, fetching new data
-    await Future.delayed(Duration(seconds: 2)); // Simulate a delay
-    _page += 1; // Increase _page by 1
+    await Future.delayed(Duration(seconds: 2));
+    _page += 1;
     try {
       String concatenatedNames =
           Sub_Category_Key.join('.').replaceAll('.', ',');
@@ -145,7 +147,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
           concatenatedNames,
           widget.size,
           _page);
-      if (_products.isNotEmpty) {
+      if (_products["items"].isNotEmpty) {
         setState(() {
           AllProducts = [];
 
@@ -162,6 +164,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   }
 
   Widget ProductsCategoryMethod() {
+    final cartProvider = Provider.of<CartProvider>(context);
     return Column(
       children: [
         Row(
@@ -267,6 +270,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             } else {
                               if (Sub_Category_Key[0].toString() ==
                                       "Women Clothing" ||
+                                  Sub_Category_Key[0].toString() == "" ||
                                   Sub_Category_Key[0].toString() ==
                                       "Weddings & Events" ||
                                   Sub_Category_Key[0].toString() ==
@@ -291,6 +295,8 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                               selectedIndexes.add(index);
                               Sub_Category_Key.add(
                                   SubCategories[index]["key"].toString());
+                              selectedCategoryKeys
+                                  .add(SubCategories[index]["name"].toString());
                               _page = 1;
                               _firstLoad();
                             }
@@ -327,6 +333,86 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
             ),
           ),
         ),
+        Visibility(
+          visible: selectedCategoryKeys.length == 0 ? false : true,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 15, right: 5, left: 5),
+            child: Container(
+              height: 45,
+              width: double.infinity,
+              child: ListView.builder(
+                  itemCount: selectedCategoryKeys.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Stack(
+                      alignment: Alignment.topLeft,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5, left: 5),
+                          child: InkWell(
+                            onTap: () {},
+                            child: Container(
+                              height: 40,
+                              //  width: ,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    width: 2,
+                                    color: Colors.black,
+                                  ),
+                                  color: Colors.white),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    selectedCategoryKeys[index].toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: MAIN_COLOR),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 5, bottom: 5),
+                          child: InkWell(
+                              onTap: () {
+                                int removeIndex = Sub_Category_Key.indexWhere(
+                                    (key) =>
+                                        key ==
+                                        SubCategories[index]["key"].toString());
+                                int removeIndexSelected =
+                                    selectedCategoryKeys.indexWhere((key) =>
+                                        key ==
+                                        selectedCategoryKeys[index].toString());
+                                print("removeIndex");
+                                print(removeIndex);
+                                if (removeIndex != -1) {
+                                  // Remove elements based on the found index
+                                  selectedIndexes.remove(index);
+                                  Sub_Category_Key.removeAt(removeIndex);
+                                  selectedCategoryKeys
+                                      .removeAt(removeIndexSelected);
+
+                                  _page = 1;
+                                  _firstLoad();
+                                }
+                              },
+                              child: FaIcon(
+                                FontAwesomeIcons.close,
+                                color: Colors.red,
+                                size: 20,
+                              )),
+                        )
+                      ],
+                    );
+                  }),
+            ),
+          ),
+        ),
         _isFirstLoadRunning
             ? Container(
                 width: double.infinity,
@@ -349,9 +435,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                   )
                 : AllProducts.length == 0
                     ? Padding(
-                        padding: const EdgeInsets.only(top: 50),
+                        padding: const EdgeInsets.only(top: 100),
                         child: Text(
-                          "لا يوجد أي منتج",
+                          "للحصول على نتائج افضل قم بتعديل الحجم المختار",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 18),
                         ),
@@ -366,10 +452,6 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                               child: GridView.builder(
                                   controller: _controller,
                                   cacheExtent: 5000,
-                                  // scrollDirection: Axis.vertical,
-                                  // physics: NeverScrollableScrollPhysics(),
-                                  // shrinkWrap: true,
-                                  // primary: false,
                                   itemCount: AllProducts.length,
                                   gridDelegate:
                                       const SliverGridDelegateWithFixedCrossAxisCount(
@@ -392,10 +474,12 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                           const Duration(milliseconds: 500),
                                       child: SlideAnimation(
                                         horizontalOffset: 100.0,
-                                        // verticalOffset: 100.0,
                                         child: FadeInAnimation(
                                           curve: Curves.easeOut,
                                           child: ProductWidget(
+                                              inCart:
+                                                  cartProvider.isProductCart(
+                                                      AllProducts[index]["id"]),
                                               SIZES: widget.SIZES,
                                               ALL: false,
                                               SubCategories: SubCategories,

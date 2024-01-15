@@ -1,3 +1,4 @@
+import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,27 @@ class CategorySplash extends StatefulWidget {
 class _CategorySplashState extends State<CategorySplash> {
   late SharedPreferences _prefs;
   bool _couponShown = false;
+  bool _showGoToTopIcon = false;
+  late ScrollController _scrollController;
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      print("test");
+      NavigatorFunction(context, AccountInformation());
+    } else {
+      setState(() {
+        _showGoToTopIcon = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _initialize();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
   }
 
   Future<void> _initialize() async {
@@ -53,6 +70,8 @@ class _CategorySplashState extends State<CategorySplash> {
       }
     }
   }
+
+  bool showGoToTopIcon = false;
 
   Widget build(BuildContext context) {
     return Container(
@@ -90,27 +109,47 @@ class _CategorySplashState extends State<CategorySplash> {
             ),
           ),
           body: SingleChildScrollView(
+            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.only(top: 15, bottom: 30),
-              child: GridView.builder(
-                  scrollDirection: Axis.vertical,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: categories.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 6,
-                    mainAxisSpacing: 6,
-                    childAspectRatio: 1.1,
-                  ),
-                  itemBuilder: (context, int index) {
-                    return CategoryWidget(
-                        main_category: categories[index]["main_category"],
-                        name: categories[index]["name"],
-                        CateImage: categories[index]["icon"],
-                        CateIcon: categories[index]["icon"],
-                        image: categories[index]["image"]);
-                  }),
+              child: Column(
+                children: [
+                  GridView.builder(
+                      scrollDirection: Axis.vertical,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: categories.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 6,
+                        mainAxisSpacing: 6,
+                        childAspectRatio: 1.1,
+                      ),
+                      itemBuilder: (context, int index) {
+                        return CategoryWidget(
+                            main_category: categories[index]["main_category"],
+                            name: categories[index]["name"],
+                            CateImage: categories[index]["icon"],
+                            CateIcon: categories[index]["icon"],
+                            image: categories[index]["image"]);
+                      }),
+                  if (_showGoToTopIcon)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 20),
+                      child: FloatingActionButton(
+                        onPressed: () {
+                          // Implement the action when the button is pressed
+                          // For example, scroll back to the top
+                          _scrollController.animateTo(0,
+                              duration: Duration(milliseconds: 500),
+                              curve: Curves.easeInOut);
+                        },
+                        child: Icon(Icons.arrow_upward),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

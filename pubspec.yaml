@@ -75,6 +75,8 @@ dependencies:
   crypto: ^3.0.1
   lottie: ^2.4.0
   easy_date_timeline: ^1.0.2
+  marquee: ^2.2.3
+  sms_otp_auto_verify: ^2.1.0
 
 dependency_overrides:
   test_api: ^0.4.18
