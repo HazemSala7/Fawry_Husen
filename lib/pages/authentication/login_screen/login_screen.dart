@@ -234,7 +234,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: Center(
                                         child: IconButton(
                                             onPressed: () {
-                                              _showBottomDialog(context);
+                                              showPhoneDialog()
+                                                  .showBottomDialog(context);
                                             },
                                             icon: Icon(
                                               Icons.phone,
@@ -335,15 +336,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _showBottomDialog(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return BottomDialog();
-      },
-    );
-  }
-
   final UserService userService = UserService();
   addUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -417,5 +409,32 @@ class _LoginScreenState extends State<LoginScreen> {
     // Sign in the user with Firebase. If the nonce we generated earlier does
     // not match the nonce in `appleCredential.identityToken`, sign in will fail.
     return await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+  }
+}
+
+class showPhoneDialog {
+  void showBottomDialog(BuildContext context) {
+    showGeneralDialog(
+      barrierLabel: "showGeneralDialog",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.6),
+      transitionDuration: const Duration(milliseconds: 400),
+      context: context,
+      pageBuilder: (context, _, __) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: PhoneBottomDialog(),
+        );
+      },
+      transitionBuilder: (_, animation1, __, child) {
+        return SlideTransition(
+          position: Tween(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(animation1),
+          child: child,
+        );
+      },
+    );
   }
 }

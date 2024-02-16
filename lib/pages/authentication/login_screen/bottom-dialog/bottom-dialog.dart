@@ -6,12 +6,12 @@ import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 import '../../../../components/button_widget/button_widget.dart';
 import '../../../../constants/constants.dart';
 
-class BottomDialog extends StatefulWidget {
+class PhoneBottomDialog extends StatefulWidget {
   @override
-  State<BottomDialog> createState() => _BottomDialogState();
+  State<PhoneBottomDialog> createState() => _PhoneBottomDialogState();
 }
 
-class _BottomDialogState extends State<BottomDialog> {
+class _PhoneBottomDialogState extends State<PhoneBottomDialog> {
   @override
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -39,61 +39,31 @@ class _BottomDialogState extends State<BottomDialog> {
   }
 
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          right: 16,
-          left: 16,
-          top: 16),
-      child: SingleChildScrollView(
-        child:
-            // sms
-            //     ? Column(
-            //         mainAxisSize: MainAxisSize.min,
-            //         children: <Widget>[
-            //           Text(
-            //             "هيا نتحقق من الرقم",
-            //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-            //           ),
-            //           TextField(
-            //             controller: SMSController,
-            //             decoration: InputDecoration(labelText: 'أدخل رمز التأكيد'),
-            //           ),
-            //           SizedBox(height: 16.0),
-            //           ElevatedButton(
-            //             onPressed: () async {
-            //               await FirebaseAuth.instance.verifyPhoneNumber(
-            //                 phoneNumber: phomeController.text,
-            //                 verificationCompleted:
-            //                     (PhoneAuthCredential credential) {},
-            //                 verificationFailed: (FirebaseAuthException e) {},
-            //                 codeSent:
-            //                     (String verificationId, int? resendToken) async {
-            //                   String smsCode = SMSController.text;
-            //                   PhoneAuthCredential credential =
-            //                       PhoneAuthProvider.credential(
-            //                           verificationId: verificationId,
-            //                           smsCode: smsCode);
-            //                   await auth.signInWithCredential(credential);
-            //                   Fluttertoast.showToast(msg: "تم تسجيل دخولك بنجاح!");
-            //                 },
-            //                 codeAutoRetrievalTimeout: (String verificationId) {},
-            //               );
-            //             },
-            //             child: Text('تأكيد الرمز'),
-            //           ),
-            //         ],
-            //       )
-            // :
-            Container(
-                height: 660 - _progress * 25,
+    return IntrinsicHeight(
+      child: Container(
+        width: double.maxFinite,
+        clipBehavior: Clip.antiAlias,
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(40),
+            topRight: Radius.circular(40),
+          ),
+        ),
+        child: Padding(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Material(
+            child: Container(
+                height: 450 - _progress * 25,
                 width: double.infinity,
-                // decoration: BoxDecoration(boxShadow: [
-                //   BoxShadow(
-                //     color: Colors.grey.withOpacity(0.2),
-                //     blurRadius: 5,
-                //   ),
-                // ], color: Colors.white),
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    blurRadius: 5,
+                  ),
+                ], color: Colors.white),
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
                   controller: _pageController,
@@ -103,7 +73,8 @@ class _BottomDialogState extends State<BottomDialog> {
                     DoneSuccessPhone(),
                   ],
                 )),
-        // EnterPhoneMethod(),
+          ),
+        ),
       ),
     );
   }

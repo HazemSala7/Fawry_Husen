@@ -52,92 +52,182 @@ getProducts(int page) async {
 }
 
 getSpeceficProduct(id) async {
-  if (id.toString().endsWith(',')) {
-    id = id.toString().substring(0, id.toString().length - 1);
+  try {
+    if (id.toString().endsWith(',')) {
+      id = id.toString().substring(0, id.toString().length - 1);
+    }
+    var response = await http.get(
+        Uri.parse(
+            "$URL_SINGLE_PRODUCT?api_key=H93J48593HFNWIEUTR287TG3&id=$id"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+    if (id.toString().endsWith(',')) {
+      id = id.toString().substring(0, id.toString().length - 1);
+    }
+    var response = await http.get(
+        Uri.parse(
+            "$DomainName/api/getItemData?api_key=H93J48593HFNWIEUTR287TG3&id=$id"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
   }
-  var response = await http.get(
-      Uri.parse(
-          "http://54.91.80.40:3000/api/getItemData?api_key=H93J48593HFNWIEUTR287TG3&id=$id"),
-      headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res;
 }
 
 getOrderDetails(id) async {
-  var response = await http.get(
-      Uri.parse(
-          "http://54.91.80.40:3000/api/getOrderData?id=$id&api_key=$key_bath"),
-      headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res;
+  try {
+    var response = await http.get(
+        Uri.parse("$URL_ORDER_DETAILS?id=$id&api_key=$key_bath"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+
+    var response = await http.get(
+        Uri.parse("$DomainName/api/getOrderData?id=$id&api_key=$key_bath"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  }
 }
 
 addOrder({context, address, phone, city, name, total}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String UserID = prefs.getString('user_id') ?? "";
-  final cartProvider =
-      Provider.of<CartProvider>(context, listen: false).cartItems;
-  List<Map<String, dynamic>> products = [];
-  double totalPrice = 0.0;
-  for (var i = 0; i < cartProvider.length; i++) {
-    products.add({
-      "id": cartProvider[i].productId.toString(),
-      "image": cartProvider[i].image.toString(),
-      "data": [
-        {
-          "sku": cartProvider[i].sku.toString(),
-          "name": cartProvider[i].name.toString(),
-          "price": cartProvider[i].price.toString(),
-          "quantity": 1,
-          "size": cartProvider[i].type.toString(),
-          "nickname": cartProvider[i].nickname.toString(),
-          "vendor_sku": cartProvider[i].vendor_sku.toString(),
-          "variant_index": 0,
-          "place_in_warehouse": cartProvider[i].placeInWarehouse.toString()
-        }
-      ]
+  try {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String UserID = prefs.getString('user_id') ?? "";
+    final cartProvider =
+        Provider.of<CartProvider>(context, listen: false).cartItems;
+    List<Map<String, dynamic>> products = [];
+    double totalPrice = 0.0;
+    for (var i = 0; i < cartProvider.length; i++) {
+      products.add({
+        "id": cartProvider[i].productId.toString(),
+        "image": cartProvider[i].image.toString(),
+        "data": [
+          {
+            "sku": cartProvider[i].sku.toString(),
+            "name": cartProvider[i].name.toString(),
+            "price": cartProvider[i].price.toString(),
+            "quantity": 1,
+            "size": cartProvider[i].type.toString(),
+            "nickname": cartProvider[i].nickname.toString(),
+            "vendor_sku": cartProvider[i].vendor_sku.toString(),
+            "variant_index": 0,
+            "place_in_warehouse": cartProvider[i].placeInWarehouse.toString()
+          }
+        ]
+      });
+      totalPrice += double.parse(cartProvider[i].price.toString());
+    }
+
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST', Uri.parse('$URL_ADD_ORDER?api_key=H93J48593HFNWIEUTR287TG3'));
+    request.body = json.encode({
+      "name": name.toString(),
+      "page": "Fawri App",
+      "description": "description Test",
+      "phone": phone.toString(),
+      "address": address.toString(),
+      "city": city.toString(),
+      "total_price": double.parse(total.toString()),
+      "user_id": 38,
+      "products": products
     });
-    totalPrice += double.parse(cartProvider[i].price.toString());
-  }
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      String stream = await response.stream.bytesToString();
+      final decodedMap = json.decode(stream);
+      final OrderController orderService = OrderController();
+      String Order_ID = Uuid().v4();
+      var now = new DateTime.now();
+      var formatter = new DateFormat('yyyy-MM-dd');
+      String formattedDate = formatter.format(now);
 
-  var headers = {'Content-Type': 'application/json'};
-  var request = http.Request(
-      'POST',
-      Uri.parse(
-          'http://54.91.80.40:3000/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
-  request.body = json.encode({
-    "name": name.toString(),
-    "page": "Fawri App",
-    "description": "description Test",
-    "phone": phone.toString(),
-    "address": address.toString(),
-    "city": city.toString(),
-    "total_price": double.parse(total.toString()),
-    "user_id": 38,
-    "products": products
-  });
-  request.headers.addAll(headers);
-  http.StreamedResponse response = await request.send();
-  if (response.statusCode == 200) {
-    String stream = await response.stream.bytesToString();
-    final decodedMap = json.decode(stream);
-    final OrderController orderService = OrderController();
-    String Order_ID = Uuid().v4();
-    var now = new DateTime.now();
-    var formatter = new DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
+      OrderFirebaseModel newItem = OrderFirebaseModel(
+          id: Order_ID,
+          tracking_number: "123456",
+          number_of_products: cartProvider.length.toString(),
+          sum: totalPrice.toString(),
+          order_id: decodedMap["id"].toString(),
+          user_id: UserID.toString(),
+          created_at: formattedDate.toString());
+      orderService.addUser(newItem);
+    } else {
+      print(response.reasonPhrase);
+    }
+  } catch (e) {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String UserID = prefs.getString('user_id') ?? "";
+    final cartProvider =
+        Provider.of<CartProvider>(context, listen: false).cartItems;
+    List<Map<String, dynamic>> products = [];
+    double totalPrice = 0.0;
+    for (var i = 0; i < cartProvider.length; i++) {
+      products.add({
+        "id": cartProvider[i].productId.toString(),
+        "image": cartProvider[i].image.toString(),
+        "data": [
+          {
+            "sku": cartProvider[i].sku.toString(),
+            "name": cartProvider[i].name.toString(),
+            "price": cartProvider[i].price.toString(),
+            "quantity": 1,
+            "size": cartProvider[i].type.toString(),
+            "nickname": cartProvider[i].nickname.toString(),
+            "vendor_sku": cartProvider[i].vendor_sku.toString(),
+            "variant_index": 0,
+            "place_in_warehouse": cartProvider[i].placeInWarehouse.toString()
+          }
+        ]
+      });
+      totalPrice += double.parse(cartProvider[i].price.toString());
+    }
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
 
-    OrderFirebaseModel newItem = OrderFirebaseModel(
-        id: Order_ID,
-        tracking_number: "123456",
-        number_of_products: cartProvider.length.toString(),
-        sum: totalPrice.toString(),
-        order_id: decodedMap["id"].toString(),
-        user_id: UserID.toString(),
-        created_at: formattedDate.toString());
-    orderService.addUser(newItem);
-  } else {
-    print(response.reasonPhrase);
+    var headers = {'Content-Type': 'application/json'};
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            '$DomainName/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
+    request.body = json.encode({
+      "name": name.toString(),
+      "page": "Fawri App",
+      "description": "description Test",
+      "phone": phone.toString(),
+      "address": address.toString(),
+      "city": city.toString(),
+      "total_price": double.parse(total.toString()),
+      "user_id": 38,
+      "products": products
+    });
+    request.headers.addAll(headers);
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      String stream = await response.stream.bytesToString();
+      final decodedMap = json.decode(stream);
+      final OrderController orderService = OrderController();
+      String Order_ID = Uuid().v4();
+      var now = new DateTime.now();
+      var formatter = new DateFormat('yyyy-MM-dd');
+      String formattedDate = formatter.format(now);
+
+      OrderFirebaseModel newItem = OrderFirebaseModel(
+          id: Order_ID,
+          tracking_number: "123456",
+          number_of_products: cartProvider.length.toString(),
+          sum: totalPrice.toString(),
+          order_id: decodedMap["id"].toString(),
+          user_id: UserID.toString(),
+          created_at: formattedDate.toString());
+      orderService.addUser(newItem);
+    } else {
+      print(response.reasonPhrase);
+    }
   }
 }
 
@@ -171,36 +261,68 @@ sendNotification({context, USER_TOKENS}) async {
 
 getProductByCategory(
     category_id, sub_category_key, String size, int page) async {
-  var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
-  var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
-  var Final_URL = "";
-  if (size != null && size.isNotEmpty && size.toString() != "null") {
-    Final_URL =
-        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
-  } else {
-    Final_URL =
-        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+  try {
+    var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
+    var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
+    var Final_URL = "";
+    if (size != null && size.isNotEmpty && size.toString() != "null") {
+      Final_URL =
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    } else {
+      Final_URL =
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    }
+
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+    var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
+    var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
+    var Final_URL = "";
+    if (size != null && size.isNotEmpty && size.toString() != "null") {
+      Final_URL =
+          "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    } else {
+      Final_URL =
+          "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    }
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
   }
-  print("Final_URL");
-  print(Final_URL);
-  var response = await http.get(Uri.parse(Final_URL), headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res;
 }
 
 getSearchResults(category_id, sub_category_key, title, type, int page) async {
-  var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
-  var Final_URL = "";
-  if (type.toString() != "title") {
-    Final_URL =
-        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
-  } else {
-    Final_URL =
-        "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&title=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+  try {
+    var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
+    var Final_URL = "";
+    if (type.toString() != "title") {
+      Final_URL =
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    } else {
+      Final_URL =
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&title=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    }
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+    var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
+    var Final_URL = "";
+    if (type.toString() != "title") {
+      Final_URL =
+          "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    } else {
+      Final_URL =
+          "$DomainName/api/getAvailableItems?main_category=$category_id&title=$title&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    }
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
   }
-  var response = await http.get(Uri.parse(Final_URL), headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res;
 }
 
 getCoupun(code) async {
@@ -226,32 +348,63 @@ getCoupunRedeem(code) async {
 }
 
 checkProductAvailability(prodct_id, size) async {
-  var Final_URL =
-      "$URL_CHECK_PRODUCT_AVAILABILITY?id=$prodct_id&size=$size&api_key=$key_bath";
-  print("|");
-  print(Final_URL);
-  var response = await http.get(Uri.parse(Final_URL), headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res["availabilty"];
+  try {
+    var Final_URL =
+        "$URL_CHECK_PRODUCT_AVAILABILITY?id=$prodct_id&size=$size&api_key=$key_bath";
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res["availabilty"];
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+
+    var Final_URL =
+        "$DomainName/api/checkProductAvailability?id=$prodct_id&size=$size&api_key=$key_bath";
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res["availabilty"];
+  }
 }
 
 getSimilarWords(main_category, query_word) async {
-  var Final_URL =
-      "$URL_SIMILAR_WORDS?main_category=$main_category&query_word=$query_word&api_key=$key_bath";
-  var response = await http.get(Uri.parse(Final_URL), headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  return res;
+  try {
+    var Final_URL =
+        "$URL_SIMILAR_WORDS?main_category=$main_category&query_word=$query_word&api_key=$key_bath";
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+
+    var Final_URL =
+        "$DomainName/api/getSimilarWords?main_category=$main_category&query_word=$query_word&api_key=$key_bath";
+    var response = await http.get(Uri.parse(Final_URL), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  }
 }
 
 getSizesByCategory(category_id, context) async {
-  var response = await http.get(
-      Uri.parse(
-          "$URL_SIZES_BY_CATEGORY?main_category=$category_id&season=Summer&api_key=$key_bath"),
-      headers: headers);
-  var res = json.decode(utf8.decode(response.bodyBytes));
-  Navigator.of(context, rootNavigator: true).pop();
+  try {
+    var response = await http.get(
+        Uri.parse(
+            "$URL_SIZES_BY_CATEGORY?main_category=$category_id&season=Summer&api_key=$key_bath"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    Navigator.of(context, rootNavigator: true).pop();
 
-  return res["sizes"];
+    return res["sizes"];
+  } catch (e) {
+    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+
+    var response = await http.get(
+        Uri.parse(
+            "$DomainName/api/getAvailableSizes?main_category=$category_id&season=Summer&api_key=$key_bath"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    Navigator.of(context, rootNavigator: true).pop();
+
+    return res["sizes"];
+  }
 }
 
 showDelayedDialog(context) {

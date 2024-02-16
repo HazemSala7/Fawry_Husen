@@ -37,6 +37,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   ConfettiController? _confettiController;
 
   bool status = false;
+  bool checkCopon = false;
   bool clicked = false;
   late PageController _pageController;
   double _progress = 0;
@@ -630,15 +631,43 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: TextField(
-                    controller: CoponController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      suffix: Visibility(
-                        visible: CoponController.text == "" ? false : true,
+                child: Stack(
+                  alignment: Alignment.topLeft,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: double.infinity,
+                      child: TextField(
+                        controller: CoponController,
+                        obscureText: false,
+                        onChanged: (_) {
+                          if (_ != "") {
+                            setState(() {
+                              checkCopon = true;
+                            });
+                          } else {
+                            setState(() {
+                              checkCopon = false;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: MAIN_COLOR, width: 2.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                                width: 2.0, color: Color(0xffD6D3D3)),
+                          ),
+                          hintText: "كود الخصم",
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: checkCopon,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: InkWell(
                           onTap: () async {
                             var res =
@@ -677,16 +706,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                           ),
                         ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                      ),
-                      hintText: "كود الخصم",
                     ),
-                  ),
+                  ],
                 ),
               ),
               Visibility(

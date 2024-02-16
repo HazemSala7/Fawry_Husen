@@ -187,8 +187,6 @@ class _ProductScreenState extends State<ProductScreen> {
     String commaSeparatedIds = idsList.join(', ');
 
     var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
-    print("commaSeparatedIds");
-    print(commaSeparatedIds);
 
     if (additionalItems != null) {
       setState(() {
@@ -469,6 +467,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             await loadAdditionalData();
                           }
                           SelectedSizes = "إختر المقاس";
+
                           setState(() {});
                         },
                       ),
@@ -547,6 +546,7 @@ class _ProductScreenState extends State<ProductScreen> {
   bool loadingfav = false;
   bool loading = false;
   int _currentIndex = 0;
+  bool showLoading = false;
   String SelectedSizes = "إختر المقاس";
   bool Selected = true;
   Widget ProductMethod(
@@ -1077,7 +1077,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     ? Matrix4.translationValues(5, 0, 0)
                     : Matrix4.identity(),
                 child: Container(
-                  width: 100,
+                  width: 115,
                   height: 50,
                   decoration: BoxDecoration(
                       border: Border.all(
@@ -1085,33 +1085,66 @@ class _ProductScreenState extends State<ProductScreen> {
                         width: 2.0,
                       ),
                       borderRadius: BorderRadius.circular(10)),
-                  child: DropdownButton(
-                    hint: Text(SelectedSizes),
-                    isExpanded: true,
-                    icon: Icon(Icons.arrow_drop_down),
-                    iconSize: 30.0,
-                    underline: Container(),
-                    style: TextStyle(
-                        color: MAIN_COLOR, fontWeight: FontWeight.bold),
-                    items: Sizes.map(
-                      (val) {
-                        return DropdownMenuItem<String>(
-                          value: val,
-                          child: Text(
-                            val,
-                            style: TextStyle(color: MAIN_COLOR),
+                  child: loadingPage
+                      ? InkWell(
+                          onTap: () {
+                            setState(() {
+                              showLoading = true;
+                            });
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                SelectedSizes,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Icon(
+                                Icons.arrow_drop_down,
+                                size: 25,
+                              )
+                            ],
                           ),
-                        );
-                      },
-                    ).toList(),
-                    onChanged: (val) {
-                      setState(() {
-                        SelectedSizes = val.toString();
-                      });
-                    },
-                  ),
+                        )
+                      : DropdownButton(
+                          hint: Text(
+                            SelectedSizes,
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          isExpanded: true,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 30.0,
+                          underline: Container(),
+                          style: TextStyle(
+                              color: MAIN_COLOR, fontWeight: FontWeight.bold),
+                          items: Sizes.map(
+                            (val) {
+                              return DropdownMenuItem<String>(
+                                value: val,
+                                child: Text(
+                                  val,
+                                  style: TextStyle(color: MAIN_COLOR),
+                                ),
+                              );
+                            },
+                          ).toList(),
+                          onChanged: (val) {
+                            setState(() {
+                              SelectedSizes = val.toString();
+                            });
+                          },
+                        ),
                 ),
               ),
+              if (showLoading && loadingPage)
+                Container(
+                    width: 15,
+                    height: 15,
+                    child: CircularProgressIndicator(
+                      color: MAIN_COLOR,
+                    )),
               loading
                   ? Container(
                       height: 50,
