@@ -31,8 +31,7 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
 getProducts(int page) async {
   try {
     var response = await http.get(
-        Uri.parse(
-            "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$page"),
+        Uri.parse("${URL}getAllItems?api_key=$key_bath&page=$page"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -56,9 +55,9 @@ getSpeceficProduct(id) async {
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
+    print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
     var response = await http.get(
-        Uri.parse(
-            "$URL_SINGLE_PRODUCT?api_key=H93J48593HFNWIEUTR287TG3&id=$id"),
+        Uri.parse("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -67,9 +66,9 @@ getSpeceficProduct(id) async {
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
+    print("$DomainName/api/getItemData?api_key=$key_bath&id=$id");
     var response = await http.get(
-        Uri.parse(
-            "$DomainName/api/getItemData?api_key=H93J48593HFNWIEUTR287TG3&id=$id"),
+        Uri.parse("$DomainName/api/getItemData?api_key=$key_bath&id=$id"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -272,7 +271,6 @@ getProductByCategory(
       Final_URL =
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
-
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;

@@ -25,6 +25,7 @@ import '../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../constants/constants.dart';
 import '../../firebase/cart/CartFirebaseModel.dart';
 import '../../firebase/cart/CartController.dart';
+import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../cart/cart.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -466,7 +467,11 @@ class _ProductScreenState extends State<ProductScreen> {
                               reason == CarouselPageChangedReason.manual) {
                             await loadAdditionalData();
                           }
-                          SelectedSizes = "إختر المقاس";
+                          if (widget.SIZES!.length != 1) {
+                            SelectedSizes = "إختر المقاس";
+                          } else {
+                            SelectedSizes = widget.SIZES[0].toString();
+                          }
 
                           setState(() {});
                         },
@@ -749,7 +754,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             IconButton(
                                 onPressed: () {
                                   Share.share(
-                                      "http://54.91.80.40/product-details-one/${id}?offset=1");
+                                      "$MAIN_URL/product-details-one/${id}?offset=1");
                                 },
                                 icon: Icon(Icons.share)),
                             Consumer<FavouriteProvider>(

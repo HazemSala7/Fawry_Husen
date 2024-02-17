@@ -217,7 +217,7 @@ class _MainScreenState extends State<MainScreen> {
                                               SIZES: [],
                                               ALL: true,
                                               url:
-                                                  "http://54.91.80.40:3000/api/getAllItems?api_key=$key_bath&page=$_page",
+                                                  "${URL}getAllItems?api_key=$key_bath&page=$_page",
                                               isLiked: isLiked,
                                               Sub_Category_Key:
                                                   Sub_Category_Key,

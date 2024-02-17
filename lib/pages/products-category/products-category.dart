@@ -250,61 +250,82 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                       padding: const EdgeInsets.only(right: 5, left: 5),
                       child: InkWell(
                         onTap: () {
-                          setState(() {
-                            if (selectedIndexes.contains(index)) {
-                              if (Sub_Category_Key.length == 1) {
-                              } else {
-                                int removeIndex = Sub_Category_Key.indexWhere(
-                                    (key) =>
-                                        key ==
-                                        SubCategories[index]["key"].toString());
-
-                                if (removeIndex != -1) {
-                                  // Remove elements based on the found index
-                                  selectedIndexes.remove(index);
-                                  Sub_Category_Key.removeAt(removeIndex);
-                                  _page = 1;
-                                  _firstLoad();
-                                }
-                              }
-                            } else {
-                              if (Sub_Category_Key[0].toString() ==
-                                      "Women Clothing" ||
-                                  Sub_Category_Key[0].toString() == "" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Weddings & Events" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Kids Shoes" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Men Shoes" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Women Shoes" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Maternity Clothing, Baby" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Women's Fashion Jewelry" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Kids Shoes, Men Shoes, Women Shoes" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Young Boys Clothing,Tween Boys Clothing" ||
-                                  Sub_Category_Key[0].toString() ==
-                                      "Young Girls Clothing,Tween Girls Clothing") {
-                                selectedIndexes.removeAt(0);
-                                Sub_Category_Key.removeAt(0);
-                              }
-                              selectedIndexes.add(index);
-                              Sub_Category_Key.add(
-                                  SubCategories[index]["key"].toString());
-                              selectedCategoryKeys
-                                  .add(SubCategories[index]["name"].toString());
+                          if (index == 0) {
+                            setState(() {
+                              // Clear both lists
+                              selectedCategoryKeys.clear();
+                              selectedIndexes.clear();
+                              Sub_Category_Key.clear();
+                              Sub_Category_Key.add("");
+                              selectedIndexes.add(0);
+                              SubCategories.add({
+                                "name": "جميع الأقسام",
+                                "key": "",
+                              });
                               _page = 1;
                               _firstLoad();
-                            }
-                          });
+                            });
+                          } else {
+                            setState(() {
+                              if (selectedIndexes.contains(index)) {
+                                if (Sub_Category_Key.length == 1) {
+                                } else {
+                                  int removeIndex = Sub_Category_Key.indexWhere(
+                                      (key) =>
+                                          key ==
+                                          SubCategories[index]["key"]
+                                              .toString());
+
+                                  if (removeIndex != -1) {
+                                    // Remove elements based on the found index
+                                    selectedIndexes.remove(index);
+                                    Sub_Category_Key.removeAt(removeIndex);
+                                    String categoryName =
+                                        SubCategories[index]["name"].toString();
+                                    selectedCategoryKeys.removeWhere(
+                                        (name) => name == categoryName);
+                                    _page = 1;
+                                    _firstLoad();
+                                  }
+                                }
+                              } else {
+                                if (Sub_Category_Key[0].toString() ==
+                                        "Women Clothing" ||
+                                    Sub_Category_Key[0].toString() == "" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Weddings & Events" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Kids Shoes" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Men Shoes" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Women Shoes" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Maternity Clothing, Baby" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Women's Fashion Jewelry" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Kids Shoes, Men Shoes, Women Shoes" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Young Boys Clothing,Tween Boys Clothing" ||
+                                    Sub_Category_Key[0].toString() ==
+                                        "Young Girls Clothing,Tween Girls Clothing") {
+                                  selectedIndexes.removeAt(0);
+                                  Sub_Category_Key.removeAt(0);
+                                }
+                                selectedIndexes.add(index);
+                                Sub_Category_Key.add(
+                                    SubCategories[index]["key"].toString());
+                                selectedCategoryKeys.add(
+                                    SubCategories[index]["name"].toString());
+                                _page = 1;
+                                _firstLoad();
+                              }
+                            });
+                          }
                         },
                         child: Container(
                           height: 40,
-                          //  width: ,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
@@ -350,10 +371,29 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                         Padding(
                           padding: const EdgeInsets.only(right: 5, left: 5),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              setState(() {
+                                if (selectedCategoryKeys.length > 1) {
+                                  // Find the index of the item in the first list
+                                  int removeIndex = Sub_Category_Key.indexWhere(
+                                      (key) =>
+                                          key ==
+                                          SubCategories[index]["key"]
+                                              .toString());
+                                  if (removeIndex != -1) {
+                                    selectedIndexes.remove(removeIndex);
+                                    Sub_Category_Key.removeAt(removeIndex);
+                                  }
+                                  // Remove sub-category from the second list
+                                  selectedCategoryKeys.removeAt(
+                                      index); // Remove based on index in this list
+                                  _page = 1;
+                                  _firstLoad();
+                                }
+                              });
+                            },
                             child: Container(
                               height: 40,
-                              //  width: ,
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
                                   border: Border.all(
@@ -379,33 +419,33 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                         Padding(
                           padding: const EdgeInsets.only(right: 5, bottom: 5),
                           child: InkWell(
-                              onTap: () {
-                                int removeIndex = Sub_Category_Key.indexWhere(
-                                    (key) =>
-                                        key ==
-                                        SubCategories[index]["key"].toString());
-                                int removeIndexSelected =
-                                    selectedCategoryKeys.indexWhere((key) =>
-                                        key ==
-                                        selectedCategoryKeys[index].toString());
-                                print("removeIndex");
-                                print(removeIndex);
-                                if (removeIndex != -1) {
-                                  // Remove elements based on the found index
-                                  selectedIndexes.remove(index);
-                                  Sub_Category_Key.removeAt(removeIndex);
-                                  selectedCategoryKeys
-                                      .removeAt(removeIndexSelected);
-
+                            onTap: () {
+                              setState(() {
+                                if (selectedCategoryKeys.length > 1) {
+                                  // Find the index of the item in the first list
+                                  int removeIndex = Sub_Category_Key.indexWhere(
+                                      (key) =>
+                                          key ==
+                                          SubCategories[index]["key"]
+                                              .toString());
+                                  if (removeIndex != -1) {
+                                    selectedIndexes.remove(removeIndex);
+                                    Sub_Category_Key.removeAt(removeIndex);
+                                  }
+                                  // Remove sub-category from the second list
+                                  selectedCategoryKeys.removeAt(
+                                      index); // Remove based on index in this list
                                   _page = 1;
                                   _firstLoad();
                                 }
-                              },
-                              child: FaIcon(
-                                FontAwesomeIcons.close,
-                                color: Colors.red,
-                                size: 20,
-                              )),
+                              });
+                            },
+                            child: FaIcon(
+                              FontAwesomeIcons.close,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                          ),
                         )
                       ],
                     );
