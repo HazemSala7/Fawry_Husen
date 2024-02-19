@@ -468,7 +468,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             await loadAdditionalData();
                           }
                           if (widget.SIZES!.length != 1) {
-                            SelectedSizes = "إختر المقاس";
+                            SelectedSizes = "اختر مقاسك";
                           } else {
                             SelectedSizes = widget.SIZES[0].toString();
                           }
