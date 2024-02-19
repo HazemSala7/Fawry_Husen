@@ -5,7 +5,8 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseBirthdate extends StatefulWidget {
-  const ChooseBirthdate({super.key});
+  final name;
+  const ChooseBirthdate({super.key, required this.name});
 
   @override
   State<ChooseBirthdate> createState() => CchoosBbirthdateState();
@@ -56,7 +57,7 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
               Padding(
                 padding: const EdgeInsets.only(top: 30),
                 child: Text(
-                  "Yasmeen Yahia",
+                  widget.name,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),

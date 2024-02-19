@@ -472,7 +472,10 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                                   show
                                                       ? NavigatorFunction(
                                                           context,
-                                                          ChooseBirthdate())
+                                                          ChooseBirthdate(
+                                                            name: NameController
+                                                                .text,
+                                                          ))
                                                       : null;
                                                 },
                                                 child: Container(
