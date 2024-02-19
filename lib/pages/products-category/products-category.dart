@@ -104,7 +104,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     );
   }
 
-  List<String> selectedCategoryKeys = [];
+  var selectedCategoryKeys = [];
 
   Future<void> _refreshData() async {
     await Future.delayed(Duration(seconds: 2));
@@ -162,6 +162,8 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       }
     }
   }
+
+  List<int> selectedIndexesFirstList = [];
 
   Widget ProductsCategoryMethod() {
     final cartProvider = Provider.of<CartProvider>(context);
@@ -283,7 +285,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                     String categoryName =
                                         SubCategories[index]["name"].toString();
                                     selectedCategoryKeys.removeWhere(
-                                        (name) => name == categoryName);
+                                        (name) => name["name"] == categoryName);
                                     _page = 1;
                                     _firstLoad();
                                   }
@@ -314,10 +316,16 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                   Sub_Category_Key.removeAt(0);
                                 }
                                 selectedIndexes.add(index);
+
                                 Sub_Category_Key.add(
                                     SubCategories[index]["key"].toString());
-                                selectedCategoryKeys.add(
-                                    SubCategories[index]["name"].toString());
+
+                                selectedCategoryKeys.add({
+                                  "name":
+                                      SubCategories[index]["name"].toString(),
+                                  "key": SubCategories[index]["key"].toString(),
+                                  "index": index
+                                });
                                 _page = 1;
                                 _firstLoad();
                               }
@@ -374,14 +382,17 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             onTap: () {
                               setState(() {
                                 if (selectedCategoryKeys.length > 1) {
-                                  // Find the index of the item in the first list
                                   int removeIndex = Sub_Category_Key.indexWhere(
                                       (key) =>
                                           key ==
-                                          SubCategories[index]["key"]
+                                          selectedCategoryKeys[index]["key"]
                                               .toString());
                                   if (removeIndex != -1) {
-                                    selectedIndexes.remove(removeIndex);
+                                    selectedIndexes.removeWhere(
+                                        (selectedIndex) =>
+                                            selectedIndex ==
+                                            selectedCategoryKeys[index]
+                                                ["index"]);
                                     Sub_Category_Key.removeAt(removeIndex);
                                   }
                                   // Remove sub-category from the second list
@@ -405,7 +416,8 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Text(
-                                    selectedCategoryKeys[index].toString(),
+                                    selectedCategoryKeys[index]["name"]
+                                        .toString(),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,
@@ -422,14 +434,17 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                             onTap: () {
                               setState(() {
                                 if (selectedCategoryKeys.length > 1) {
-                                  // Find the index of the item in the first list
                                   int removeIndex = Sub_Category_Key.indexWhere(
                                       (key) =>
                                           key ==
-                                          SubCategories[index]["key"]
+                                          selectedCategoryKeys[index]["key"]
                                               .toString());
                                   if (removeIndex != -1) {
-                                    selectedIndexes.remove(removeIndex);
+                                    selectedIndexes.removeWhere(
+                                        (selectedIndex) =>
+                                            selectedIndex ==
+                                            selectedCategoryKeys[index]
+                                                ["index"]);
                                     Sub_Category_Key.removeAt(removeIndex);
                                   }
                                   // Remove sub-category from the second list

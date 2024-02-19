@@ -552,7 +552,7 @@ class _ProductScreenState extends State<ProductScreen> {
   bool loading = false;
   int _currentIndex = 0;
   bool showLoading = false;
-  String SelectedSizes = "إختر المقاس";
+  String SelectedSizes = "اختر مقاسك";
   bool Selected = true;
   Widget ProductMethod(
       {String image = "",
@@ -1205,7 +1205,8 @@ class _ProductScreenState extends State<ProductScreen> {
                             cartProvider.removeFromCart(id);
                             setState(() {});
                           } else {
-                            if (SelectedSizes != "اختر مقاسك") {
+                            if (SelectedSizes != "اختر مقاسك" &&
+                                SelectedSizes != "") {
                               setState(() {
                                 loading = true;
                                 clicked = true;
