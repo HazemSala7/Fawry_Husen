@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
@@ -456,9 +458,10 @@ class _ProductScreenState extends State<ProductScreen> {
                       options: CarouselOptions(
                         aspectRatio: 2.5,
                         autoPlay: false,
+                        enableInfiniteScroll: false,
                         enlargeCenterPage: true,
                         viewportFraction: 1,
-                        reverse: false,
+                        reverse: true,
                         scrollDirection: Axis.horizontal,
                         height: MediaQuery.of(context).size.height,
                         initialPage: _currentPage,
@@ -549,6 +552,7 @@ class _ProductScreenState extends State<ProductScreen> {
 
   bool loadingcart = false;
   bool loadingfav = false;
+  final FlareControls flareControls = FlareControls();
   bool loading = false;
   int _currentIndex = 0;
   bool showLoading = false;
@@ -620,186 +624,263 @@ class _ProductScreenState extends State<ProductScreen> {
             child: Column(
               children: [
                 Stack(
-                  alignment: Alignment.centerLeft,
                   children: [
-                    Container(
-                      key: widgetKey,
-                      height: MediaQuery.of(context).size.height * 0.60,
-                      width: double.infinity,
-                      child: clicked
-                          ? Container()
-                          : StatefulBuilder(
-                              builder:
-                                  (BuildContext context, StateSetter setState) {
-                                return Stack(
-                                  alignment: Alignment.topRight,
-                                  children: [
-                                    images!.length == 1
-                                        ? Container(
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.60,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            child: FancyShimmerImage(
-                                              imageUrl: images[0],
-                                            ),
-                                          )
-                                        : CarouselSlider(
-                                            options: CarouselOptions(
-                                              onPageChanged: (index, reason) {
-                                                _currentIndex = index;
-                                                setState(() {});
-                                              },
-                                              height: MediaQuery.of(context)
+                    InkWell(
+                      onDoubleTap: () {
+                        flareControls.play("like");
+                        Vibration.vibrate(duration: 300);
+                        if (LocalStorage().isFavorite(id.toString())) {
+                        } else {
+                          LocalStorage().setFavorite(FavoriteItem(
+                            productId: id,
+                            id: id,
+                            name: name,
+                            image: image,
+                            price: double.parse(new_price.toString()),
+                          ));
+                          favoriteProvider.notifyListeners();
+                        }
+                      },
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Container(
+                            key: widgetKey,
+                            height: MediaQuery.of(context).size.height * 0.60,
+                            width: double.infinity,
+                            child: clicked
+                                ? Container()
+                                : StatefulBuilder(
+                                    builder: (BuildContext context,
+                                        StateSetter setState) {
+                                      return Stack(
+                                        alignment: Alignment.topRight,
+                                        children: [
+                                          images!.length == 1
+                                              ? Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.60,
+                                                  width: MediaQuery.of(context)
                                                       .size
-                                                      .height *
-                                                  0.60,
-                                              scrollDirection: Axis.vertical,
-                                              viewportFraction: 1,
-                                              autoPlayCurve:
-                                                  Curves.fastOutSlowIn,
-                                              aspectRatio: 2.0,
-                                              autoPlay: true,
-                                            ),
-                                            items: images.map((i) {
-                                              return Builder(
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return Container(
+                                                      .width,
+                                                  child: FancyShimmerImage(
+                                                    imageUrl: images[0],
+                                                  ),
+                                                )
+                                              : CarouselSlider(
+                                                  options: CarouselOptions(
+                                                    onPageChanged:
+                                                        (index, reason) {
+                                                      _currentIndex = index;
+                                                      setState(() {});
+                                                    },
                                                     height:
                                                         MediaQuery.of(context)
                                                                 .size
                                                                 .height *
                                                             0.60,
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    child: InteractiveViewer(
-                                                      panEnabled:
-                                                          false, // Set it to false
-                                                      boundaryMargin:
-                                                          EdgeInsets.all(100),
-                                                      minScale: 0.5,
-                                                      maxScale: 2,
-                                                      child: FancyShimmerImage(
-                                                        imageUrl: i,
-                                                        errorWidget:
-                                                            Icon(Icons.delete),
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }).toList(),
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    viewportFraction: 1,
+                                                    autoPlayCurve:
+                                                        Curves.fastOutSlowIn,
+                                                    aspectRatio: 2.0,
+                                                    autoPlay: true,
+                                                  ),
+                                                  items: images.map((i) {
+                                                    return Builder(
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return Container(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.60,
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child:
+                                                              InteractiveViewer(
+                                                            panEnabled:
+                                                                false, // Set it to false
+                                                            boundaryMargin:
+                                                                EdgeInsets.all(
+                                                                    100),
+                                                            minScale: 0.5,
+                                                            maxScale: 2,
+                                                            child:
+                                                                FancyShimmerImage(
+                                                              imageUrl: i,
+                                                              errorWidget: Icon(
+                                                                  Icons.delete),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    );
+                                                  }).toList(),
+                                                ),
+                                          Visibility(
+                                            visible: images.length == 1
+                                                ? false
+                                                : true,
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                  right: 10.0, top: 150),
+                                              width: 20.0,
+                                              child: DotsIndicator(
+                                                dotsCount: images.length == 0
+                                                    ? 1
+                                                    : images.length,
+                                                position: _currentIndex >=
+                                                        images.length
+                                                    ? images.length - 1
+                                                    : _currentIndex,
+                                                axis: Axis.vertical,
+                                                decorator: DotsDecorator(
+                                                  size: const Size.square(9.0),
+                                                  activeSize:
+                                                      const Size(38.0, 15.0),
+                                                  activeShape:
+                                                      RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5.0),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                    Visibility(
-                                      visible:
-                                          images.length == 1 ? false : true,
-                                      child: Container(
-                                        margin: EdgeInsets.only(
-                                            right: 10.0, top: 150),
-                                        width: 20.0,
-                                        child: DotsIndicator(
-                                          dotsCount: images.length == 0
-                                              ? 1
-                                              : images.length,
-                                          position:
-                                              _currentIndex >= images.length
-                                                  ? images.length - 1
-                                                  : _currentIndex,
-                                          axis: Axis.vertical,
-                                          decorator: DotsDecorator(
-                                            size: const Size.square(9.0),
-                                            activeSize: const Size(38.0, 15.0),
-                                            activeShape: RoundedRectangleBorder(
+                                          Positioned(
+                                            top: 10,
+                                            right: 10,
+                                            child: Tooltip(
+                                              onTriggered: () {
+                                                Clipboard.setData(
+                                                    ClipboardData(text: SKU));
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "copied successfully!");
+                                              },
+                                              triggerMode:
+                                                  TooltipTriggerMode.tap,
+                                              message: SKU,
+                                              child: Icon(Icons.info,
+                                                  size: 30, color: MAIN_COLOR),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                          ),
+                          Container(
+                            height: 70,
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                      onTap: () {
+                                        Share.share(
+                                            "$MAIN_URL/product-details-one/${id}?offset=1");
+                                      },
+                                      child: Opacity(
+                                        opacity: 0.75,
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
                                               borderRadius:
-                                                  BorderRadius.circular(5.0),
+                                                  BorderRadius.circular(10),
+                                              color: Colors.white),
+                                          child: Center(
+                                            child: Image.asset(
+                                              "assets/images/share.png",
+                                              height: 30,
+                                              width: 30,
+                                              fit: BoxFit.cover,
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      top: 10,
-                                      right: 10,
-                                      child: Tooltip(
-                                        onTriggered: () {
-                                          Clipboard.setData(
-                                              ClipboardData(text: SKU));
-                                          Fluttertoast.showToast(
-                                              msg: "copied successfully!");
-                                        },
-                                        triggerMode: TooltipTriggerMode.tap,
-                                        message: SKU,
-                                        child: Icon(Icons.info,
-                                            size: 30, color: MAIN_COLOR),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
+                                      )),
+                                  Consumer<FavouriteProvider>(
+                                    builder: (context, favoriteProvider, _) {
+                                      return InkWell(
+                                          onTap: () {
+                                            Vibration.vibrate(duration: 300);
+                                            if (LocalStorage()
+                                                .isFavorite(id.toString())) {
+                                              LocalStorage().deleteFavorite(
+                                                  id.toString());
+                                              favoriteProvider
+                                                  .notifyListeners();
+                                            } else {
+                                              LocalStorage()
+                                                  .setFavorite(FavoriteItem(
+                                                productId: id,
+                                                id: id,
+                                                name: name,
+                                                image: image,
+                                                price: double.parse(
+                                                    new_price.toString()),
+                                              ));
+                                              favoriteProvider
+                                                  .notifyListeners();
+                                            }
+                                          },
+                                          child: Opacity(
+                                            opacity: 0.75,
+                                            child: Container(
+                                              width: 40,
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.favorite,
+                                                  size: 30,
+                                                  color: LocalStorage()
+                                                          .isFavorite(
+                                                              id.toString())
+                                                      ? Colors.red
+                                                      : Colors.black26,
+                                                ),
+                                              ),
+                                            ),
+                                          ));
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.60,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  Share.share(
-                                      "$MAIN_URL/product-details-one/${id}?offset=1");
-                                },
-                                icon: Icon(Icons.share)),
-                            Consumer<FavouriteProvider>(
-                              builder: (context, favoriteProvider, _) {
-                                return InkWell(
-                                    onTap: () {
-                                      Vibration.vibrate(duration: 300);
-                                      if (LocalStorage()
-                                          .isFavorite(id.toString())) {
-                                        LocalStorage()
-                                            .deleteFavorite(id.toString());
-                                        favoriteProvider.notifyListeners();
-                                      } else {
-                                        LocalStorage().setFavorite(FavoriteItem(
-                                          productId: id,
-                                          id: id,
-                                          name: name,
-                                          image: image,
-                                          price: double.parse(
-                                              new_price.toString()),
-                                        ));
-                                        favoriteProvider.notifyListeners();
-                                      }
-                                    },
-                                    child: Container(
-                                      width: 40,
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.favorite,
-                                          size: 30,
-                                          color: LocalStorage()
-                                                  .isFavorite(id.toString())
-                                              ? Colors.red
-                                              : Colors.black26,
-                                        ),
-                                      ),
-                                    ));
-                              },
-                            ),
-                          ],
+                      width: double.infinity,
+                      height: 250,
+                      child: Center(
+                        child: SizedBox(
+                          width: 100,
+                          height: 100,
+                          child: FlareActor(
+                            'assets/images/instagram_like.flr',
+                            controller: flareControls,
+                            color: Colors.red,
+                            animation: 'idle',
+                          ),
                         ),
                       ),
                     ),

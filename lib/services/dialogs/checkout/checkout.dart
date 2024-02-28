@@ -275,6 +275,45 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               ),
             ],
           ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "الوصف",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
+                child: Container(
+                  height: 80,
+                  width: double.infinity,
+                  child: TextField(
+                    controller: OrderController,
+                    obscureText: false,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                      ),
+                      hintText: "الوصف",
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
           loading
               ? Padding(
                   padding: EdgeInsets.only(top: 30),
@@ -421,82 +460,104 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                     return Dialog(
                                         backgroundColor: Colors.transparent,
                                         insetPadding: EdgeInsets.all(0),
-                                        child: Container(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Lottie.asset(
-                                                  "assets/lottie_animations/Animation - 1701597212878.json",
-                                                  height: 300,
-                                                  reverse: true,
-                                                  repeat: true,
-                                                  fit: BoxFit.cover),
-                                              SizedBox(
-                                                height: 20,
-                                              ),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 10),
-                                                child: Text(
-                                                  "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
-                                                    fontSize: 20,
+                                        child: InkWell(
+                                          onTap: () async {
+                                            NavigatorFunction(context,
+                                                HomeScreen(selectedIndex: 0));
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            bool? show = await prefs
+                                                    .getBool('show_birthday') ??
+                                                true;
+                                            show
+                                                ? NavigatorFunction(
+                                                    context,
+                                                    ChooseBirthdate(
+                                                      name: NameController.text,
+                                                    ))
+                                                : null;
+                                          },
+                                          child: Container(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Lottie.asset(
+                                                    "assets/lottie_animations/Animation - 1701597212878.json",
+                                                    height: 300,
+                                                    reverse: true,
+                                                    repeat: true,
+                                                    fit: BoxFit.cover),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                height: 40,
-                                              ),
-                                              InkWell(
-                                                onTap: () async {
-                                                  NavigatorFunction(
-                                                      context,
-                                                      HomeScreen(
-                                                          selectedIndex: 0));
-                                                  SharedPreferences prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  bool? show =
-                                                      await prefs.getBool(
-                                                              'show_birthday') ??
-                                                          true;
-                                                  show
-                                                      ? NavigatorFunction(
-                                                          context,
-                                                          ChooseBirthdate(
-                                                            name: NameController
-                                                                .text,
-                                                          ))
-                                                      : null;
-                                                },
-                                                child: Container(
-                                                  width: 200,
+                                                SizedBox(
                                                   height: 40,
-                                                  child: Center(
-                                                      child: Text(
-                                                    "الصفحة الرئيسية",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white),
-                                                  )),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.black),
                                                 ),
-                                              )
-                                            ],
+                                                InkWell(
+                                                  onTap: () async {
+                                                    NavigatorFunction(
+                                                        context,
+                                                        HomeScreen(
+                                                            selectedIndex: 0));
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    bool? show =
+                                                        await prefs.getBool(
+                                                                'show_birthday') ??
+                                                            true;
+                                                    show
+                                                        ? NavigatorFunction(
+                                                            context,
+                                                            ChooseBirthdate(
+                                                              name:
+                                                                  NameController
+                                                                      .text,
+                                                            ))
+                                                        : null;
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    child: Center(
+                                                        child: Text(
+                                                      "الصفحة الرئيسية",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.black),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ));
                                   },
@@ -872,6 +933,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   TextEditingController CityController = TextEditingController();
   TextEditingController AreaController = TextEditingController();
   TextEditingController AddressController = TextEditingController();
+  TextEditingController OrderController = TextEditingController();
   final UserService userService = UserService();
 
   Widget sizeWidget() {

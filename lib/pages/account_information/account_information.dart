@@ -288,22 +288,178 @@ class AaccounIinformationState extends State<AccountInformation> {
                                 SizedBox(
                                   height: 15,
                                 ),
-                                Row(
-                                  children: [
-                                    FaIcon(
-                                      FontAwesomeIcons.plus,
-                                      size: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      "اضافه عنوان جديد",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                  ],
+                                InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: Colors.white,
+                                          shadowColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(4.0))),
+                                          elevation: 0,
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5,
+                                                    left: 15,
+                                                    bottom: 10),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "المنطقة",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              DropdownButtonFormField(
+                                                value: selectedArea,
+                                                items: ['1', '2', '3']
+                                                    .map((area) =>
+                                                        DropdownMenuItem(
+                                                          child: Text(area),
+                                                          value: area,
+                                                        ))
+                                                    .toList(),
+                                                onChanged: (value) {
+                                                  setState(() {
+                                                    selectedArea =
+                                                        value.toString();
+                                                  });
+                                                },
+                                                decoration: InputDecoration(
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: MAIN_COLOR,
+                                                        width: 2.0),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 1.0,
+                                                        color: MAIN_COLOR),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5,
+                                                    bottom: 10,
+                                                    left: 15),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "المدينة",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                controller: cityController,
+                                                decoration: InputDecoration(
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: MAIN_COLOR,
+                                                        width: 2.0),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 1.0,
+                                                        color: MAIN_COLOR),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(height: 10),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 5,
+                                                    bottom: 10,
+                                                    left: 15),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      "العنوان",
+                                                      style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              TextFormField(
+                                                controller: addressController,
+                                                decoration: InputDecoration(
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: MAIN_COLOR,
+                                                        width: 2.0),
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        width: 1.0,
+                                                        color: MAIN_COLOR),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          actions: <Widget>[
+                                            ButtonWidget(
+                                                name: "تأكيد العنوان",
+                                                height: 40,
+                                                width: double.infinity,
+                                                BorderColor: MAIN_COLOR,
+                                                OnClickFunction: () {},
+                                                BorderRaduis: 10,
+                                                ButtonColor: MAIN_COLOR,
+                                                NameColor: Colors.white)
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  child: Row(
+                                    children: [
+                                      FaIcon(
+                                        FontAwesomeIcons.plus,
+                                        size: 15,
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        "اضافه عنوان جديد",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -329,4 +485,8 @@ class AaccounIinformationState extends State<AccountInformation> {
             ),
     );
   }
+
+  String selectedArea = '1';
+  TextEditingController cityController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 }
