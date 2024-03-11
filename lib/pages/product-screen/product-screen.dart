@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
+import 'package:fawri_app_refactor/pages/product-screen/product-screen-item/product-screen-item.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,7 @@ import '../../LocalDB/Models/CartModel.dart';
 import '../../LocalDB/Models/FavoriteItem.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
+import '../../components/product_widget/product-widget.dart';
 import '../../constants/constants.dart';
 import '../../firebase/cart/CartFirebaseModel.dart';
 import '../../firebase/cart/CartController.dart';
@@ -36,10 +38,9 @@ class ProductScreen extends StatefulWidget {
   var favourite;
   int id;
   int index;
-  var Product;
   var Sub_Category_Key;
   bool cart_fav;
-  List Images;
+  List Images, Product;
   List SubCategories;
   List sizes;
   var IDs, SIZES;
@@ -76,11 +77,6 @@ class _ProductScreenState extends State<ProductScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
     user_id = UserID;
-    if (widget.SIZES!.length == 1) {
-      SelectedSizes = widget.SIZES[0].toString();
-    } else {
-      SelectedSizes = "اختر مقاسك";
-    }
   }
 
   List<int> _extractIds(String idsString) {
@@ -151,6 +147,7 @@ class _ProductScreenState extends State<ProductScreen> {
       // If the item with the target ID is found, remove it and add it to the front.
       var itemToMove = orderedItems.removeAt(index);
       orderedItems.insert(0, itemToMove);
+      removeDuplicatesById(orderedItems);
     }
   }
 
@@ -165,8 +162,8 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {
       orderedItems.add(InitialData["item"]);
       removeDuplicatesById(orderedItems);
-      initSubKey = InitialData["item"]["categories"][2][0];
-      initMAINKey = InitialData["item"]["categories"][0][0];
+      // initSubKey = InitialData["item"]["categories"][2][0];
+      // initMAINKey = InitialData["item"]["categories"][0][0];
     });
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
     final uri = Uri.parse(widget.url);
@@ -193,9 +190,11 @@ class _ProductScreenState extends State<ProductScreen> {
 
     if (additionalItems != null) {
       setState(() {
+        // orderedItems = [];
         orderedItems.addAll(ProductsApiData["item"]);
       });
     }
+
     moveItemToFront(orderedItems, widget.id);
 
     setState(() {
@@ -268,11 +267,9 @@ class _ProductScreenState extends State<ProductScreen> {
 
   GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
   late Function(GlobalKey) runAddToCartAnimation;
-  void listClick(GlobalKey widgetKey) async {
-    await runAddToCartAnimation(widgetKey);
-  }
 
   bool isLoadingMoreItems = false;
+
   final favouriteProvider = FavouriteProvider();
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
@@ -354,6 +351,8 @@ class _ProductScreenState extends State<ProductScreen> {
                           options: CarouselOptions(
                             aspectRatio: 2.5,
                             autoPlay: false,
+                            // reverse: true,
+                            initialPage: 0,
                             enlargeCenterPage: true,
                             viewportFraction: 1,
                             height: MediaQuery.of(context).size.height,
@@ -374,7 +373,16 @@ class _ProductScreenState extends State<ProductScreen> {
                                     verticalOffset: 100.0,
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
-                                      child: ProductMethod(
+                                      child: ProductItem(
+                                          runAddToCartAnimation:
+                                              runAddToCartAnimation,
+                                          loadingPage: true,
+                                          SKU: "",
+                                          isLikedProduct: false,
+                                          SelectedSizes: "اختر مقاسك",
+                                          nickname: "",
+                                          variants: [],
+                                          vendor_SKU: "",
                                           inCart: cartProvider.isProductCart(
                                               widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
@@ -407,6 +415,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             autoPlay: false,
                             enlargeCenterPage: true,
                             viewportFraction: 1,
+                            initialPage: 0,
                             height: MediaQuery.of(context).size.height,
                             onPageChanged: (index, reason) async {
                               if (index == orderedItems.length - 5 &&
@@ -425,7 +434,16 @@ class _ProductScreenState extends State<ProductScreen> {
                                     verticalOffset: 100.0,
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
-                                      child: ProductMethod(
+                                      child: ProductItem(
+                                          runAddToCartAnimation:
+                                              runAddToCartAnimation,
+                                          loadingPage: true,
+                                          SKU: "",
+                                          isLikedProduct: false,
+                                          SelectedSizes: "اختر مقاسك",
+                                          nickname: "",
+                                          variants: [],
+                                          vendor_SKU: "",
                                           inCart: cartProvider.isProductCart(
                                               widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
@@ -458,39 +476,33 @@ class _ProductScreenState extends State<ProductScreen> {
                       options: CarouselOptions(
                         aspectRatio: 2.5,
                         autoPlay: false,
-                        enableInfiniteScroll: false,
+                        // enableInfiniteScroll: false,
+                        padEnds: false,
                         enlargeCenterPage: true,
                         viewportFraction: 1,
-                        reverse: true,
+                        reverse: false,
                         scrollDirection: Axis.horizontal,
                         height: MediaQuery.of(context).size.height,
-                        initialPage: _currentPage,
+                        initialPage: 0,
                         onPageChanged: (index, reason) async {
                           if (index == orderedItems.length - 8 &&
                               reason == CarouselPageChangedReason.manual) {
                             await loadAdditionalData();
                           }
-                          if (widget.SIZES!.length != 1) {
-                            SelectedSizes = "اختر مقاسك";
-                          } else {
-                            SelectedSizes = widget.SIZES[0].toString();
-                          }
-
-                          setState(() {});
                         },
                       ),
                       items: orderedItems.map((item) {
-                        List<String> images =
-                            (item["vendor_images_links"] as List)
-                                .cast<String>();
-                        int itemIndex = orderedItems.indexOf(item);
-
                         return Builder(
                           builder: (BuildContext context) {
-                            // if(Selected){
-                            //   SelectedSizes = "إختر المقاس";
-                            // }
+                            // print("1");
+                            List<String> images =
+                                (item["vendor_images_links"] as List)
+                                    .cast<String>();
+                            // print("2");
+                            int itemIndex = orderedItems.indexOf(item);
+                            // print("3");
                             List sizesAPI = widget.sizes;
+                            // print("4");
                             sizesAPI = [];
                             Map placeInWarehouse = {};
                             bool typeApi = false;
@@ -503,6 +515,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                 typeApi = true;
                               }
                             }
+                            // print("5");
+                            print("itemIndex");
+                            print(itemIndex);
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
@@ -511,14 +526,19 @@ class _ProductScreenState extends State<ProductScreen> {
                                 verticalOffset: 100.0,
                                 child: FadeInAnimation(
                                   curve: Curves.easeIn,
-                                  child: ProductMethod(
+                                  child: ProductItem(
+                                    runAddToCartAnimation:
+                                        runAddToCartAnimation,
+                                    loadingPage: false,
+                                    SelectedSizes: sizesAPI.length == 1
+                                        ? sizesAPI[0]
+                                        : "اختر مقاسك",
                                     isLikedProduct: favouriteProvider
                                         .isProductFavorite(item["id"]),
                                     inCart:
                                         cartProvider.isProductCart(item["id"]),
                                     name: item["title"] ?? "-",
                                     sizesApi: sizesAPI,
-                                    // SelectedSizes: "اختر الحجم",
                                     id: item["id"],
                                     images: images,
                                     description: item["description"],
@@ -545,882 +565,6 @@ class _ProductScreenState extends State<ProductScreen> {
                     ),
                   ),
           ),
-        ),
-      ),
-    );
-  }
-
-  bool loadingcart = false;
-  bool loadingfav = false;
-  final FlareControls flareControls = FlareControls();
-  bool loading = false;
-  int _currentIndex = 0;
-  bool showLoading = false;
-  String SelectedSizes = "اختر مقاسك";
-  bool Selected = true;
-  Widget ProductMethod(
-      {String image = "",
-      String name = "",
-      String SKU = "",
-      String vendor_SKU = "",
-      String nickname = "",
-      var variants,
-      required Map placeInWarehouse,
-      required List sizesApi,
-      required bool TypeApi,
-      List? images,
-      int id = 0,
-      var description,
-      bool inCart = false,
-      bool isLikedProduct = false,
-      var old_price,
-      var new_price}) {
-    // String SelectedSizes = "";
-    List Sizes = sizesApi.length == 0 ? LocalStorage().sizeUser : sizesApi;
-
-    final cartProvider = Provider.of<CartProvider>(context);
-    // final cartFirebaseProvider = Provider.of<CartProviderFirebase>(context);
-    final favoriteProvider =
-        Provider.of<FavouriteProvider>(context, listen: false);
-    Future<bool> onLikeButtonTapped(bool liked) async {
-      bool isFavorite = favoriteProvider.isProductFavorite(widget.id);
-
-      if (isFavorite) {
-        await favoriteProvider.removeFromFavorite(widget.id);
-        Fluttertoast.showToast(
-          msg: "تم حذف هذا المنتج من المفضلة بنجاح",
-        );
-        return false;
-      }
-      try {
-        Vibration.vibrate(duration: 300);
-        final newItem = FavoriteItem(
-          productId: id,
-          name: name,
-          image: image,
-          price: double.parse(new_price.toString()),
-        );
-
-        await favoriteProvider.addToFavorite(newItem);
-        Fluttertoast.showToast(
-          msg: "تم اضافة هذا المنتج الى المفضلة بنجاح",
-        );
-        isLikedProduct = true;
-        return true;
-      } catch (e) {
-        return !isLikedProduct;
-      }
-    }
-
-    final GlobalKey widgetKey = GlobalKey();
-
-    return Stack(
-      alignment: Alignment.bottomCenter,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Stack(
-                  children: [
-                    InkWell(
-                      onDoubleTap: () {
-                        flareControls.play("like");
-                        Vibration.vibrate(duration: 300);
-                        if (LocalStorage().isFavorite(id.toString())) {
-                        } else {
-                          LocalStorage().setFavorite(FavoriteItem(
-                            productId: id,
-                            id: id,
-                            name: name,
-                            image: image,
-                            price: double.parse(new_price.toString()),
-                          ));
-                          favoriteProvider.notifyListeners();
-                        }
-                      },
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Container(
-                            key: widgetKey,
-                            height: MediaQuery.of(context).size.height * 0.60,
-                            width: double.infinity,
-                            child: clicked
-                                ? Container()
-                                : StatefulBuilder(
-                                    builder: (BuildContext context,
-                                        StateSetter setState) {
-                                      return Stack(
-                                        alignment: Alignment.topRight,
-                                        children: [
-                                          images!.length == 1
-                                              ? Container(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.60,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: FancyShimmerImage(
-                                                    imageUrl: images[0],
-                                                  ),
-                                                )
-                                              : CarouselSlider(
-                                                  options: CarouselOptions(
-                                                    onPageChanged:
-                                                        (index, reason) {
-                                                      _currentIndex = index;
-                                                      setState(() {});
-                                                    },
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.60,
-                                                    scrollDirection:
-                                                        Axis.vertical,
-                                                    viewportFraction: 1,
-                                                    autoPlayCurve:
-                                                        Curves.fastOutSlowIn,
-                                                    aspectRatio: 2.0,
-                                                    autoPlay: true,
-                                                  ),
-                                                  items: images.map((i) {
-                                                    return Builder(
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return Container(
-                                                          height: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .height *
-                                                              0.60,
-                                                          width: MediaQuery.of(
-                                                                  context)
-                                                              .size
-                                                              .width,
-                                                          child:
-                                                              InteractiveViewer(
-                                                            panEnabled:
-                                                                false, // Set it to false
-                                                            boundaryMargin:
-                                                                EdgeInsets.all(
-                                                                    100),
-                                                            minScale: 0.5,
-                                                            maxScale: 2,
-                                                            child:
-                                                                FancyShimmerImage(
-                                                              imageUrl: i,
-                                                              errorWidget: Icon(
-                                                                  Icons.delete),
-                                                            ),
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  }).toList(),
-                                                ),
-                                          Visibility(
-                                            visible: images.length == 1
-                                                ? false
-                                                : true,
-                                            child: Container(
-                                              margin: EdgeInsets.only(
-                                                  right: 10.0, top: 150),
-                                              width: 20.0,
-                                              child: DotsIndicator(
-                                                dotsCount: images.length == 0
-                                                    ? 1
-                                                    : images.length,
-                                                position: _currentIndex >=
-                                                        images.length
-                                                    ? images.length - 1
-                                                    : _currentIndex,
-                                                axis: Axis.vertical,
-                                                decorator: DotsDecorator(
-                                                  size: const Size.square(9.0),
-                                                  activeSize:
-                                                      const Size(38.0, 15.0),
-                                                  activeShape:
-                                                      RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5.0),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 10,
-                                            right: 10,
-                                            child: Tooltip(
-                                              onTriggered: () {
-                                                Clipboard.setData(
-                                                    ClipboardData(text: SKU));
-                                                Fluttertoast.showToast(
-                                                    msg:
-                                                        "copied successfully!");
-                                              },
-                                              triggerMode:
-                                                  TooltipTriggerMode.tap,
-                                              message: SKU,
-                                              child: Icon(Icons.info,
-                                                  size: 30, color: MAIN_COLOR),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                          ),
-                          Container(
-                            height: 70,
-                            width: double.infinity,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  InkWell(
-                                      onTap: () {
-                                        Share.share(
-                                            "$MAIN_URL/product-details-one/${id}?offset=1");
-                                      },
-                                      child: Opacity(
-                                        opacity: 0.75,
-                                        child: Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.white),
-                                          child: Center(
-                                            child: Image.asset(
-                                              "assets/images/share.png",
-                                              height: 30,
-                                              width: 30,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      )),
-                                  Consumer<FavouriteProvider>(
-                                    builder: (context, favoriteProvider, _) {
-                                      return InkWell(
-                                          onTap: () {
-                                            Vibration.vibrate(duration: 300);
-                                            if (LocalStorage()
-                                                .isFavorite(id.toString())) {
-                                              LocalStorage().deleteFavorite(
-                                                  id.toString());
-                                              favoriteProvider
-                                                  .notifyListeners();
-                                            } else {
-                                              LocalStorage()
-                                                  .setFavorite(FavoriteItem(
-                                                productId: id,
-                                                id: id,
-                                                name: name,
-                                                image: image,
-                                                price: double.parse(
-                                                    new_price.toString()),
-                                              ));
-                                              favoriteProvider
-                                                  .notifyListeners();
-                                            }
-                                          },
-                                          child: Opacity(
-                                            opacity: 0.75,
-                                            child: Container(
-                                              width: 40,
-                                              height: 40,
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.favorite,
-                                                  size: 30,
-                                                  color: LocalStorage()
-                                                          .isFavorite(
-                                                              id.toString())
-                                                      ? Colors.red
-                                                      : Colors.black26,
-                                                ),
-                                              ),
-                                            ),
-                                          ));
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: double.infinity,
-                      height: 250,
-                      child: Center(
-                        child: SizedBox(
-                          width: 100,
-                          height: 100,
-                          child: FlareActor(
-                            'assets/images/instagram_like.flr',
-                            controller: flareControls,
-                            color: Colors.red,
-                            animation: 'idle',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Text(
-                                  "₪${old_price.toString().length > 5 ? old_price.toString().substring(0, 5) : old_price.toString()}",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Container(
-                                  height: 1,
-                                  width: 50,
-                                  color: Colors.black,
-                                )
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 190, 0.0),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: "توصيل فوري",
-                                    child: FaIcon(
-                                      FontAwesomeIcons.truck,
-                                      color: Color(0xD9000000),
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 10, 0.0),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: "الدفع عند الاستلام",
-                                    child: FaIcon(
-                                      FontAwesomeIcons.moneyBillWaveAlt,
-                                      color: Color(0xD9000000),
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: "سياسه الخصوصيه",
-                                    child: FaIcon(
-                                      Icons.handshake,
-                                      color: Color(0xD9000000),
-                                      size: 19,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Row(
-                          children: [
-                            Text(
-                              "₪${new_price}",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              "(15%)",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8, top: 8),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                name,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: description is List
-                            ? description.isNotEmpty
-                            : description != null && description != '',
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(16, 8, 16, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsetsDirectional.fromSTEB(
-                                      1, 0, 1, 0),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                    ),
-                                    child: Container(
-                                      width: double.infinity,
-                                      color: Colors.white,
-                                      child: ExpandableNotifier(
-                                          initialExpanded: false,
-                                          child: description is List
-                                              ? ExpandablePanel(
-                                                  header: Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.max,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsetsDirectional
-                                                                .fromSTEB(0, 0,
-                                                                    12, 0),
-                                                        child: Icon(
-                                                          Icons
-                                                              .sticky_note_2_outlined,
-                                                          color: Colors.black,
-                                                          size: 24,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        "تفاصيل المنتج",
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  collapsed: Container(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                            .size
-                                                            .width,
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black,
-                                                    ),
-                                                  ),
-                                                  expanded:
-                                                      SingleChildScrollView(
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      children: [
-                                                        Align(
-                                                            alignment:
-                                                                AlignmentDirectional(
-                                                                    -1, 0),
-                                                            child: ListView
-                                                                .builder(
-                                                              physics:
-                                                                  NeverScrollableScrollPhysics(),
-                                                              shrinkWrap: true,
-                                                              itemCount:
-                                                                  description
-                                                                      .length,
-                                                              itemBuilder:
-                                                                  (context,
-                                                                      index) {
-                                                                return Row(
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          Text(
-                                                                        description[index].toString().startsWith("{") &&
-                                                                                description[index].toString().endsWith("}")
-                                                                            ? description[index].toString().substring(1, description[index].toString().length - 1)
-                                                                            : description[index].toString(),
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              },
-                                                            )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  theme: ExpandableThemeData(
-                                                    tapHeaderToExpand: true,
-                                                    tapBodyToExpand: false,
-                                                    tapBodyToCollapse: false,
-                                                    headerAlignment:
-                                                        ExpandablePanelHeaderAlignment
-                                                            .center,
-                                                    hasIcon: true,
-                                                    expandIcon: Icons
-                                                        .keyboard_arrow_down_sharp,
-                                                    collapseIcon: Icons
-                                                        .keyboard_arrow_down_rounded,
-                                                    iconSize: 38,
-                                                    iconColor: Colors.black,
-                                                  ),
-                                                )
-                                              : description is String
-                                                  ? Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: Text(
-                                                        description.isNotEmpty
-                                                            ? description
-                                                            : 'No description available',
-                                                        // You might format the text differently or provide a default message
-                                                        style: TextStyle(
-                                                            fontSize: 16),
-                                                      ),
-                                                    )
-                                                  : Container()),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 100,
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          height: 70,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
-            ),
-          ], color: Colors.white),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 1000),
-                curve: Curves.easeInOut,
-                transform: _hasError
-                    ? Matrix4.translationValues(5, 0, 0)
-                    : Matrix4.identity(),
-                child: Container(
-                  width: 115,
-                  height: 50,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _hasError ? Colors.red : Colors.transparent,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: loadingPage
-                      ? InkWell(
-                          onTap: () {
-                            setState(() {
-                              showLoading = true;
-                            });
-                          },
-                          child: Row(
-                            children: [
-                              Text(
-                                SelectedSizes,
-                                style: TextStyle(fontSize: 14),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.arrow_drop_down,
-                                size: 25,
-                              )
-                            ],
-                          ),
-                        )
-                      : DropdownButton(
-                          hint: Text(
-                            SelectedSizes,
-                            style: TextStyle(fontSize: 14),
-                          ),
-                          isExpanded: true,
-                          icon: Icon(Icons.arrow_drop_down),
-                          iconSize: 30.0,
-                          underline: Container(),
-                          style: TextStyle(
-                              color: MAIN_COLOR, fontWeight: FontWeight.bold),
-                          items: Sizes.map(
-                            (val) {
-                              return DropdownMenuItem<String>(
-                                value: val,
-                                child: Text(
-                                  val,
-                                  style: TextStyle(color: MAIN_COLOR),
-                                ),
-                              );
-                            },
-                          ).toList(),
-                          onChanged: (val) {
-                            setState(() {
-                              SelectedSizes = val.toString();
-                            });
-                          },
-                        ),
-                ),
-              ),
-              if (showLoading && loadingPage)
-                Container(
-                    width: 15,
-                    height: 15,
-                    child: CircularProgressIndicator(
-                      color: MAIN_COLOR,
-                    )),
-              loading
-                  ? Container(
-                      height: 50,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(40),
-                          border: Border.all(color: Colors.black)),
-                      child: Center(
-                          child: Container(
-                        height: 15,
-                        width: 15,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                      )),
-                    )
-                  : ButtonWidget(
-                      name: inCart ? "ازاله من السله" : "أضف الى السله",
-                      height: 50,
-                      width: 150,
-                      BorderColor: Colors.black,
-                      OnClickFunction: () async {
-                        if (SKU.toString() == "" || SKU == null) {
-                          setState(() {
-                            Vibration.vibrate(duration: 100);
-                            _hasError = true;
-                            Future.delayed(Duration(milliseconds: 1000), () {
-                              setState(() {
-                                _hasError = false;
-                              });
-                            });
-                          });
-                        } else {
-                          if (inCart) {
-                            final newItem = CartItem(
-                                sku: SKU,
-                                vendor_sku: vendor_SKU,
-                                nickname: nickname,
-                                productId: id,
-                                id: id,
-                                name: name,
-                                image: image.toString(),
-                                price: double.parse(new_price.toString()),
-                                quantity: 1,
-                                user_id: 0,
-                                type: SelectedSizes.toString() == ""
-                                    ? LocalStorage().sizeUser[0]
-                                    : SelectedSizes,
-                                placeInWarehouse:
-                                    placeInWarehouse[SelectedSizes] ?? "0000");
-
-                            cartProvider.removeFromCart(id);
-                            setState(() {});
-                          } else {
-                            if (SelectedSizes != "اختر مقاسك" &&
-                                SelectedSizes != "") {
-                              setState(() {
-                                loading = true;
-                                clicked = true;
-                              });
-                              listClick(widgetKey);
-                              Vibration.vibrate(duration: 300);
-                              final newItem = CartItem(
-                                  sku: SKU,
-                                  vendor_sku: vendor_SKU,
-                                  nickname: nickname,
-                                  productId: id,
-                                  id: id,
-                                  name: name,
-                                  image: image.toString(),
-                                  price: double.parse(new_price.toString()),
-                                  quantity: 1,
-                                  user_id: 0,
-                                  type: SelectedSizes.toString() == ""
-                                      ? LocalStorage().sizeUser[0]
-                                      : SelectedSizes,
-                                  placeInWarehouse:
-                                      placeInWarehouse[SelectedSizes] ??
-                                          "0000");
-                              cartProvider.addToCart(newItem);
-                              const snackBar = SnackBar(
-                                content:
-                                    Text('تم اضافه المنتج الى السله بنجاح!'),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              Timer(Duration(milliseconds: 500), () {
-                                Fluttertoast.cancel();
-                              });
-                              Timer(Duration(seconds: 1), () async {
-                                Navigator.pop(context);
-                              });
-                              final CartService cartFirebaseProvider =
-                                  CartService();
-                              String idCart = Uuid().v4();
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String? USER_ID =
-                                  await prefs.getString('user_id') ?? "-";
-                              String? TOKEN =
-                                  await prefs.getString('device_token') ?? "-";
-
-                              CartFirebaseModel cartFirebaseItem =
-                                  CartFirebaseModel(
-                                id: idCart,
-                                user_id: USER_ID.toString(),
-                                product_id: id.toString(),
-                                user_token: TOKEN,
-                              );
-                              cartFirebaseProvider.addToCart(cartFirebaseItem);
-                              final selectedSizeItem = variants.firstWhere(
-                                (variant) => variant['size'] == SelectedSizes,
-                                orElse: () => null,
-                              );
-                              List<String> userIds = await cartFirebaseProvider
-                                  .getUserIdsByProductId(id.toString());
-                              userIds.removeWhere((token) => token == TOKEN);
-
-                              if (int.parse(
-                                      selectedSizeItem["quantity"].toString()) <
-                                  2) {
-                                sendNotification(
-                                    context: context, USER_TOKENS: userIds);
-                              }
-                            } else {
-                              setState(() {
-                                Vibration.vibrate(duration: 100);
-                                _hasError = true;
-                                Future.delayed(Duration(milliseconds: 1000),
-                                    () {
-                                  setState(() {
-                                    _hasError = false;
-                                  });
-                                });
-                              });
-                            }
-                          }
-                        }
-                      },
-                      BorderRaduis: 10,
-                      ButtonColor: Colors.black,
-                      NameColor: Colors.white)
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  bool _hasError = false;
-  bool clicked = false;
-
-  Widget desceiptionMethod({String key = "", String value = ""}) {
-    return Container(
-      height: 40,
-      color: Colors.white,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 15, left: 15),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Color(0xffD6D3D3))),
-                child: Center(
-                  child: Text(
-                    key,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 245, 244, 244),
-                    border: Border.all(color: Color(0xffD6D3D3))),
-                child: Center(
-                  child: Text(
-                    value,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

@@ -34,7 +34,7 @@ class _CartState extends State<Cart> {
   @override
   bool clicked = false;
   Widget build(BuildContext context) {
-    final cartProvider = context.watch<CartProvider>();
+    // final cartProvider = context.watch<CartProvider>();
     return Consumer<CartProvider>(
       builder: (context, cartProvider, _) {
         List<CartItem> cartItems = cartProvider.cartItems;

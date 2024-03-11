@@ -92,6 +92,23 @@ class _ProductWidgetState extends State<ProductWidget> {
     }
   }
 
+  double calculateDiscountSimple(int id,
+      {double minDiscount = 10.0, double maxDiscount = 35.0}) {
+    // Extract the last two digits of the ID
+    int lastTwoDigits = id % 100;
+
+    // Scale the sum of the last two digits to fit within the discount range
+    double discountRange = maxDiscount - minDiscount;
+    double discount =
+        ((lastTwoDigits % discountRange) + minDiscount) % (maxDiscount + 1);
+
+    // Dart doesn't have a direct equivalent to Python's round function for rounding to 2 decimal places,
+    // so we do the multiplication and division trick to achieve that.
+    discount = (discount * 100).round() / 100.0;
+
+    return discount;
+  }
+
   int _currentIndex = 0;
 
   @override
@@ -115,7 +132,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     var OLD_PRICE = double.parse(widget.old_price.toString()) * 1.5;
     return InkWell(
       onTap: () {
-        var result = [];
+        List result = [];
         int startIndex = widget.index - 20;
         int endIndex = widget.index + 20;
         if (startIndex < 0) {
@@ -129,7 +146,6 @@ class _ProductWidgetState extends State<ProductWidget> {
         List<String> idsList =
             result.map((item) => item['id'].toString()).toList();
         String commaSeparatedIds = idsList.join(', ');
-
         Navigator.push(
             context,
             MaterialPageRoute(

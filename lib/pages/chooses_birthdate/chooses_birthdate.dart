@@ -14,6 +14,7 @@ class ChooseBirthdate extends StatefulWidget {
 
 class CchoosBbirthdateState extends State<ChooseBirthdate> {
   @override
+  String Birthday = "";
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +79,8 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                   child: EasyDateTimeLine(
                     initialDate: DateTime.now(),
                     onDateChange: (selectedDate) {
-                      //`selectedDate` the new date selected.
+                      Birthday = selectedDate.toString().substring(0, 10);
+                      setState(() {});
                     },
                     activeColor: const Color(0xffB04759),
                     locale: "ar",
@@ -96,10 +98,15 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                         width: 80,
                         BorderColor: MAIN_COLOR,
                         OnClickFunction: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          await prefs.setBool('show_birthday', false);
-                          Navigator.pop(context);
+                          if (Birthday.toString() == "") {
+                          } else {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            await prefs.setBool('show_birthday', false);
+                            await prefs.setString(
+                                'birthdate', Birthday.toString());
+                            Navigator.pop(context);
+                          }
                         },
                         BorderRaduis: 10,
                         ButtonColor: MAIN_COLOR,

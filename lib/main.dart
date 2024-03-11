@@ -1,5 +1,6 @@
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
+import 'package:fawri_app_refactor/LocalDB/Provider/AddressProvider.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
 import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/code_birthdate/code_birthdate.dart';
@@ -31,6 +32,7 @@ void main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => CartProvider()),
     ChangeNotifierProvider(create: (_) => FavouriteProvider()),
+    ChangeNotifierProvider(create: (_) => AddressProvider()),
   ], child: Fawri()));
 }
 

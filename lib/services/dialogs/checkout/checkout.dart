@@ -9,12 +9,15 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../../LocalDB/Models/AddressItem.dart';
+import '../../../LocalDB/Provider/AddressProvider.dart';
 import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../firebase/cart/CartController.dart';
 import '../../../firebase/user/UserController.dart';
@@ -40,9 +43,30 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   bool checkCopon = false;
   bool clicked = false;
   late PageController _pageController;
+  setControllers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? buy = await prefs.getBool('buy') ?? false;
+    if (buy) {
+      String name = prefs.getString('name') ?? "";
+      String phone = prefs.getString('phone') ?? "";
+      editName = false;
+      editPhone = false;
+      chooseAddress = false;
+      NameController.text = name.toString();
+      PhoneController.text = phone.toString();
+    } else {
+      editName = true;
+      editPhone = true;
+      chooseAddress = true;
+      NameController.text = "";
+      PhoneController.text = "";
+    }
+  }
+
   double _progress = 0;
   @override
   void initState() {
+    setControllers();
     _pageController = PageController()
       ..addListener(() {
         setState(() {
@@ -74,7 +98,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             child: Column(
               children: [
                 Container(
-                    height: 560 - _progress * 25,
+                    height: 600 - _progress * 30,
                     width: double.infinity,
                     decoration: BoxDecoration(boxShadow: [
                       BoxShadow(
@@ -110,8 +134,16 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
     if (!value.startsWith('05')) {
       return 'رقم الهاتف يجب ان يبدأ ب 05';
     }
-    return null; // Return null if the input is valid
+    return null;
   }
+
+  bool editName = false;
+  bool editPhone = false;
+  bool chooseAddress = false;
+  String selectedCity = 'الخليل';
+  String selectedArea = 'اختر العنوان';
+  TextEditingController cityController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   Widget SecondScreen() {
     return SingleChildScrollView(
@@ -121,159 +153,367 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
+                padding: const EdgeInsets.only(top: 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text(
-                      "الأسم",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "أسم المستخدم",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: MAIN_COLOR),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          editName
+                              ? Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 15, left: 15, top: 5),
+                                  child: Container(
+                                    height: 50,
+                                    width: double.infinity,
+                                    child: TextField(
+                                      controller: NameController,
+                                      obscureText: false,
+                                      keyboardType: TextInputType.name,
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: MAIN_COLOR, width: 2.0),
+                                        ),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide: BorderSide(
+                                              width: 2.0,
+                                              color: Color(0xffD6D3D3)),
+                                        ),
+                                        hintText: "الأسم",
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.only(
+                                      right: 15, left: 25),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        NameController.text,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color:
+                                                Color.fromARGB(255, 83, 83, 83),
+                                            fontSize: 20),
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            setState(() {
+                                              editName = true;
+                                            });
+                                          },
+                                          icon: Icon(Icons.edit))
+                                    ],
+                                  ),
+                                ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: TextField(
-                    controller: NameController,
-                    obscureText: false,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+                padding: const EdgeInsets.only(top: 15),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "رقم الهاتف",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: MAIN_COLOR),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          editPhone
+                              ? Form(
+                                  key: _formKey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 15, left: 15, top: 5),
+                                    child: Container(
+                                      height: 50,
+                                      width: double.infinity,
+                                      child: TextFormField(
+                                        controller: PhoneController,
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: MAIN_COLOR, width: 2.0),
+                                          ),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                width: 2.0,
+                                                color: Color(0xffD6D3D3)),
+                                          ),
+                                          hintText: "رقم الهاتف",
+                                        ),
+                                        validator: validatePhoneNumber,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Form(
+                                  key: _formKey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 15, left: 25),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          PhoneController.text,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: Color.fromARGB(
+                                                  255, 83, 83, 83),
+                                              fontSize: 20),
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                editPhone = true;
+                                              });
+                                            },
+                                            icon: Icon(Icons.edit))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                        ],
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                      ),
-                      hintText: "الأسم",
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
           ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "رقم الهاتف",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Form(
-                key: _formKey,
+          Padding(
+            padding: const EdgeInsets.only(top: 10, left: 15, bottom: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  "العنوان",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+          ),
+          Consumer<AddressProvider>(
+            builder: (context, addressprovider, _) {
+              List<AddressItem> addressItems = addressprovider.addressItems;
+              return Visibility(
+                visible: addressItems.length == 0 ? false : true,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
+                  padding: const EdgeInsets.only(right: 15, left: 15),
                   child: Container(
-                    height: 50,
-                    width: double.infinity,
-                    child: TextFormField(
-                      controller: PhoneController,
-                      keyboardType: TextInputType.phone,
+                    height: 55,
+                    child: DropdownButtonFormField(
+                      hint: Text("اختر العنوان"),
+                      value: null,
+                      items: addressItems
+                          .map((address) => DropdownMenuItem(
+                                child: Text(address.name),
+                                value: address.name,
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedArea = value.toString();
+                        });
+                      },
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
+                          borderSide: BorderSide(width: 1.0, color: MAIN_COLOR),
                         ),
-                        hintText: "رقم الهاتف",
                       ),
-                      validator: validatePhoneNumber,
                     ),
                   ),
                 ),
-              ),
-            ],
+              );
+            },
           ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "المدينة",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: TextField(
-                    controller: CityController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 10),
+            child: InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      backgroundColor: Colors.white,
+                      shadowColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                      elevation: 0,
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 5, left: 15, bottom: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "المنطقة",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                          DropdownButtonFormField(
+                            value: selectedCity,
+                            items: [
+                              'الخليل',
+                              'القدس',
+                              'بيت لحم',
+                              'جنين',
+                              'رام الله',
+                              'سلفيت',
+                              'طوباس',
+                              'قرى القدس',
+                              'قلقيلة',
+                              'نابلس ',
+                              'مناطق ال 48'
+                            ]
+                                .map((area) => DropdownMenuItem(
+                                      child: Text(area),
+                                      value: area,
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedCity = value.toString();
+                              });
+                            },
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: MAIN_COLOR, width: 2.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 1.0, color: MAIN_COLOR),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 5, bottom: 10, left: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "العنوان",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                          TextFormField(
+                            controller: addressController,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: MAIN_COLOR, width: 2.0),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(width: 1.0, color: MAIN_COLOR),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                      ),
-                      hintText: "المدينة",
-                    ),
+                      actions: <Widget>[
+                        ButtonWidget(
+                            name: "تأكيد العنوان",
+                            height: 40,
+                            width: double.infinity,
+                            BorderColor: MAIN_COLOR,
+                            OnClickFunction: () async {
+                              final addressProviderFinal =
+                                  Provider.of<AddressProvider>(context,
+                                      listen: false);
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String UserID = prefs.getString('user_id') ?? "";
+                              final newItem = AddressItem(
+                                user_id: UserID,
+                                name:
+                                    "$selectedCity ,${addressController.text} ",
+                              );
+                              addressProviderFinal.addToAddress(newItem);
+                              Fluttertoast.showToast(
+                                  msg: "تم اضافة العنوان بنجاح");
+                              Navigator.pop(context);
+                            },
+                            BorderRaduis: 10,
+                            ButtonColor: MAIN_COLOR,
+                            NameColor: Colors.white)
+                      ],
+                    );
+                  },
+                );
+              },
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  FaIcon(
+                    FontAwesomeIcons.plus,
+                    size: 20,
                   ),
-                ),
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 5, right: 15, left: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      "العنوان",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 15, left: 15, top: 5),
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  child: TextField(
-                    controller: AddressController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: MAIN_COLOR, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
-                      ),
-                      hintText: "العنوان",
-                    ),
+                  SizedBox(
+                    width: 10,
                   ),
-                ),
+                  Text(
+                    "اضافة عنوان جديد",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
           Column(
             children: [
@@ -344,8 +584,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                         BorderColor: Colors.black,
                         OnClickFunction: () async {
                           if (PhoneController.text == "" ||
-                              AddressController.text == "" ||
-                              CityController.text == "") {
+                              selectedArea.toString() == "" ||
+                              selectedArea.toString() == "اختر العنوان") {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -383,6 +623,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               },
                             );
                           } else {
+                            // if(editPhone){
+
+                            // }
+                            // else {
+
+                            // }
                             if (_formKey.currentState!.validate()) {
                               setState(() {
                                 loading = true;
@@ -416,10 +662,11 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                               : widget.total.toString();
                               await addOrder(
                                   context: context,
-                                  address: AddressController.text,
-                                  city: CityController.text,
+                                  address: selectedArea.toString(),
+                                  city: selectedArea.toString(),
                                   phone: PhoneController.text,
                                   name: NameController.text,
+                                  description: OrderController.text,
                                   total: TOTALFINAL.toString());
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
@@ -429,21 +676,21 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               await prefs.setString(
                                   'name', NameController.text);
                               await prefs.setString(
-                                  'city', CityController.text);
+                                  'city', selectedArea.toString());
                               await prefs.setString(
                                   'area', AreaController.text);
                               await prefs.setString(
                                   'phone', PhoneController.text);
                               await prefs.setString(
-                                  'address', AddressController.text);
+                                  'address', selectedArea.toString());
                               UserItem updatedUser = UserItem(
                                 id: UserID,
                                 token: TOKEN.toString(),
                                 email: "$UserID@email.com",
                                 phone: PhoneController.text,
-                                city: CityController.text,
-                                area: AreaController.text,
-                                address: AddressController.text,
+                                city: selectedArea.toString(),
+                                area: selectedArea.toString(),
+                                address: selectedArea.toString(),
                                 password: '123',
                               );
                               try {
@@ -564,6 +811,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                 );
 
                                 cartProvider.clearCart();
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setBool('buy', true);
                               } catch (e) {
                                 print('Error updating user data: $e');
                               }

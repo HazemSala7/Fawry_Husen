@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+import '../Models/AddressItem.dart';
 import '../Models/CartModel.dart';
 import '../Models/FavoriteItem.dart';
 
@@ -39,7 +40,7 @@ class CartDatabaseHelper {
 
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, 'cart.db');
+    String path = join(documentsDirectory.path, 'fawri.db');
 
     return await openDatabase(
       path,
@@ -64,6 +65,14 @@ class CartDatabaseHelper {
         vendor_sku TEXT NOT NULL,
         price REAL NOT NULL,
         quantity INTEGER NOT NULL,
+        user_id INTEGER NOT NULL
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS addresses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
         user_id INTEGER NOT NULL
       )
     ''');
@@ -119,9 +128,19 @@ class CartDatabaseHelper {
     await db!.delete('cart'); // Delete all records from the 'cart' table
   }
 
+  Future<void> clearUserAddress() async {
+    final db = await database;
+    await db!.delete('addresses');
+  }
+
   Future<int> insertCartItem(CartItem item) async {
     final db = await database;
     return await db!.insert('cart', item.toJson());
+  }
+
+  Future<int> insertAddressItem(AddressItem item) async {
+    final db = await database;
+    return await db!.insert('addresses', item.toJson());
   }
 
   Future<List<CartItem>> getCartItems() async {
@@ -133,16 +152,54 @@ class CartDatabaseHelper {
     );
   }
 
+  Future<List<AddressItem>> getAddresses() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db!.query('addresses');
+    return List.generate(
+      maps.length,
+      (i) => AddressItem.fromJson(maps[i]),
+    );
+  }
+
+  Future<List<AddressItem>> getUserAddresses() async {
+    final Database? db = await database;
+    final List<Map<String, dynamic>> maps = await db!.query('addresses');
+
+    return List.generate(maps.length, (i) {
+      return AddressItem(
+        id: maps[i]['id'],
+        user_id: maps[i]['user_id'],
+        name: maps[i]['name'],
+      );
+    });
+  }
+
   Future<void> deleteCartItem(int id) async {
     final db = await database;
     print(id);
     await db!.delete('cart', where: 'productId = ?', whereArgs: [id]);
   }
 
+  Future<void> deleteAddressItem(int id) async {
+    final db = await database;
+    print(id);
+    await db!.delete('addresses', where: 'id = ?', whereArgs: [id]);
+  }
+
   Future<void> updateCartItem(CartItem item) async {
     final db = await database;
     await db!.update(
       'cart',
+      item.toJson(),
+      where: 'id = ?',
+      whereArgs: [item.id],
+    );
+  }
+
+  Future<void> updateAddressItem(AddressItem item) async {
+    final db = await database;
+    await db!.update(
+      'addresses',
       item.toJson(),
       where: 'id = ?',
       whereArgs: [item.id],

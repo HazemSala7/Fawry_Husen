@@ -222,12 +222,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         String address = prefs.getString('address') ?? "";
                         String area = prefs.getString('area') ?? "";
                         String city = prefs.getString('city') ?? "";
+                        String birthday = prefs.getString('birthdate') ?? "";
                         NavigatorFunction(
                             context,
                             AccountInformation(
                               address: address,
                               area: area,
                               city: city,
+                              birthday: birthday,
                               name: name,
                               phone: phone,
                             ));

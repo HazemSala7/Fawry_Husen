@@ -281,6 +281,11 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
                           return Visibility(
+                            visible: index == 0
+                                ? true
+                                : selectedIndexes.contains(index)
+                                    ? false
+                                    : true,
                             child: Padding(
                               padding: const EdgeInsets.only(right: 5, left: 5),
                               child: InkWell(
@@ -765,89 +770,94 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                     ),
                     itemCount: SubCategories.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 5, left: 5),
-                        child: InkWell(
-                          onTap: () {
-                            if (index == 0) {
-                              setState(() {
-                                // Clear both lists
-                                selectedCategoryKeys.clear();
-                                selectedIndexes.clear();
-                                Sub_Category_Key.clear();
-                                Sub_Category_Key.add("");
-                                selectedIndexes.add(0);
-                                SubCategories.add({
-                                  "name": "جميع الأقسام",
-                                  "key": "",
-                                });
-                              });
-                            } else {
-                              setState(() {
-                                if (selectedIndexes.contains(index)) {
-                                  if (Sub_Category_Key.length == 1) {
-                                  } else {
-                                    int removeIndex =
-                                        Sub_Category_Key.indexWhere((key) =>
-                                            key ==
-                                            SubCategories[index]["key"]
-                                                .toString());
-
-                                    if (removeIndex != -1) {
-                                      // Remove elements based on the found index
-                                      selectedIndexes.remove(index);
-                                      Sub_Category_Key.removeAt(removeIndex);
-                                      String categoryName = SubCategories[index]
-                                              ["name"]
-                                          .toString();
-                                      selectedCategoryKeys.removeWhere((name) =>
-                                          name["name"] == categoryName);
-                                    }
-                                  }
-                                } else {
-                                  if (Sub_Category_Key[0].toString() ==
-                                          "Women Clothing" ||
-                                      Sub_Category_Key[0].toString() == "" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Weddings & Events" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Kids Shoes" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Men Shoes" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Women Shoes" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Maternity Clothing, Baby" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Women's Fashion Jewelry" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Kids Shoes, Men Shoes, Women Shoes" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Young Boys Clothing,Tween Boys Clothing" ||
-                                      Sub_Category_Key[0].toString() ==
-                                          "Young Girls Clothing,Tween Girls Clothing") {
-                                    selectedIndexes.removeAt(0);
-                                    Sub_Category_Key.removeAt(0);
-                                  }
-                                  selectedIndexes.add(index);
-
-                                  Sub_Category_Key.add(
-                                      SubCategories[index]["key"].toString());
-
-                                  selectedCategoryKeys.add({
-                                    "name":
-                                        SubCategories[index]["name"].toString(),
-                                    "key":
-                                        SubCategories[index]["key"].toString(),
-                                    "index": index
+                      if (selectedIndexes.contains(index)) {
+                        // Return an empty container if the item is hidden
+                        return Container();
+                      } else {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 5, left: 5),
+                          child: InkWell(
+                            onTap: () {
+                              if (index == 0) {
+                                setState(() {
+                                  // Clear both lists
+                                  selectedCategoryKeys.clear();
+                                  selectedIndexes.clear();
+                                  Sub_Category_Key.clear();
+                                  Sub_Category_Key.add("");
+                                  selectedIndexes.add(0);
+                                  SubCategories.add({
+                                    "name": "جميع الأقسام",
+                                    "key": "",
                                   });
-                                }
-                              });
-                            }
-                          },
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
+                                });
+                              } else {
+                                setState(() {
+                                  if (selectedIndexes.contains(index)) {
+                                    if (Sub_Category_Key.length == 1) {
+                                    } else {
+                                      int removeIndex =
+                                          Sub_Category_Key.indexWhere((key) =>
+                                              key ==
+                                              SubCategories[index]["key"]
+                                                  .toString());
+
+                                      if (removeIndex != -1) {
+                                        // Remove elements based on the found index
+                                        selectedIndexes.remove(index);
+                                        Sub_Category_Key.removeAt(removeIndex);
+                                        String categoryName =
+                                            SubCategories[index]["name"]
+                                                .toString();
+                                        selectedCategoryKeys.removeWhere(
+                                            (name) =>
+                                                name["name"] == categoryName);
+                                      }
+                                    }
+                                  } else {
+                                    if (Sub_Category_Key[0].toString() ==
+                                            "Women Clothing" ||
+                                        Sub_Category_Key[0].toString() == "" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Weddings & Events" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Kids Shoes" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Men Shoes" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Women Shoes" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Maternity Clothing, Baby" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Women's Fashion Jewelry" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Kids Shoes, Men Shoes, Women Shoes" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Young Boys Clothing,Tween Boys Clothing" ||
+                                        Sub_Category_Key[0].toString() ==
+                                            "Young Girls Clothing,Tween Girls Clothing") {
+                                      selectedIndexes.removeAt(0);
+                                      Sub_Category_Key.removeAt(0);
+                                    }
+                                    selectedIndexes.add(index);
+
+                                    Sub_Category_Key.add(
+                                        SubCategories[index]["key"].toString());
+
+                                    selectedCategoryKeys.add({
+                                      "name": SubCategories[index]["name"]
+                                          .toString(),
+                                      "key": SubCategories[index]["key"]
+                                          .toString(),
+                                      "index": index
+                                    });
+                                  }
+                                });
+                              }
+                            },
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 border: Border.all(
                                   width: 2,
@@ -855,22 +865,25 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                       ? Colors.red
                                       : Colors.black,
                                 ),
-                                color: Colors.black),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Text(
-                                  SubCategories[index]["name"].toString(),
-                                  style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Text(
+                                    SubCategories[index]["name"].toString(),
+                                    style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
-                                      color: Colors.white),
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                   ),
                   Padding(

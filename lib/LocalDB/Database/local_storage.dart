@@ -22,8 +22,6 @@ class LocalStorage {
     List data = favorites;
     data.add(item.toJson());
     favoriteDataBox.put('favorites', data);
-    print(favorites);
-    print("favorites");
   }
 
   setStartSize() {
@@ -317,6 +315,8 @@ class LocalStorage {
 
   List<dynamic> get favorites =>
       favoriteDataBox.get('favorites', defaultValue: []);
+  List<dynamic> get user_address =>
+      favoriteDataBox.get('users_addresses', defaultValue: []);
   List get sizeUser => sizeDataBox.get('sizeUser', defaultValue: []);
   bool get startSize => sizeDataBox.get('startSize', defaultValue: false);
   bool get startCart => sizeDataBox.get('startCart', defaultValue: false);

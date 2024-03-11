@@ -55,6 +55,8 @@ getSpeceficProduct(id) async {
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
+    print("0");
+    print("url");
     print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
     var response = await http.get(
         Uri.parse("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id"),
@@ -62,11 +64,11 @@ getSpeceficProduct(id) async {
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
   } catch (e) {
+    print("1");
     var DomainName = await FirebaseRemoteConfigClass().getDomain();
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
-    print("$DomainName/api/getItemData?api_key=$key_bath&id=$id");
     var response = await http.get(
         Uri.parse("$DomainName/api/getItemData?api_key=$key_bath&id=$id"),
         headers: headers);
@@ -93,7 +95,7 @@ getOrderDetails(id) async {
   }
 }
 
-addOrder({context, address, phone, city, name, total}) async {
+addOrder({context, address, phone, city, name, description, total}) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
@@ -128,7 +130,7 @@ addOrder({context, address, phone, city, name, total}) async {
     request.body = json.encode({
       "name": name.toString(),
       "page": "Fawri App",
-      "description": "description Test",
+      "description": description.toString(),
       "phone": phone.toString(),
       "address": address.toString(),
       "city": city.toString(),
@@ -271,6 +273,8 @@ getProductByCategory(
       Final_URL =
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
+    print("Final_URL");
+    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -413,70 +417,75 @@ showDelayedDialog(context) {
         return Dialog(
             backgroundColor: Colors.transparent,
             insetPadding: EdgeInsets.all(0),
-            child: Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Lottie.asset(
-                      "assets/lottie_animations/Animation - 1699360987745.json",
-                      height: 300,
-                      reverse: true,
-                      repeat: true,
-                      fit: BoxFit.cover),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "مفاجأة",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 26,
-                        color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      "لقد حصلت على كوبون خصم بقيمة 20% يمكنك استخدامه عند شرائك لأحد منتجاتنا",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Lottie.asset(
+                        "assets/lottie_animations/Animation - 1699360987745.json",
+                        height: 300,
+                        reverse: true,
+                        repeat: true,
+                        fit: BoxFit.cover),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Text(
-                    "Fawri2024",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.white),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Clipboard.setData(ClipboardData(text: "Fawri2024"));
-                      Navigator.pop(context);
-                    },
-                    child: Text(
-                      "اضغط للنسخ",
+                    Text(
+                      "مفاجأة",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 26,
                           color: Colors.white),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        "لقد حصلت على كوبون خصم بقيمة 20% يمكنك استخدامه عند شرائك لأحد منتجاتنا",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Text(
+                      "Fawri2024",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: Colors.white),
+                    ),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Clipboard.setData(ClipboardData(text: "Fawri2024"));
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "اضغط للنسخ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ));
       },
