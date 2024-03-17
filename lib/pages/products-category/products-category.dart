@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
@@ -51,6 +52,33 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     setState(() {
       selectedIndex = index;
     });
+  }
+
+  GlobalKey _one = GlobalKey();
+
+  // Function to check if the showcase has been shown before
+  Future<bool> hasShowcaseBeenShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('showcaseShown') ?? false;
+  }
+
+  // Function to mark the showcase as shown
+  Future<void> markShowcaseAsShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('showcaseShown', true);
+  }
+
+  void startShowCase() async {
+    bool showcaseShown = await hasShowcaseBeenShown();
+
+    if (!showcaseShown) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([_one]);
+      });
+
+      // Mark the showcase as shown
+      markShowcaseAsShown();
+    }
   }
 
   Widget build(BuildContext context) {
@@ -241,24 +269,33 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                 SizedBox(
                                   width: 15,
                                 ),
-                                IconButton(
-                                  icon: isListView
-                                      ? Icon(
-                                          Icons.grid_on,
-                                          size: 20,
-                                        )
-                                      : Icon(Icons.list, size: 15),
-                                  padding: EdgeInsets.all(5),
-                                  onPressed: () {
-                                    setState(() {
-                                      // Toggle between list and grid view
-                                      isListView = !isListView;
-                                      if (isListView) {
-                                        _page = 1;
-                                        _firstLoad();
-                                      }
-                                    });
-                                  },
+                                Visibility(
+                                  visible:
+                                      SubCategories.length == 0 ? false : true,
+                                  child: Showcase(
+                                    key: _one,
+                                    title: 'اختيار القسم الفرعي',
+                                    description: 'هنا يتم اختيار القسم الفرعي',
+                                    child: IconButton(
+                                      icon: isListView
+                                          ? Icon(
+                                              Icons.grid_on,
+                                              size: 20,
+                                            )
+                                          : Icon(Icons.list, size: 15),
+                                      padding: EdgeInsets.all(5),
+                                      onPressed: () {
+                                        setState(() {
+                                          // Toggle between list and grid view
+                                          isListView = !isListView;
+                                          if (isListView) {
+                                            _page = 1;
+                                            _firstLoad();
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -1154,21 +1191,21 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                       widget.category_id == "Men Shoes"
                   ? "Shoes"
                   : widget.category_id == "Underwear & Sleepwear"
-                      ? "Underwear %26 Sleepwear"
+                      ? "Underwear %26 Sleepwear , Underwear  Sleepwear"
                       : widget.category_id ==
                               "Home %26 Living,Tools %26 Home Improvement"
-                          ? "Home %26 Living,Tools %26 Home Improvement"
+                          ? "Home %26 Living,Tools %26 Home Improvement , Home  Living,Tools  Home Improvement"
                           : widget.category_id == "Sports & Outdoor"
-                              ? "Sports %26 Outdoor"
+                              ? "Sports %26 Outdoor , Sports  Outdoor"
                               : widget.category_id == "Women Apparel Baby"
                                   ? "Women Apparel"
                                   : widget.category_id == "Jewelry & Watches"
-                                      ? "Jewelry %26 Watches"
+                                      ? "Jewelry %26 Watches , Jewelry  Watches"
                                       : widget.category_id == "Beauty & Health"
-                                          ? "Beauty %26 Health"
+                                          ? "Beauty %26 Health , Beauty  Health"
                                           : widget.category_id ==
                                                   "Bags & Luggage"
-                                              ? "Bags %26 Luggage"
+                                              ? "Bags %26 Luggage , Bags  Luggage"
                                               : widget.category_id ==
                                                       "Weddings & Events"
                                                   ? "Women Apparel"
@@ -1183,7 +1220,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                               ? "Kids"
                                                               : widget.category_id ==
                                                                       "Office School Supplies, Office & School Supplies"
-                                                                  ? "Office School Supplies, Office %26 School Supplies"
+                                                                  ? "Office School Supplies, Office %26 School Supplies , Office School Supplies, Office  School Supplies"
                                                                   : widget
                                                                       .category_id,
               concatenatedNames,
@@ -1196,21 +1233,21 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                       widget.category_id == "Men Shoes"
                   ? "Shoes"
                   : widget.category_id == "Underwear & Sleepwear"
-                      ? "Underwear %26 Sleepwear"
+                      ? "Underwear %26 Sleepwear , Underwear  Sleepwear"
                       : widget.category_id ==
                               "Home %26 Living,Tools %26 Home Improvement"
-                          ? "Home %26 Living,Tools %26 Home Improvement"
+                          ? "Home %26 Living,Tools %26 Home Improvement , Home  Living,Tools  Home Improvement"
                           : widget.category_id == "Sports & Outdoor"
-                              ? "Sports %26 Outdoor"
+                              ? "Sports %26 Outdoor , Sports  Outdoor"
                               : widget.category_id == "Women Apparel Baby"
                                   ? "Women Apparel"
                                   : widget.category_id == "Jewelry & Watches"
-                                      ? "Jewelry %26 Watches"
+                                      ? "Jewelry %26 Watches , Jewelry  Watches"
                                       : widget.category_id == "Beauty & Health"
-                                          ? "Beauty %26 Health"
+                                          ? "Beauty %26 Health , Beauty  Health"
                                           : widget.category_id ==
                                                   "Bags & Luggage"
-                                              ? "Bags %26 Luggage"
+                                              ? "Bags %26 Luggage , Bags  Luggage"
                                               : widget.category_id ==
                                                       "Weddings & Events"
                                                   ? "Women Apparel"
@@ -1225,7 +1262,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                               ? "Kids"
                                                               : widget.category_id ==
                                                                       "Office School Supplies, Office & School Supplies"
-                                                                  ? "Office School Supplies, Office %26 School Supplies"
+                                                                  ? "Office School Supplies, Office %26 School Supplies , Office School Supplies, Office  School Supplies"
                                                                   : widget
                                                                       .category_id,
               concatenatedNames,
@@ -1338,6 +1375,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     setStaticSubCategories();
     super.initState();
     _firstLoad();
+    startShowCase();
     _controller = ScrollController()..addListener(_loadMore);
   }
 

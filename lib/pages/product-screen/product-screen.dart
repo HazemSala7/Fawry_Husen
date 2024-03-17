@@ -162,8 +162,8 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {
       orderedItems.add(InitialData["item"]);
       removeDuplicatesById(orderedItems);
-      // initSubKey = InitialData["item"]["categories"][2][0];
-      // initMAINKey = InitialData["item"]["categories"][0][0];
+      initSubKey = InitialData["item"]["categories"][2][0];
+      initMAINKey = InitialData["item"]["categories"][0][0];
     });
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
     final uri = Uri.parse(widget.url);
@@ -515,9 +515,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                 typeApi = true;
                               }
                             }
-                            // print("5");
-                            print("itemIndex");
-                            print(itemIndex);
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,

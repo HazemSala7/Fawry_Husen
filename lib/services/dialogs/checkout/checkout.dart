@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
@@ -831,6 +833,16 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   }
 
   String CoponMessage = "";
+// Declare a Timer variable
+  Timer? _couponMessageTimer;
+
+// Inside your State class
+  @override
+  void dispose() {
+    // Dispose the timer when the widget is disposed to prevent memory leaks
+    _couponMessageTimer?.cancel();
+    super.dispose();
+  }
 
   bool loading = false;
   bool coponed = false;
@@ -991,6 +1003,15 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               CoponMessage =
                                   "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
                               setState(() {});
+                              _couponMessageTimer?.cancel();
+
+                              // Set a new timer to clear the message after 15 seconds
+                              _couponMessageTimer =
+                                  Timer(Duration(seconds: 15), () {
+                                setState(() {
+                                  CoponMessage = "";
+                                });
+                              });
                             } else {
                               CoponMessage =
                                   "تم خصم قيمة الكوبون من مجموع الطلبية";
@@ -1000,6 +1021,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               }
                               coponed = true;
                               setState(() {});
+                              _couponMessageTimer =
+                                  Timer(Duration(seconds: 15), () {
+                                setState(() {
+                                  CoponMessage = "";
+                                });
+                              });
                             }
                           },
                           child: Container(

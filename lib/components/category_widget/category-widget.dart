@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:vibration/vibration.dart';
 
 import '../../pages/products-category/products-category.dart';
@@ -65,157 +66,190 @@ class _CategoryWidgetState extends State<CategoryWidget> {
         } else if (widget.name == "مستلزمات رياضية") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "للمنزل") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "للرضيع و الأم") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "مجوهرات و ساعات") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "اكسسوارات") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "مستحضرات تجميلية") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "الكترونيات") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "حقائب") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "للحيوانات الاليفة") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "مستلزمات سيارات") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else if (widget.name == "مستلزمات مكاتب") {
           NavigatorFunction(
               context,
-              ProductsCategories(
-                SIZES: [],
-                category_id: widget.main_category,
-                search: false,
-                size: "",
-                containerWidths: "null",
-                keys: "null",
-                name: widget.name,
-                sizes: "null",
-                main_category: widget.main_category,
-              ));
+              ShowCaseWidget(
+                  builder: Builder(
+                builder: (context) => ProductsCategories(
+                  SIZES: [],
+                  category_id: widget.main_category,
+                  search: false,
+                  size: "",
+                  containerWidths: "null",
+                  keys: "null",
+                  name: widget.name,
+                  sizes: "null",
+                  main_category: widget.main_category,
+                ),
+              )));
         } else {
           Map sizes = {};
           if (widget.name == "ملابس نسائيه") {

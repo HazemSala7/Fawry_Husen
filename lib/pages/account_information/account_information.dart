@@ -249,36 +249,37 @@ class AaccounIinformationState extends State<AccountInformation> {
                         return Visibility(
                           visible: addressItems.length == 0 ? false : true,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 15, left: 15),
-                            child: Container(
-                              height: 55,
-                              child: DropdownButtonFormField(
-                                hint: Text("اختر العنوان"),
-                                value: null,
-                                items: addressItems
-                                    .map((address) => DropdownMenuItem(
-                                          child: Text(address.name),
-                                          value: address.name,
-                                        ))
-                                    .toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedArea = value.toString();
-                                  });
-                                },
-                                decoration: InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: MAIN_COLOR, width: 2.0),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1.0, color: MAIN_COLOR),
-                                  ),
+                              padding:
+                                  const EdgeInsets.only(right: 15, left: 15),
+                              child: Container(
+                                decoration: BoxDecoration(border: Border.all()),
+                                child: ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: addressItems.length,
+                                  itemBuilder: (context, index) {
+                                    AddressItem item = addressItems[index];
+                                    return Container(
+                                      height: 50,
+                                      decoration:
+                                          BoxDecoration(border: Border.all()),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              item.name,
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              ),
-                            ),
-                          ),
+                              )),
                         );
                       },
                     ),

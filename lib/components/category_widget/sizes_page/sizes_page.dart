@@ -1,6 +1,7 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:vibration/vibration.dart';
 import '../../../LocalDB/Database/local_storage.dart';
 import '../../../constants/constants.dart';
@@ -180,17 +181,20 @@ class _SizesPageState extends State<SizesPage> {
 
                         NavigatorFunction(
                             context,
-                            ProductsCategories(
-                              SIZES: sizeApp,
-                              category_id: widget.main_category,
-                              search: false,
-                              size: sizeApp.join(', '),
-                              containerWidths: widget.containerWidths,
-                              main_category: widget.main_category,
-                              keys: widget.keys,
-                              sizes: widget.sizes,
-                              name: widget.name,
-                            ));
+                            ShowCaseWidget(
+                                builder: Builder(
+                              builder: (context) => ProductsCategories(
+                                SIZES: sizeApp,
+                                category_id: widget.main_category,
+                                search: false,
+                                size: sizeApp.join(', '),
+                                containerWidths: widget.containerWidths,
+                                main_category: widget.main_category,
+                                keys: widget.keys,
+                                sizes: widget.sizes,
+                                name: widget.name,
+                              ),
+                            )));
                       } else {
                         null;
                       }

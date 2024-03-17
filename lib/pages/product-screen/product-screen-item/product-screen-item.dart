@@ -220,8 +220,13 @@ class _ProductItemState extends State<ProductItem> {
                                                     aspectRatio: 2.0,
                                                     autoPlay: true,
                                                   ),
-                                                  items:
-                                                      widget.images!.map((i) {
+                                                  items: widget.images!
+                                                      .sublist(
+                                                          0,
+                                                          widget.images!
+                                                                  .length -
+                                                              1)
+                                                      .map((i) {
                                                     return Builder(
                                                       builder: (BuildContext
                                                           context) {
@@ -884,6 +889,7 @@ class _ProductItemState extends State<ProductItem> {
                                 user_token: TOKEN,
                               );
                               cartFirebaseProvider.addToCart(cartFirebaseItem);
+                              favoriteProvider.removeFromFavorite(widget.id);
                               final selectedSizeItem =
                                   widget.variants.firstWhere(
                                 (variant) =>

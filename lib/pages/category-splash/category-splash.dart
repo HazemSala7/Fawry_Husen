@@ -21,24 +21,24 @@ class _CategorySplashState extends State<CategorySplash> {
   bool _showGoToTopIcon = false;
   late ScrollController _scrollController;
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      print("test");
-      NavigatorFunction(context, AccountInformation());
-    } else {
-      setState(() {
-        _showGoToTopIcon = false;
-      });
-    }
-  }
+  // void _scrollListener() {
+  //   if (_scrollController.position.pixels ==
+  //       _scrollController.position.maxScrollExtent) {
+  //     print("test");
+  //     NavigatorFunction(context, AccountInformation());
+  //   } else {
+  //     setState(() {
+  //       _showGoToTopIcon = false;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     _initialize();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
+    // _scrollController = ScrollController();
+    // _scrollController.addListener(_scrollListener);
   }
 
   Future<void> _initialize() async {
@@ -109,7 +109,6 @@ class _CategorySplashState extends State<CategorySplash> {
             ),
           ),
           body: SingleChildScrollView(
-            controller: _scrollController,
             child: Padding(
               padding: const EdgeInsets.only(top: 15, bottom: 30),
               child: Column(
@@ -134,20 +133,6 @@ class _CategorySplashState extends State<CategorySplash> {
                             CateIcon: categories[index]["icon"],
                             image: categories[index]["image"]);
                       }),
-                  if (_showGoToTopIcon)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, bottom: 20),
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          // Implement the action when the button is pressed
-                          // For example, scroll back to the top
-                          _scrollController.animateTo(0,
-                              duration: Duration(milliseconds: 500),
-                              curve: Curves.easeInOut);
-                        },
-                        child: Icon(Icons.arrow_upward),
-                      ),
-                    ),
                 ],
               ),
             ),
