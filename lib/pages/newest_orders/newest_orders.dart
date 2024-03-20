@@ -401,6 +401,9 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                               NavigatorFunction(
                                                                   context,
                                                                   OrderDetails(
+                                                                    order_id: orders[
+                                                                            index]
+                                                                        .order_id,
                                                                     done: false,
                                                                     expected_date:
                                                                         "05/08/2023",

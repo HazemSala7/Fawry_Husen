@@ -171,7 +171,7 @@ class _SizesPageState extends State<SizesPage> {
                         widget.sizes.keys.forEach((k) {
                           if (widget.sizes[k]) {
                             sizeApi = sizeApi + k;
-                            sizeApp.add(k.split(' ')[0]);
+                            sizeApp.add(k);
                           }
                         });
                         LocalStorage().setSizeUser(sizeApp);
@@ -219,17 +219,20 @@ class _SizesPageState extends State<SizesPage> {
                     await prefs.setBool('is_selected_size', false);
                     NavigatorFunction(
                         context,
-                        ProductsCategories(
-                          SIZES: [],
-                          category_id: widget.main_category,
-                          search: false,
-                          size: "null",
-                          containerWidths: widget.containerWidths,
-                          main_category: widget.main_category,
-                          keys: widget.keys,
-                          sizes: widget.sizes,
-                          name: widget.name,
-                        ));
+                        ShowCaseWidget(
+                            builder: Builder(
+                          builder: (context) => ProductsCategories(
+                            SIZES: [],
+                            category_id: widget.main_category,
+                            search: false,
+                            size: "null",
+                            containerWidths: widget.containerWidths,
+                            main_category: widget.main_category,
+                            keys: widget.keys,
+                            sizes: widget.sizes,
+                            name: widget.name,
+                          ),
+                        )));
                   },
                   child: Text(
                     "تخطي",

@@ -129,6 +129,7 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                                     TextStyle(fontWeight: FontWeight.bold)) +
                                 100.0)
                             .toList();
+
                         NavigatorFunction(
                             context,
                             SizesPage(

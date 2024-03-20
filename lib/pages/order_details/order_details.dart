@@ -1,13 +1,20 @@
+import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../constants/constants.dart';
 
 class OrderDetails extends StatefulWidget {
-  final sku, sun, expected_date;
+  final sku, sun, expected_date, order_id;
   bool done;
   OrderDetails(
-      {super.key, this.sku, this.sun, this.expected_date, required this.done});
+      {super.key,
+      this.sku,
+      required this.order_id,
+      this.sun,
+      this.expected_date,
+      required this.done});
 
   @override
   State<OrderDetails> createState() => Oorder_detaDsState();
@@ -41,66 +48,93 @@ class Oorder_detaDsState extends State<OrderDetails> {
             ),
           ),
           body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 30,
-                ),
-                statusOrderMethod(
-                    first_text: "تم تقديم طلبك",
-                    lines: true,
-                    check_image: widget.done
-                        ? "assets/images/icons8-check-mark-50 (1).png"
-                        : "assets/images/icons8-check-mark-50.png",
-                    second_text: "تم استلام طلبك لدينا 2/8/2023",
-                    image: "assets/images/icons8-received-96.png"),
-                SizedBox(
-                  height: 10,
-                ),
-                statusOrderMethod(
-                    lines: true,
-                    first_text: "تجهيز الطلب",
-                    second_text: "تم نقل طلبك 03/08/2023",
-                    check_image: widget.done
-                        ? "assets/images/icons8-check-mark-50 (1).png"
-                        : "assets/images/icons8-check-mark-50.png",
-                    image: "assets/images/icons8-shipping-to-door-64.png"),
-                SizedBox(
-                  height: 10,
-                ),
-                statusOrderMethod(
-                    lines: true,
-                    first_text: "جاهز للنقل",
-                    second_text: "تم تجهيز الطلب 03/08/2023",
-                    check_image: widget.done
-                        ? "assets/images/icons8-check-mark-50 (1).png"
-                        : "assets/images/icons8-check-mark-50.png",
-                    image: "assets/images/icons8-shopping-bag-50 (2).png"),
-                SizedBox(
-                  height: 10,
-                ),
-                statusOrderMethod(
-                    lines: true,
-                    first_text: "تم الشحن",
-                    second_text: "جاري شحن طلبك الأن الى العنوان المطلوب",
-                    check_image: widget.done
-                        ? "assets/images/icons8-check-mark-50 (1).png"
-                        : "assets/images/icons8-check-mark-50.png",
-                    image: "assets/images/icons8-shipping-50.png"),
-                SizedBox(
-                  height: 10,
-                ),
-                statusOrderMethod(
-                    lines: false,
-                    first_text: "تم التوصيل",
-                    check_image: widget.done
-                        ? "assets/images/icons8-check-mark-50 (1).png"
-                        : "assets/images/icons8-check-mark-50.png",
-                    second_text: "تم توصيل طلبك , تجربة ممتعة!",
-                    image: "assets/images/icons8-delivery-64.png"),
-              ],
-            ),
-          ),
+              child: FutureBuilder(
+            future: getOrderDetails(widget.order_id),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  width: double.infinity,
+                  height: 400,
+                  child: Center(
+                    child: SpinKitPulse(
+                      color: MAIN_COLOR,
+                      size: 60,
+                    ),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error fetching order status: ${snapshot.error}');
+              } else {
+                String orderStatus = snapshot.data["data"]["status"];
+
+                bool isPending = orderStatus == 'Pending';
+                bool isShipped = orderStatus == 'Shipped';
+                bool isReceived = orderStatus == 'Received';
+
+                return Column(
+                  children: [
+                    SizedBox(
+                      height: 30,
+                    ),
+                    statusOrderMethod(
+                      first_text: "تم تقديم طلبك",
+                      lines: true,
+                      check_image: isPending || isShipped || isReceived
+                          ? "assets/images/icons8-check-mark-50 (1).png"
+                          : "assets/images/icons8-check-mark-50.png",
+                      second_text: "تم استلام طلبك لدينا 2/8/2023",
+                      image: "assets/images/icons8-received-96.png",
+                      isBold: isPending || isShipped || isReceived,
+                    ),
+                    SizedBox(height: 10),
+                    statusOrderMethod(
+                      lines: true,
+                      first_text: "تجهيز الطلب",
+                      second_text: "تم نقل طلبك",
+                      check_image: isPending || isShipped
+                          ? "assets/images/icons8-check-mark-50 (1).png"
+                          : "assets/images/icons8-check-mark-50.png",
+                      image: "assets/images/icons8-shipping-to-door-64.png",
+                      isBold: isPending || isShipped,
+                    ),
+                    SizedBox(height: 10),
+                    statusOrderMethod(
+                      lines: true,
+                      first_text: "جاهز للنقل",
+                      second_text: "تم تجهيز الطلب",
+                      check_image: isShipped
+                          ? "assets/images/icons8-check-mark-50 (1).png"
+                          : "assets/images/icons8-check-mark-50.png",
+                      image: "assets/images/icons8-shopping-bag-50 (2).png",
+                      isBold: isPending || isShipped,
+                    ),
+                    SizedBox(height: 10),
+                    statusOrderMethod(
+                      lines: true,
+                      first_text: "تم الشحن",
+                      second_text: "جاري شحن طلبك الأن الى العنوان المطلوب",
+                      check_image: isShipped
+                          ? "assets/images/icons8-check-mark-50 (1).png"
+                          : "assets/images/icons8-check-mark-50.png",
+                      image: "assets/images/icons8-shipping-50.png",
+                      isBold: isShipped,
+                    ),
+                    SizedBox(height: 10),
+                    statusOrderMethod(
+                      lines: false,
+                      first_text: "تم التوصيل",
+                      check_image: isReceived
+                          ? "assets/images/icons8-check-mark-50 (1).png"
+                          : "assets/images/icons8-check-mark-50.png",
+                      second_text: "تم توصيل طلبك , تجربة ممتعة!",
+                      image: "assets/images/icons8-delivery-64.png",
+                      isBold: isReceived,
+                    ),
+                  ],
+                );
+              }
+            },
+          )),
         ),
         Material(
           child: Padding(
@@ -255,6 +289,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
       String check_image = "",
       String first_text = "",
       String second_text = "",
+      bool isBold = false,
       bool lines = true}) {
     return Padding(
       padding: const EdgeInsets.only(right: 20),
@@ -314,7 +349,8 @@ class Oorder_detaDsState extends State<OrderDetails> {
                   Text(
                     first_text,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                        fontWeight:
+                            isBold ? FontWeight.bold : FontWeight.normal,
                         color: const Color.fromARGB(255, 87, 86, 86),
                         fontSize: 18),
                   ),
