@@ -24,6 +24,12 @@ class OrderDetails extends StatefulWidget {
 class Oorder_detaDsState extends State<OrderDetails> {
   @override
   Widget build(BuildContext context) {
+    String createdAtString = widget.created_at;
+    DateTime createdAt = DateTime.parse(createdAtString.replaceAll('-', ''));
+    DateTime threeDaysLater = createdAt.add(Duration(days: 3));
+    String formattedDate =
+        "${threeDaysLater.day.toString().padLeft(2, '0')}-${threeDaysLater.month.toString().padLeft(2, '0')}-${threeDaysLater.year}";
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -95,7 +101,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                           ? "assets/images/icons8-check-mark-50 (1).png"
                           : "assets/images/icons8-check-mark-50.png",
                       image: "assets/images/icons8-shipping-to-door-64.png",
-                      isBold: isPending || isShipped,
+                      isBold: isPending || isShipped || isReceived,
                     ),
                     SizedBox(height: 10),
                     statusOrderMethod(
@@ -106,7 +112,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                           ? "assets/images/icons8-check-mark-50 (1).png"
                           : "assets/images/icons8-check-mark-50.png",
                       image: "assets/images/icons8-shopping-bag-50 (2).png",
-                      isBold: isPending || isShipped,
+                      isBold: isShipped || isReceived,
                     ),
                     SizedBox(height: 10),
                     statusOrderMethod(
@@ -172,7 +178,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                                 height: 5,
                               ),
                               Text(
-                                "05/08/2023",
+                                "$formattedDate",
                                 style: TextStyle(
                                   color: MAIN_COLOR,
                                   fontSize: 16,
