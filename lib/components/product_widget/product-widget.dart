@@ -189,20 +189,33 @@ class _ProductWidgetState extends State<ProductWidget> {
                     child: ImageSlideshow(
                       width: double.infinity,
                       initialPage: 0,
-                      indicatorColor: widget.Images.length == 1
+                      indicatorColor: widget.Images.length != 1
                           ? Colors.transparent
                           : MAIN_COLOR,
                       indicatorBackgroundColor: Colors.grey,
-                      children: widget.Images.map((e) {
-                        try {
-                          return FancyShimmerImage(
-                            imageUrl: e,
-                          );
-                        } catch (e) {
-                          print('Error loading image: $e');
-                          return Container(); // or an alternative widget to display when image loading fails
-                        }
-                      }).toList(),
+                      children: widget.Images.length != 1
+                          ? widget.Images!
+                              .sublist(0, widget.Images!.length - 1)
+                              .map((e) {
+                              try {
+                                return FancyShimmerImage(
+                                  imageUrl: e,
+                                );
+                              } catch (e) {
+                                print('Error loading image: $e');
+                                return Container(); // or an alternative widget to display when image loading fails
+                              }
+                            }).toList()
+                          : widget.Images!.map((e) {
+                              try {
+                                return FancyShimmerImage(
+                                  imageUrl: e,
+                                );
+                              } catch (e) {
+                                print('Error loading image: $e');
+                                return Container(); // or an alternative widget to display when image loading fails
+                              }
+                            }).toList(),
                       onPageChanged: (value) {},
                       autoPlayInterval: 0,
                       isLoop: false,

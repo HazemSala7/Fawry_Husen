@@ -401,14 +401,18 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                               NavigatorFunction(
                                                                   context,
                                                                   OrderDetails(
+                                                                    created_at:
+                                                                        orders[index]
+                                                                            .created_at,
                                                                     order_id: orders[
                                                                             index]
                                                                         .order_id,
                                                                     done: false,
                                                                     expected_date:
                                                                         "05/08/2023",
-                                                                    sku:
-                                                                        "0VK249",
+                                                                    sku: orders[
+                                                                            index]
+                                                                        .order_id,
                                                                     sun: snapshot
                                                                         .data[
                                                                             "data"]

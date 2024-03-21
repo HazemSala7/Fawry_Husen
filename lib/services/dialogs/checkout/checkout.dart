@@ -340,7 +340,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 child: Padding(
                   padding: const EdgeInsets.only(right: 15, left: 15),
                   child: Container(
-                    height: 55,
+                    height: 65,
                     child: DropdownButtonFormField(
                       hint: Text("اختر العنوان"),
                       value: null,

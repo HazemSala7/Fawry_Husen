@@ -6,12 +6,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../constants/constants.dart';
 
 class OrderDetails extends StatefulWidget {
-  final sku, sun, expected_date, order_id;
+  final sku, sun, expected_date, created_at, order_id;
   bool done;
   OrderDetails(
       {super.key,
       this.sku,
       required this.order_id,
+      required this.created_at,
       this.sun,
       this.expected_date,
       required this.done});
@@ -66,7 +67,6 @@ class Oorder_detaDsState extends State<OrderDetails> {
                 return Text('Error fetching order status: ${snapshot.error}');
               } else {
                 String orderStatus = snapshot.data["data"]["status"];
-
                 bool isPending = orderStatus == 'Pending';
                 bool isShipped = orderStatus == 'Shipped';
                 bool isReceived = orderStatus == 'Received';
@@ -82,7 +82,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                       check_image: isPending || isShipped || isReceived
                           ? "assets/images/icons8-check-mark-50 (1).png"
                           : "assets/images/icons8-check-mark-50.png",
-                      second_text: "تم استلام طلبك لدينا 2/8/2023",
+                      second_text: "تم استلام طلبك لدينا ${widget.created_at}",
                       image: "assets/images/icons8-received-96.png",
                       isBold: isPending || isShipped || isReceived,
                     ),
@@ -91,7 +91,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                       lines: true,
                       first_text: "تجهيز الطلب",
                       second_text: "تم نقل طلبك",
-                      check_image: isPending || isShipped
+                      check_image: isPending || isShipped || isReceived
                           ? "assets/images/icons8-check-mark-50 (1).png"
                           : "assets/images/icons8-check-mark-50.png",
                       image: "assets/images/icons8-shipping-to-door-64.png",
@@ -102,7 +102,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                       lines: true,
                       first_text: "جاهز للنقل",
                       second_text: "تم تجهيز الطلب",
-                      check_image: isShipped
+                      check_image: isShipped || isReceived
                           ? "assets/images/icons8-check-mark-50 (1).png"
                           : "assets/images/icons8-check-mark-50.png",
                       image: "assets/images/icons8-shopping-bag-50 (2).png",
@@ -113,7 +113,7 @@ class Oorder_detaDsState extends State<OrderDetails> {
                       lines: true,
                       first_text: "تم الشحن",
                       second_text: "جاري شحن طلبك الأن الى العنوان المطلوب",
-                      check_image: isShipped
+                      check_image: isShipped || isReceived
                           ? "assets/images/icons8-check-mark-50 (1).png"
                           : "assets/images/icons8-check-mark-50.png",
                       image: "assets/images/icons8-shipping-50.png",
