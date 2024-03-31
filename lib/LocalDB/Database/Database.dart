@@ -9,6 +9,7 @@ import '../Models/FavoriteItem.dart';
 
 class CartDatabaseHelper {
   static final CartDatabaseHelper _instance = CartDatabaseHelper._internal();
+  static final int dbVersion = 2;
 
   factory CartDatabaseHelper() => _instance;
 
@@ -44,7 +45,8 @@ class CartDatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: dbVersion,
+      onUpgrade: _onUpgrade,
       onCreate: (db, version) async {
         await _createDb(db);
       },
@@ -86,6 +88,15 @@ class CartDatabaseHelper {
         price REAL NOT NULL
       )
     ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    // Drop existing tables
+    await db.execute('DROP TABLE IF EXISTS cart');
+    await db.execute('DROP TABLE IF EXISTS favorites');
+
+    // Recreate tables with updated schema
+    await _createDb(db);
   }
 
   Future<FavoriteItem?> getFavoriteItemByProductId(int productId) async {

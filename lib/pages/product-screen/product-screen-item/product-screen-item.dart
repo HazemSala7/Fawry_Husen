@@ -32,12 +32,13 @@ class ProductItem extends StatefulWidget {
   String image, name, nickname, SKU, vendor_SKU, SelectedSizes;
   var variants, old_price, new_price, description, runAddToCartAnimation;
   Map placeInWarehouse;
-  List sizesApi, images;
+  List sizesApi, images, Sizes;
   int id = 0;
   bool inCart, isLikedProduct, loadingPage, TypeApi;
   ProductItem({
     super.key,
     required this.name,
+    required this.Sizes,
     required this.loadingPage,
     required this.runAddToCartAnimation,
     required this.SelectedSizes,
@@ -73,23 +74,9 @@ class _ProductItemState extends State<ProductItem> {
   bool showLoading = false;
   bool Selected = true;
   bool _hasError = false;
-  List Sizes = [];
+
   listClick(GlobalKey widgetKey) async {
     await widget.runAddToCartAnimation(widgetKey);
-  }
-
-  setSizes() {
-    Sizes =
-        widget.sizesApi.length == 0 ? LocalStorage().sizeUser : widget.sizesApi;
-
-    widget.SelectedSizes = Sizes.length == 1 ? Sizes[0] : "اختر مقاسك";
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setSizes();
   }
 
   Widget build(BuildContext context) {
@@ -737,7 +724,9 @@ class _ProductItemState extends State<ProductItem> {
                         )
                       : DropdownButton(
                           hint: Text(
-                            Sizes.length == 1 ? Sizes[0] : widget.SelectedSizes,
+                            widget.Sizes.length == 1
+                                ? widget.Sizes[0]
+                                : widget.SelectedSizes,
                             style: TextStyle(fontSize: 14),
                           ),
                           isExpanded: true,
@@ -746,7 +735,7 @@ class _ProductItemState extends State<ProductItem> {
                           underline: Container(),
                           style: TextStyle(
                               color: MAIN_COLOR, fontWeight: FontWeight.bold),
-                          items: Sizes.map(
+                          items: widget.Sizes.map(
                             (val) {
                               return DropdownMenuItem<String>(
                                 value: val,
@@ -795,8 +784,9 @@ class _ProductItemState extends State<ProductItem> {
                       width: 150,
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
-                        // print("SelectedSizes");
-                        // print(SelectedSizes);
+                        // print("widget.SelectedSizes");
+                        // print(widget.SKU);
+                        // print(widget.SelectedSizes);
                         // return;
                         if (widget.SKU.toString() == "" || widget.SKU == null) {
                           setState(() {
