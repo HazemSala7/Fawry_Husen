@@ -140,9 +140,7 @@ class _FawriState extends State<Fawri> {
               curve: Curves.ease,
             ),
           ),
-          child:
-              // CodeBirthdate()
-              ShowCaseWidget(
+          child: ShowCaseWidget(
             builder: Builder(
                 builder: (context) =>
                     FirstScreen ? LoginScreen() : CategorySplash()),
