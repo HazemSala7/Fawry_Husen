@@ -176,8 +176,8 @@ class _ProductScreenState extends State<ProductScreen> {
     int incrementPage = page;
     updatedQueryParameters['page'] = "1";
     updatedQueryParameters['sub_category'] = initSubKey.toString();
-    var _products =
-        await getProductByCategory(main_category_key_final, initSubKey, "", 1);
+    var _products = await getProductByCategory(main_category_key_final,
+        initSubKey, "", widget.sizes.length == 1 ? widget.sizes[0] : "", 1);
     var additionalItems = [];
     if (_products != null) {
       if (_products["items"].length != 0) {
@@ -200,6 +200,7 @@ class _ProductScreenState extends State<ProductScreen> {
     }
 
     moveItemToFront(orderedItems, widget.id);
+    await loadFeaturedItems();
 
     setState(() {
       loadingPage = false;
@@ -232,8 +233,8 @@ class _ProductScreenState extends State<ProductScreen> {
     }
     var additionalItems = [];
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
-    var _products = await getProductByCategory(
-        main_category_key_final, initSubKey, sizesString, page);
+    var _products = await getProductByCategory(main_category_key_final,
+        initSubKey, sizesString, widget.sizes[0] ?? '', page);
     if (_products != null) {
       if (_products["items"].length != 0) {
         additionalItems = _products["items"];
@@ -246,7 +247,7 @@ class _ProductScreenState extends State<ProductScreen> {
       } else {
         var main_category_key_final = initMAINKey.replaceAll('&', '%26');
         var _products = await getProductByCategory(
-            main_category_key_final, initSubKey, "", 1);
+            main_category_key_final, initSubKey, "", widget.sizes[0], 1);
         if (_products != null) {
           if (_products["items"].length != 0) {
             additionalItems = _products["items"];
@@ -265,6 +266,56 @@ class _ProductScreenState extends State<ProductScreen> {
     if (additionalItems != null) {
       setState(() {
         orderedItems.addAll(ProductsApiData["item"]);
+      });
+    }
+  }
+
+  Future<void> loadFeaturedItems() async {
+    page += 1;
+    final uri = Uri.parse(widget.url);
+    if (uri.host == null) {
+      // Handle the case where the URL does not contain a host
+      print("Invalid URL: No host specified");
+      return;
+    }
+    var additionalItems = [];
+    var main_category_key_final = initMAINKey.replaceAll('&', '%26');
+    String categoryString =
+        "Mens Bracelets, Mens Rings, Mens Necklaces, Men Belts & Scarves, Men Belts Scarves, Men Sunglasses & Accessories, Men Sunglasses Accessories";
+    String correctedCategoryString = categoryString.replaceAll("Mens", "Men's");
+    var _products = await getProductByCategory(
+        'Jewelry %26 Watches, Jewelry Watches, Apparel Accessories',
+        correctedCategoryString,
+        '',
+        '',
+        1);
+    if (_products != null && _products["items"].isNotEmpty) {
+      additionalItems = _products["items"];
+    } else {
+      var _products = await getProductByCategory(
+          main_category_key_final, initSubKey, "", widget.sizes[0], 1);
+      if (_products != null && _products["items"].isNotEmpty) {
+        additionalItems = _products["items"];
+      }
+    }
+
+    List<String> idsList =
+        additionalItems.map((item) => item['id'].toString()).toList();
+
+    String commaSeparatedIds = idsList.join(', ');
+
+    var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
+
+    if (additionalItems.isNotEmpty) {
+      setState(() {
+        for (int i = 0; i < ProductsApiData["item"].length; i++) {
+          int insertionIndex = (i + 1) * 7;
+          if (insertionIndex <= orderedItems.length) {
+            orderedItems.insert(insertionIndex, ProductsApiData["item"][i]);
+          } else {
+            break;
+          }
+        }
       });
     }
   }
@@ -521,8 +572,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                 typeApi = true;
                               }
                             }
-                            print("sizesAPI");
-                            print(sizesAPI);
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,

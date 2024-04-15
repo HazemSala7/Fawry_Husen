@@ -260,18 +260,21 @@ sendNotification({context, USER_TOKENS}) async {
   }
 }
 
-getProductByCategory(
-    category_id, sub_category_key, String size, int page) async {
+getProductByCategory(category_id, sub_category_key, String size,
+    String selected_sizes, int page) async {
   try {
     var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
     var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
     var Final_URL = "";
     if (size != null && size.isNotEmpty && size.toString() != "null") {
       Final_URL =
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final},ONE SIZE&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     } else {
       Final_URL =
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final},ONE SIZE&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+    }
+    if (selected_sizes != '') {
+      Final_URL += "&selected_sizes=$selected_sizes";
     }
     print("Final_URL");
     print(Final_URL);
@@ -290,8 +293,9 @@ getProductByCategory(
       Final_URL =
           "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
-    print("Final_URL");
-    print(Final_URL);
+    if (selected_sizes != null && selected_sizes.isNotEmpty) {
+      Final_URL += "&selected_sizes=$selected_sizes";
+    }
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;

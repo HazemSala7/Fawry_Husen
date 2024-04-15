@@ -175,6 +175,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                           : widget.category_id,
           concatenatedNames,
           widget.size,
+          '',
           _page);
       if (_products["items"].isNotEmpty) {
         setState(() {
@@ -1112,7 +1113,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
               concatenatedNames, widget.title, widget.type, _page);
         } else {
           _products = await getProductByCategory(
-              getCategoryKey(), concatenatedNames, widget.size, _page);
+              getCategoryKey(), concatenatedNames, widget.size, '', _page);
         }
 
         setState(() {
@@ -1147,7 +1148,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
               concatenatedNames, widget.title, widget.type, _page);
         } else {
           _products = await getProductByCategory(
-              getCategoryKey(), concatenatedNames, widget.size, _page);
+              getCategoryKey(), concatenatedNames, widget.size, '', _page);
         }
         if (_products.isNotEmpty) {
           setState(() {

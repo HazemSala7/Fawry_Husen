@@ -525,7 +525,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      "الوصف",
+                      "ملاحظات",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     )
@@ -549,7 +549,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                         borderSide:
                             BorderSide(width: 2.0, color: Color(0xffD6D3D3)),
                       ),
-                      hintText: "الوصف",
+                      hintText: "أضف ملاحظاتك",
                     ),
                   ),
                 ),
@@ -690,6 +690,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                 token: TOKEN.toString(),
                                 email: "$UserID@email.com",
                                 phone: PhoneController.text,
+                                gender: '',
+                                birthdate: '',
                                 city: selectedArea.toString(),
                                 area: selectedArea.toString(),
                                 address: selectedArea.toString(),

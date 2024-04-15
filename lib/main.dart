@@ -2,6 +2,7 @@ import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/AddressProvider.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
+import 'package:fawri_app_refactor/pages/choose-size-shoes/choose-size-shoes.dart';
 import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/code_birthdate/code_birthdate.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';

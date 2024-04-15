@@ -15,6 +15,7 @@ class ChooseBirthdate extends StatefulWidget {
 class CchoosBbirthdateState extends State<ChooseBirthdate> {
   @override
   String Birthday = "";
+  String? selectedGender;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +42,7 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 15),
                 child: Image.asset(
                   "assets/images/iconsss.png",
                   // height: 150,
@@ -49,14 +50,14 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 15),
                 child: Text(
                   "ما هو تاريخ ميلادك ؟ ",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 30),
+                padding: const EdgeInsets.only(top: 15),
                 child: Text(
                   widget.name,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
@@ -88,7 +89,53 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40, left: 25, right: 25),
+                padding: const EdgeInsets.only(top: 20, right: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "اختر الجنس:",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    Row(
+                      children: [
+                        Radio(
+                          value: 'male',
+                          groupValue: selectedGender,
+                          activeColor: Color(0xffB04759),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedGender = value as String?;
+                            });
+                          },
+                        ),
+                        Text(
+                          'ذكر',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(width: 20),
+                        Radio(
+                          value: 'female',
+                          groupValue: selectedGender,
+                          activeColor: Color(0xffB04759),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedGender = value as String?;
+                            });
+                          },
+                        ),
+                        Text(
+                          'أنثى',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 15, left: 25, right: 25),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -103,6 +150,8 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             await prefs.setBool('show_birthday', false);
+                            await prefs.setString(
+                                'gender', selectedGender.toString());
                             await prefs.setString(
                                 'birthdate', Birthday.toString());
                             Navigator.pop(context);

@@ -57,7 +57,6 @@ class LocalStorage {
     "XL 🩱",
     "XXL 👘",
     "XXXL 🧥",
-    "ONE SIZE 👘",
   ];
   var women_Plus_sizes = ["0XL", "1XL", "2XL", "3XL", "4XL", "5XL"];
   List<String> kids_boys_sizes = [
@@ -108,7 +107,6 @@ class LocalStorage {
       "XL": false,
       "XXL": false,
       "XXXL": false,
-      "ONE SIZE": false,
     });
     sizeDataBox.put('womenPlusSizes', {
       "0XL": false,
@@ -165,7 +163,6 @@ class LocalStorage {
       "M": false,
       "XL": false,
       "4XL": false,
-      "ONE SIZE": false,
     });
     sizeDataBox.put('Kids_shoes_sizes', {
       "21": false,
@@ -224,7 +221,6 @@ class LocalStorage {
       "5XL": false,
       "L": false,
       "M": false,
-      "ONE SIZE": false,
       "S": false,
       "XL": false,
       "XS": false,
@@ -243,7 +239,6 @@ class LocalStorage {
       "3XL": false,
       "4XL": false,
       "5XL": false,
-      "ONE SIZE": false,
     });
   }
 
