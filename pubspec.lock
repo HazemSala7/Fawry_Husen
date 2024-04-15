@@ -595,6 +595,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  flutter_swiper_view:
+    dependency: "direct main"
+    description:
+      name: flutter_swiper_view
+      sha256: "2a165b259e8a4c49d4da5626b967ed42a73dac2d075bd9e266ad8d23b9f01879"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.8"
   flutter_switch:
     dependency: "direct main"
     description:
@@ -1021,14 +1029,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
-  scaled_list:
-    dependency: "direct main"
-    description:
-      name: scaled_list
-      sha256: "42754e6140dcb7d4291a6fb170364e000b6da1cae304fab96f35c01fa8599058"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   share:
     dependency: "direct main"
     description:

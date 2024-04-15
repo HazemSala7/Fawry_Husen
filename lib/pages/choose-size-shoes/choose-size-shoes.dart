@@ -2,7 +2,7 @@ import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:scaled_list/scaled_list.dart';
+import 'package:flutter_swiper_view/flutter_swiper_view.dart';
 
 class ChooseSizeShoes extends StatefulWidget {
   const ChooseSizeShoes({super.key});
@@ -41,18 +41,22 @@ class _ChooseSizeShoesState extends State<ChooseSizeShoes> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            ScaledList(
-              showDots: false,
-              itemCount: 10,
-              itemColor: (index) {
-                return Colors.white;
-              },
-              itemBuilder: (index, selectedIndex) {
-                return Image.network(
-                  "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/99486859-0ff3-46b4-949b-2d16af2ad421/custom-nike-dunk-high-by-you-shoes.png",
-                  fit: BoxFit.cover,
-                );
-              },
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              height: 300,
+              width: double.infinity,
+              child: Swiper(
+                itemBuilder: (context, index) {
+                  return Image.network(
+                    "https://static.nike.com/a/images/t_PDP_1280_v1/f_auto,q_auto:eco/99486859-0ff3-46b4-949b-2d16af2ad421/custom-nike-dunk-high-by-you-shoes.png",
+                    fit: BoxFit.cover,
+                  );
+                },
+                itemCount: 10,
+                autoplay: true,
+                viewportFraction: 0.7,
+                scale: 0.9,
+              ),
             ),
             Container(
               margin: EdgeInsets.only(top: 20, bottom: 20),
