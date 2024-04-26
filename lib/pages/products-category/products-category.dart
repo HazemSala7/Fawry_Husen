@@ -11,6 +11,8 @@ import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
+import '../../components/category_widget/category-widget.dart';
+import '../../components/category_widget/sizes_page/sizes_page.dart';
 import '../../components/product_widget/product-widget.dart';
 import '../../constants/constants.dart';
 import '../../server/domain/domain.dart';
@@ -371,6 +373,145 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                             _page = 1;
                                             _firstLoad();
                                           }
+                                        }
+                                      } else if (SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Underwear & Sleepwear" ||
+                                          SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Apparel Accessories" ||
+                                          SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Jewelry & Watches" ||
+                                          SubCategories[index]
+                                                      ["key"]
+                                                  .toString() ==
+                                              "Beauty & Health" ||
+                                          SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Women Shoes" ||
+                                          SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Weddings & Events" ||
+                                          SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Men Shoes" ||
+                                          SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Sports & Outdoor") {
+                                        Map sizes = {};
+                                        if (SubCategories[index]["key"]
+                                                    .toString() ==
+                                                "Jewelry & Watches" ||
+                                            SubCategories[index]["key"]
+                                                    .toString() ==
+                                                "Apparel Accessories") {
+                                          NavigatorFunction(
+                                              context,
+                                              ShowCaseWidget(
+                                                  builder: Builder(
+                                                builder: (context) =>
+                                                    ProductsCategories(
+                                                  SIZES: [],
+                                                  category_id:
+                                                      SubCategories[index]
+                                                              ["key"]
+                                                          .toString(),
+                                                  search: false,
+                                                  size: "",
+                                                  containerWidths: "null",
+                                                  keys: "null",
+                                                  name: widget.name,
+                                                  sizes: "null",
+                                                  main_category:
+                                                      SubCategories[index]
+                                                              ["key"]
+                                                          .toString(),
+                                                ),
+                                              )));
+                                        } else if (SubCategories[index]["key"]
+                                                    .toString() ==
+                                                "Men Shoes" ||
+                                            SubCategories[index]["key"]
+                                                    .toString() ==
+                                                "Women Shoes") {
+                                          Map sizes = {};
+                                          String Main_Category = "";
+                                          if (SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Women Shoes") {
+                                            sizes = LocalStorage()
+                                                .getSize("Women_shoes_sizes");
+                                            Main_Category = "Women Shoes";
+                                          } else {
+                                            sizes = LocalStorage()
+                                                .getSize("Men_shoes_sizes");
+                                            Main_Category = "Men Shoes";
+                                          }
+                                          var keys = sizes.keys.toList();
+
+                                          double gridViewHeight =
+                                              calculateGridViewHeight(
+                                                  keys.length);
+                                          List<double> containerWidths = keys
+                                              .map((text) =>
+                                                  getTextWidth(
+                                                      text,
+                                                      TextStyle(
+                                                          fontWeight: FontWeight
+                                                              .bold)) +
+                                                  100.0)
+                                              .toList();
+                                          NavigatorFunction(
+                                              context,
+                                              SizesPage(
+                                                sizes: sizes,
+                                                main_category: Main_Category,
+                                                name: "الأحذيه",
+                                                containerWidths:
+                                                    containerWidths,
+                                                keys: keys,
+                                              ));
+                                        } else {
+                                          if (SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Weddings & Events") {
+                                            sizes = LocalStorage()
+                                                .getSize("Weddings & Events");
+                                          } else if (SubCategories[index]["key"]
+                                                  .toString() ==
+                                              "Underwear & Sleepwear") {
+                                            sizes = LocalStorage().getSize(
+                                                "Underwear_Sleepwear_sizes");
+                                          }
+
+                                          var keys = sizes.keys.toList();
+
+                                          double gridViewHeight =
+                                              calculateGridViewHeight(
+                                                  keys.length);
+                                          // Calculate the widths for each Container
+                                          List<double> containerWidths = keys
+                                              .map((text) =>
+                                                  getTextWidth(
+                                                      text,
+                                                      TextStyle(
+                                                          fontWeight: FontWeight
+                                                              .bold)) +
+                                                  120.0)
+                                              .toList();
+                                          NavigatorFunction(
+                                              context,
+                                              SizesPage(
+                                                sizes: sizes,
+                                                main_category:
+                                                    SubCategories[index]["key"]
+                                                        .toString(),
+                                                name: widget.name,
+                                                containerWidths:
+                                                    containerWidths,
+                                                keys: keys,
+                                              ));
                                         }
                                       } else {
                                         if (Sub_Category_Key[0].toString() ==

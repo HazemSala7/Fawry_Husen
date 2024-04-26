@@ -155,6 +155,22 @@ var sub_categories_Men__sizes = [
     "name": "ملابس سباحة",
     "key": "Men Swimwear",
   },
+  {
+    "name": "ملابس رياضية",
+    "key": "Sports & Outdoor",
+  },
+  {
+    "name": "اكسسوارات",
+    "key": "Apparel Accessories",
+  },
+  {
+    "name": "مجوهرات وساعات",
+    "key": "Jewelry & Watches",
+  },
+  {
+    "name": "احذية",
+    "key": "Men Shoes",
+  },
 ];
 
 var sub_categories_women_appearel = [
@@ -213,6 +229,30 @@ var sub_categories_women_appearel = [
   {
     "name": "ملابس علوية",
     "key": "Women Tops,Blouses & Tee",
+  },
+  {
+    "name": "ملابس داخلية",
+    "key": "Underwear & Sleepwear",
+  },
+  {
+    "name": "اكسسوارات",
+    "key": "Apparel Accessories",
+  },
+  {
+    "name": "مجوهرات وساعات",
+    "key": "Jewelry & Watches",
+  },
+  {
+    "name": "الموضة والجمال",
+    "key": "Beauty & Health",
+  },
+  {
+    "name": "احذية",
+    "key": "Women Shoes",
+  },
+  {
+    "name": "ملتزمات اعراس",
+    "key": "Weddings & Events",
   },
 ];
 

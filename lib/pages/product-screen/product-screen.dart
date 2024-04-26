@@ -31,6 +31,7 @@ import '../../firebase/cart/CartFirebaseModel.dart';
 import '../../firebase/cart/CartController.dart';
 import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
+import '../../services/remote_config_firebase/remote_config_firebase.dart';
 import '../cart/cart.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -270,25 +271,41 @@ class _ProductScreenState extends State<ProductScreen> {
     }
   }
 
+  FeatureCategoryKeyNumber() async {
+    if (widget.Sub_Category_Key[0] == "Women Clothing" ||
+        widget.Sub_Category_Key[0] == "Women Plus Clothing" ||
+        widget.Sub_Category_Key[0] == "Maternity Clothing, Baby" ||
+        widget.Sub_Category_Key[0] == "Women Shoes" ||
+        widget.Sub_Category_Key[0] == "Kids" ||
+        widget.Sub_Category_Key[0] ==
+            "Women Sexy Lingerie & Costumes,Women Lingerie Accessories,Women Plus Intimates" ||
+        widget.Sub_Category_Key[0] ==
+            "Young Girls Clothing,Tween Girls Clothing") {
+      var CategoryName = await FirebaseRemoteConfigClass().getCategoryIDKey1();
+      return CategoryName;
+    } else if (widget.Sub_Category_Key[0] == "Men Shoes" ||
+        widget.Sub_Category_Key[0] == "Men Tops" ||
+        widget.Sub_Category_Key[0] ==
+            "Young Boys Clothing,Tween Boys Clothing") {
+      var CategoryName = await FirebaseRemoteConfigClass().getCategoryIDKey2();
+      return CategoryName;
+    } else {
+      var CategoryName = await FirebaseRemoteConfigClass().getCategoryIDKey3();
+      return CategoryName;
+    }
+  }
+
   Future<void> loadFeaturedItems() async {
+    var main_category_key_final = initMAINKey.replaceAll('&', '%26');
     page += 1;
     final uri = Uri.parse(widget.url);
     if (uri.host == null) {
-      // Handle the case where the URL does not contain a host
       print("Invalid URL: No host specified");
       return;
     }
     var additionalItems = [];
-    var main_category_key_final = initMAINKey.replaceAll('&', '%26');
-    String categoryString =
-        "Mens Bracelets, Mens Rings, Mens Necklaces, Men Belts & Scarves, Men Belts Scarves, Men Sunglasses & Accessories, Men Sunglasses Accessories";
-    String correctedCategoryString = categoryString.replaceAll("Mens", "Men's");
-    var _products = await getProductByCategory(
-        'Jewelry %26 Watches, Jewelry Watches, Apparel Accessories',
-        correctedCategoryString,
-        '',
-        '',
-        1);
+    String categoryString = await FeatureCategoryKeyNumber();
+    var _products = await getFeatureProducts(categoryString);
     if (_products != null && _products["items"].isNotEmpty) {
       additionalItems = _products["items"];
     } else {
@@ -429,6 +446,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductItem(
+                                          featureProduct: false,
                                           Sizes: [],
                                           runAddToCartAnimation:
                                               runAddToCartAnimation,
@@ -491,6 +509,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductItem(
+                                          featureProduct: false,
                                           Sizes: [],
                                           runAddToCartAnimation:
                                               runAddToCartAnimation,
@@ -557,7 +576,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     .cast<String>();
                             // print("2");
                             int itemIndex = orderedItems.indexOf(item);
-                            // print("3");
+                            bool isFeature = (itemIndex) % 7 == 0;
                             List sizesAPI = widget.sizes;
                             // print("4");
                             sizesAPI = [];
@@ -581,6 +600,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                 child: FadeInAnimation(
                                   curve: Curves.easeIn,
                                   child: ProductItem(
+                                    featureProduct:
+                                        itemIndex == 0 ? false : isFeature,
                                     Sizes: sizesAPI.length == 0
                                         ? LocalStorage().sizeUser
                                         : sizesAPI,

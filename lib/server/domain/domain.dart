@@ -1,5 +1,6 @@
 var URL = "https://fawri-f7ab5f0e45b8.herokuapp.com/api/";
 var MAIN_URL = "https://fawrifrontend-122a38646eec.herokuapp.com";
+var URLIMAGE = "https://well.com.co/storage/";
 
 var key_bath = "H93J48593HFNWIEUTR287TG3";
 

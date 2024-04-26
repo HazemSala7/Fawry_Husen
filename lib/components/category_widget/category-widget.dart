@@ -18,6 +18,23 @@ import 'package:vibration/vibration.dart';
 import '../../pages/products-category/products-category.dart';
 import '../../services/custom_icons/custom_icons.dart';
 
+double calculateGridViewHeight(int itemCount) {
+  final double itemHeight = 30.0; // Height of each item
+  final int itemsPerRow = 3; // Number of items per row
+  final int rowCount = (itemCount / itemsPerRow).ceil();
+  final double gridHeight = itemHeight * rowCount;
+  final double spacingHeight = 30.0 * (rowCount - 1); // Adjust for spacing
+  return gridHeight + spacingHeight;
+}
+
+double getTextWidth(String text, TextStyle style) {
+  final TextPainter textPainter = TextPainter(
+    text: TextSpan(text: text, style: style),
+    textDirection: TextDirection.ltr,
+  )..layout();
+  return textPainter.width;
+}
+
 class CategoryWidget extends StatefulWidget {
   final image, name, main_category, CateIcon, CateImage;
   CategoryWidget({
@@ -35,23 +52,6 @@ class CategoryWidget extends StatefulWidget {
 
 class _CategoryWidgetState extends State<CategoryWidget> {
   @override
-  double calculateGridViewHeight(int itemCount) {
-    final double itemHeight = 30.0; // Height of each item
-    final int itemsPerRow = 3; // Number of items per row
-    final int rowCount = (itemCount / itemsPerRow).ceil();
-    final double gridHeight = itemHeight * rowCount;
-    final double spacingHeight = 30.0 * (rowCount - 1); // Adjust for spacing
-    return gridHeight + spacingHeight;
-  }
-
-  double getTextWidth(String text, TextStyle style) {
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    return textPainter.width;
-  }
-
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {

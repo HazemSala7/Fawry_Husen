@@ -19,4 +19,31 @@ class FirebaseRemoteConfigClass {
     var temp = remoteConfig.getString("domain");
     return temp;
   }
+
+  Future getCategoryIDKey1() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 1),
+        minimumFetchInterval: Duration(seconds: 1)));
+    await remoteConfig.fetchAndActivate();
+    var temp = remoteConfig.getString("FeaturesUrl_1");
+    return temp;
+  }
+
+  Future getCategoryIDKey2() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 1),
+        minimumFetchInterval: Duration(seconds: 1)));
+    await remoteConfig.fetchAndActivate();
+    var temp = remoteConfig.getString("FeaturesUrl_2");
+    return temp;
+  }
+
+  Future getCategoryIDKey3() async {
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 1),
+        minimumFetchInterval: Duration(seconds: 1)));
+    await remoteConfig.fetchAndActivate();
+    var temp = remoteConfig.getString("FeaturesUrl_3");
+    return temp;
+  }
 }

@@ -28,6 +28,23 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Widget));
 }
 
+getSliders() async {
+  var response = await http.get(Uri.parse("http://api.well.ps:3002/sliders"),
+      headers: headers);
+  var res = jsonDecode(response.body)["response"];
+  return res;
+}
+
+getFeatureProducts(DomainName) async {
+  var response = await http.get(Uri.parse(DomainName), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
 getProducts(int page) async {
   try {
     var response = await http.get(
@@ -55,9 +72,6 @@ getSpeceficProduct(id) async {
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
-    print("0");
-    print("url");
-    print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
     var response = await http.get(
         Uri.parse("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id"),
         headers: headers);
@@ -276,8 +290,6 @@ getProductByCategory(category_id, sub_category_key, String size,
     if (selected_sizes != '') {
       Final_URL += "&selected_sizes=$selected_sizes";
     }
-    print("Final_URL");
-    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;

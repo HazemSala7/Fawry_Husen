@@ -34,12 +34,14 @@ class ProductItem extends StatefulWidget {
   Map placeInWarehouse;
   List sizesApi, images, Sizes;
   int id = 0;
+  bool featureProduct = false;
   bool inCart, isLikedProduct, loadingPage, TypeApi;
   ProductItem({
     super.key,
     required this.name,
     required this.Sizes,
     required this.loadingPage,
+    required this.featureProduct,
     required this.runAddToCartAnimation,
     required this.SelectedSizes,
     required this.image,
@@ -417,68 +419,95 @@ class _ProductItemState extends State<ProductItem> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        child: Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Stack(
-                              alignment: Alignment.center,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "₪${widget.old_price.toString().length > 5 ? widget.old_price.toString().substring(0, 5) : widget.old_price.toString()}",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                  ),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Text(
+                                      "₪${widget.old_price.toString().length > 5 ? widget.old_price.toString().substring(0, 5) : widget.old_price.toString()}",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 1,
+                                      width: 50,
+                                      color: Colors.black,
+                                    )
+                                  ],
                                 ),
-                                Container(
-                                  height: 1,
-                                  width: 50,
-                                  color: Colors.black,
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 190, 0.0),
+                                      child: Tooltip(
+                                        triggerMode: TooltipTriggerMode.tap,
+                                        message: "توصيل فوري",
+                                        child: FaIcon(
+                                          FontAwesomeIcons.truck,
+                                          color: Color(0xD9000000),
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 10, 0.0),
+                                      child: Tooltip(
+                                        triggerMode: TooltipTriggerMode.tap,
+                                        message: "الدفع عند الاستلام",
+                                        child: FaIcon(
+                                          FontAwesomeIcons.moneyBillWaveAlt,
+                                          color: Color(0xD9000000),
+                                          size: 16,
+                                        ),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                          0.0, 0.0, 10.0, 0.0),
+                                      child: Tooltip(
+                                        triggerMode: TooltipTriggerMode.tap,
+                                        message: "سياسه الخصوصيه",
+                                        child: FaIcon(
+                                          Icons.handshake,
+                                          color: Color(0xD9000000),
+                                          size: 19,
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 )
                               ],
                             ),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 190, 0.0),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: "توصيل فوري",
-                                    child: FaIcon(
-                                      FontAwesomeIcons.truck,
-                                      color: Color(0xD9000000),
-                                      size: 16,
+                            Visibility(
+                              visible: widget.featureProduct,
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 40),
+                                child: Container(
+                                  height: 30,
+                                  width: 150,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      color: MAIN_COLOR),
+                                  child: Center(
+                                    child: Text(
+                                      "منتج من الممكن أن يعجبك",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                          color: Colors.white),
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 10, 0.0),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: "الدفع عند الاستلام",
-                                    child: FaIcon(
-                                      FontAwesomeIcons.moneyBillWaveAlt,
-                                      color: Color(0xD9000000),
-                                      size: 16,
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.tap,
-                                    message: "سياسه الخصوصيه",
-                                    child: FaIcon(
-                                      Icons.handshake,
-                                      color: Color(0xD9000000),
-                                      size: 19,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            )
+                              ),
+                            ),
                           ],
                         ),
                       ),
