@@ -312,7 +312,7 @@ class _ProductItemState extends State<ProductItem> {
                                                   opacity: 0.9,
                                                   child: Container(
                                                     height: 30,
-                                                    width: 150,
+                                                    width: 100,
                                                     decoration: BoxDecoration(
                                                         borderRadius:
                                                             BorderRadius
@@ -320,7 +320,7 @@ class _ProductItemState extends State<ProductItem> {
                                                         color: Colors.white),
                                                     child: Center(
                                                       child: Text(
-                                                        "منتج من الممكن أن يعجبك",
+                                                        "👑  منتج مميز  👑",
                                                         style: TextStyle(
                                                             fontWeight:
                                                                 FontWeight.bold,

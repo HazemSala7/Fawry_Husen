@@ -169,6 +169,16 @@ class _CategorySplashState extends State<CategorySplash> {
                           }
                         }
                       }),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Text("الأقسام الرئيسية : ",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20))
+                      ],
+                    ),
+                  ),
                   GridView.builder(
                       scrollDirection: Axis.vertical,
                       physics: NeverScrollableScrollPhysics(),

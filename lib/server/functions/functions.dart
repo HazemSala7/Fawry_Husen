@@ -29,10 +29,23 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
 }
 
 getSliders() async {
-  var response = await http.get(Uri.parse("http://api.well.ps:3002/sliders"),
-      headers: headers);
-  var res = jsonDecode(response.body)["response"];
-  return res;
+  try {
+    var response = await http
+        .get(Uri.parse("${URL}getSliders?api_key=$key_bath"), headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    if (response.statusCode >= 200 && response.statusCode < 300) {
+      var res = json.decode(utf8.decode(response.bodyBytes));
+      return res;
+    } else {
+      // If response is not successful, handle the error
+      throw Exception('Failed to load sliders: ${response.statusCode}');
+    }
+  } catch (e) {
+    var response = await http.get(Uri.parse("http://api.well.ps:3002/sliders"),
+        headers: headers);
+    var res = jsonDecode(response.body)["response"];
+    return res;
+  }
 }
 
 getFeatureProducts(DomainName) async {
