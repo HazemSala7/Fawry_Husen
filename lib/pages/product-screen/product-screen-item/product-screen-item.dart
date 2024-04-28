@@ -300,6 +300,39 @@ class _ProductItemState extends State<ProductItem> {
                                                   size: 30, color: MAIN_COLOR),
                                             ),
                                           ),
+                                          Visibility(
+                                            visible: widget.featureProduct,
+                                            child: Positioned(
+                                              top: 10,
+                                              left: 10,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 5),
+                                                child: Opacity(
+                                                  opacity: 0.9,
+                                                  child: Container(
+                                                    height: 30,
+                                                    width: 150,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.white),
+                                                    child: Center(
+                                                      child: Text(
+                                                        "منتج من الممكن أن يعجبك",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 12,
+                                                            color: MAIN_COLOR),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                         ],
                                       );
                                     },
@@ -485,28 +518,6 @@ class _ProductItemState extends State<ProductItem> {
                                   ],
                                 )
                               ],
-                            ),
-                            Visibility(
-                              visible: widget.featureProduct,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 40),
-                                child: Container(
-                                  height: 30,
-                                  width: 150,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(4),
-                                      color: MAIN_COLOR),
-                                  child: Center(
-                                    child: Text(
-                                      "منتج من الممكن أن يعجبك",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 12,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ],
                         ),

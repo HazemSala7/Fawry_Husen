@@ -282,10 +282,10 @@ getProductByCategory(category_id, sub_category_key, String size,
     var Final_URL = "";
     if (size != null && size.isNotEmpty && size.toString() != "null") {
       Final_URL =
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final},ONE SIZE&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final}&${size != "null" || size != "" ? "size=${"$size,ONE SIZE"}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     } else {
       Final_URL =
-          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final},ONE SIZE&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
+          "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
     if (selected_sizes != '') {
       Final_URL += "&selected_sizes=$selected_sizes";

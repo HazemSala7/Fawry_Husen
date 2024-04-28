@@ -93,62 +93,7 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
-        //   child: Container(
-        //     height: 40,
-        //     width: double.infinity,
-        //     child: ListView.builder(
-        //         itemCount: sub_categories_women_appearel.length,
-        //         scrollDirection: Axis.horizontal,
-        //         itemBuilder: (BuildContext context, int index) {
-        //           return Padding(
-        //             padding: const EdgeInsets.only(right: 5, left: 5),
-        //             child: InkWell(
-        //               onTap: () {
-        //                 setState(() {
-        //                   if (selectedIndexes.contains(index)) {
-        //                     selectedIndexes.remove(index);
-        //                   } else {
-        //                     selectedIndexes.add(index);
-        //                     _firstLoad();
-        //                     Sub_Category_Key =
-        //                         sub_categories_women_appearel[index]["key"]
-        //                             .toString();
-        //                     Sub_Category_Number = index;
-        //                   }
-        //                 });
-        //               },
-        //               child: Container(
-        //                 height: 40,
-        //                 //  width: ,
-        //                 decoration: BoxDecoration(
-        //                     borderRadius: BorderRadius.circular(20),
-        //                     border: Border.all(
-        //                         width: 3,
-        //                         color: selectedIndexes.contains(index)
-        //                             ? Colors.red
-        //                             : Colors.black),
-        //                     color: Colors.black),
-        //                 child: Center(
-        //                   child: Padding(
-        //                     padding: const EdgeInsets.all(10.0),
-        //                     child: Text(
-        //                       sub_categories_women_appearel[index]["name"]
-        //                           .toString(),
-        //                       style: TextStyle(
-        //                           fontWeight: FontWeight.bold,
-        //                           fontSize: 14,
-        //                           color: Colors.white),
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ),
-        //             ),
-        //           );
-        //         }),
-        //   ),
-        // ),
+
         _isFirstLoadRunning
             ? Container(
                 width: double.infinity,
@@ -365,27 +310,18 @@ class _MainScreenState extends State<MainScreen> {
       });
       _page += 1; // Increase _page by 1
       try {
-        // Check if data for the current sub-category key exists in the cache
-        if (cache.containsKey("all_products")) {
-          // Use the cached data
+        // Fetch data from the API
+        var _products = await getProducts(_page);
+        if (_products.isNotEmpty) {
           setState(() {
-            AllProducts.addAll(cache["all_products"]);
+            AllProducts.addAll(_products["items"]);
           });
         } else {
-          // Fetch data from the API
-          var _products = await getProducts(_page);
-          if (_products.isNotEmpty) {
-            setState(() {
-              AllProducts.addAll(_products["items"]);
-              cache["all_products"] = AllProducts;
-            });
-          } else {
-            // This means there is no more data
-            // and therefore, we will not send another GET request
-            setState(() {
-              _hasNextPage = false;
-            });
-          }
+          // This means there is no more data
+          // and therefore, we will not send another GET request
+          setState(() {
+            _hasNextPage = false;
+          });
         }
       } catch (err) {
         if (kDebugMode) {
