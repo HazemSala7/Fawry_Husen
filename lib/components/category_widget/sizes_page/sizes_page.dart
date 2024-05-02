@@ -179,6 +179,8 @@ class _SizesPageState extends State<SizesPage> {
                             await SharedPreferences.getInstance();
                         await prefs.setBool('is_selected_size', true);
 
+                        print("widget.main_category");
+                        print(widget.main_category);
                         NavigatorFunction(
                             context,
                             ShowCaseWidget(

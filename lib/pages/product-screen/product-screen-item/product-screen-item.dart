@@ -824,10 +824,6 @@ class _ProductItemState extends State<ProductItem> {
                       width: 150,
                       BorderColor: Colors.black,
                       OnClickFunction: () async {
-                        // print("widget.SelectedSizes");
-                        // print(widget.SKU);
-                        // print(widget.SelectedSizes);
-                        // return;
                         if (widget.SKU.toString() == "" || widget.SKU == null) {
                           setState(() {
                             Vibration.vibrate(duration: 100);
@@ -842,6 +838,7 @@ class _ProductItemState extends State<ProductItem> {
                           if (widget.inCart) {
                             final newItem = CartItem(
                                 sku: widget.SKU,
+                                availability: 1,
                                 vendor_sku: widget.vendor_SKU,
                                 nickname: widget.nickname,
                                 productId: widget.id,
@@ -872,6 +869,7 @@ class _ProductItemState extends State<ProductItem> {
                               Vibration.vibrate(duration: 300);
                               final newItem = CartItem(
                                   sku: widget.SKU,
+                                  availability: 1,
                                   vendor_sku: widget.vendor_SKU,
                                   nickname: widget.nickname,
                                   productId: widget.id,

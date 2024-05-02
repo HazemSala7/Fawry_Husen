@@ -1203,21 +1203,26 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     String key = widget.category_id == "Women Shoes" ||
             widget.category_id == "Men Shoes"
         ? "Shoes"
-        : widget.category_id == "Underwear & Sleepwear"
+        : widget.category_id == "Underwear & Sleepwear, Underwear Sleepwear"
             ? "Underwear %26 Sleepwear , Underwear  Sleepwear"
-            : widget.category_id == "Home %26 Living,Tools %26 Home Improvement"
-                ? "Home %26 Living,Tools  Home Improvement"
-                : widget.category_id == "Sports & Outdoor"
-                    ? "Sports %26 Outdoor , Sports  Outdoor"
+            : widget.category_id ==
+                    "Home & Living, Home Living, Home Textile,Tools & Home Improvement"
+                ? "Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement"
+                : widget.category_id == "Sports %26 Outdoor, Sports  Outdoor"
+                    ? "Sports %26 Outdoor, Sports  Outdoor"
                     : widget.category_id == "Women Apparel Baby"
                         ? "Women Apparel"
-                        : widget.category_id == "Jewelry & Watches"
-                            ? "Jewelry %26 Watches , Jewelry  Watches"
-                            : widget.category_id == "Beauty & Health"
-                                ? "Beauty %26 Health , Beauty  Health"
-                                : widget.category_id == "Bags & Luggage"
-                                    ? "Bags %26 Luggage , Bags  Luggage"
-                                    : widget.category_id == "Weddings & Events"
+                        : widget.category_id ==
+                                "Jewelry %26 Watches, Jewelry  Watches"
+                            ? "Jewelry %26 Watches, Jewelry  Watches"
+                            : widget.category_id ==
+                                    "Beauty %26 Health, Jewelry %26 Watches"
+                                ? "Beauty %26 Health, Jewelry %26 Watches"
+                                : widget.category_id ==
+                                        "Bags %26 Luggage, Bags %26 Luggage"
+                                    ? "Bags %26 Luggage, Bags %26 Luggage"
+                                    : widget.category_id ==
+                                            "Weddings %26 Events, Weddings %26 Events"
                                         ? "Women Apparel"
                                         : widget.category_id == "Kids Boys"
                                             ? "Kids"
@@ -1227,7 +1232,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                         "Kids Shoes"
                                                     ? "Kids"
                                                     : widget.category_id ==
-                                                            "Office School Supplies, Office & School Supplies"
+                                                            "Office School Supplies, Office %26 School Supplies"
                                                         ? "Office School Supplies, Office %26 School Supplies"
                                                         : widget.category_id;
     return key;
@@ -1256,7 +1261,6 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
           _products = await getProductByCategory(
               getCategoryKey(), concatenatedNames, widget.size, '', _page);
         }
-
         setState(() {
           AllProducts = _products["items"];
         });
@@ -1317,6 +1321,8 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   var SubCategories;
 
   setStaticSubCategories() {
+    print("widget.category_id.toString()");
+    print(widget.category_id.toString());
     if (widget.name == "ملابس نسائيه مقاس كبير") {
       SubCategories = sub_categories_women_plus_sizes;
       Sub_Category_Key.add("Women Plus Clothing");
@@ -1330,16 +1336,19 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       SubCategories = sub_categories_kids_sizes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() ==
-        "Home %26 Living,Tools %26 Home Improvement") {
+        "Home & Living, Home Living, Home Textile,Tools & Home Improvement") {
       SubCategories = sub_categories_HomeLiving;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-    } else if (widget.category_id.toString() == "Weddings & Events") {
+    } else if (widget.category_id.toString() ==
+        "Weddings %26 Events, Weddings %26 Events") {
       SubCategories = [];
       Sub_Category_Key.add("Weddings & Events");
-    } else if (widget.category_id.toString() == "Sports & Outdoor") {
+    } else if (widget.category_id.toString() ==
+        "Sports %26 Outdoor, Sports  Outdoor") {
       SubCategories = sub_categories_SportsOutdoor;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-    } else if (widget.category_id.toString() == "Underwear & Sleepwear") {
+    } else if (widget.category_id.toString() ==
+        "Underwear & Sleepwear, Underwear Sleepwear") {
       SubCategories = sub_categories_Underware;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Women Shoes") {
@@ -1351,28 +1360,31 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     } else if (widget.category_id.toString() == "Kids Shoes") {
       SubCategories = sub_categories_KidsShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-    } else if (widget.category_id.toString() == "Women Apparel Baby") {
+    } else if (widget.category_id.toString() == "Women Apparel, Baby") {
       SubCategories = sub_categories_MaternityBaby;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-    } else if (widget.category_id.toString() == "Jewelry & Watches") {
+    } else if (widget.category_id.toString() ==
+        "Jewelry %26 Watches, Jewelry  Watches") {
       SubCategories = sub_categories_JewelryWatches;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Apparel Accessories") {
       SubCategories = sub_categories_Accessories;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-    } else if (widget.category_id.toString() == "Beauty & Health") {
+    } else if (widget.category_id.toString() ==
+        "Beauty %26 Health, Jewelry %26 Watches") {
       SubCategories = sub_categories_BeautyHealth;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Electronics") {
       SubCategories = sub_categories_Electronics;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-    } else if (widget.category_id.toString() == "Bags & Luggage") {
+    } else if (widget.category_id.toString() ==
+        "Bags %26 Luggage, Bags %26 Luggage") {
       SubCategories = sub_categories_BagsLuggage;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
     } else if (widget.category_id.toString() == "Pet Supplies") {
       SubCategories = [];
     } else if (widget.category_id.toString() ==
-        "Office School Supplies, Office & School Supplies") {
+        "Office School Supplies, Office %26 School Supplies") {
       SubCategories = [];
     } else if (widget.category_id.toString() == "Automotive") {
       SubCategories = [];

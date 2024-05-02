@@ -158,6 +158,7 @@ class _FavouriteState extends State<Favourite> {
   addToCart(product_ID, name, image, price, sku, vendorski, nickname,
       cartProvider, favoriteProvider) async {
     final newItem = CartItem(
+      availability: 1,
       productId: product_ID,
       name: name,
       sku: sku,

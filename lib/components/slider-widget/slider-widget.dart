@@ -52,7 +52,7 @@ class _SlideImageState extends State<SlideImage> {
                       Stack(
                         children: [
                           FancyShimmerImage(
-                            imageUrl: URLIMAGE + e.image,
+                            imageUrl: e.image,
                             boxFit: BoxFit.cover,
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.4,

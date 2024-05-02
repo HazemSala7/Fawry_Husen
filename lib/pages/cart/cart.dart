@@ -107,6 +107,7 @@ class _CartState extends State<Cart> {
                                 cartProvider: cartProvider,
                                 price: item.price,
                                 product_id: item.productId,
+                                available: item.availability,
                                 type: item.type,
                                 name: item.name,
                                 qty: item.quantity,
@@ -191,21 +192,32 @@ class _CartState extends State<Cart> {
                                               "المنتج :${cartItems[i].name} لم يتبقى أي كمية منه , الرجاء حذف المنتج من الطلبية",
                                           backgroundColor: Colors.red);
                                       allAvailable = false;
-                                      break; // No need to continue checking if any item is unavailable
+                                      CartItem updatedItem = CartItem(
+                                        image: cartItems[i].image,
+                                        name: cartItems[i].name,
+                                        nickname: cartItems[i].nickname,
+                                        placeInWarehouse:
+                                            cartItems[i].placeInWarehouse,
+                                        price: cartItems[i].price,
+                                        sku: cartItems[i].sku,
+                                        type: cartItems[i].type,
+                                        user_id: cartItems[i].user_id,
+                                        vendor_sku: cartItems[i].vendor_sku,
+                                        quantity: cartItems[i].quantity,
+                                        id: cartItems[i].id,
+                                        productId: cartItems[i].productId,
+                                        availability: 0,
+                                      );
+                                      cartProvider.updateCartItemById(
+                                          cartItems[i].productId, updatedItem);
+                                      break;
                                     }
                                   }
 
                                   if (allAvailable) {
-                                    // All items are available, show checkout dialog
                                     showCheckoutDialog()
                                         .showBottomDialog(context, total);
-                                  } else {
-                                    // If any item is unavailable, show a failed toast
-                                    // Fluttertoast.showToast(
-                                    //     msg:
-                                    //         "فشلت عملية الشراء بسبب توفر كمية غير كافية لبعض المنتجات",
-                                    //     backgroundColor: Colors.red);
-                                  }
+                                  } else {}
                                   setState(() {
                                     clicked = false;
                                   });
@@ -223,13 +235,11 @@ class _CartState extends State<Cart> {
   }
 
   GlobalKey _one = GlobalKey();
-  // Function to check if the showcase has been shown before
   Future<bool> hasShowcaseBeenShown() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('cart') ?? false;
   }
 
-  // Function to mark the showcase as shown
   Future<void> markShowcaseAsShown() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('cart', true);
@@ -242,8 +252,6 @@ class _CartState extends State<Cart> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ShowCaseWidget.of(context).startShowCase([_one]);
       });
-
-      // Mark the showcase as shown
       markShowcaseAsShown();
     }
   }
@@ -260,25 +268,6 @@ class _CartState extends State<Cart> {
     Fluttertoast.showToast(msg: "تم حذف المنتج بنجاح");
   }
 
-  // addToCart(product_ID, name, image, price, cartProvider) async {
-  //   final newItem = CartItem(
-  //     productId: product_ID,
-  //     name: name,
-  //     image: image.toString(),
-  //     price: double.parse(price.toString()),
-  //     quantity: 1,
-  //     user_id: 0, type: '',
-  //   );
-  //   cartProvider.addToCart(newItem);
-  //   Navigator.pop(context);
-  //   Fluttertoast.showToast(
-  //     msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
-  //   );
-  //   Timer(Duration(milliseconds: 500), () {
-  //     Fluttertoast.cancel(); // Dismiss the toast after the specified duration
-  //   });
-  // }
-
   Widget CartProductMethod(
       {String image = "",
       String name = "",
@@ -287,6 +276,7 @@ class _CartState extends State<Cart> {
       int product_id = 0,
       CartItem? item,
       int index = 0,
+      int available = 1,
       var IDs,
       int qty = 0,
       String type = "",
@@ -298,189 +288,192 @@ class _CartState extends State<Cart> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 3, bottom: 3),
-      child: Dismissible(
-        key: Key(index.toString()), // Provide a unique key for each item
-        direction:
-            DismissDirection.horizontal, // Allow both left and right swipes
-        confirmDismiss: (direction) async {
-          bool isDeleteAction = direction == DismissDirection.startToEnd;
-          return await showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: Text(
-                    'هل أنت متأكد انك تريد حذف هذا المنتج من سله المنتجات'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
-                    child: Text('اغلاق'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      String UserID = prefs.getString('user_id') ?? "";
-                      deleteCart(removeProduct);
-                    },
-                    child: Text('حذف'),
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        onDismissed: (direction) async {
-          if (direction == DismissDirection.startToEnd) {
-          } else if (direction == DismissDirection.endToStart) {}
-        },
-        background: Container(
-          color: Colors
-              .red, // Use different colors for delete and add to cart actions
-          alignment: Alignment.centerRight,
-          padding: EdgeInsets.only(right: 20),
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 5,
+            ),
+          ],
+          color: Colors.white,
+          border: Border.all(
+            color: available == 1
+                ? Colors.transparent
+                : Colors.red, // Set border color
+            width: 2, // Set border width
           ),
+          borderRadius: BorderRadius.circular(10),
         ),
-        // secondaryBackground: Container(
-        //   color: Colors
-        //       .blue, // Use different colors for delete and add to cart actions
-        //   alignment: Alignment.centerLeft,
-        //   padding: EdgeInsets.only(left: 20),
-        //   child: Icon(
-        //     Icons.add_shopping_cart,
-        //     color: Colors.white,
-        //   ),
-        // ),
-        child: InkWell(
-          onTap: () {
-            List<Map<String, dynamic>> products = [];
-
-            for (int i = 0; i < cartItems.length; i++) {
-              Map<String, dynamic> product = {
-                'id': cartItems[i].productId,
-                'title': cartItems[i].name,
-                'image': cartItems[i].image,
-                'price': cartItems[i].price,
-              };
-              products.add(product);
-            }
-            List<T> reorderListBasedOnIndex<T>(List<T> list, int index) {
-              if (index >= 0 && index < list.length) {
-                var firstPart = list.sublist(index);
-                var secondPart = list.sublist(0, index);
-                return [...firstPart, ...secondPart];
-              }
-              return list; // Return the original list if the index is out of bounds
-            }
-
-            String productIdsString = reorderListBasedOnIndex(
-                    cartItems.map((item) => item.productId).toList(), index)
-                .join(', ');
-
-// Create a map for the first object you want to insert
-            Map<String, dynamic> firstProduct = {
-              'id': cartItems[index].productId,
-              'title': cartItems[index].name,
-              'image': cartItems[index].image,
-              'price': cartItems[index].price,
-            };
-
-// Insert the first object at the specified index
-            products.insert(0, firstProduct);
-
-            NavigatorFunction(
-              context,
-              ProductScreen(
-                SIZES: [],
-                ALL: false,
-                Sub_Category_Key: "",
-                SubCategories: [],
-                index: index,
-                url: "",
-                page: 1,
-                sizes: [],
-                cart_fav: true,
-                favourite: false,
-                Images: [image],
-                Product: products,
-                IDs: productIdsString,
-                id: product_id,
-              ),
+        child: Dismissible(
+          key: Key(index.toString()), // Provide a unique key for each item
+          direction:
+              DismissDirection.horizontal, // Allow both left and right swipes
+          confirmDismiss: (direction) async {
+            bool isDeleteAction = direction == DismissDirection.startToEnd;
+            return await showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Text(
+                      'هل أنت متأكد انك تريد حذف هذا المنتج من سله المنتجات'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(false),
+                      child: Text('اغلاق'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String UserID = prefs.getString('user_id') ?? "";
+                        deleteCart(removeProduct);
+                      },
+                      child: Text('حذف'),
+                    ),
+                  ],
+                );
+              },
             );
           },
-          child: Container(
-            height: 140,
-            width: double.infinity,
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 5,
-              ),
-            ], color: Colors.white),
-            child: Stack(
-              alignment: Alignment.bottomLeft,
-              children: [
-                SizedBox(
-                  // height: 100,
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Container(
-                        // height: 80,
-                        width: 100,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              topLeft: Radius.circular(10)),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(0),
-                          child: FancyShimmerImage(
-                            imageUrl: image,
+          onDismissed: (direction) async {
+            if (direction == DismissDirection.startToEnd) {
+            } else if (direction == DismissDirection.endToStart) {}
+          },
+          background: Container(
+            color: Colors
+                .red, // Use different colors for delete and add to cart actions
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(right: 20),
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+          ),
+          child: InkWell(
+            onTap: () {
+              List<Map<String, dynamic>> products = [];
+
+              for (int i = 0; i < cartItems.length; i++) {
+                Map<String, dynamic> product = {
+                  'id': cartItems[i].productId,
+                  'title': cartItems[i].name,
+                  'image': cartItems[i].image,
+                  'price': cartItems[i].price,
+                };
+                products.add(product);
+              }
+              List<T> reorderListBasedOnIndex<T>(List<T> list, int index) {
+                if (index >= 0 && index < list.length) {
+                  var firstPart = list.sublist(index);
+                  var secondPart = list.sublist(0, index);
+                  return [...firstPart, ...secondPart];
+                }
+                return list; // Return the original list if the index is out of bounds
+              }
+
+              String productIdsString = reorderListBasedOnIndex(
+                      cartItems.map((item) => item.productId).toList(), index)
+                  .join(', ');
+              Map<String, dynamic> firstProduct = {
+                'id': cartItems[index].productId,
+                'title': cartItems[index].name,
+                'image': cartItems[index].image,
+                'price': cartItems[index].price,
+              };
+              products.insert(0, firstProduct);
+
+              NavigatorFunction(
+                context,
+                ProductScreen(
+                  SIZES: [],
+                  ALL: false,
+                  Sub_Category_Key: "",
+                  SubCategories: [],
+                  index: index,
+                  url: "",
+                  page: 1,
+                  sizes: [],
+                  cart_fav: true,
+                  favourite: false,
+                  Images: [image],
+                  Product: products,
+                  IDs: productIdsString,
+                  id: product_id,
+                ),
+              );
+            },
+            child: Container(
+              height: 140,
+              width: double.infinity,
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.2),
+                  blurRadius: 5,
+                ),
+              ], color: Colors.white),
+              child: Stack(
+                alignment: Alignment.bottomLeft,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(10),
+                                topLeft: Radius.circular(10)),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(0),
+                            child: FancyShimmerImage(
+                              imageUrl: image,
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, right: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 250,
-                              child: Text(
-                                name.length > 50
-                                    ? name.substring(0, 50) + '...'
-                                    : name,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 10, bottom: 10, right: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 250,
+                                child: Text(
+                                  name.length > 50
+                                      ? name.substring(0, 50) + '...'
+                                      : name,
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
+                                ),
+                              ),
+                              Text(
+                                type.toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
                               ),
-                            ),
-                            Text(
-                              type.toString(),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      )
-                    ],
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Text(
-                    "₪$price",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.red),
+                  Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Text(
+                      "₪$price",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.red),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

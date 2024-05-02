@@ -13,7 +13,7 @@ class Silder {
 
   factory Silder.fromJson(Map<String, dynamic> json) {
     return Silder(
-      image: json['image'] ?? "",
+      image: json['image_url'] ?? "",
       product_id: json['url'] ?? "",
       description: json['description'] ?? "",
       title: json['title'] ?? "",

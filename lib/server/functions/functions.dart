@@ -303,6 +303,8 @@ getProductByCategory(category_id, sub_category_key, String size,
     if (selected_sizes != '') {
       Final_URL += "&selected_sizes=$selected_sizes";
     }
+    print("Final_URL");
+    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;

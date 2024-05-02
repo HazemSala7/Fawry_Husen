@@ -31,7 +31,7 @@ var categories = [
   {
     "name": "للرضيع و الأم",
     "image": "assets/images/Pregcat.jpg",
-    "main_category": "Women Apparel Baby",
+    "main_category": "Women Apparel, Baby",
     "icon": "assets/categories_icons/mother.png"
   },
   {
@@ -43,19 +43,20 @@ var categories = [
   {
     "name": "ملابس داخليه",
     "image": "assets/images/Undercat.jpg",
-    "main_category": "Underwear & Sleepwear",
+    "main_category": "Underwear & Sleepwear, Underwear Sleepwear",
     "icon": "assets/categories_icons/bikini.png"
   },
   {
     "name": "للمنزل",
     "image": "assets/images/Homecat.jpg",
-    "main_category": "Home %26 Living,Tools %26 Home Improvement",
+    "main_category":
+        "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
     "icon": "assets/categories_icons/house.png"
   },
   {
     "name": "مجوهرات و ساعات",
     "image": "assets/images/Jwelerycat.jpg",
-    "main_category": "Jewelry & Watches",
+    "main_category": "Jewelry %26 Watches, Jewelry  Watches",
     "icon": "assets/categories_icons/jewelry.png"
   },
   {
@@ -79,13 +80,13 @@ var categories = [
   {
     "name": "مستلزمات مكاتب",
     "image": "assets/images/Officecat.jpg",
-    "main_category": "Office School Supplies, Office & School Supplies",
+    "main_category": "Office School Supplies, Office %26 School Supplies",
     "icon": "assets/categories_icons/worker.png"
   },
   {
     "name": "مستحضرات تجميلية",
     "image": "assets/images/Beautycat.jpg",
-    "main_category": "Beauty & Health",
+    "main_category": "Beauty %26 Health, Jewelry %26 Watches",
     "icon": "assets/categories_icons/cosmetics.png"
   },
   {
@@ -97,19 +98,19 @@ var categories = [
   {
     "name": "حقائب",
     "image": "assets/images/Bagcat.jpg",
-    "main_category": "Bags & Luggage",
+    "main_category": "Bags %26 Luggage, Bags %26 Luggage",
     "icon": "assets/categories_icons/travel.png"
   },
   {
     "name": "مستلزمات اعراس",
     "image": "assets/images/Weddingcat.jpg",
-    "main_category": "Weddings & Events",
+    "main_category": "Weddings %26 Events, Weddings %26 Events",
     "icon": "assets/categories_icons/wedding-arch.png"
   },
   {
     "name": "مستلزمات رياضية",
     "image": "assets/images/Sportcat.jpg",
-    "main_category": "Sports & Outdoor",
+    "main_category": "Sports %26 Outdoor, Sports  Outdoor",
     "icon": "assets/categories_icons/dumbbell.png"
   },
 ];
@@ -121,55 +122,42 @@ var sub_categories_Men__sizes = [
   },
   {
     "name": "بلايز",
-    "key": "Men Tops",
+    "key": "Men Tops, Men Plus Size Tops",
   },
   {
     "name": "تنسيقات واطقم",
-    "key": "Men Co-ords",
+    "key":
+        "Men Co-ords, Men Co ords, Men Plus Size Co-ords, Men Plus Size Co ords",
   },
   {
     "name": "هوديز",
-    "key": "Men Hoodies & Sweatshirts",
+    "key":
+        "Men Hoodies %26 Sweatshirts, Men Hoodies Sweatshirts, Men Plus Size Hoodies & Sweatshirts, Men Plus Size Hoodies Sweatshirts",
   },
   {
     "name": "ملابس سفلية",
-    "key": "Men Bottoms",
+    "key": "Men Bottoms, Men Plus Size Bottoms",
   },
   {
     "name": "ملابس خارجية",
-    "key": "Men Outerwear",
+    "key": "Men Outerwear, Men Plus Size Outerwear",
   },
   {
     "name": "اقمشة جينز",
-    "key": "Men Denim",
+    "key": "Men Denim, Men Plus Size Denim",
   },
   {
     "name": "منسوجات",
-    "key": "Men Knitwear",
+    "key": "Men Knitwear, Men Plus Size Knitwear",
   },
   {
     "name": "بدلات",
-    "key": "Men Suits & Separates",
+    "key":
+        "Men Suits %26 Separates, Men Suits  Separates, Men Plus Size Suits %26 Separates",
   },
   {
     "name": "ملابس سباحة",
     "key": "Men Swimwear",
-  },
-  {
-    "name": "ملابس رياضية",
-    "key": "Sports & Outdoor",
-  },
-  {
-    "name": "اكسسوارات",
-    "key": "Apparel Accessories",
-  },
-  {
-    "name": "مجوهرات وساعات",
-    "key": "Jewelry & Watches",
-  },
-  {
-    "name": "احذية",
-    "key": "Men Shoes",
   },
 ];
 
@@ -208,7 +196,7 @@ var sub_categories_women_appearel = [
   },
   {
     "name": "تنسيقات",
-    "key": "Women Co-ords",
+    "key": "Women Co-ords, Women Co ords",
   },
   {
     "name": "زفاف وسهرات",
@@ -224,35 +212,12 @@ var sub_categories_women_appearel = [
   },
   {
     "name": "جمبسوت ",
-    "key": "Women Jumpsuits & Bodysuits",
+    "key": "Women Jumpsuits %26 Bodysuits, Women Jumpsuits Bodysuits",
   },
   {
     "name": "ملابس علوية",
-    "key": "Women Tops,Blouses & Tee",
-  },
-  {
-    "name": "ملابس داخلية",
-    "key": "Underwear & Sleepwear",
-  },
-  {
-    "name": "اكسسوارات",
-    "key": "Apparel Accessories",
-  },
-  {
-    "name": "مجوهرات وساعات",
-    "key": "Jewelry & Watches",
-  },
-  {
-    "name": "الموضة والجمال",
-    "key": "Beauty & Health",
-  },
-  {
-    "name": "احذية",
-    "key": "Women Shoes",
-  },
-  {
-    "name": "ملتزمات اعراس",
-    "key": "Weddings & Events",
+    "key":
+        "Women Tops, Blouses %26 Tee,  Blouses  Tee, Women Blouses, Women T Shirts, Women Tank Tops Camis",
   },
 ];
 
@@ -279,7 +244,7 @@ var sub_categories_women_plus_sizes = [
   },
   {
     "name": "تنسيقات واطقم",
-    "key": "Plus Size Co-Ords",
+    "key": "Plus Size Co-Ords, Plus Size Co Ords",
   },
   {
     "name": "منسوجات",
@@ -299,7 +264,7 @@ var sub_categories_women_plus_sizes = [
   },
   {
     "name": "جمبسوت ",
-    "key": "Plus Size Jumpsuits & Bodysuits",
+    "key": "Plus Size Jumpsuits %26 Bodysuits, Plus Size Jumpsuits  Bodysuits",
   },
   {
     "name": "ملابس سباحة",
@@ -307,14 +272,15 @@ var sub_categories_women_plus_sizes = [
   },
   {
     "name": "ملابس زفاف وسهرات",
-    "key": "Women Plus Wedding",
+    "key": "Women Plus Wedding, Women Plus Party Wear",
   },
 ];
 
 var sub_categories_kids_sizes = [
   {
     "name": "جميع الأقسام",
-    "key": "",
+    "key":
+        "Young Boys Clothing,Tween Boys Clothing,Teen Boys Clothing,Kids Accessories, Kids Jewelry & Watches",
   },
   {
     "name": "بلايز",
@@ -347,15 +313,15 @@ var sub_categories_kids_sizes = [
   },
   {
     "name": "بجامات",
-    "key": "Tween Boys Pajamas",
+    "key": "Young Boys Pajamas,Tween Boys Pajamas",
   },
   {
     "name": "بدلات",
-    "key": "Young Boys Suits",
+    "key": "Young Boys Suits,Tween Boys Suits",
   },
   {
     "name": "ملابس سباحة",
-    "key": "Tween Boys Swimwear",
+    "key": "Young Boys Swimwear,Tween Boys Swimwear",
   },
 ];
 List<String> Men_sizes = [
@@ -391,15 +357,18 @@ var women_Plus_sizes = ["0XL", "1XL", "2XL", "3XL", "4XL", "5XL"];
 var sub_categories_Girls = [
   {
     "name": "جميع الأقسام",
-    "key": "Young Girls Clothing,Tween Girls Clothing",
+    "key":
+        "Young Girls Clothing,Tween Girls Clothing,Teen Girls Clothing,Kids Accessories, Kids Jewelry & Watches",
   },
   {
     "name": "فساتين",
-    "key": "Tween Girls Dresses, Young Girls Dresses, Teen Girls Dresses",
+    "key":
+        "Young Girls Dresses, Tween Girls Dresses, Tween Girls Partywear, Young Girls Partywear,Teen Girls Dresses",
   },
   {
     "name": "تنسيقات واطقم",
-    "key": "Teen  Girls Sets, Tween Girls Sets, Young Girls Sets",
+    "key":
+        "Young Girls Sets,Young Girls Pajamas, Tween Girls Sets, Teen Girls Sets",
   },
   {
     "name": "منسوجات",
@@ -412,7 +381,7 @@ var sub_categories_Girls = [
   },
   {
     "name": "ملابس علوية",
-    "key": "Teen Girls Tops, Tween Girls Tops, Young Girls Tops",
+    "key": "Young Girls Tops, Tween Girls Tops, Teen Girls Tops",
   },
   {
     "name": "ملابس خارجية",
@@ -425,7 +394,7 @@ var sub_categories_Girls = [
   {
     "name": "ملابس سفلية",
     "key":
-        "Young Girls Bottoms, Tween Girls Denim Shorts, Tween Girls Jeans, Tween Girls Bottoms, Teen Girls Bottoms",
+        "Young Girls Bottoms, Tween Girls Denim Shorts, Tween Girls Jeans, Tween Girls Bottoms, Teen Girls Bottoms, Baby %26 Kids' Socks & Tights",
   },
   {
     "name": "ملابس نوم وبجامات",
@@ -434,11 +403,11 @@ var sub_categories_Girls = [
   {
     "name": "جمبسوت ",
     "key":
-        "Young Girls Jumpsuits, Tween Girls Denim Overalls & Jumpsuits, Tween Girls Jumpsuits",
+        "Young Girls Jumpsuits,Young Girls Bodysuits Jumpsuits, Tween Girls Jumpsuits, Tween Girls Bodysuits Jumpsuits, Teen Girls Jumpsuits",
   },
   {
-    "name": "ملابس حفلات وسهرات",
-    "key": "Young Girls Partywear, Tween Girls Partywear",
+    "name": "بجامات",
+    "key": "Young Girls Pajamas, Tween Girls Pajamas",
   },
   {
     "name": "ملابس سباحة",
@@ -446,7 +415,7 @@ var sub_categories_Girls = [
   },
   {
     "name": "اقمشة جينز",
-    "key": "Young Girls Denim",
+    "key": "Young Girls Denim, Tween Girls Denim",
   },
 ];
 
@@ -482,7 +451,8 @@ var girls_kids_sizes = [
 var sub_categories_Boys = [
   {
     "name": "جميع الأقسام",
-    "key": "Young Boys Clothing,Tween Boys Clothing",
+    "key":
+        "Young Boys Clothing,Tween Boys Clothing,Teen Boys Clothing,Kids Accessories, Kids Jewelry %26 Watches",
   },
   {
     "name": "بلايز",
@@ -490,7 +460,7 @@ var sub_categories_Boys = [
   },
   {
     "name": "ملابس خارجية",
-    "key": "Young Boys Outerwear, Tween Boys Outerwear",
+    "key": "Young Boys Outerwear,Tween Boys Outerwear",
   },
   {
     "name": "تنسيقات واطقم",
@@ -515,11 +485,11 @@ var sub_categories_Boys = [
   },
   {
     "name": "بجامات",
-    "key": "Tween Boys Pajamas",
+    "key": "Young Boys Pajamas,Tween Boys Pajamas",
   },
   {
     "name": "بدلات",
-    "key": "Young Boys Suits",
+    "key": "Young Boys Suits,Tween Boys Suits",
   },
   {
     "name": "ملابس سباحة",
@@ -552,7 +522,7 @@ var kids_boys_sizes = [
 var sub_categories_MaternityBaby = [
   {
     "name": "جميع الأقسام",
-    "key": "Maternity Clothing, Baby",
+    "key": "Maternity Clothing, Baby, Maternity Plus Clothing",
   },
   {
     "name": "ملابس حجم كبير",
@@ -560,7 +530,8 @@ var sub_categories_MaternityBaby = [
   },
   {
     "name": "ملابس علوية",
-    "key": "Maternity Tops, Maternity Sweaters, Nursing,Maternity Sweatshirts",
+    "key":
+        "Maternity Tops, Sweaters, Nursing, Sweatshirts, Maternity Plus Clothing, Maternity Activewear, Maternity Sweatshirts, Maternity Sweaters",
   },
   {
     "name": "ملابس سفلية",
@@ -572,7 +543,7 @@ var sub_categories_MaternityBaby = [
   },
   {
     "name": "أطقم  وتنسيقات",
-    "key": "Maternity Two-piece Suits",
+    "key": "Maternity Suits, Maternity Two-piece Suits",
   },
   {
     "name": "جمبسوت ",
@@ -585,11 +556,12 @@ var sub_categories_MaternityBaby = [
   {
     "name": " جمبسوت وملابس للاطفال البنات",
     "key":
-        "Baby Girls Jumpsuits, Baby Girls Onesies, Baby Girls Dresses,Baby Girls Denim, Baby Girls Photography Sets Baby Girls Tops",
+        "Baby Girls Jumpsuits, Baby Girls Onesies, Baby Girls Dresses,Baby Girls Denim, Baby Girls Photography Sets,  Baby Girls Tops, Baby Girls Partywear",
   },
   {
     "name": " أطقم  وتنسيقات للاطفال البنات",
-    "key": "Baby Girls Sets",
+    "key":
+        "Baby Girls Sets, Baby Girls Knitwear, Baby Girls Pajamas, Baby Girls Photography Sets,Baby Girls Tops, Baby Girls Costumes",
   },
   {
     "name": "معاطف وجاكيتات للاطفال البنات",
@@ -597,11 +569,12 @@ var sub_categories_MaternityBaby = [
   },
   {
     "name": "ملابس سفلية للاطفال البنات",
-    "key": "Baby Girls Bottoms",
+    "key": "Baby Girls Bottoms, Baby Girls Denim",
   },
   {
     "name": "أطقم وتنسيقات للاطفال الاولاد",
-    "key": "Baby Boys Sets, Baby Boys Pajamas, Baby Boys Onesies"
+    "key":
+        "Baby Boys Sets, Baby Boys Pajamas, Baby Boys Onesies,Baby Boys Clothing"
   },
   {"name": "احذية للاطفال", "key": "Baby Shoes"},
   {
@@ -617,11 +590,11 @@ var sub_categories_WomenShoes = [
   },
   {
     "name": " Boots ",
-    "key": "Women Boots",
+    "key": "Women Boots, Women Fashion Boots",
   },
   {
     "name": "احذية كعب عالي",
-    "key": "Pumps",
+    "key": "Women Pumps",
   },
   {
     "name": "احذية مسطحة و حفايات",
@@ -644,12 +617,8 @@ var sub_categories_WomenShoes = [
     "key": "Women Fashion Boots, Women Outdoor Shoes",
   },
   {
-    "name": "احذية مسطحة",
-    "key": "Women Flats",
-  },
-  {
     "name": "احذية بنعل عالي",
-    "key": "Women Wedges & Flatform",
+    "key": "Women Wedges %26 Flatform, Women Wedges Flatform",
   },
   {
     "name": "اكسسوارات للاحذية",
@@ -694,11 +663,13 @@ var sub_categories_MenShoes = [
   },
   {
     "name": "صنادل",
-    "key": "Men Sandals, Men Clogs, Men Flip Flops & Slides",
+    "key":
+        "Men Sandals, Men Clogs, Men Flip Flops %26 Slides, Men Flip Flops  Slides",
   },
   {
     "name": " شباشب واحذية منزل",
-    "key": "Men Clogs, Men Slippers, Men Work & Safety Shoes",
+    "key":
+        "Men Clogs, Men Slippers, Men Work %26 Safety Shoes, Men Work Safety Shoes",
   },
   {
     "name": "احذية شتوية وجزمات",
@@ -818,28 +789,28 @@ var sub_categories_Underware = [
   {
     "name": "لانجري",
     "key":
-        "Women Sexy Lingerie & Costumes,Women Lingerie Accessories,Women Plus Intimates",
+        "Women Sexy Lingerie %26 Costumes, Lingerie Accessories, Women Plus Intimates, Women Sexy Lingerie  Costumes, Women Sexy Lingerie, Women Lingerie Accessories, Women Sexy Lingerie Costumes",
   },
   {
     "name": "فساتين وقمصان نوم",
     "key":
-        "Women Nightgowns & Sleepshirts, Maternity Sleepwear, Women Rompers, Women Sexy Lingerie & Costumes",
+        "Women Nightgowns %26 Sleepshirts, Maternity Sleepwear, Rompers, Sexy Lingerie %26 Costumes, Women Nightgowns  Sleepshirts, Sexy Lingerie  Costumes, Women Plus Sleep %26Lounge, Women Sleep %26 Lounge, Women Sleep Lounge, Women Plus Sleep Lounge",
   },
   {
     "name": " بجامات و روبات",
-    "key": "Women Pajama Sets,Women Robes,Women Loungewear",
+    "key": "Women Pajama Sets,Women Robes,Women Loungewear ",
   },
   {
     "name": "حمالات صدر",
-    "key": "Women Bras,Plus Size Bra & Panty Sets",
+    "key": "Women Bras,Plus Size Bra %26 Panty Sets",
   },
   {
     "name": "ملابس داخلية",
-    "key": "Women Panties, Women Shapewear,Plus Size Panties",
+    "key": "Women Panties, Shapewear, Plus Size Panties, Women Shapewear",
   },
   {
     "name": "جوارب نسائية ",
-    "key": "Women Socks & Hosiery",
+    "key": "Women Socks & Hosiery, Women Socks Hosiery",
   }
 ];
 
@@ -866,36 +837,38 @@ var sub_categories_HomeLiving = [
   },
   {
     "name": "ادوات للمطبخ",
-    "key": "Kitchen & Dining, Kitchen Fixtures, Plumbing",
+    "key":
+        "Kitchen %26 Dining, Kitchen Fixtures, Plumbing, Kitchen Dining,Household Cleaning, Household Merchandises, Kitchen Linen Sets, Tablecloths, Table Runners",
   },
   {
     "name": "ديكور و زينة",
-    "key": "Home Decor",
+    "key":
+        "Home Decor,Arts,Crafts %26 Sewing, Bedding, Home Textile,  Table %26 Sofa Linens, Rugs %26 Carpets, Cushion Cover, Tapestry, Sofa Covers Table Linens, Sofa Covers %26 Table Linens, Decorative Pillows, Inserts, %26 Covers, Rugs Carpets, Decorative Pillows, Sofa Covers &amp; Table Linens, Tablecloths, Sheer Panels, Rugs, Table Runners, Curtains, Chair Covers, Sofa Covers, Mat, Door Curtains, Bedspread, Pillow Cases, Window Valance,Area Rugs Sets, Duvet Covers Sets, Mattress Covers %26 Grippers, Pillowcases Shams",
   },
   {
     "name": " لوازم الحفلات والمناسبات",
-    "key": "Event & Party Supplies",
+    "key": "Event %26 Party Supplies, Event Party Supplies",
   },
   {
     "name": " رفوف وادوات تخزين",
-    "key": "Storage & Organization",
+    "key": "Storage %26 Organization, Storage Organization, Furniture",
   },
   {
     "name": "ادوات للحمامات",
-    "key": "Bathroom, Bathroom Fixtures",
+    "key": "Bathroom, Bathroom Fixtures,Household Cleaning, Rugs %26 Carpets",
   },
   {
     "name": " اساسيات المنزل و الحديقة",
     "key":
-        "Home Essentials, Outdoor & Garden, Household Merchandises, Garden Tools",
+        "Home Essentials, Outdoor %26 Garden, Household Merchandises, Garden Tools, Outdoor  Garden, Household Merchandises",
   },
   {
     "name": " اضائة ومصابيح",
-    "key": "Lighting & Lamp",
+    "key": "Lighting %26 Lamp, Lighting  Lamp",
   },
   {
     "name": " معدات وادوات",
-    "key": "Hardware,Hand Tools",
+    "key": "Hardware, Hand Tools",
   },
 ];
 
@@ -906,19 +879,19 @@ var sub_categories_SportsOutdoor = [
   },
   {
     "name": "بلايز رياضية للرجال",
-    "key": "Men Active Tops",
+    "key": "Men Active Tops, Men Outdoor Apparel",
   },
   {
     "name": "أطقم رياضة رجالية",
-    "key": "Men Active Sets",
+    "key": "Men Active Sets, Men Outdoor Apparel",
   },
   {
     "name": "سراويل رياضية للرجال",
-    "key": "Men Active Bottoms",
+    "key": "Men Active Bottoms, Plus Size Sports Bottoms",
   },
   {
     "name": "أطقم رياضة نسائية",
-    "key": "Women Active Sets",
+    "key": "Women Active Sets, Plus Size Sports Sets",
   },
   {
     "name": "ملابس علوية رياضية نسائية",
@@ -930,11 +903,13 @@ var sub_categories_SportsOutdoor = [
   },
   {
     "name": "بوديسوت & جمبسوت رياضية نسائية",
-    "key": "Women Sports Bodysuits & Jumpsuits",
+    "key":
+        "Women Sports Bodysuits %26 Jumpsuits, Women Sports Bodysuits  Jumpsuits, Sports %26 Outdoor Accessories",
   },
   {
     "name": "لانجري رياضية نسائية",
-    "key": "Women Sports Bras,Women Sports Intimates"
+    "key":
+        "Women Sports Bras & Intimates, Women Sports Bras  Intimates, Plus Size Sports Bra, Sports & Outdoor Accessories"
   },
 ];
 
@@ -949,7 +924,7 @@ var sub_categories_JewelryWatches = [
   },
   {
     "name": "قلادات وسناسيل نسائية",
-    "key": "Women's Necklaces",
+    "key": "Women's Necklaces, Women's Brooches",
   },
   {
     "name": "أساور نسائية",
@@ -965,7 +940,8 @@ var sub_categories_JewelryWatches = [
   },
   {
     "name": "أطقم مجوهرات نسائية",
-    "key": "Women's Jewelry Sets, Women's Body Jewelry, Women's Body Chains",
+    "key":
+        "Women's Jewelry Sets, Women's Body Jewelry, Body Chain, Women's Body Chains",
   },
   {
     "name": "أطقم مجوهرات نسائية",
@@ -974,15 +950,18 @@ var sub_categories_JewelryWatches = [
   },
   {
     "name": "ساعات نسائية",
-    "key": "Women's Watches",
+    "key":
+        "Women's Watches, Women's Watch Sets, Women's Quartz Watches, Jewelry Findings %26 Components",
   },
   {
     "name": "أساور وخواتم رجالية",
-    "key": "Men's Bracelets, Men's Rings",
+    "key":
+        "Men's Bracelets, Men's Rings, Men's Body Jewelry, Men's Watch Sets, Men's Quartz Watches",
   },
   {
     "name": "قلادات وسناسيل رجالية",
-    "key": "Men's Necklaces",
+    "key":
+        "Men's Necklaces, Men's Body Jewelry,Jewelry Findings %26 Components",
   },
 ];
 
@@ -994,36 +973,40 @@ var sub_categories_Accessories = [
   {
     "name": " أوشحة وشالات نسائي",
     "key":
-        "Women Scarves Accessories, Women Scarves & Scarf Accessories,Women Collar & Accessories",
+        "Women Scarves %26 Scarf Accessories, Women Scarves Scarf Accessories, Women Collar %26 Accessories,Wedding Accessories,Wedding Fashion Jewelry,Face Coverings %26 Accs, Women Collar Accessories",
   },
   {
     "name": "قبعات و قفازات نسائية",
-    "key": "Women Hats, Women Gloves",
+    "key":
+        "Women Hats %26 Gloves, Women Hats  Gloves, Women Hats, Women Gloves",
   },
   {
     "name": "أحزمة نسائية",
-    "key": "Women Belts & Belts Accessories,Women Keychains & Accessories",
+    "key":
+        "Women Belts %26 Belts Accessories, Women Belts  Belts Accessories, Women Keychains & Accessories",
   },
   {
     "name": "إكسسوارات شعر نسائية   ",
-    "key": "Women Hair Accessories ",
+    "key": "Women Hair Accessories",
   },
   {
     "name": "نظارات نسائية وإكسسوارات نظارات",
-    "key": "Women Glasses & Eyewear Accessories",
+    "key":
+        "Women Glasses %26 Eyewear Accessories, Women Glasses  Eyewear Accessories",
   },
   {
     "name": "احزمة واوشحة رجالية ",
     "key":
-        "Men Belts & Belts Accessories, Men Scarves & Scarf Accessories, Men Keychains & Accessories",
+        "Men Scarves %26 Scarf Accessories,Men Keychains %26 Accessories,Men Belts %26 Belts Accessories, Men s Wallets Card Cases",
   },
   {
     "name": "نظارات  شمسية رجالية ",
-    "key": "Men Fashion Glasses, Men Glasses & Eyewear Accessories",
+    "key":
+        "Men Sunglasses %26 Accessories, Men Sunglasses  Accessories, Men Glasses %26 Eyewear Accessories",
   },
   {
     "name": "قبعات وقفازات رجالية",
-    "key": "Men Hats, Men Gloves",
+    "key": "Men Hats %26 Gloves, Men Hats Gloves, Men Hats, Men Gloves",
   },
 ];
 
@@ -1034,23 +1017,26 @@ var sub_categories_BeautyHealth = [
   },
   {
     "name": " شعر مستعار وبواريك",
-    "key": "Wigs & Accs",
+    "key":
+        "Wigs %26 Accessories, Wigs  Accessories, Synthetic Hair Wigs, Hair Tools, Human Hair Wigs, Wig Caps %26 Tools, Wigs Accs, Wigs %26 Accs",
   },
   {
     "name": "إكسسوارات الاظافر ",
-    "key": "Nail Art & Tools",
+    "key": "Nail Art %26 Tools, Nail Art  Tools, Press On Nails",
   },
   {
     "name": "أدوات المكياج",
-    "key": "Makeup Tools,Makeup, Makeup Brushes, Makeup Bags",
+    "key":
+        "Makeup Tools, Makeup Brushes, Makeup Bags, Body Care Tools, Face Make Up, Eye Make Up, Makeup Bag Storage",
   },
   {
     "name": "وشم وفنون الجسم",
-    "key": "Tattoos & Body Art",
+    "key": "Tattoos %26 Body Art, Tattoos  Body Art, Body Care Tools",
   },
   {
     "name": " أدوات العناية بالجسم وبالبشرة",
-    "key": "Body Care Tools,Skin Care Tools",
+    "key":
+        "Body %26 Skin Care Tools, Body  Skin Care Tools, Skin Care Tools, Face Care Devices, Shaving Electric, Beauty Tools",
   },
   {
     "name": " أدوات العناية بالشعر",
@@ -1058,7 +1044,7 @@ var sub_categories_BeautyHealth = [
   },
   {
     "name": " أدوات العناية بالرموش",
-    "key": "Eyelashes",
+    "key": "Eyelashes Tools, Eyelashes",
   },
 ];
 
@@ -1069,15 +1055,17 @@ var sub_categories_Electronics = [
   },
   {
     "name": " اغلفة وإكسسوارات الهاتف",
-    "key": "Cases,Cell Phones & Accessories",
+    "key":
+        "Cases,Cell Phones  %26 Accessories, Phone Mounts Holders, Cable Cable Accessories, Phone Accessories",
   },
   {
     "name": "سماعات رأس وأذن",
-    "key": "Consumer Electronic,Earphone Cases",
+    "key":
+        "Consumer Electronic,Earphone Cases,Headphone  %26 Earphone, Portable Audio  %26 Video",
   },
   {
     "name": "أدوات كومبيوتر والمكتب",
-    "key": "Computer & Office",
+    "key": "Computer  %26 Office",
   },
 ];
 
@@ -1089,7 +1077,7 @@ var sub_categories_BagsLuggage = [
   {
     "name": " حقائب يد وكتف نسائية",
     "key":
-        "Women Satchels, Women Bag Sets, Women Crossbody, Women Shoulder Bags, Women Wristlet Bags, Women Evening Bags, Women Clutches,Women Tote Bags, Women Waist Bags, ",
+        "Women Shoulder Bags, Women Crossbody, Women Satchels, Women Tote Bags, Women Evening Bags, Women Bag Sets, Women Wristlet Bags, Women Waist Bags, Women Clutches, Women Top Handle Bags",
   },
   {
     "name": " حقائب ظهر نسائية",
@@ -1097,14 +1085,16 @@ var sub_categories_BagsLuggage = [
   },
   {
     "name": "حقائب وإكسسوارات سفر ",
-    "key": "Luggage & Travel Bags",
+    "key":
+        "Luggage %26 Travel Accessories, Luggage  Travel Accessories, Luggage & Travel Bags,Bag Accessories",
   },
   {
     "name": "محافظ وحاملات بطاقات",
-    "key": "Wallets & Cardholders",
+    "key":
+        "Wallets %26 Card Holders, Wallets  Card Holders, Women Evening Bags, Wallets %26 Cardholders",
   },
   {
     "name": "حقائب رجالية",
-    "key": "Men Bags",
+    "key": "Men Bags, Men's Bags",
   },
 ];

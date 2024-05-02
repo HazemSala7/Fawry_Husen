@@ -27,18 +27,15 @@ class CartProvider extends ChangeNotifier {
     return total;
   }
 
-  // Future<void> addToCart(CartItem item) async {
-  //   await _dbHelper.insertCartItem(item);
-  //   _cartItems.add(item);
-  //   // Refresh _cartItems with the latest data from the database
-  //   _cartItems = await _dbHelper.getCartItems();
-  //   notifyListeners();
-  //   print("test");
-  //   // Print cart items with product IDs as JSON
-  //   List<int?> productIds = _cartItems.map((item) => item.productId).toList();
-  //   print("jsonEncode(productIds)");
-  //   print(jsonEncode(productIds));
-  // }
+  Future<void> updateCartItemById(int productId, CartItem updatedItem) async {
+    final index = _cartItems.indexWhere((item) => item.productId == productId);
+    if (index != -1) {
+      _cartItems[index] = updatedItem;
+      await _dbHelper.updateCartItem(updatedItem);
+      notifyListeners();
+    }
+  }
+
   Future<void> addToCart(CartItem item) async {
     final existingIndex = _cartItems
         .indexWhere((cartItem) => cartItem.productId == item.productId);
@@ -60,9 +57,7 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<void> removeFromCart(int productId) async {
-    print("item.id!.toString()");
-    print(productId.toString());
+  Future<void> removeFromCart(int productId) async {
     await _dbHelper.deleteCartItem(productId);
     _cartItems.removeWhere((item) => item.productId == productId);
     notifyListeners();
@@ -102,6 +97,7 @@ class CartProvider extends ChangeNotifier {
         'sku': item.sku,
         'vendor_sku': item.vendor_sku,
         'nickname': item.nickname,
+        'availability': item.availability,
       };
       productsArray.add(productData);
     }
