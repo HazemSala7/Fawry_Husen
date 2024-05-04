@@ -117,8 +117,6 @@ class LocalStorage {
       "5XL": false
     });
     sizeDataBox.put('kidsboysSizes', {
-      "6-9 شهر": false,
-      "9-12 شهر": false,
       "S": false,
       "2سنة": false,
       "2-3سنة": false,
@@ -138,11 +136,6 @@ class LocalStorage {
       "13-14 سنة": false,
     });
     sizeDataBox.put('girls_kids_sizes', {
-      "0-3 شهر": false,
-      "3-6 شهر": false,
-      "6-9 شهر": false,
-      "9-12 شهر": false,
-      "12-18 شهر": false,
       "2سنة": false,
       "2-3سنة": false,
       "3سنة": false,
@@ -159,10 +152,6 @@ class LocalStorage {
       "12 سنة": false,
       "12-13 سنة": false,
       "13-14 سنة": false,
-      "L": false,
-      "M": false,
-      "XL": false,
-      "4XL": false,
     });
     sizeDataBox.put('Kids_shoes_sizes', {
       "21": false,
