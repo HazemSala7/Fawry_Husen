@@ -117,7 +117,6 @@ class LocalStorage {
       "5XL": false
     });
     sizeDataBox.put('kidsboysSizes', {
-      "S": false,
       "2سنة": false,
       "2-3سنة": false,
       "3سنة": false,
