@@ -122,12 +122,12 @@ var sub_categories_Men__sizes = [
   },
   {
     "name": "بلايز",
-    "key": "Men Tops, Men Plus Size Tops",
+    "key": "Men Tops, Men Plus Size Tops, Men Active Tops, Men Outdoor Apparel",
   },
   {
     "name": "تنسيقات واطقم",
     "key":
-        "Men Co-ords, Men Co ords, Men Plus Size Co-ords, Men Plus Size Co ords",
+        "Men Co-ords, Men Co ords, Men Plus Size Co-ords, Men Plus Size Co ords,Men Active Sets, Men Outdoor Apparel",
   },
   {
     "name": "هوديز",
@@ -136,19 +136,17 @@ var sub_categories_Men__sizes = [
   },
   {
     "name": "ملابس سفلية",
-    "key": "Men Bottoms, Men Plus Size Bottoms",
+    "key":
+        "Men Bottoms, Men Plus Size Bottoms, Men Active Bottoms, Plus Size Sports Bottoms",
   },
   {
     "name": "ملابس خارجية",
-    "key": "Men Outerwear, Men Plus Size Outerwear",
+    "key":
+        "Men Outerwear, Men Plus Size Outerwear,Men Knitwear, Men Plus Size Knitwear",
   },
   {
     "name": "اقمشة جينز",
     "key": "Men Denim, Men Plus Size Denim",
-  },
-  {
-    "name": "منسوجات",
-    "key": "Men Knitwear, Men Plus Size Knitwear",
   },
   {
     "name": "بدلات",
@@ -158,6 +156,22 @@ var sub_categories_Men__sizes = [
   {
     "name": "ملابس سباحة",
     "key": "Men Swimwear",
+  },
+  {
+    "name": "ملابس رياضية",
+    "key": "Sports %26 Outdoor, Sports  Outdoor",
+  },
+  {
+    "name": "اكسسوارات",
+    "key": "Apparel Accessories",
+  },
+  {
+    "name": "مجوهرات وساعات",
+    "key": "Jewelry %26 Watches, Jewelry  Watches",
+  },
+  {
+    "name": "احذية",
+    "key": "Men Shoes",
   },
 ];
 
@@ -175,12 +189,8 @@ var sub_categories_women_appearel = [
     "key": "Women Bottoms",
   },
   {
-    "name": "ملابس منسوجات",
-    "key": "Women Knitwear",
-  },
-  {
     "name": "ملابس خارجية",
-    "key": "Women Outerwear",
+    "key": "Women Outerwear,Women Knitwear",
   },
   {
     "name": "اقمشة جينز",
@@ -188,7 +198,7 @@ var sub_categories_women_appearel = [
   },
   {
     "name": "بلايز نسائية",
-    "key": "Women Sweatshirts",
+    "key": "Women Sweatshirts,Women Knitwear",
   },
   {
     "name": "ملابس خليجية",
@@ -219,6 +229,34 @@ var sub_categories_women_appearel = [
     "key":
         "Women Tops, Blouses %26 Tee,  Blouses  Tee, Women Blouses, Women T Shirts, Women Tank Tops Camis",
   },
+  {
+    "name": "ملابس علوية",
+    "key": "Women Tops,Blouses & Tee",
+  },
+  {
+    "name": "ملابس داخلية",
+    "key": "Underwear & Sleepwear, Underwear Sleepwear",
+  },
+  {
+    "name": "اكسسوارات",
+    "key": "Apparel Accessories",
+  },
+  {
+    "name": "مجوهرات وساعات",
+    "key": "Jewelry %26 Watches, Jewelry  Watches",
+  },
+  {
+    "name": "الموضة والجمال",
+    "key": "Beauty %26 Health, Jewelry %26 Watches",
+  },
+  {
+    "name": "احذية",
+    "key": "Women Shoes",
+  },
+  {
+    "name": "ملتزمات اعراس",
+    "key": "Weddings %26 Events, Weddings %26 Events",
+  },
 ];
 
 var sub_categories_women_plus_sizes = [
@@ -232,7 +270,7 @@ var sub_categories_women_plus_sizes = [
   },
   {
     "name": "ملابس علوية",
-    "key": "Plus Size Tops",
+    "key": "Plus Size Tops،Plus Size Knitwear",
   },
   {
     "name": "ملابس سفلية",
@@ -240,15 +278,11 @@ var sub_categories_women_plus_sizes = [
   },
   {
     "name": "ملابس خارجية",
-    "key": "Plus Size Outerwears",
+    "key": "Plus Size Outerwears،Plus Size Knitwear",
   },
   {
     "name": "تنسيقات واطقم",
     "key": "Plus Size Co-Ords, Plus Size Co Ords",
-  },
-  {
-    "name": "منسوجات",
-    "key": "Plus Size Knitwear",
   },
   {
     "name": "ملابس خليجية",
@@ -256,7 +290,7 @@ var sub_categories_women_plus_sizes = [
   },
   {
     "name": "بلايز  نسائية",
-    "key": "Plus Size Sweatshirts",
+    "key": "Plus Size Sweatshirts،Plus Size Knitwear",
   },
   {
     "name": "بدلات",
@@ -284,11 +318,13 @@ var sub_categories_kids_sizes = [
   },
   {
     "name": "بلايز",
-    "key": "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops",
+    "key":
+        "Young Boys Tops, Tween Boys Denim Tops, Tween Boys Tops،Young Boys Knitwear, Tween Boys Knitwear",
   },
   {
     "name": "ملابس خارجية",
-    "key": "Young Boys Outerwear, Tween Boys Outerwear",
+    "key":
+        "Young Boys Outerwear, Tween Boys Outerwear،Young Boys Knitwear, Tween Boys Knitwear",
   },
   {
     "name": "تنسيقات واطقم",
@@ -297,10 +333,6 @@ var sub_categories_kids_sizes = [
   {
     "name": "هوديز",
     "key": "Young Boys Sweatshirts, Tween Boys Sweatshirts",
-  },
-  {
-    "name": "منسوجات",
-    "key": "Young Boys Knitwear, Tween Boys Knitwear",
   },
   {
     "name": "ملابس سفلية",
@@ -371,17 +403,14 @@ var sub_categories_Girls = [
         "Young Girls Sets,Young Girls Pajamas, Tween Girls Sets, Teen Girls Sets",
   },
   {
-    "name": "منسوجات",
-    "key": "Tween Girls Knitwear, Young Girls Knitwear",
-  },
-  {
     "name": "هوديز",
     "key":
         "Young Girls Sweatshirts, Tween Girls Sweatshirts, Teen Girls Sweatshirts",
   },
   {
     "name": "ملابس علوية",
-    "key": "Young Girls Tops, Tween Girls Tops, Teen Girls Tops",
+    "key":
+        "Young Girls Tops, Tween Girls Tops, Teen Girls Tops،Tween Girls Knitwear, Young Girls Knitwear",
   },
   {
     "name": "ملابس خارجية",
@@ -1000,7 +1029,7 @@ var sub_categories_Accessories = [
         "Men Scarves %26 Scarf Accessories,Men Keychains %26 Accessories,Men Belts %26 Belts Accessories, Men s Wallets Card Cases",
   },
   {
-    "name": "نظارات  شمسية رجالية ",
+    "name": "نظارات شمسية رجالية ",
     "key":
         "Men Sunglasses %26 Accessories, Men Sunglasses  Accessories, Men Glasses %26 Eyewear Accessories",
   },

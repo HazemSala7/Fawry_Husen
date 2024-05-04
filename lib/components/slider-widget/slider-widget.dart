@@ -29,23 +29,11 @@ class _SlideImageState extends State<SlideImage> {
       return ImageSlideshow(
         width: double.infinity,
         indicatorColor: MAIN_COLOR,
+        isLoop: true,
         height: MediaQuery.of(context).size.height * 0.4,
         children: widget.slideimage
             .map((e) => InkWell(
-                  onTap: () {
-                    // if (widget.click) {
-                    //   if (e.product_id.length < 5) {
-                    //     NavigatorFunction(
-                    //         context,
-                    //         ProductScreen(
-                    //             name: " - ",
-                    //             category_id: 0,
-                    //             image: "-",
-                    //             product_id:
-                    //                 int.parse(e.product_id.toString())));
-                    //   }
-                    // }
-                  },
+                  onTap: () {},
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: [

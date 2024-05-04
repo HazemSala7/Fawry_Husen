@@ -376,33 +376,40 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                         }
                                       } else if (SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Underwear & Sleepwear" ||
+                                              "Underwear & Sleepwear, Underwear Sleepwear" ||
                                           SubCategories[index]["key"]
                                                   .toString() ==
                                               "Apparel Accessories" ||
                                           SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Jewelry & Watches" ||
-                                          SubCategories[index]
-                                                      ["key"]
+                                              "Jewelry %26 Watches, Jewelry  Watches" ||
+                                          SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Beauty & Health" ||
+                                              "Beauty %26 Health, Jewelry %26 Watches" ||
                                           SubCategories[index]["key"]
                                                   .toString() ==
                                               "Women Shoes" ||
                                           SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Weddings & Events" ||
+                                              "Weddings %26 Events, Weddings %26 Events" ||
                                           SubCategories[index]["key"]
                                                   .toString() ==
                                               "Men Shoes" ||
                                           SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Sports & Outdoor") {
+                                              "Sports %26 Outdoor, Sports  Outdoor") {
                                         Map sizes = {};
-                                        if (SubCategories[index]["key"]
+                                        if (SubCategories[index]
+                                                        ["key"]
                                                     .toString() ==
-                                                "Jewelry & Watches" ||
+                                                "Jewelry %26 Watches, Jewelry  Watches" ||
+                                            SubCategories[index]
+                                                        ["key"]
+                                                    .toString() ==
+                                                "Sports %26 Outdoor, Sports  Outdoor" ||
+                                            SubCategories[index]["key"]
+                                                    .toString() ==
+                                                "Beauty %26 Health, Jewelry %26 Watches" ||
                                             SubCategories[index]["key"]
                                                     .toString() ==
                                                 "Apparel Accessories") {
@@ -475,12 +482,12 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                         } else {
                                           if (SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Weddings & Events") {
+                                              "Weddings %26 Events, Weddings %26 Events") {
                                             sizes = LocalStorage()
                                                 .getSize("Weddings & Events");
                                           } else if (SubCategories[index]["key"]
                                                   .toString() ==
-                                              "Underwear & Sleepwear") {
+                                              "Underwear & Sleepwear, Underwear Sleepwear") {
                                             sizes = LocalStorage().getSize(
                                                 "Underwear_Sleepwear_sizes");
                                           }
