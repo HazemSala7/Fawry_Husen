@@ -164,7 +164,7 @@ class _ProductScreenState extends State<ProductScreen> {
       orderedItems.add(InitialData["item"]);
       removeDuplicatesById(orderedItems);
       initSubKey = InitialData["item"]["categories"].length >= 2
-          ? InitialData["item"]["categories"][2][0]
+          ? InitialData["item"]["categories"][1][0]
           : InitialData["item"]["categories"].length > 1
               ? InitialData["item"]["categories"][1][0]
               : InitialData["item"]["categories"][0][0];
@@ -234,8 +234,12 @@ class _ProductScreenState extends State<ProductScreen> {
     }
     var additionalItems = [];
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
-    var _products = await getProductByCategory(main_category_key_final,
-        initSubKey, sizesString, widget.sizes[0] ?? '', page);
+    var _products = await getProductByCategory(
+        main_category_key_final,
+        initSubKey,
+        sizesString,
+        widget.sizes.length == 1 ? widget.sizes[0] : "",
+        page);
     if (_products != null) {
       if (_products["items"].length != 0) {
         additionalItems = _products["items"];
@@ -247,8 +251,8 @@ class _ProductScreenState extends State<ProductScreen> {
         additionalItems = _products["items"];
       } else {
         var main_category_key_final = initMAINKey.replaceAll('&', '%26');
-        var _products = await getProductByCategory(
-            main_category_key_final, initSubKey, "", widget.sizes[0], 1);
+        var _products = await getProductByCategory(main_category_key_final,
+            initSubKey, "", widget.sizes.length == 1 ? widget.sizes[0] : "", 1);
         if (_products != null) {
           if (_products["items"].length != 0) {
             additionalItems = _products["items"];

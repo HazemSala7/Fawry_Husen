@@ -21,6 +21,7 @@ import '../../firebase/cart/CartProvider.dart';
 import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../../services/dialogs/bottom-dialogs.dart';
+import '../newest_orders/newest_orders.dart';
 import '../product-screen/product-screen.dart';
 
 class Cart extends StatefulWidget {
@@ -33,6 +34,21 @@ class Cart extends StatefulWidget {
 class _CartState extends State<Cart> {
   @override
   bool clicked = false;
+  bool Login = false;
+  String user_id = "";
+  setControllers() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? login = prefs.getBool('login');
+    String UserID = prefs.getString('user_id') ?? "";
+    user_id = UserID;
+    if (login == true) {
+      Login = true;
+    } else {
+      Login = false;
+    }
+    setState(() {});
+  }
+
   Widget build(BuildContext context) {
     // final cartProvider = context.watch<CartProvider>();
     return Consumer<CartProvider>(
@@ -52,21 +68,30 @@ class _CartState extends State<Cart> {
               appBar: AppBar(
                 centerTitle: true,
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: FaIcon(
+                  //     FontAwesomeIcons.facebookMessenger,
+                  //     color: Colors.black,
+                  //     size: 25,
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   width: 10,
+                  // ),
+                  InkWell(
+                    onTap: () {
+                      NavigatorFunction(
+                          context,
+                          NewestOrders(
+                            user_id: user_id,
+                          ));
+                    },
                     child: FaIcon(
-                      FontAwesomeIcons.facebookMessenger,
+                      FontAwesomeIcons.clock,
                       color: Colors.black,
                       size: 25,
                     ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  FaIcon(
-                    FontAwesomeIcons.clock,
-                    color: Colors.black,
-                    size: 25,
                   ),
                   SizedBox(
                     width: 10,
@@ -260,6 +285,7 @@ class _CartState extends State<Cart> {
   void initState() {
     super.initState();
     startShowCase();
+    setControllers();
   }
 
   deleteCart(removeProduct) async {

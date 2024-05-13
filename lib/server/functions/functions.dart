@@ -20,6 +20,8 @@ import '../../constants/constants.dart';
 import '../../firebase/favourites/FavouriteControler.dart';
 import '../../firebase/favourites/favourite.dart';
 import '../../firebase/order/OrderFirebaseModel.dart';
+import '../../firebase/used_copons/UsedCoponsController.dart';
+import '../../firebase/used_copons/UsedCoponsFirebaseModel.dart';
 import '../domain/domain.dart';
 
 var headers = {'ContentType': 'application/json', "Connection": "Keep-Alive"};
@@ -80,8 +82,16 @@ getProducts(int page) async {
   }
 }
 
+getSliderProducts(url) async {
+  var response = await http.get(Uri.parse(url), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res;
+}
+
 getSpeceficProduct(id) async {
   try {
+    print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
+    print("dsf");
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
@@ -122,7 +132,8 @@ getOrderDetails(id) async {
   }
 }
 
-addOrder({context, address, phone, city, name, description, total}) async {
+addOrder(
+    {context, address, phone, city, name, description, total, copon}) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
@@ -171,7 +182,9 @@ addOrder({context, address, phone, city, name, description, total}) async {
       String stream = await response.stream.bytesToString();
       final decodedMap = json.decode(stream);
       final OrderController orderService = OrderController();
+      final UsedCoponsController usedCoponService = UsedCoponsController();
       String Order_ID = Uuid().v4();
+      String usedCopon_ID = Uuid().v4();
       var now = new DateTime.now();
       var formatter = new DateFormat('yyyy-MM-dd');
       String formattedDate = formatter.format(now);
@@ -185,6 +198,13 @@ addOrder({context, address, phone, city, name, description, total}) async {
           user_id: UserID.toString(),
           created_at: formattedDate.toString());
       orderService.addUser(newItem);
+      UsedCoponsFirebaseModel newUsedCoponItem = UsedCoponsFirebaseModel(
+        id: usedCopon_ID,
+        copon: usedCopon_ID.toString(),
+        order_id: decodedMap["id"].toString(),
+        user_id: UserID.toString(),
+      );
+      usedCoponService.addUsedCopon(newUsedCoponItem);
     } else {
       print(response.reasonPhrase);
     }
@@ -239,7 +259,9 @@ addOrder({context, address, phone, city, name, description, total}) async {
       String stream = await response.stream.bytesToString();
       final decodedMap = json.decode(stream);
       final OrderController orderService = OrderController();
+      final UsedCoponsController usedCoponService = UsedCoponsController();
       String Order_ID = Uuid().v4();
+      String usedCopon_ID = Uuid().v4();
       var now = new DateTime.now();
       var formatter = new DateFormat('yyyy-MM-dd');
       String formattedDate = formatter.format(now);
@@ -253,6 +275,13 @@ addOrder({context, address, phone, city, name, description, total}) async {
           user_id: UserID.toString(),
           created_at: formattedDate.toString());
       orderService.addUser(newItem);
+      UsedCoponsFirebaseModel newUsedCoponItem = UsedCoponsFirebaseModel(
+        id: usedCopon_ID,
+        copon: usedCopon_ID.toString(),
+        order_id: decodedMap["id"].toString(),
+        user_id: UserID.toString(),
+      );
+      usedCoponService.addUsedCopon(newUsedCoponItem);
     } else {
       print(response.reasonPhrase);
     }

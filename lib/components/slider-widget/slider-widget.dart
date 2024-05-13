@@ -1,4 +1,5 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fawri_app_refactor/pages/slider_products/slider_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import '../../constants/constants.dart';
@@ -33,7 +34,9 @@ class _SlideImageState extends State<SlideImage> {
         height: MediaQuery.of(context).size.height * 0.4,
         children: widget.slideimage
             .map((e) => InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    NavigatorFunction(context, SliderProducts(url: e.action));
+                  },
                   child: Stack(
                     alignment: Alignment.centerRight,
                     children: [

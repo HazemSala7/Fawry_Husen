@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../firebase/user/UserController.dart';
 import '../../authentication/login_screen/login_screen.dart';
 import '../../privacy_policy/privacy_policy.dart';
+import '../../switch_policy/switch_policy.dart';
 import '../../who/who.dart';
 import '../home_screen.dart';
 
@@ -311,8 +312,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.privacy_tip,
                       iconornot: true,
                       NavigatorFunction: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Privacy()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SwitchPolicy()));
                       }),
                   lineMethod(),
                   profileCard(

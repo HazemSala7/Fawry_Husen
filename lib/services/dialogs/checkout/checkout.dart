@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
@@ -669,7 +669,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                   phone: PhoneController.text,
                                   name: NameController.text,
                                   description: OrderController.text,
-                                  total: TOTALFINAL.toString());
+                                  total: TOTALFINAL.toString(),
+                                  copon: CoponController.text);
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               String UserID = prefs.getString('user_id') ?? "";
@@ -849,6 +850,24 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   bool loading = false;
   bool coponed = false;
 
+  Future<bool> checkCouponInFirebase(String coupon, String userId) async {
+    try {
+      // Query Firestore to check if the coupon and user_id match any record
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('used_copons')
+          .where('copon', isEqualTo: coupon)
+          .where('user_id', isEqualTo: userId)
+          .get();
+
+      // If there are any matching records, return true
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      // Handle any errors here
+      print("Error checking coupon in Firebase: $e");
+      return false;
+    }
+  }
+
   Widget FirstScreen() {
     return Column(
       key: Key("2"),
@@ -998,37 +1017,57 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                         padding: const EdgeInsets.all(8.0),
                         child: InkWell(
                           onTap: () async {
-                            var res =
-                                await getCoupun(CoponController.text) ?? null;
-                            if (res.toString() == "null" ||
-                                res.toString() == "false") {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            String UserID = prefs.getString('user_id') ?? "";
+                            bool couponExists = await checkCouponInFirebase(
+                                CoponController.text, UserID.toString());
+                            if (couponExists) {
                               CoponMessage =
-                                  "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
+                                  "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
                               setState(() {});
                               _couponMessageTimer?.cancel();
 
                               // Set a new timer to clear the message after 15 seconds
                               _couponMessageTimer =
-                                  Timer(Duration(seconds: 15), () {
+                                  Timer(Duration(seconds: 5), () {
                                 setState(() {
                                   CoponMessage = "";
                                 });
                               });
                             } else {
-                              CoponMessage =
-                                  "تم خصم قيمة الكوبون من مجموع الطلبية";
+                              var res =
+                                  await getCoupun(CoponController.text) ?? null;
+                              if (res.toString() == "null" ||
+                                  res.toString() == "false") {
+                                CoponMessage =
+                                    "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
+                                setState(() {});
+                                _couponMessageTimer?.cancel();
 
-                              if (!coponed) {
-                                widget.total = widget.total * (1 - res);
-                              }
-                              coponed = true;
-                              setState(() {});
-                              _couponMessageTimer =
-                                  Timer(Duration(seconds: 15), () {
-                                setState(() {
-                                  CoponMessage = "";
+                                // Set a new timer to clear the message after 15 seconds
+                                _couponMessageTimer =
+                                    Timer(Duration(seconds: 5), () {
+                                  setState(() {
+                                    CoponMessage = "";
+                                  });
                                 });
-                              });
+                              } else {
+                                CoponMessage =
+                                    "تم خصم قيمة الكوبون من مجموع الطلبية";
+
+                                if (!coponed) {
+                                  widget.total = widget.total * (1 - res);
+                                }
+                                coponed = true;
+                                setState(() {});
+                                _couponMessageTimer =
+                                    Timer(Duration(seconds: 15), () {
+                                  setState(() {
+                                    CoponMessage = "";
+                                  });
+                                });
+                              }
                             }
                           },
                           child: Container(
