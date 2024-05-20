@@ -774,15 +774,15 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                               child: FadeInAnimation(
                                                 curve: Curves.easeOut,
                                                 child: ProductWidget(
-                                                    inCart: cartProvider.isProductCart(
-                                                        AllProducts[index]
-                                                            ["id"]),
+                                                    inCart:
+                                                        cartProvider.isProductCart(
+                                                            AllProducts[index]
+                                                                ["id"]),
                                                     SIZES: widget.SIZES,
                                                     ALL: false,
                                                     SubCategories:
                                                         SubCategories,
-                                                    sizes:
-                                                        LocalStorage().sizeUser,
+                                                    sizes: [widget.size],
                                                     url:
                                                         "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
                                                     isLiked: isLiked,

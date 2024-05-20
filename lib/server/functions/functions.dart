@@ -90,18 +90,16 @@ getSliderProducts(url) async {
 
 getSpeceficProduct(id) async {
   try {
-    print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
-    print("dsf");
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
+    print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
     var response = await http.get(
         Uri.parse("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
   } catch (e) {
-    print("1");
     var DomainName = await FirebaseRemoteConfigClass().getDomain();
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
@@ -330,10 +328,8 @@ getProductByCategory(category_id, sub_category_key, String size,
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
     if (selected_sizes != '') {
-      Final_URL += "&selected_sizes=$selected_sizes";
+      Final_URL += "&size=$selected_sizes";
     }
-    print("Final_URL");
-    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;

@@ -289,28 +289,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                             )),
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: MAIN_COLOR),
-                                      child: Center(
-                                        child: IconButton(
-                                            onPressed: () {
-                                              showPhoneDialog()
-                                                  .showBottomDialog(context);
-                                            },
-                                            icon: Icon(
-                                              Icons.phone,
-                                              color: Colors.white,
-                                              size: 30,
-                                            )),
-                                      ),
-                                    ),
+                                    // SizedBox(
+                                    //   width: 15,
+                                    // ),
+                                    // Container(
+                                    //   height: 50,
+                                    //   width: 50,
+                                    //   decoration: BoxDecoration(
+                                    //       shape: BoxShape.circle,
+                                    //       color: MAIN_COLOR),
+                                    //   child: Center(
+                                    //     child: IconButton(
+                                    //         onPressed: () {
+                                    //           showPhoneDialog()
+                                    //               .showBottomDialog(context);
+                                    //         },
+                                    //         icon: Icon(
+                                    //           Icons.phone,
+                                    //           color: Colors.white,
+                                    //           size: 30,
+                                    //         )),
+                                    //   ),
+                                    // ),
                                   ],
                                 )),
                           )
@@ -354,6 +354,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await prefs.setBool('login', true);
       NavigatorFunction(context, CategorySplash());
     }).catchError((error) {
+      Navigator.pop(context);
       Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
     });
 
@@ -362,38 +363,75 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   signInWithFacebook() async {
-    final LoginResult loginResult = await FacebookAuth.instance
-        .login(permissions: ['email', 'public_profile', 'user_birthday']);
-    final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(loginResult.accessToken!.token);
-    var userDate = await FacebookAuth.instance.getUserData();
-    String userDataJson = json.encode(userDate);
-    String user_Id = Uuid().v4();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? TOKEN = await prefs.getString('device_token');
-    UserItem newItem = UserItem(
-      id: user_Id,
-      token: TOKEN.toString(),
-      email: userDate["email"],
-      password: "",
-      birthdate: '',
-      address: '',
-      gender: '',
-      area: '',
-      city: '',
-      phone: '',
-    );
-    userService.addUser(newItem).then((_) async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_id', user_Id);
-      await prefs.setBool('login', true);
-      NavigatorFunction(context, CategorySplash());
-    }).catchError((error) {
-      Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
-    });
     try {
-      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      final LoginResult loginResult = await FacebookAuth.instance
+          .login(permissions: ['email', 'public_profile', 'user_birthday']);
+      final OAuthCredential facebookAuthCredential =
+          FacebookAuthProvider.credential(loginResult.accessToken!.token);
+      var userDate = await FacebookAuth.instance.getUserData();
+      String userDataJson = json.encode(userDate);
+      String user_Id = Uuid().v4();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? TOKEN = await prefs.getString('device_token');
+      UserItem newItem = UserItem(
+        id: user_Id,
+        token: TOKEN.toString(),
+        email: userDate["email"],
+        password: "",
+        birthdate: '',
+        address: '',
+        gender: '',
+        area: '',
+        city: '',
+        phone: '',
+      );
+      userService.addUser(newItem).then((_) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', user_Id);
+        await prefs.setBool('login', true);
+        NavigatorFunction(context, CategorySplash());
+      }).catchError((error) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
+      });
+
+      // Try to sign in with Facebook credential
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'account-exists-with-different-credential') {
+        // Handle account linking here
+        // Get the email address of the user.
+        String email = e.email!;
+
+        // Fetch sign-in methods for the email.
+        List<String> methods =
+            await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+
+        // Check if the user has already signed in using a different provider.
+        if (methods.contains('password')) {
+          // User already signed in with email/password, show error or handle accordingly.
+          Fluttertoast.showToast(
+              msg: "You have already signed in with email/password.");
+        } else {
+          // User signed in with a different provider, link the accounts.
+          // Retrieve current user and link the Facebook credential.
+          User? currentUser = FirebaseAuth.instance.currentUser;
+          if (currentUser != null) {
+            // Retrieve loginResult here
+            final LoginResult loginResult = await FacebookAuth.instance.login(
+                permissions: ['email', 'public_profile', 'user_birthday']);
+            final OAuthCredential facebookAuthCredential =
+                FacebookAuthProvider.credential(loginResult.accessToken!.token);
+            await currentUser.linkWithCredential(facebookAuthCredential);
+            // Continue with your application flow after linking the accounts.
+          }
+        }
+      } else {
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
+      }
     } catch (e) {
+      Navigator.pop(context);
       Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
     }
   }

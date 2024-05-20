@@ -1,5 +1,6 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:fawri_app_refactor/pages/slider_products/slider_products.dart';
+import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
+import 'package:fawri_app_refactor/pages/home_screen/slider_products/slider_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import '../../constants/constants.dart';
@@ -35,7 +36,16 @@ class _SlideImageState extends State<SlideImage> {
         children: widget.slideimage
             .map((e) => InkWell(
                   onTap: () {
-                    NavigatorFunction(context, SliderProducts(url: e.action));
+                    NavigatorFunction(
+                        context,
+                        HomeScreen(
+                          title: e.title == null || e.title.toString() == ""
+                              ? "سلايدر 1 سلايدر 1"
+                              : e.title,
+                          url: e.action,
+                          selectedIndex: 0,
+                          slider: true,
+                        ));
                   },
                   child: Stack(
                     alignment: Alignment.centerRight,

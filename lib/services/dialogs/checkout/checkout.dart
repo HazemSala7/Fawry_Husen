@@ -714,8 +714,14 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                         insetPadding: EdgeInsets.all(0),
                                         child: InkWell(
                                           onTap: () async {
-                                            NavigatorFunction(context,
-                                                HomeScreen(selectedIndex: 0));
+                                            NavigatorFunction(
+                                                context,
+                                                HomeScreen(
+                                                  title: "",
+                                                  selectedIndex: 0,
+                                                  slider: false,
+                                                  url: "",
+                                                ));
                                             SharedPreferences prefs =
                                                 await SharedPreferences
                                                     .getInstance();
@@ -772,6 +778,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                                     NavigatorFunction(
                                                         context,
                                                         HomeScreen(
+                                                            title: "",
+                                                            slider: false,
+                                                            url: "",
                                                             selectedIndex: 0));
                                                     SharedPreferences prefs =
                                                         await SharedPreferences

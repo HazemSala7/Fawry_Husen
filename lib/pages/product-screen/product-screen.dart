@@ -177,8 +177,8 @@ class _ProductScreenState extends State<ProductScreen> {
     int incrementPage = page;
     updatedQueryParameters['page'] = "1";
     updatedQueryParameters['sub_category'] = initSubKey.toString();
-    var _products = await getProductByCategory(main_category_key_final,
-        initSubKey, "", widget.sizes.length == 1 ? widget.sizes[0] : "", 1);
+    var _products = await getProductByCategory(
+        main_category_key_final, initSubKey, "", widget.sizes.join(', '), 1);
     var additionalItems = [];
     if (_products != null) {
       if (_products["items"].length != 0) {

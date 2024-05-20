@@ -10,10 +10,17 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
+import 'slider_products/slider_products.dart';
+
 class HomeScreen extends StatefulWidget {
   int selectedIndex = 0;
+  bool slider = false;
+  String url, title;
   HomeScreen({
     Key? key,
+    required this.url,
+    required this.title,
+    required this.slider,
     required this.selectedIndex,
   }) : super(key: key);
 
@@ -38,14 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  List<Widget> _listOfWidget = <Widget>[
-    MainScreen(),
-    CategoryScreen(),
-    Favourite(),
-    ProfileScreen(),
-  ];
-
   Widget build(BuildContext context) {
+    List<Widget> _listOfWidget = <Widget>[
+      widget.slider
+          ? SliderProducts(
+              url: widget.url,
+              title: widget.title,
+            )
+          : MainScreen(),
+      CategoryScreen(),
+      Favourite(),
+      ProfileScreen(),
+    ];
     return Scaffold(
       appBar: PreferredSize(
           child: ShowCaseWidget(

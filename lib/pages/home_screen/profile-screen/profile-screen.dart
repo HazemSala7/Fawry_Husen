@@ -163,6 +163,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen(
                                       selectedIndex: 2,
+                                      title: "",
+                                      slider: false,
+                                      url: "",
                                     )));
                       }),
                   lineMethod(),
@@ -242,13 +245,78 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: Icons.logout,
                           iconornot: true,
                           NavigatorFunction: () async {
-                            SharedPreferences preferences =
-                                await SharedPreferences.getInstance();
-                            await preferences.clear();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: Text(
+                                    "هل تريد بالتأكيد تسجيل الخروج من حسابك ؟",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  actions: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            SharedPreferences preferences =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            await preferences.clear();
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginScreen()));
+                                          },
+                                          child: Container(
+                                            height: 50,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: MAIN_COLOR),
+                                            child: Center(
+                                              child: Text(
+                                                "نعم",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            height: 50,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: MAIN_COLOR),
+                                            child: Center(
+                                              child: Text(
+                                                "لا",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                );
+                              },
+                            );
                           })
                       : profileCard(
                           name: "تسجيل دخول",
@@ -261,6 +329,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     builder: (context) => LoginScreen()));
                           }),
                   lineMethod(),
+                  // profileCard(
+                  //     name: "الدعم الفني",
+                  //     icon: Icons.support,
+                  //     iconornot: true,
+                  //     NavigatorFunction: () {
+                  //       Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => LoginScreen()));
+                  //     }),
+                  // lineMethod(),
                 ],
               ),
             ),

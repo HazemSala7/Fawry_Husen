@@ -91,7 +91,10 @@ class _CategorySplashState extends State<CategorySplash> {
                   NavigatorFunction(
                       context,
                       HomeScreen(
+                        title: "",
                         selectedIndex: 0,
+                        slider: false,
+                        url: "",
                       ));
                 },
                 child: Padding(

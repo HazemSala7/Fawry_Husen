@@ -180,7 +180,7 @@ class _SizesPageState extends State<SizesPage> {
                         await prefs.setBool('is_selected_size', true);
 
                         print("widget.main_category");
-                        print(widget.main_category);
+                        print(widget.sizes);
                         NavigatorFunction(
                             context,
                             ShowCaseWidget(

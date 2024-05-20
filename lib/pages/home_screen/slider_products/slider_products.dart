@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
-import '../../../LocalDB/Provider/CartProvider.dart';
-import '../../../LocalDB/Provider/FavouriteProvider.dart';
-import '../../../constants/constants.dart';
+import '../../../../LocalDB/Provider/CartProvider.dart';
+import '../../../../LocalDB/Provider/FavouriteProvider.dart';
+import '../../../../constants/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../../../server/domain/domain.dart';
-import '../../services/app_bar/app_bar.dart';
+import '../../../../server/domain/domain.dart';
+import '../../../services/app_bar/app_bar.dart';
 
 class SliderProducts extends StatefulWidget {
-  final url;
-  const SliderProducts({super.key, required this.url});
+  final url, title;
+  const SliderProducts({super.key, required this.url, required this.title});
 
   @override
   State<SliderProducts> createState() => _SliderProductsState();
@@ -27,23 +27,10 @@ class _SliderProductsState extends State<SliderProducts> {
   TextEditingController? textController;
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
-    return Container(
-      color: MAIN_COLOR,
-      child: SafeArea(
-          child: Scaffold(
-        appBar: PreferredSize(
-            child: ShowCaseWidget(
-              builder: Builder(
-                  builder: (context) => AppBarWidget(
-                        main_Category: "",
-                        containerWidths: "",
-                        keys: "",
-                        name: "",
-                        sizes: "",
-                      )),
-            ),
-            preferredSize: Size.fromHeight(60)),
-        body: Column(
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Column(
           children: [
             Row(
               mainAxisSize: MainAxisSize.max,
@@ -239,7 +226,22 @@ class _SliderProductsState extends State<SliderProducts> {
               ),
           ],
         ),
-      )),
+        Opacity(
+          opacity: 0.7,
+          child: Container(
+            width: double.infinity,
+            height: 40,
+            color: MAIN_COLOR,
+            child: Center(
+              child: Text(
+                widget.title,
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
