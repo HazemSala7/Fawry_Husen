@@ -932,7 +932,9 @@ class _ProductItemState extends State<ProductItem> {
                                       selectedSizeItem["quantity"].toString()) <
                                   2) {
                                 sendNotification(
-                                    context: context, USER_TOKENS: userIds);
+                                    context: context,
+                                    USER_TOKENS: userIds,
+                                    productImage: widget.image.toString());
                               }
                             } else {
                               setState(() {

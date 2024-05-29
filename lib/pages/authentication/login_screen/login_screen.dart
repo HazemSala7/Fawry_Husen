@@ -352,7 +352,11 @@ class _LoginScreenState extends State<LoginScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_id', user_Id);
       await prefs.setBool('login', true);
-      NavigatorFunction(context, CategorySplash());
+      NavigatorFunction(
+          context,
+          CategorySplash(
+            selectedIndex: 0,
+          ));
     }).catchError((error) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
@@ -389,7 +393,11 @@ class _LoginScreenState extends State<LoginScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('user_id', user_Id);
         await prefs.setBool('login', true);
-        NavigatorFunction(context, CategorySplash());
+        NavigatorFunction(
+            context,
+            CategorySplash(
+              selectedIndex: 0,
+            ));
       }).catchError((error) {
         Navigator.pop(context);
         Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
@@ -460,7 +468,11 @@ class _LoginScreenState extends State<LoginScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('user_id', user_Id);
       await prefs.setBool('login', true);
-      NavigatorFunction(context, CategorySplash());
+      NavigatorFunction(
+          context,
+          CategorySplash(
+            selectedIndex: 0,
+          ));
     }).catchError((error) {
       setState(() {
         loading = false;

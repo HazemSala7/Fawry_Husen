@@ -145,13 +145,6 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
                     ButtonColor: MAIN_COLOR,
                     NameColor: Colors.white,
                   ),
-                Text(
-                  "تخطي الأن",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.black87),
-                )
               ],
             ),
           ),

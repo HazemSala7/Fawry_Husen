@@ -1,8 +1,10 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../LocalDB/Database/local_storage.dart';
 import '../../../constants/constants.dart';
+import '../../../pages/products-category/products-category.dart';
 import '../../../server/functions/functions.dart';
 import '../sizes_page/sizes_page.dart';
 
@@ -154,6 +156,22 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                         categoryItems[2].isSelected =
                             !categoryItems[2].isSelected;
                       });
+                      NavigatorFunction(
+                          context,
+                          ShowCaseWidget(
+                              builder: Builder(
+                            builder: (context) => ProductsCategories(
+                              SIZES: [],
+                              category_id: "Kids",
+                              search: false,
+                              size: "",
+                              containerWidths: "null",
+                              main_category: "Kids",
+                              keys: "null",
+                              sizes: "null",
+                              name: "قسم الأولاد و البنات",
+                            ),
+                          )));
                     },
                   ),
                 ),

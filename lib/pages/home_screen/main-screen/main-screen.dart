@@ -312,15 +312,15 @@ class _MainScreenState extends State<MainScreen> {
       try {
         // Fetch data from the API
         var _products = await getProducts(_page);
-        if (_products.isNotEmpty) {
+        if (_products["items"].isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products["items"]);
           });
         } else {
-          // This means there is no more data
-          // and therefore, we will not send another GET request
+          _page = 1;
+          var _products = await getProducts(_page);
           setState(() {
-            _hasNextPage = false;
+            AllProducts.addAll(_products["items"]);
           });
         }
       } catch (err) {

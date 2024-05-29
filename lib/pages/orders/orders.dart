@@ -152,7 +152,8 @@ class _OrdersState extends State<Orders> {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
-                                          color: Colors.white,
+                                          color: const Color.fromARGB(
+                                              255, 43, 41, 41),
                                         ),
                                         child: Row(
                                           mainAxisAlignment:

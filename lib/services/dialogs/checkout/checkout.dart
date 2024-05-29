@@ -24,6 +24,7 @@ import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../firebase/cart/CartController.dart';
 import '../../../firebase/user/UserController.dart';
 import '../../../firebase/user/UserModel.dart';
+import '../../../pages/newest_orders/newest_orders.dart';
 
 class CheckoutBottomDialog extends StatefulWidget {
   var total;
@@ -123,6 +124,20 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
       ),
     );
   }
+
+  List<String> defaCities = [
+    'الخليل',
+    'بيت لحم',
+    'جنين',
+    'رام الله',
+    'سلفيت',
+    'طوباس',
+    'قرى القدس',
+    'قلقيلة',
+    'أريحا',
+    'طولكرم',
+    'نابلس'
+  ];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -335,24 +350,27 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           Consumer<AddressProvider>(
             builder: (context, addressprovider, _) {
               List<AddressItem> addressItems = addressprovider.addressItems;
+              String? selectedValue =
+                  addressItems.isNotEmpty ? addressItems[0].name : null;
+
               return Visibility(
-                visible: addressItems.length == 0 ? false : true,
+                visible: addressItems.isNotEmpty,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 15, left: 15),
                   child: Container(
                     height: 65,
-                    child: DropdownButtonFormField(
+                    child: DropdownButtonFormField<String>(
                       hint: Text("اختر العنوان"),
-                      value: null,
+                      value: selectedValue,
                       items: addressItems
-                          .map((address) => DropdownMenuItem(
+                          .map((address) => DropdownMenuItem<String>(
                                 child: Text(address.name),
                                 value: address.name,
                               ))
                           .toList(),
                       onChanged: (value) {
                         setState(() {
-                          selectedArea = value.toString();
+                          selectedArea = value!;
                         });
                       },
                       decoration: InputDecoration(
@@ -374,6 +392,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 10),
             child: InkWell(
               onTap: () {
+                print("dropdownValue");
+                print(dropdownValue);
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
@@ -401,42 +421,44 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               ],
                             ),
                           ),
-                          DropdownButtonFormField(
-                            value: selectedCity,
-                            items: [
-                              'الخليل',
-                              'القدس',
-                              'بيت لحم',
-                              'جنين',
-                              'رام الله',
-                              'سلفيت',
-                              'طوباس',
-                              'قرى القدس',
-                              'قلقيلة',
-                              'نابلس ',
-                              'مناطق ال 48'
-                            ]
-                                .map((area) => DropdownMenuItem(
-                                      child: Text(area),
-                                      value: area,
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                selectedCity = value.toString();
-                              });
-                            },
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: MAIN_COLOR, width: 2.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1.0, color: MAIN_COLOR),
-                              ),
-                            ),
-                          ),
+                          dropdownValue.toString() == "الضفه الغربيه"
+                              ? DropdownButtonFormField(
+                                  value: selectedCity,
+                                  items: defaCities
+                                      .map((area) => DropdownMenuItem(
+                                            child: Text(area),
+                                            value: area,
+                                          ))
+                                      .toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedCity = value.toString();
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: MAIN_COLOR, width: 2.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 1.0, color: MAIN_COLOR),
+                                    ),
+                                  ),
+                                )
+                              : TextFormField(
+                                  controller: cityController,
+                                  decoration: InputDecoration(
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: MAIN_COLOR, width: 2.0),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          width: 1.0, color: MAIN_COLOR),
+                                    ),
+                                  ),
+                                ),
                           SizedBox(height: 10),
                           Padding(
                             padding: const EdgeInsets.only(
@@ -484,7 +506,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               final newItem = AddressItem(
                                 user_id: UserID,
                                 name:
-                                    "$selectedCity ,${addressController.text} ",
+                                    "${dropdownValue.toString() == "الضفه الغربيه" ? selectedCity : cityController.text} ,${addressController.text} ",
                               );
                               addressProviderFinal.addToAddress(newItem);
                               Fluttertoast.showToast(
@@ -816,7 +838,37 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                                                 .circular(10),
                                                         color: Colors.black),
                                                   ),
-                                                )
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                    NavigatorFunction(
+                                                        context,
+                                                        NewestOrders(
+                                                          user_id:
+                                                              UserID.toString(),
+                                                        ));
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    child: Center(
+                                                        child: Text(
+                                                      "تتبع طلبياتي",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),

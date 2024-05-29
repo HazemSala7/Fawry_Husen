@@ -2,17 +2,27 @@ import 'package:fawri_app_refactor/pages/account_information/account_information
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
 import '../../../components/category_widget/category-widget.dart';
 import '../../../constants/constants.dart';
 import '../../../services/custom_icons/custom_icons.dart';
+import '../../components/cart_icon/cart_icon.dart';
 import '../../components/slider-widget/slider-widget.dart';
 import '../../model/slider/slider.dart';
+import '../home_screen/category-screen/category-screen.dart';
+import '../home_screen/favourite-screen/favourite-screen.dart';
+import '../home_screen/profile-screen/profile-screen.dart';
 
 class CategorySplash extends StatefulWidget {
-  const CategorySplash({super.key});
+  int selectedIndex = 0;
+  CategorySplash({
+    Key? key,
+    required this.selectedIndex,
+  }) : super(key: key);
 
   @override
   State<CategorySplash> createState() => _CategorySplashState();
@@ -35,11 +45,12 @@ class _CategorySplashState extends State<CategorySplash> {
   //     });
   //   }
   // }
-
+  late PageController _pageController;
   @override
   void initState() {
     super.initState();
     _initialize();
+    _pageController = PageController(initialPage: widget.selectedIndex);
     // _scrollController = ScrollController();
     // _scrollController.addListener(_scrollListener);
   }
@@ -75,8 +86,19 @@ class _CategorySplashState extends State<CategorySplash> {
   }
 
   bool showGoToTopIcon = false;
+  void onButtonPressed(int index) {
+    setState(() {
+      widget.selectedIndex = index;
+    });
+  }
 
   Widget build(BuildContext context) {
+    List<Widget> _listOfWidget = <Widget>[
+      categorySplashMainScreen(),
+      CategoryScreen(),
+      Favourite(),
+      ProfileScreen(),
+    ];
     return Container(
       color: Colors.white,
       child: SafeArea(
@@ -84,7 +106,10 @@ class _CategorySplashState extends State<CategorySplash> {
           appBar: AppBar(
             centerTitle: true,
             elevation: 1,
-            leading: Container(),
+            leading: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CartIcon(),
+            ),
             actions: [
               InkWell(
                 onTap: () {
@@ -114,98 +139,121 @@ class _CategorySplashState extends State<CategorySplash> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 15, bottom: 30),
-              child: Column(
-                children: [
-                  FutureBuilder(
-                      future: getSliders(),
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Container(
-                            width: double.infinity,
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: Shimmer.fromColors(
-                              baseColor:
-                                  const Color.fromARGB(255, 196, 196, 196),
-                              highlightColor:
-                                  const Color.fromARGB(255, 129, 129, 129),
-                              child: Container(
-                                width: double.infinity,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        } else {
-                          List<Silder>? album = [];
-                          if (snapshot.data != null) {
-                            List mysslide = snapshot.data;
-                            List<Silder> album1 = mysslide.map((s) {
-                              Silder c = Silder.fromJson(s);
-                              return c;
-                            }).toList();
-                            album = album1;
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15, bottom: 15),
-                              child: Container(
-                                width: double.infinity,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.3,
-                                child: SlideImage(
-                                  click: true,
-                                  showShadow: true,
-                                  slideimage: album,
-                                ),
-                              ),
-                            );
-                          } else {
-                            return Container(
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              width: double.infinity,
-                              color: Colors.white,
-                            );
-                          }
-                        }
-                      }),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        Text("الأقسام الرئيسية : ",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20))
-                      ],
-                    ),
-                  ),
-                  GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: categories.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 6,
-                        mainAxisSpacing: 6,
-                        childAspectRatio: 1.1,
+          bottomNavigationBar: SlidingClippedNavBar(
+            backgroundColor: Colors.white,
+            onButtonPressed: onButtonPressed,
+            iconSize: 30,
+            activeColor: MAIN_COLOR,
+            selectedIndex: widget.selectedIndex,
+            barItems: <BarItem>[
+              BarItem(
+                icon: Icons.home,
+                title: "الرئيسيه",
+              ),
+              BarItem(
+                icon: Icons.category,
+                title: "الأقسام",
+              ),
+              BarItem(
+                icon: FontAwesomeIcons.heart,
+                title: "المفضله",
+              ),
+              BarItem(
+                icon: Icons.more,
+                title: "المزيد",
+              ),
+            ],
+          ),
+          body: _listOfWidget[widget.selectedIndex],
+        ),
+      ),
+    );
+  }
+
+  Widget categorySplashMainScreen() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15, bottom: 30),
+        child: Column(
+          children: [
+            FutureBuilder(
+                future: getSliders(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: Shimmer.fromColors(
+                        baseColor: const Color.fromARGB(255, 196, 196, 196),
+                        highlightColor:
+                            const Color.fromARGB(255, 129, 129, 129),
+                        child: Container(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          color: Colors.white,
+                        ),
                       ),
-                      itemBuilder: (context, int index) {
-                        return CategoryWidget(
-                            main_category: categories[index]["main_category"],
-                            name: categories[index]["name"],
-                            CateImage: categories[index]["icon"],
-                            CateIcon: categories[index]["icon"],
-                            image: categories[index]["image"]);
-                      }),
+                    );
+                  } else {
+                    List<Silder>? album = [];
+                    if (snapshot.data != null) {
+                      List mysslide = snapshot.data;
+                      List<Silder> album1 = mysslide.map((s) {
+                        Silder c = Silder.fromJson(s);
+                        return c;
+                      }).toList();
+                      album = album1;
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 15, bottom: 15),
+                        child: Container(
+                          width: double.infinity,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          child: SlideImage(
+                            click: true,
+                            showShadow: true,
+                            slideimage: album,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Container(
+                        height: MediaQuery.of(context).size.height * 0.25,
+                        width: double.infinity,
+                        color: Colors.white,
+                      );
+                    }
+                  }
+                }),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Text("الأقسام الرئيسية : ",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
                 ],
               ),
             ),
-          ),
+            GridView.builder(
+                scrollDirection: Axis.vertical,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: categories.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 6,
+                  childAspectRatio: 1.1,
+                ),
+                itemBuilder: (context, int index) {
+                  return CategoryWidget(
+                      main_category: categories[index]["main_category"],
+                      name: categories[index]["name"],
+                      CateImage: categories[index]["icon"],
+                      CateIcon: categories[index]["icon"],
+                      image: categories[index]["image"]);
+                }),
+          ],
         ),
       ),
     );

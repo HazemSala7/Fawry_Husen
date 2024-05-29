@@ -159,6 +159,8 @@ addOrder(
       });
       totalPrice += double.parse(cartProvider[i].price.toString());
     }
+    print("totalPrice");
+    print(totalPrice);
 
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
@@ -191,7 +193,7 @@ addOrder(
           id: Order_ID,
           tracking_number: "123456",
           number_of_products: cartProvider.length.toString(),
-          sum: totalPrice.toString(),
+          sum: total.toString(),
           order_id: decodedMap["id"].toString(),
           user_id: UserID.toString(),
           created_at: formattedDate.toString());
@@ -286,7 +288,7 @@ addOrder(
   }
 }
 
-sendNotification({context, USER_TOKENS}) async {
+sendNotification({context, USER_TOKENS, productImage}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String? TOKEN = await prefs.getString('device_token') ?? "-";
   var headers = {
@@ -300,10 +302,13 @@ sendNotification({context, USER_TOKENS}) async {
   request.body = json.encode({
     "notification": {
       "title": "Fawri App",
+      "image": productImage,
       "body": "المنتج الذي تم اضافته الى السله لم يتبقى منه الا 2"
     },
     "registration_ids": registrationTokens
   });
+  print("registrationTokens");
+  print(registrationTokens);
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();
   if (response.statusCode == 200) {
@@ -330,6 +335,8 @@ getProductByCategory(category_id, sub_category_key, String size,
     if (selected_sizes != '') {
       Final_URL += "&size=$selected_sizes";
     }
+    print("Final_URL");
+    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -468,7 +475,7 @@ getSizesByCategory(category_id, context) async {
 }
 
 showDelayedDialog(context) {
-  Future.delayed(Duration(seconds: 120), () {
+  Future.delayed(Duration(seconds: 300), () {
     showDialog(
       context: context,
       builder: (context) {
@@ -507,7 +514,7 @@ showDelayedDialog(context) {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
                       child: Text(
-                        "لقد حصلت على كوبون خصم بقيمة 20% يمكنك استخدامه عند شرائك لأحد منتجاتنا",
+                        "لقد حصلت على كوبون خصم بقيمة 10% يمكنك استخدامه عند شرائك لأحد منتجاتنا",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,

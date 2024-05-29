@@ -5,17 +5,26 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChooseBirthdate extends StatefulWidget {
-  final name;
+  final String name;
   const ChooseBirthdate({super.key, required this.name});
 
   @override
-  State<ChooseBirthdate> createState() => CchoosBbirthdateState();
+  State<ChooseBirthdate> createState() => _ChooseBirthdateState();
 }
 
-class CchoosBbirthdateState extends State<ChooseBirthdate> {
-  @override
-  String Birthday = "";
+class _ChooseBirthdateState extends State<ChooseBirthdate> {
+  String birthday = "";
   String? selectedGender;
+
+  @override
+  void initState() {
+    super.initState();
+    birthday = DateTime.now()
+        .toString()
+        .substring(0, 10); // Set initial birthday to today's date
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -80,8 +89,9 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                   child: EasyDateTimeLine(
                     initialDate: DateTime.now(),
                     onDateChange: (selectedDate) {
-                      Birthday = selectedDate.toString().substring(0, 10);
-                      setState(() {});
+                      setState(() {
+                        birthday = selectedDate.toString().substring(0, 10);
+                      });
                     },
                     activeColor: const Color(0xffB04759),
                     locale: "ar",
@@ -145,15 +155,15 @@ class CchoosBbirthdateState extends State<ChooseBirthdate> {
                         width: 80,
                         BorderColor: MAIN_COLOR,
                         OnClickFunction: () async {
-                          if (Birthday.toString() == "") {
+                          if (birthday == "") {
+                            // Handle case where birthday is not set (optional)
                           } else {
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             await prefs.setBool('show_birthday', false);
                             await prefs.setString(
                                 'gender', selectedGender.toString());
-                            await prefs.setString(
-                                'birthdate', Birthday.toString());
+                            await prefs.setString('birthdate', birthday);
                             Navigator.pop(context);
                           }
                         },

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -200,650 +201,16 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
 
   Widget ProductsCategoryMethod() {
     final cartProvider = Provider.of<CartProvider>(context);
-    return isListView
-        ? Column(
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
-                      child: TextFormField(
-                        onTap: () {
-                          showSearchDialog(context, widget.category_id);
-                        },
-                        controller: textController,
-                        onFieldSubmitted: (_) {},
-                        obscureText: false,
-                        autofocus: false,
-                        decoration: InputDecoration(
-                          labelText: "ابحث هنا",
-                          // labelStyle:
-                          //     FlutterFlowTheme.of(context).bodyText2,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x00000000),
-                              width: 1,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x00000000),
-                              width: 1,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                          errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x00000000),
-                              width: 1,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                          focusedErrorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Color(0x00000000),
-                              width: 1,
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(4.0),
-                              topRight: Radius.circular(4.0),
-                            ),
-                          ),
-                          suffixIcon: Container(
-                            width: 85,
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                Visibility(
-                                  visible:
-                                      SubCategories.length == 0 ? false : true,
-                                  child: Showcase(
-                                    key: _one,
-                                    title: 'اختيار القسم الفرعي',
-                                    description: 'هنا يتم اختيار القسم الفرعي',
-                                    child: IconButton(
-                                      icon: isListView
-                                          ? Icon(
-                                              Icons.grid_on,
-                                              size: 20,
-                                            )
-                                          : Icon(Icons.list, size: 15),
-                                      padding: EdgeInsets.all(5),
-                                      onPressed: () {
-                                        setState(() {
-                                          // Toggle between list and grid view
-                                          isListView = !isListView;
-                                          if (isListView) {
-                                            _page = 1;
-                                            _firstLoad();
-                                          }
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Visibility(
-                visible: SubCategories.length == 0 ? false : true,
-                child: Padding(
-                    padding: const EdgeInsets.only(top: 5, right: 5, left: 5),
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      child: ListView.builder(
-                        itemCount: SubCategories.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Visibility(
-                            visible: index == 0
-                                ? true
-                                : selectedIndexes.contains(index)
-                                    ? false
-                                    : true,
-                            child: Padding(
-                              padding: const EdgeInsets.only(right: 5, left: 5),
-                              child: InkWell(
-                                onTap: () {
-                                  if (index == 0) {
-                                    setState(() {
-                                      // Clear both lists
-                                      selectedCategoryKeys.clear();
-                                      selectedIndexes.clear();
-                                      Sub_Category_Key.clear();
-                                      Sub_Category_Key.add("");
-                                      selectedIndexes.add(0);
-                                      SubCategories.add({
-                                        "name": "جميع الأقسام",
-                                        "key": "",
-                                      });
-                                      _page = 1;
-                                      _firstLoad();
-                                    });
-                                  } else {
-                                    setState(() {
-                                      if (selectedIndexes.contains(index)) {
-                                        if (Sub_Category_Key.length == 1) {
-                                        } else {
-                                          int removeIndex =
-                                              Sub_Category_Key.indexWhere(
-                                                  (key) =>
-                                                      key ==
-                                                      SubCategories[index]
-                                                              ["key"]
-                                                          .toString());
-
-                                          if (removeIndex != -1) {
-                                            // Remove elements based on the found index
-                                            selectedIndexes.remove(index);
-                                            Sub_Category_Key.removeAt(
-                                                removeIndex);
-                                            String categoryName =
-                                                SubCategories[index]["name"]
-                                                    .toString();
-                                            selectedCategoryKeys.removeWhere(
-                                                (name) =>
-                                                    name["name"] ==
-                                                    categoryName);
-                                            _page = 1;
-                                            _firstLoad();
-                                          }
-                                        }
-                                      } else if (SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Underwear & Sleepwear, Underwear Sleepwear" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Apparel Accessories" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Jewelry %26 Watches, Jewelry  Watches" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Beauty %26 Health, Jewelry %26 Watches" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Women Shoes" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Weddings %26 Events, Weddings %26 Events" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Men Shoes" ||
-                                          SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Sports %26 Outdoor, Sports  Outdoor") {
-                                        Map sizes = {};
-                                        if (SubCategories[index]
-                                                        ["key"]
-                                                    .toString() ==
-                                                "Jewelry %26 Watches, Jewelry  Watches" ||
-                                            SubCategories[index]
-                                                        ["key"]
-                                                    .toString() ==
-                                                "Sports %26 Outdoor, Sports  Outdoor" ||
-                                            SubCategories[index]["key"]
-                                                    .toString() ==
-                                                "Beauty %26 Health, Jewelry %26 Watches" ||
-                                            SubCategories[index]["key"]
-                                                    .toString() ==
-                                                "Apparel Accessories") {
-                                          NavigatorFunction(
-                                              context,
-                                              ShowCaseWidget(
-                                                  builder: Builder(
-                                                builder: (context) =>
-                                                    ProductsCategories(
-                                                  SIZES: [],
-                                                  category_id:
-                                                      SubCategories[index]
-                                                              ["key"]
-                                                          .toString(),
-                                                  search: false,
-                                                  size: "",
-                                                  containerWidths: "null",
-                                                  keys: "null",
-                                                  name: widget.name,
-                                                  sizes: "null",
-                                                  main_category:
-                                                      SubCategories[index]
-                                                              ["key"]
-                                                          .toString(),
-                                                ),
-                                              )));
-                                        } else if (SubCategories[index]["key"]
-                                                    .toString() ==
-                                                "Men Shoes" ||
-                                            SubCategories[index]["key"]
-                                                    .toString() ==
-                                                "Women Shoes") {
-                                          Map sizes = {};
-                                          String Main_Category = "";
-                                          if (SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Women Shoes") {
-                                            sizes = LocalStorage()
-                                                .getSize("Women_shoes_sizes");
-                                            Main_Category = "Women Shoes";
-                                          } else {
-                                            sizes = LocalStorage()
-                                                .getSize("Men_shoes_sizes");
-                                            Main_Category = "Men Shoes";
-                                          }
-                                          var keys = sizes.keys.toList();
-
-                                          double gridViewHeight =
-                                              calculateGridViewHeight(
-                                                  keys.length);
-                                          List<double> containerWidths = keys
-                                              .map((text) =>
-                                                  getTextWidth(
-                                                      text,
-                                                      TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .bold)) +
-                                                  100.0)
-                                              .toList();
-                                          NavigatorFunction(
-                                              context,
-                                              SizesPage(
-                                                sizes: sizes,
-                                                main_category: Main_Category,
-                                                name: "الأحذيه",
-                                                containerWidths:
-                                                    containerWidths,
-                                                keys: keys,
-                                              ));
-                                        } else {
-                                          if (SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Weddings %26 Events, Weddings %26 Events") {
-                                            sizes = LocalStorage()
-                                                .getSize("Weddings & Events");
-                                          } else if (SubCategories[index]["key"]
-                                                  .toString() ==
-                                              "Underwear & Sleepwear, Underwear Sleepwear") {
-                                            sizes = LocalStorage().getSize(
-                                                "Underwear_Sleepwear_sizes");
-                                          }
-
-                                          var keys = sizes.keys.toList();
-
-                                          double gridViewHeight =
-                                              calculateGridViewHeight(
-                                                  keys.length);
-                                          // Calculate the widths for each Container
-                                          List<double> containerWidths = keys
-                                              .map((text) =>
-                                                  getTextWidth(
-                                                      text,
-                                                      TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .bold)) +
-                                                  120.0)
-                                              .toList();
-                                          NavigatorFunction(
-                                              context,
-                                              SizesPage(
-                                                sizes: sizes,
-                                                main_category:
-                                                    SubCategories[index]["key"]
-                                                        .toString(),
-                                                name: widget.name,
-                                                containerWidths:
-                                                    containerWidths,
-                                                keys: keys,
-                                              ));
-                                        }
-                                      } else {
-                                        if (Sub_Category_Key[0].toString() ==
-                                                "Women Clothing" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Weddings & Events" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Kids Shoes" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Men Shoes" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Women Shoes" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Maternity Clothing, Baby" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Women's Fashion Jewelry" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Kids Shoes, Men Shoes, Women Shoes" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Young Boys Clothing,Tween Boys Clothing" ||
-                                            Sub_Category_Key[0].toString() ==
-                                                "Young Girls Clothing,Tween Girls Clothing") {
-                                          selectedIndexes.removeAt(0);
-                                          Sub_Category_Key.removeAt(0);
-                                        }
-                                        selectedIndexes.add(index);
-
-                                        Sub_Category_Key.add(
-                                            SubCategories[index]["key"]
-                                                .toString());
-
-                                        selectedCategoryKeys.add({
-                                          "name": SubCategories[index]["name"]
-                                              .toString(),
-                                          "key": SubCategories[index]["key"]
-                                              .toString(),
-                                          "index": index
-                                        });
-                                        _page = 1;
-                                        _firstLoad();
-                                      }
-                                    });
-                                  }
-                                },
-                                child: Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(
-                                        width: 2,
-                                        color: selectedIndexes.contains(index)
-                                            ? Colors.red
-                                            : Colors.black,
-                                      ),
-                                      color: Colors.black),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(10.0),
-                                      child: Text(
-                                        SubCategories[index]["name"].toString(),
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    )),
-              ),
-              Visibility(
-                visible: selectedCategoryKeys.length == 0 ? false : true,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15, right: 5, left: 5),
-                  child: Container(
-                    height: 45,
-                    width: double.infinity,
-                    child: ListView.builder(
-                        itemCount: selectedCategoryKeys.length,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Stack(
-                            alignment: Alignment.topLeft,
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 5, left: 5),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      if (selectedCategoryKeys.length > 1) {
-                                        int removeIndex =
-                                            Sub_Category_Key.indexWhere((key) =>
-                                                key ==
-                                                selectedCategoryKeys[index]
-                                                        ["key"]
-                                                    .toString());
-                                        if (removeIndex != -1) {
-                                          selectedIndexes.removeWhere(
-                                              (selectedIndex) =>
-                                                  selectedIndex ==
-                                                  selectedCategoryKeys[index]
-                                                      ["index"]);
-                                          Sub_Category_Key.removeAt(
-                                              removeIndex);
-                                        }
-                                        // Remove sub-category from the second list
-                                        selectedCategoryKeys.removeAt(
-                                            index); // Remove based on index in this list
-                                        _page = 1;
-                                        _firstLoad();
-                                      }
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: Colors.black,
-                                        ),
-                                        color: Colors.white),
-                                    child: Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Text(
-                                          selectedCategoryKeys[index]["name"]
-                                              .toString(),
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                              color: MAIN_COLOR),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 5, bottom: 5),
-                                child: InkWell(
-                                  onTap: () {
-                                    setState(() {
-                                      if (selectedCategoryKeys.length > 1) {
-                                        int removeIndex =
-                                            Sub_Category_Key.indexWhere((key) =>
-                                                key ==
-                                                selectedCategoryKeys[index]
-                                                        ["key"]
-                                                    .toString());
-                                        if (removeIndex != -1) {
-                                          selectedIndexes.removeWhere(
-                                              (selectedIndex) =>
-                                                  selectedIndex ==
-                                                  selectedCategoryKeys[index]
-                                                      ["index"]);
-                                          Sub_Category_Key.removeAt(
-                                              removeIndex);
-                                        }
-                                        // Remove sub-category from the second list
-                                        selectedCategoryKeys.removeAt(
-                                            index); // Remove based on index in this list
-                                        _page = 1;
-                                        _firstLoad();
-                                      }
-                                    });
-                                  },
-                                  child: Image.asset(
-                                    "assets/images/x-button.png",
-                                    height: 17,
-                                    width: 17,
-                                  ),
-                                ),
-                              )
-                            ],
-                          );
-                        }),
-                  ),
-                ),
-              ),
-              _isFirstLoadRunning
-                  ? Container(
-                      width: double.infinity,
-                      height: 400,
-                      child: Center(
-                        child: SpinKitPulse(
-                          color: MAIN_COLOR,
-                          size: 60,
-                        ),
-                      ),
-                    )
-                  : no_internet
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: Text(
-                            "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                        )
-                      : AllProducts.length == 0
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 100),
-                              child: Text(
-                                "للحصول على نتائج افضل قم بتعديل الحجم المختار",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 18),
-                              ),
-                            )
-                          : Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 12, right: 10, left: 10),
-                                child: AnimationLimiter(
-                                  child: RefreshIndicator(
-                                    onRefresh: _refreshData,
-                                    child: GridView.builder(
-                                        controller: _controller,
-                                        cacheExtent: 5000,
-                                        itemCount: AllProducts.length,
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          crossAxisSpacing: 6,
-                                          mainAxisSpacing: 6,
-                                          childAspectRatio: 0.5,
-                                        ),
-                                        itemBuilder: (context, int index) {
-                                          String concatenatedNames =
-                                              Sub_Category_Key.join('.')
-                                                  .replaceAll('.', ',');
-                                          final isLiked =
-                                              Provider.of<FavouriteProvider>(
-                                                      context)
-                                                  .isProductFavorite(
-                                                      AllProducts[index]["id"]);
-                                          return AnimationConfiguration
-                                              .staggeredList(
-                                            position: index,
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            child: SlideAnimation(
-                                              horizontalOffset: 100.0,
-                                              child: FadeInAnimation(
-                                                curve: Curves.easeOut,
-                                                child: ProductWidget(
-                                                    inCart:
-                                                        cartProvider.isProductCart(
-                                                            AllProducts[index]
-                                                                ["id"]),
-                                                    SIZES: widget.SIZES,
-                                                    ALL: false,
-                                                    SubCategories:
-                                                        SubCategories,
-                                                    sizes: [widget.size],
-                                                    url:
-                                                        "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
-                                                    isLiked: isLiked,
-                                                    Images:
-                                                        AllProducts[index]["vendor_images_links"] ??
-                                                            [],
-                                                    Products: AllProducts,
-                                                    index: index,
-                                                    name: AllProducts[index]
-                                                        ["title"],
-                                                    thumbnail: AllProducts[index]
-                                                        ["thumbnail"],
-                                                    id: AllProducts[index]
-                                                        ["id"],
-                                                    new_price: AllProducts[index]
-                                                        ["price"],
-                                                    old_price: AllProducts[index]
-                                                            ["price"] ??
-                                                        0.0,
-                                                    image: AllProducts[index]
-                                                        ["vendor_images_links"][0],
-                                                    Sub_Category_Key: Sub_Category_Key,
-                                                    page: _page,
-                                                    home: false,
-                                                    category_id: widget.category_id,
-                                                    size: widget.size),
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                ),
-                              ),
-                            ),
-              // when the _loadMore function is running
-              if (_isLoadMoreRunning == true)
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 40),
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: MAIN_COLOR,
-                    ),
-                  ),
-                ),
-
-              // When nothing else to load
-              if (_hasNextPage == false)
-                Container(
-                  padding: const EdgeInsets.only(top: 30, bottom: 40),
-                  color: MAIN_COLOR,
-                  child: const Center(
-                    child: Text('You have fetched all of the products'),
-                  ),
-                ),
-            ],
+    return no_internet
+        ? Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: Text(
+              "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
           )
-        : Container(
-            height: MediaQuery.of(context).size.height,
-            width: double.infinity,
-            child: SingleChildScrollView(
-              child: Column(
+        : isListView
+            ? Column(
                 children: [
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -914,24 +281,35 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                     SizedBox(
                                       width: 15,
                                     ),
-                                    IconButton(
-                                      icon: isListView
-                                          ? Icon(
-                                              Icons.grid_on,
-                                              size: 20,
-                                            )
-                                          : Icon(Icons.list, size: 15),
-                                      padding: EdgeInsets.all(5),
-                                      onPressed: () {
-                                        setState(() {
-                                          // Toggle between list and grid view
-                                          isListView = !isListView;
-                                          if (isListView) {
-                                            _page = 1;
-                                            _firstLoad();
-                                          }
-                                        });
-                                      },
+                                    Visibility(
+                                      visible: SubCategories.length == 0
+                                          ? false
+                                          : true,
+                                      child: Showcase(
+                                        key: _one,
+                                        title: 'اختيار القسم الفرعي',
+                                        description:
+                                            'هنا يتم اختيار القسم الفرعي',
+                                        child: IconButton(
+                                          icon: isListView
+                                              ? Icon(
+                                                  Icons.grid_on,
+                                                  size: 20,
+                                                )
+                                              : Icon(Icons.list, size: 15),
+                                          padding: EdgeInsets.all(5),
+                                          onPressed: () {
+                                            setState(() {
+                                              // Toggle between list and grid view
+                                              isListView = !isListView;
+                                              if (isListView) {
+                                                _page = 1;
+                                                _firstLoad();
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -942,251 +320,953 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 2.7,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
-                      crossAxisCount: 3,
-                    ),
-                    itemCount: SubCategories.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (selectedIndexes.contains(index)) {
-                        // Return an empty container if the item is hidden
-                        return Container();
-                      } else {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 5, left: 5),
-                          child: InkWell(
-                            onTap: () {
-                              if (index == 0) {
-                                setState(() {
-                                  // Clear both lists
-                                  selectedCategoryKeys.clear();
-                                  selectedIndexes.clear();
-                                  Sub_Category_Key.clear();
-                                  Sub_Category_Key.add("");
-                                  selectedIndexes.add(0);
-                                  SubCategories.add({
-                                    "name": "جميع الأقسام",
-                                    "key": "",
-                                  });
-                                });
-                              } else {
-                                setState(() {
-                                  if (selectedIndexes.contains(index)) {
-                                    if (Sub_Category_Key.length == 1) {
-                                    } else {
-                                      int removeIndex =
-                                          Sub_Category_Key.indexWhere((key) =>
-                                              key ==
-                                              SubCategories[index]["key"]
-                                                  .toString());
-
-                                      if (removeIndex != -1) {
-                                        // Remove elements based on the found index
-                                        selectedIndexes.remove(index);
-                                        Sub_Category_Key.removeAt(removeIndex);
-                                        String categoryName =
-                                            SubCategories[index]["name"]
-                                                .toString();
-                                        selectedCategoryKeys.removeWhere(
-                                            (name) =>
-                                                name["name"] == categoryName);
-                                      }
-                                    }
-                                  } else {
-                                    if (Sub_Category_Key[0].toString() ==
-                                            "Women Clothing" ||
-                                        Sub_Category_Key[0].toString() == "" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Weddings & Events" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Kids Shoes" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Men Shoes" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Women Shoes" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Maternity Clothing, Baby" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Women's Fashion Jewelry" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Kids Shoes, Men Shoes, Women Shoes" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Young Boys Clothing,Tween Boys Clothing" ||
-                                        Sub_Category_Key[0].toString() ==
-                                            "Young Girls Clothing,Tween Girls Clothing") {
-                                      selectedIndexes.removeAt(0);
-                                      Sub_Category_Key.removeAt(0);
-                                    }
-                                    selectedIndexes.add(index);
-
-                                    Sub_Category_Key.add(
-                                        SubCategories[index]["key"].toString());
-
-                                    selectedCategoryKeys.add({
-                                      "name": SubCategories[index]["name"]
-                                          .toString(),
-                                      "key": SubCategories[index]["key"]
-                                          .toString(),
-                                      "index": index
-                                    });
-                                  }
-                                });
-                              }
-                            },
-                            child: Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  width: 2,
-                                  color: selectedIndexes.contains(index)
-                                      ? Colors.red
-                                      : Colors.black,
-                                ),
-                                color: Colors.black,
-                              ),
-                              child: Center(
+                  Visibility(
+                    visible: SubCategories.length == 0 ||
+                            widget.name.toString() == "قسم الأولاد و البنات"
+                        ? false
+                        : true,
+                    child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 5, right: 5, left: 5),
+                        child: Container(
+                          height: 40,
+                          width: double.infinity,
+                          child: ListView.builder(
+                            itemCount: SubCategories.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Visibility(
+                                visible: index == 0
+                                    ? true
+                                    : selectedIndexes.contains(index)
+                                        ? false
+                                        : true,
                                 child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Text(
-                                    SubCategories[index]["name"].toString(),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                      color: Colors.white,
+                                  padding:
+                                      const EdgeInsets.only(right: 5, left: 5),
+                                  child: InkWell(
+                                    onTap: () {
+                                      print(SubCategories[index]["key"]
+                                          .toString());
+                                      if (index == 0) {
+                                        setState(() {
+                                          // Clear both lists
+                                          selectedCategoryKeys.clear();
+                                          selectedIndexes.clear();
+                                          Sub_Category_Key.clear();
+                                          Sub_Category_Key.add("");
+                                          selectedIndexes.add(0);
+
+                                          _page = 1;
+                                          _firstLoad();
+                                        });
+                                      } else {
+                                        setState(() {
+                                          if (selectedIndexes.contains(index)) {
+                                            if (Sub_Category_Key.length == 1) {
+                                            } else {
+                                              int removeIndex =
+                                                  Sub_Category_Key.indexWhere(
+                                                      (key) =>
+                                                          key ==
+                                                          SubCategories[index]
+                                                                  ["key"]
+                                                              .toString());
+
+                                              if (removeIndex != -1) {
+                                                // Remove elements based on the found index
+                                                selectedIndexes.remove(index);
+                                                Sub_Category_Key.removeAt(
+                                                    removeIndex);
+                                                String categoryName =
+                                                    SubCategories[index]["name"]
+                                                        .toString();
+                                                selectedCategoryKeys
+                                                    .removeWhere((name) =>
+                                                        name["name"] ==
+                                                        categoryName);
+                                                _page = 1;
+                                                _firstLoad();
+                                              }
+                                            }
+                                          } else if (SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Underwear & Sleepwear, Underwear Sleepwear" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Apparel Accessories" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Jewelry %26 Watches, Jewelry  Watches" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Beauty %26 Health, Jewelry %26 Watches" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Women Shoes" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Weddings %26 Events, Weddings %26 Events" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Men Shoes" ||
+                                              SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Sports %26 Outdoor, Sports  Outdoor") {
+                                            print("1");
+                                            Map sizes = {};
+                                            if (SubCategories[index]
+                                                            ["key"]
+                                                        .toString() ==
+                                                    "Jewelry %26 Watches, Jewelry  Watches" ||
+                                                SubCategories[index]
+                                                            ["key"]
+                                                        .toString() ==
+                                                    "Sports %26 Outdoor, Sports  Outdoor" ||
+                                                SubCategories[index]["key"]
+                                                        .toString() ==
+                                                    "Beauty %26 Health, Jewelry %26 Watches" ||
+                                                SubCategories[index]["key"]
+                                                        .toString() ==
+                                                    "Apparel Accessories") {
+                                              NavigatorFunction(
+                                                  context,
+                                                  ShowCaseWidget(
+                                                      builder: Builder(
+                                                    builder: (context) =>
+                                                        ProductsCategories(
+                                                      SIZES: [],
+                                                      category_id:
+                                                          SubCategories[index]
+                                                                  ["key"]
+                                                              .toString(),
+                                                      search: false,
+                                                      size: "",
+                                                      containerWidths: "null",
+                                                      keys: "null",
+                                                      name: widget.name,
+                                                      sizes: "null",
+                                                      main_category:
+                                                          SubCategories[index]
+                                                                  ["key"]
+                                                              .toString(),
+                                                    ),
+                                                  )));
+                                            } else if (SubCategories[index]
+                                                            ["key"]
+                                                        .toString() ==
+                                                    "Men Shoes" ||
+                                                SubCategories[index]["key"]
+                                                        .toString() ==
+                                                    "Women Shoes") {
+                                              Map sizes = {};
+                                              String Main_Category = "";
+                                              if (SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Women Shoes") {
+                                                sizes = LocalStorage().getSize(
+                                                    "Women_shoes_sizes");
+                                                Main_Category = "Women Shoes";
+                                              } else {
+                                                sizes = LocalStorage()
+                                                    .getSize("Men_shoes_sizes");
+                                                Main_Category = "Men Shoes";
+                                              }
+                                              var keys = sizes.keys.toList();
+
+                                              double gridViewHeight =
+                                                  calculateGridViewHeight(
+                                                      keys.length);
+                                              List<double> containerWidths = keys
+                                                  .map((text) =>
+                                                      getTextWidth(
+                                                          text,
+                                                          TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)) +
+                                                      100.0)
+                                                  .toList();
+                                              NavigatorFunction(
+                                                  context,
+                                                  SizesPage(
+                                                    sizes: sizes,
+                                                    main_category:
+                                                        Main_Category,
+                                                    name: "الأحذيه",
+                                                    containerWidths:
+                                                        containerWidths,
+                                                    keys: keys,
+                                                  ));
+                                            } else {
+                                              if (SubCategories[index]["key"]
+                                                      .toString() ==
+                                                  "Weddings %26 Events, Weddings %26 Events") {
+                                                sizes = LocalStorage().getSize(
+                                                    "Weddings & Events");
+                                              } else if (SubCategories[index]
+                                                          ["key"]
+                                                      .toString() ==
+                                                  "Underwear & Sleepwear, Underwear Sleepwear") {
+                                                sizes = LocalStorage().getSize(
+                                                    "Underwear_Sleepwear_sizes");
+                                              }
+
+                                              var keys = sizes.keys.toList();
+
+                                              double gridViewHeight =
+                                                  calculateGridViewHeight(
+                                                      keys.length);
+                                              // Calculate the widths for each Container
+                                              List<double> containerWidths = keys
+                                                  .map((text) =>
+                                                      getTextWidth(
+                                                          text,
+                                                          TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)) +
+                                                      120.0)
+                                                  .toList();
+                                              NavigatorFunction(
+                                                  context,
+                                                  SizesPage(
+                                                    sizes: sizes,
+                                                    main_category:
+                                                        SubCategories[index]
+                                                                ["key"]
+                                                            .toString(),
+                                                    name: widget.name,
+                                                    containerWidths:
+                                                        containerWidths,
+                                                    keys: keys,
+                                                  ));
+                                            }
+                                          } else {
+                                            print("2");
+                                            print(Sub_Category_Key[0]);
+                                            if (Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Women Clothing" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Weddings & Events" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Kids Shoes" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Men Shoes" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Women Shoes" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Maternity Clothing, Baby" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Women's Fashion Jewelry" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Kids Shoes, Men Shoes, Women Shoes" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Young Boys Clothing,Tween Boys Clothing" ||
+                                                Sub_Category_Key[0]
+                                                        .toString() ==
+                                                    "Young Girls Clothing,Tween Girls Clothing") {}
+                                            selectedIndexes.removeAt(0);
+                                            Sub_Category_Key.removeAt(0);
+                                            selectedIndexes.add(index);
+
+                                            Sub_Category_Key.add(
+                                                SubCategories[index]["key"]
+                                                    .toString());
+
+                                            selectedCategoryKeys.add({
+                                              "name": SubCategories[index]
+                                                      ["name"]
+                                                  .toString(),
+                                              "key": SubCategories[index]["key"]
+                                                  .toString(),
+                                              "index": index
+                                            });
+                                            _page = 1;
+                                            _firstLoad();
+                                          }
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                            width: 2,
+                                            color:
+                                                selectedIndexes.contains(index)
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                          ),
+                                          color: Colors.black),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                            SubCategories[index]["name"]
+                                                .toString(),
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      }
-                    },
+                        )),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, bottom: 20),
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 5,
-                      child: CustomPaint(
-                        size: Size(200, 70),
-                        painter: DashLinePainter(),
+                  Visibility(
+                    visible: selectedCategoryKeys.length == 0 ? false : true,
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 15, right: 5, left: 5),
+                      child: Container(
+                        height: 45,
+                        width: double.infinity,
+                        child: ListView.builder(
+                            itemCount: selectedCategoryKeys.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Stack(
+                                alignment: Alignment.topLeft,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 5, left: 5),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (selectedCategoryKeys.length > 1) {
+                                            int removeIndex = Sub_Category_Key
+                                                .indexWhere((key) =>
+                                                    key ==
+                                                    selectedCategoryKeys[index]
+                                                            ["key"]
+                                                        .toString());
+                                            if (removeIndex != -1) {
+                                              selectedIndexes.removeWhere(
+                                                  (selectedIndex) =>
+                                                      selectedIndex ==
+                                                      selectedCategoryKeys[
+                                                          index]["index"]);
+                                              Sub_Category_Key.removeAt(
+                                                  removeIndex);
+                                            }
+                                            // Remove sub-category from the second list
+                                            selectedCategoryKeys.removeAt(
+                                                index); // Remove based on index in this list
+                                            _page = 1;
+                                            _firstLoad();
+                                          } else {
+                                            setState(() {
+                                              // Clear both lists
+                                              selectedCategoryKeys.clear();
+                                              selectedIndexes.clear();
+                                              Sub_Category_Key.clear();
+                                              Sub_Category_Key.add("");
+                                              selectedIndexes.add(0);
+
+                                              _page = 1;
+                                              _firstLoad();
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                              width: 2,
+                                              color: Colors.black,
+                                            ),
+                                            color: Colors.white),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Text(
+                                              selectedCategoryKeys[index]
+                                                      ["name"]
+                                                  .toString(),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  color: MAIN_COLOR),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 5, bottom: 5),
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          if (selectedCategoryKeys.length > 1) {
+                                            int removeIndex = Sub_Category_Key
+                                                .indexWhere((key) =>
+                                                    key ==
+                                                    selectedCategoryKeys[index]
+                                                            ["key"]
+                                                        .toString());
+                                            if (removeIndex != -1) {
+                                              selectedIndexes.removeWhere(
+                                                  (selectedIndex) =>
+                                                      selectedIndex ==
+                                                      selectedCategoryKeys[
+                                                          index]["index"]);
+                                              Sub_Category_Key.removeAt(
+                                                  removeIndex);
+                                            }
+                                            // Remove sub-category from the second list
+                                            selectedCategoryKeys.removeAt(
+                                                index); // Remove based on index in this list
+                                            _page = 1;
+                                            _firstLoad();
+                                          } else {
+                                            setState(() {
+                                              // Clear both lists
+                                              selectedCategoryKeys.clear();
+                                              selectedIndexes.clear();
+                                              Sub_Category_Key.clear();
+                                              Sub_Category_Key.add("");
+                                              selectedIndexes.add(0);
+
+                                              _page = 1;
+                                              _firstLoad();
+                                            });
+                                          }
+                                        });
+                                      },
+                                      child: Image.asset(
+                                        "assets/images/x-button.png",
+                                        height: 17,
+                                        width: 17,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              );
+                            }),
                       ),
                     ),
                   ),
-                  GridView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 2.7,
-                      crossAxisSpacing: 5,
-                      mainAxisSpacing: 5,
-                      crossAxisCount: 3,
-                    ),
-                    itemCount: selectedCategoryKeys.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Stack(
-                        alignment: Alignment.topLeft,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5, left: 5),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (selectedCategoryKeys.length > 1) {
-                                    int removeIndex =
-                                        Sub_Category_Key.indexWhere((key) =>
-                                            key ==
-                                            selectedCategoryKeys[index]["key"]
-                                                .toString());
-                                    if (removeIndex != -1) {
-                                      selectedIndexes.removeWhere(
-                                          (selectedIndex) =>
-                                              selectedIndex ==
-                                              selectedCategoryKeys[index]
-                                                  ["index"]);
-                                      Sub_Category_Key.removeAt(removeIndex);
-                                    }
-                                    // Remove sub-category from the second list
-                                    selectedCategoryKeys.removeAt(
-                                        index); // Remove based on index in this list
-                                  }
-                                });
-                              },
-                              child: Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      width: 2,
-                                      color: Colors.black,
-                                    ),
-                                    color: Colors.white),
-                                child: Center(
+                  _isFirstLoadRunning
+                      ? Container(
+                          width: double.infinity,
+                          height: 400,
+                          child: Center(
+                            child: SpinKitPulse(
+                              color: MAIN_COLOR,
+                              size: 60,
+                            ),
+                          ),
+                        )
+                      : no_internet
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 50),
+                              child: Text(
+                                "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                            )
+                          : AllProducts.length == 0
+                              ? Padding(
+                                  padding: const EdgeInsets.only(top: 100),
+                                  child: Text(
+                                    "للحصول على نتائج افضل قم بتعديل الحجم المختار",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                )
+                              : Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Text(
-                                      selectedCategoryKeys[index]["name"]
-                                          .toString(),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color: MAIN_COLOR),
+                                    padding: const EdgeInsets.only(
+                                        top: 12, right: 10, left: 10),
+                                    child: AnimationLimiter(
+                                      child: RefreshIndicator(
+                                        onRefresh: _refreshData,
+                                        child: GridView.builder(
+                                            controller: _controller,
+                                            cacheExtent: 5000,
+                                            itemCount: AllProducts.length,
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              crossAxisSpacing: 6,
+                                              mainAxisSpacing: 6,
+                                              childAspectRatio: 0.5,
+                                            ),
+                                            itemBuilder: (context, int index) {
+                                              String concatenatedNames =
+                                                  Sub_Category_Key.join('.')
+                                                      .replaceAll('.', ',');
+                                              final isLiked = Provider.of<
+                                                          FavouriteProvider>(
+                                                      context)
+                                                  .isProductFavorite(
+                                                      AllProducts[index]["id"]);
+                                              return AnimationConfiguration
+                                                  .staggeredList(
+                                                position: index,
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                                child: SlideAnimation(
+                                                  horizontalOffset: 100.0,
+                                                  child: FadeInAnimation(
+                                                    curve: Curves.easeOut,
+                                                    child: ProductWidget(
+                                                        inCart: cartProvider.isProductCart(
+                                                            AllProducts[index]
+                                                                ["id"]),
+                                                        SIZES: widget.SIZES,
+                                                        ALL: false,
+                                                        SubCategories:
+                                                            SubCategories,
+                                                        sizes: [widget.size],
+                                                        url:
+                                                            "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                                        isLiked: isLiked,
+                                                        Images: AllProducts[index]["vendor_images_links"] ??
+                                                            [],
+                                                        Products: AllProducts,
+                                                        index: index,
+                                                        name: AllProducts[index]
+                                                            ["title"],
+                                                        thumbnail:
+                                                            AllProducts[index]
+                                                                ["thumbnail"],
+                                                        id: AllProducts[index]
+                                                            ["id"],
+                                                        new_price:
+                                                            AllProducts[index]
+                                                                ["price"],
+                                                        old_price:
+                                                            AllProducts[index]
+                                                                    ["price"] ??
+                                                                0.0,
+                                                        image: AllProducts[index]
+                                                            ["vendor_images_links"][0],
+                                                        Sub_Category_Key: Sub_Category_Key,
+                                                        page: _page,
+                                                        home: false,
+                                                        category_id: widget.category_id,
+                                                        size: widget.size),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                  // when the _loadMore function is running
+                  if (_isLoadMoreRunning == true)
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 40),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: MAIN_COLOR,
+                        ),
+                      ),
+                    ),
+
+                  // When nothing else to load
+                  if (_hasNextPage == false)
+                    Container(
+                      padding: const EdgeInsets.only(top: 30, bottom: 40),
+                      color: MAIN_COLOR,
+                      child: const Center(
+                        child: Text('You have fetched all of the products'),
+                      ),
+                    ),
+                ],
+              )
+            : Container(
+                height: MediaQuery.of(context).size.height,
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                              child: TextFormField(
+                                onTap: () {
+                                  showSearchDialog(context, widget.category_id);
+                                },
+                                controller: textController,
+                                onFieldSubmitted: (_) {},
+                                obscureText: false,
+                                autofocus: false,
+                                decoration: InputDecoration(
+                                  labelText: "ابحث هنا",
+                                  // labelStyle:
+                                  //     FlutterFlowTheme.of(context).bodyText2,
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                  errorBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                  focusedErrorBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Color(0x00000000),
+                                      width: 1,
+                                    ),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(4.0),
+                                      topRight: Radius.circular(4.0),
+                                    ),
+                                  ),
+                                  suffixIcon: Container(
+                                    width: 85,
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.search,
+                                          size: 20,
+                                        ),
+                                        SizedBox(
+                                          width: 15,
+                                        ),
+                                        IconButton(
+                                          icon: isListView
+                                              ? Icon(
+                                                  Icons.grid_on,
+                                                  size: 20,
+                                                )
+                                              : Icon(Icons.list, size: 15),
+                                          padding: EdgeInsets.all(5),
+                                          onPressed: () {
+                                            setState(() {
+                                              // Toggle between list and grid view
+                                              isListView = !isListView;
+                                              if (isListView) {
+                                                _page = 1;
+                                                _firstLoad();
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5, bottom: 5),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  if (selectedCategoryKeys.length > 1) {
-                                    int removeIndex =
-                                        Sub_Category_Key.indexWhere((key) =>
-                                            key ==
-                                            selectedCategoryKeys[index]["key"]
-                                                .toString());
-                                    if (removeIndex != -1) {
-                                      selectedIndexes.removeWhere(
-                                          (selectedIndex) =>
-                                              selectedIndex ==
-                                              selectedCategoryKeys[index]
-                                                  ["index"]);
-                                      Sub_Category_Key.removeAt(removeIndex);
-                                    }
-                                    // Remove sub-category from the second list
-                                    selectedCategoryKeys.removeAt(
-                                        index); // Remove based on index in this list
-                                  }
-                                });
-                              },
-                              child: Image.asset(
-                                "assets/images/x-button.png",
-                                height: 17,
-                                width: 17,
-                              ),
-                            ),
-                          )
                         ],
-                      );
-                    },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 2.7,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: SubCategories.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (selectedIndexes.contains(index)) {
+                            // Return an empty container if the item is hidden
+                            return Container();
+                          } else {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 5, left: 5),
+                              child: InkWell(
+                                onTap: () {
+                                  if (index == 0) {
+                                    setState(() {
+                                      // Clear both lists
+                                      selectedCategoryKeys.clear();
+                                      selectedIndexes.clear();
+                                      Sub_Category_Key.clear();
+                                      Sub_Category_Key.add("");
+                                      selectedIndexes.add(0);
+                                      SubCategories.add({
+                                        "name": "جميع الأقسام",
+                                        "key": "",
+                                      });
+                                    });
+                                  } else {
+                                    setState(() {
+                                      if (selectedIndexes.contains(index)) {
+                                        if (Sub_Category_Key.length == 1) {
+                                        } else {
+                                          int removeIndex =
+                                              Sub_Category_Key.indexWhere(
+                                                  (key) =>
+                                                      key ==
+                                                      SubCategories[index]
+                                                              ["key"]
+                                                          .toString());
+
+                                          if (removeIndex != -1) {
+                                            // Remove elements based on the found index
+                                            selectedIndexes.remove(index);
+                                            Sub_Category_Key.removeAt(
+                                                removeIndex);
+                                            String categoryName =
+                                                SubCategories[index]["name"]
+                                                    .toString();
+                                            selectedCategoryKeys.removeWhere(
+                                                (name) =>
+                                                    name["name"] ==
+                                                    categoryName);
+                                          }
+                                        }
+                                      } else {
+                                        if (Sub_Category_Key[0].toString() ==
+                                                "Women Clothing" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Weddings & Events" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Kids Shoes" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Men Shoes" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Women Shoes" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Maternity Clothing, Baby" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Women's Fashion Jewelry" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Kids Shoes, Men Shoes, Women Shoes" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Young Boys Clothing,Tween Boys Clothing" ||
+                                            Sub_Category_Key[0].toString() ==
+                                                "Young Girls Clothing,Tween Girls Clothing") {
+                                          selectedIndexes.removeAt(0);
+                                          Sub_Category_Key.removeAt(0);
+                                        }
+                                        selectedIndexes.add(index);
+
+                                        Sub_Category_Key.add(
+                                            SubCategories[index]["key"]
+                                                .toString());
+
+                                        selectedCategoryKeys.add({
+                                          "name": SubCategories[index]["name"]
+                                              .toString(),
+                                          "key": SubCategories[index]["key"]
+                                              .toString(),
+                                          "index": index
+                                        });
+                                      }
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      width: 2,
+                                      color: selectedIndexes.contains(index)
+                                          ? Colors.red
+                                          : Colors.black,
+                                    ),
+                                    color: Colors.black,
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Text(
+                                        SubCategories[index]["name"].toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, bottom: 20),
+                        child: SizedBox(
+                          width: double.infinity,
+                          height: 5,
+                          child: CustomPaint(
+                            size: Size(200, 70),
+                            painter: DashLinePainter(),
+                          ),
+                        ),
+                      ),
+                      GridView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          childAspectRatio: 2.7,
+                          crossAxisSpacing: 5,
+                          mainAxisSpacing: 5,
+                          crossAxisCount: 3,
+                        ),
+                        itemCount: selectedCategoryKeys.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Stack(
+                            alignment: Alignment.topLeft,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 5, left: 5),
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (selectedCategoryKeys.length > 1) {
+                                        int removeIndex =
+                                            Sub_Category_Key.indexWhere((key) =>
+                                                key ==
+                                                selectedCategoryKeys[index]
+                                                        ["key"]
+                                                    .toString());
+                                        if (removeIndex != -1) {
+                                          selectedIndexes.removeWhere(
+                                              (selectedIndex) =>
+                                                  selectedIndex ==
+                                                  selectedCategoryKeys[index]
+                                                      ["index"]);
+                                          Sub_Category_Key.removeAt(
+                                              removeIndex);
+                                        }
+                                        // Remove sub-category from the second list
+                                        selectedCategoryKeys.removeAt(
+                                            index); // Remove based on index in this list
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: Colors.black,
+                                        ),
+                                        color: Colors.white),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Text(
+                                          selectedCategoryKeys[index]["name"]
+                                              .toString(),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                              color: MAIN_COLOR),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 5, bottom: 5),
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      if (selectedCategoryKeys.length > 1) {
+                                        int removeIndex =
+                                            Sub_Category_Key.indexWhere((key) =>
+                                                key ==
+                                                selectedCategoryKeys[index]
+                                                        ["key"]
+                                                    .toString());
+                                        if (removeIndex != -1) {
+                                          selectedIndexes.removeWhere(
+                                              (selectedIndex) =>
+                                                  selectedIndex ==
+                                                  selectedCategoryKeys[index]
+                                                      ["index"]);
+                                          Sub_Category_Key.removeAt(
+                                              removeIndex);
+                                        }
+                                        // Remove sub-category from the second list
+                                        selectedCategoryKeys.removeAt(
+                                            index); // Remove based on index in this list
+                                      }
+                                    });
+                                  },
+                                  child: Image.asset(
+                                    "assets/images/x-button.png",
+                                    height: 17,
+                                    width: 17,
+                                  ),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-          );
+                ),
+              );
   }
 
   List<int> selectedIndexes = [0];
@@ -1302,16 +1382,13 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
           _products = await getProductByCategory(
               getCategoryKey(), concatenatedNames, widget.size, '', _page);
         }
-        if (_products.isNotEmpty) {
+        if (_products["items"].isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products["items"]);
           });
         } else {
-          // This means there is no more data
-          // and therefore, we will not send another GET request
-          setState(() {
-            _hasNextPage = false;
-          });
+          Fluttertoast.showToast(
+              msg: "لا يوجد المزيد من المنتجات , تصفح أقسام اخرى");
         }
       } catch (err) {
         if (kDebugMode) {
@@ -1328,8 +1405,6 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   var SubCategories;
 
   setStaticSubCategories() {
-    print("widget.category_id.toString()");
-    print(widget.category_id.toString());
     if (widget.name == "ملابس نسائيه مقاس كبير") {
       SubCategories = sub_categories_women_plus_sizes;
       Sub_Category_Key.add("Women Plus Clothing");

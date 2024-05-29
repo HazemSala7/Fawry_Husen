@@ -201,11 +201,15 @@ class _ProductScreenState extends State<ProductScreen> {
     }
 
     moveItemToFront(orderedItems, widget.id);
-    await loadFeaturedItems();
 
     setState(() {
       loadingPage = false;
     });
+    if (initMAINKey != "Pet Supplies" &&
+        initMAINKey != "Automotive" &&
+        initMAINKey != "Office School Supplies") {
+      await loadFeaturedItems();
+    }
   }
 
   removeDuplicatesById(items) {
@@ -300,44 +304,46 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   Future<void> loadFeaturedItems() async {
-    var main_category_key_final = initMAINKey.replaceAll('&', '%26');
-    page += 1;
-    final uri = Uri.parse(widget.url);
-    if (uri.host == null) {
-      print("Invalid URL: No host specified");
-      return;
-    }
-    var additionalItems = [];
-    String categoryString = await FeatureCategoryKeyNumber();
-    var _products = await getFeatureProducts(categoryString);
-    if (_products != null && _products["items"].isNotEmpty) {
-      additionalItems = _products["items"];
-    } else {
-      var _products = await getProductByCategory(
-          main_category_key_final, initSubKey, "", widget.sizes[0], 1);
+    if (!widget.cart_fav) {
+      var main_category_key_final = initMAINKey.replaceAll('&', '%26');
+      page += 1;
+      final uri = Uri.parse(widget.url);
+      if (uri.host == null) {
+        print("Invalid URL: No host specified");
+        return;
+      }
+      var additionalItems = [];
+      String categoryString = await FeatureCategoryKeyNumber();
+      var _products = await getFeatureProducts(categoryString);
       if (_products != null && _products["items"].isNotEmpty) {
         additionalItems = _products["items"];
-      }
-    }
-
-    List<String> idsList =
-        additionalItems.map((item) => item['id'].toString()).toList();
-
-    String commaSeparatedIds = idsList.join(', ');
-
-    var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
-
-    if (additionalItems.isNotEmpty) {
-      setState(() {
-        for (int i = 0; i < ProductsApiData["item"].length; i++) {
-          int insertionIndex = (i + 1) * 7;
-          if (insertionIndex <= orderedItems.length) {
-            orderedItems.insert(insertionIndex, ProductsApiData["item"][i]);
-          } else {
-            break;
-          }
+      } else {
+        var _products = await getProductByCategory(
+            main_category_key_final, initSubKey, "", widget.sizes[0], 1);
+        if (_products != null && _products["items"].isNotEmpty) {
+          additionalItems = _products["items"];
         }
-      });
+      }
+
+      List<String> idsList =
+          additionalItems.map((item) => item['id'].toString()).toList();
+
+      String commaSeparatedIds = idsList.join(', ');
+
+      var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
+
+      if (additionalItems.isNotEmpty) {
+        setState(() {
+          for (int i = 0; i < ProductsApiData["item"].length; i++) {
+            int insertionIndex = (i + 1) * 7;
+            if (insertionIndex <= orderedItems.length) {
+              orderedItems.insert(insertionIndex, ProductsApiData["item"][i]);
+            } else {
+              break;
+            }
+          }
+        });
+      }
     }
   }
 

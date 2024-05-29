@@ -9,6 +9,7 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../firebase/user/UserController.dart';
 import '../../authentication/login_screen/login_screen.dart';
@@ -370,31 +371,57 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       name: "معلومات عنا",
                       icon: Icons.info,
                       iconornot: true,
-                      NavigatorFunction: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WhoWeAre()));
+                      NavigatorFunction: () async {
+                        const url = 'https://www.fawri.co/about';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
+                        }
                       }),
                   lineMethod(),
                   profileCard(
                       name: "سياسه الخصوصيه",
                       icon: Icons.privacy_tip,
                       iconornot: true,
-                      NavigatorFunction: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Privacy()));
+                      NavigatorFunction: () async {
+                        const url = 'https://www.fawri.co/privacy_policy';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
+                        }
                       }),
                   lineMethod(),
                   profileCard(
                       name: "سياسه التبديل",
                       icon: Icons.privacy_tip,
                       iconornot: true,
-                      NavigatorFunction: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SwitchPolicy()));
+                      NavigatorFunction: () async {
+                        const url = 'https://www.fawri.co/switch_policy';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      }),
+                  lineMethod(),
+                  profileCard(
+                      name: "تواصل معنا للدعم",
+                      icon: Icons.support,
+                      iconornot: true,
+                      NavigatorFunction: () async {
+                        const url =
+                            "https://www.messenger.com/t/10079269944406";
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
                       }),
                   lineMethod(),
                   profileCard(

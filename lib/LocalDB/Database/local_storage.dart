@@ -166,12 +166,6 @@ class LocalStorage {
       "32": false,
       "33": false,
       "34": false,
-      "35": false,
-      "36": false,
-      "37": false,
-      "38": false,
-      "39": false,
-      "41": false,
     });
     sizeDataBox.put('Men_shoes_sizes', {
       "37": false,

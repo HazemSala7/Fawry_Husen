@@ -11,6 +11,7 @@ import '../../LocalDB/Database/local_storage.dart';
 import '../../LocalDB/Models/CartModel.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../components/button_widget/button_widget.dart';
+import '../../components/cart_icon/cart_icon.dart';
 import '../../constants/constants.dart';
 import '../../firebase/cart/CartController.dart';
 import '../../firebase/cart/CartFirebaseModel.dart';
@@ -127,114 +128,92 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
-      leading: Visibility(
-        visible: widget.sizes == "" || widget.sizes == "null" ? false : true,
-        child: Showcase(
-          key: _one,
-          title: 'اختيار الحجم',
-          description: 'هنا يتم اختيار الحجم',
-          child: InkWell(
-            onTap: () {
-              NavigatorFunction(
-                  context,
-                  SizesPage(
-                      sizes: widget.sizes,
-                      name: widget.name,
-                      main_category: widget.main_Category,
-                      keys: widget.keys,
-                      containerWidths: widget.containerWidths));
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: is_selected_size
-                  ? Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Marquee(
-                        text: "$sizesOutput",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 17),
-                        scrollAxis: Axis.horizontal,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        blankSpace: 40.0,
-                        velocity: 50.0,
-                        pauseAfterRound: Duration(seconds: 1),
-                        startPadding: 10.0,
-                        accelerationDuration: Duration(milliseconds: 500),
-                        decelerationDuration: Duration(milliseconds: 500),
-                        accelerationCurve: Curves.linear,
-                        decelerationCurve: Curves.easeOut,
-                      ),
-                    )
-                  : Image.asset(
-                      is_selected_size
-                          ? "assets/images/full_tshirt.png"
-                          : "assets/images/tshirt.png",
-                      height: 35,
-                      width: 35,
-                    ),
-            ),
-          ),
-        ),
+      leading: Row(
+        children: [
+          IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back)),
+        ],
       ),
       actions: [
-        Stack(
-          alignment: Alignment.topRight,
-          children: [
-            InkWell(
-              onTap: () {
-                NavigatorFunction(
-                    context,
-                    ShowCaseWidget(
-                        builder: Builder(builder: (context) => Cart())));
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Image.asset(
-                  "assets/images/shopping-cart.png",
-                  height: 35,
-                  width: 35,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Consumer<CartProvider>(
-              builder: (context, cartProvider, _) {
-                int itemCount = cartProvider.cartItemsCount;
-                return CartIcon(itemCount);
-              },
-            )
-          ],
-        )
+        CartIcon(),
       ],
       elevation: 1,
       centerTitle: true,
-      title: Text(
-        "الرئيسيه",
-        style: TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
-      ),
-    );
-  }
-
-  Widget CartIcon(int itemCount) {
-    return Container(
-      height: 17,
-      width: 17,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.red,
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.only(top: 2),
-          child: Text(
-            itemCount.toString(),
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 12,
+      title: Container(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Visibility(
+              visible:
+                  widget.sizes == "" || widget.sizes == "null" ? false : true,
+              child: Showcase(
+                key: _one,
+                title: 'اختيار الحجم',
+                description: 'هنا يتم اختيار الحجم',
+                child: InkWell(
+                  onTap: () {
+                    NavigatorFunction(
+                        context,
+                        SizesPage(
+                            sizes: widget.sizes,
+                            name: widget.name,
+                            main_category: widget.main_Category,
+                            keys: widget.keys,
+                            containerWidths: widget.containerWidths));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: is_selected_size
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Container(
+                              width: 50,
+                              child: Marquee(
+                                text: "$sizesOutput",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 17),
+                                scrollAxis: Axis.horizontal,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                blankSpace: 40.0,
+                                velocity: 50.0,
+                                pauseAfterRound: Duration(seconds: 1),
+                                startPadding: 10.0,
+                                accelerationDuration:
+                                    Duration(milliseconds: 500),
+                                decelerationDuration:
+                                    Duration(milliseconds: 500),
+                                accelerationCurve: Curves.linear,
+                                decelerationCurve: Curves.easeOut,
+                              ),
+                            ),
+                          )
+                        : Image.asset(
+                            is_selected_size
+                                ? "assets/images/full_tshirt.png"
+                                : "assets/images/tshirt.png",
+                            height: 35,
+                            width: 35,
+                          ),
+                  ),
+                ),
+              ),
             ),
-          ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(
+              "الرئيسيه",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black),
+            ),
+          ],
         ),
       ),
     );

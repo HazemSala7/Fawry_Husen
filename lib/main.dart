@@ -143,8 +143,11 @@ class _FawriState extends State<Fawri> {
           ),
           child: ShowCaseWidget(
             builder: Builder(
-                builder: (context) =>
-                    FirstScreen ? LoginScreen() : CategorySplash()),
+                builder: (context) => FirstScreen
+                    ? LoginScreen()
+                    : CategorySplash(
+                        selectedIndex: 0,
+                      )),
           )),
     );
   }
