@@ -324,46 +324,51 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-    var data = await FirebaseAuth.instance.signInWithCredential(credential);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? TOKEN = await prefs.getString('device_token');
-    String user_Id = Uuid().v4();
-    UserItem newItem = UserItem(
-      id: user_Id,
-      token: TOKEN.toString(),
-      email: data.user!.email.toString(),
-      password: "",
-      address: 'address',
-      birthdate: '',
-      area: '',
-      gender: '',
-      city: '',
-      phone: '',
-    );
-    userService.addUser(newItem).then((_) async {
+  signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+      var data = await FirebaseAuth.instance.signInWithCredential(credential);
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('user_id', user_Id);
-      await prefs.setBool('login', true);
-      NavigatorFunction(
-          context,
-          CategorySplash(
-            selectedIndex: 0,
-          ));
-    }).catchError((error) {
+      String? TOKEN = await prefs.getString('device_token');
+      String user_Id = Uuid().v4();
+      UserItem newItem = UserItem(
+        id: user_Id,
+        token: TOKEN.toString(),
+        email: data.user!.email.toString(),
+        password: "",
+        address: 'address',
+        birthdate: '',
+        area: '',
+        gender: '',
+        city: '',
+        phone: '',
+      );
+      userService.addUser(newItem).then((_) async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('user_id', user_Id);
+        await prefs.setBool('login', true);
+        NavigatorFunction(
+            context,
+            CategorySplash(
+              selectedIndex: 0,
+            ));
+      }).catchError((error) {
+        Navigator.pop(context);
+        Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
+      });
+
+      // Once signed in, return the UserCredential
+      return data;
+    } catch (e) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
-    });
-
-    // Once signed in, return the UserCredential
-    return data;
+    }
   }
 
   signInWithFacebook() async {
