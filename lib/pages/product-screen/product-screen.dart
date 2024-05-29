@@ -163,9 +163,9 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {
       orderedItems.add(InitialData["item"]);
       removeDuplicatesById(orderedItems);
-      initSubKey = InitialData["item"]["categories"].length >= 2
-          ? InitialData["item"]["categories"][1][0]
-          : InitialData["item"]["categories"].length > 1
+      initSubKey = InitialData["item"]["categories"].length == 3
+          ? InitialData["item"]["categories"][2][0]
+          : InitialData["item"]["categories"].length == 2
               ? InitialData["item"]["categories"][1][0]
               : InitialData["item"]["categories"][0][0];
       initMAINKey = InitialData["item"]["categories"][0][0] ?? "";
@@ -188,15 +188,17 @@ class _ProductScreenState extends State<ProductScreen> {
     }
     List<String> idsList =
         additionalItems.map((item) => item['id'].toString()).toList();
-
     String commaSeparatedIds = idsList.join(', ');
-
     var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
 
     if (additionalItems != null) {
       setState(() {
-        // orderedItems = [];
-        orderedItems.addAll(ProductsApiData["item"]);
+        if (ProductsApiData.length == 1) {
+          orderedItems = [];
+          orderedItems = ProductsApiData["item"];
+        } else {
+          orderedItems.addAll(ProductsApiData["item"]);
+        }
       });
     }
 

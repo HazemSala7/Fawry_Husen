@@ -4,6 +4,7 @@ import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../LocalDB/Provider/FavouriteProvider.dart';
@@ -317,11 +318,8 @@ class _MainScreenState extends State<MainScreen> {
             AllProducts.addAll(_products["items"]);
           });
         } else {
-          _page = 1;
-          var _products = await getProducts(_page);
-          setState(() {
-            AllProducts.addAll(_products["items"]);
-          });
+          Fluttertoast.showToast(
+              msg: "لا يوجد المزيد من المنتجات ، قم بتصفح الاقسام الأُخرى");
         }
       } catch (err) {
         if (kDebugMode) {

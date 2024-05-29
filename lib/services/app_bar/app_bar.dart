@@ -145,7 +145,9 @@ class _AppBarWidgetState extends State<AppBarWidget> {
       title: Container(
         height: 50,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: widget.sizes == "" || widget.sizes == "null"
+              ? MainAxisAlignment.center
+              : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Visibility(
@@ -203,11 +205,15 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                 ),
               ),
             ),
-            SizedBox(
-              width: 20,
+            Visibility(
+              visible:
+                  widget.sizes == "" || widget.sizes == "null" ? false : true,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.05,
+              ),
             ),
             Text(
-              "الرئيسيه",
+              "الرئيسية",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,

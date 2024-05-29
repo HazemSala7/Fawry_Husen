@@ -1017,7 +1017,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          childAspectRatio: 2.7,
+                          childAspectRatio: 2.4,
                           crossAxisSpacing: 5,
                           mainAxisSpacing: 5,
                           crossAxisCount: 3,
@@ -1388,7 +1388,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
           });
         } else {
           Fluttertoast.showToast(
-              msg: "لا يوجد المزيد من المنتجات , تصفح أقسام اخرى");
+              msg: "لا يوجد المزيد من المنتجات ، قم بتصفح الاقسام الأُخرى");
         }
       } catch (err) {
         if (kDebugMode) {

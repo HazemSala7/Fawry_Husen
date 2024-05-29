@@ -93,6 +93,7 @@ getSpeceficProduct(id) async {
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
+    print("1");
     print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
     var response = await http.get(
         Uri.parse("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id"),
@@ -325,14 +326,17 @@ getProductByCategory(category_id, sub_category_key, String size,
     var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
     var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
     var Final_URL = "";
-    if (size != null && size.isNotEmpty && size.toString() != "null") {
+    if (size != null &&
+        size.isNotEmpty &&
+        size.toString() != "null" &&
+        size.toString() != "") {
       Final_URL =
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final}&${size != "null" || size != "" ? "size=${"$size,ONE SIZE"}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     } else {
       Final_URL =
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
-    if (selected_sizes != '') {
+    if (selected_sizes != '' && selected_sizes.toString() != "null") {
       Final_URL += "&size=$selected_sizes";
     }
     print("Final_URL");

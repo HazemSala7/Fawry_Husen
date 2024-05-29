@@ -400,7 +400,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   profileCard(
                       name: "سياسه التبديل",
                       icon: Icons.privacy_tip,
-                      iconornot: true,
+                      iconornot: false,
+                      image: "assets/images/insurance-policy.png",
                       NavigatorFunction: () async {
                         const url = 'https://www.fawri.co/switch_policy';
                         if (await canLaunch(url)) {
@@ -416,7 +417,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconornot: true,
                       NavigatorFunction: () async {
                         const url =
-                            "https://www.messenger.com/t/10079269944406";
+                            "https://www.facebook.com/FawriCOD?mibextid=LQQJ4d";
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {

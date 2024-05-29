@@ -159,50 +159,50 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Visibility(
-                                      visible: isAppleDevice,
-                                      child: Container(
-                                        height: 50,
-                                        width: 50,
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: MAIN_COLOR),
-                                        child: Center(
-                                          child: IconButton(
-                                              onPressed: () async {
-                                                showDialog(
-                                                    context: context,
-                                                    barrierDismissible: false,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Card(
-                                                              color:
-                                                                  Colors.white,
-                                                              child: Container(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          50),
-                                                                  child:
-                                                                      const CircularProgressIndicator())),
-                                                        ],
-                                                      );
-                                                    });
-                                                await signInWithApple();
-                                              },
-                                              icon: Icon(
-                                                FontAwesome.apple,
-                                                color: Colors.white,
-                                                size: 30,
-                                              )),
-                                        ),
-                                      ),
-                                    ),
+                                    // Visibility(
+                                    //   visible: isAppleDevice,
+                                    //   child: Container(
+                                    //     height: 50,
+                                    //     width: 50,
+                                    //     decoration: BoxDecoration(
+                                    //         shape: BoxShape.circle,
+                                    //         color: MAIN_COLOR),
+                                    //     child: Center(
+                                    //       child: IconButton(
+                                    //           onPressed: () async {
+                                    //             showDialog(
+                                    //                 context: context,
+                                    //                 barrierDismissible: false,
+                                    //                 builder:
+                                    //                     (BuildContext context) {
+                                    //                   return Column(
+                                    //                     mainAxisAlignment:
+                                    //                         MainAxisAlignment
+                                    //                             .center,
+                                    //                     children: [
+                                    //                       Card(
+                                    //                           color:
+                                    //                               Colors.white,
+                                    //                           child: Container(
+                                    //                               padding:
+                                    //                                   const EdgeInsets
+                                    //                                           .all(
+                                    //                                       50),
+                                    //                               child:
+                                    //                                   const CircularProgressIndicator())),
+                                    //                     ],
+                                    //                   );
+                                    //                 });
+                                    //             await signInWithApple();
+                                    //           },
+                                    //           icon: Icon(
+                                    //             FontAwesome.apple,
+                                    //             color: Colors.white,
+                                    //             size: 30,
+                                    //           )),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     SizedBox(
                                       width: 15,
                                     ),
