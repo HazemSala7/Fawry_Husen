@@ -163,7 +163,8 @@ class _ProductScreenState extends State<ProductScreen> {
     setState(() {
       orderedItems.add(InitialData["item"]);
       removeDuplicatesById(orderedItems);
-      initSubKey = InitialData["item"]["categories"].length == 3
+      initSubKey = InitialData["item"]["categories"].length == 3 ||
+              InitialData["item"]["categories"].length > 2
           ? InitialData["item"]["categories"][2][0]
           : InitialData["item"]["categories"].length == 2
               ? InitialData["item"]["categories"][1][0]
@@ -193,12 +194,14 @@ class _ProductScreenState extends State<ProductScreen> {
 
     if (additionalItems != null) {
       setState(() {
-        if (ProductsApiData.length == 1) {
-          orderedItems = [];
-          orderedItems = ProductsApiData["item"];
-        } else {
-          orderedItems.addAll(ProductsApiData["item"]);
+        var items = ProductsApiData["item"];
+
+        if (items is Map) {
+          // If items is an object, wrap it in a list
+          items = [items];
         }
+
+        orderedItems.addAll(items);
       });
     }
 

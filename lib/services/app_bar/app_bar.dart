@@ -126,102 +126,88 @@ class _AppBarWidgetState extends State<AppBarWidget> {
   }
 
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      leading: Row(
-        children: [
-          IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: Icon(Icons.arrow_back)),
-        ],
-      ),
-      actions: [
-        CartIcon(),
-      ],
-      elevation: 1,
-      centerTitle: true,
-      title: Container(
-        height: 50,
-        child: Row(
-          mainAxisAlignment: widget.sizes == "" || widget.sizes == "null"
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Visibility(
-              visible:
-                  widget.sizes == "" || widget.sizes == "null" ? false : true,
-              child: Showcase(
-                key: _one,
-                title: 'اختيار الحجم',
-                description: 'هنا يتم اختيار الحجم',
-                child: InkWell(
-                  onTap: () {
-                    NavigatorFunction(
-                        context,
-                        SizesPage(
-                            sizes: widget.sizes,
-                            name: widget.name,
-                            main_category: widget.main_Category,
-                            keys: widget.keys,
-                            containerWidths: widget.containerWidths));
+    return Stack(
+      alignment: Alignment.centerRight,
+      children: [
+        AppBar(
+          backgroundColor: Colors.white,
+          leading: Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: is_selected_size
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Container(
-                              width: 50,
-                              child: Marquee(
-                                text: "$sizesOutput",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 17),
-                                scrollAxis: Axis.horizontal,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                blankSpace: 40.0,
-                                velocity: 50.0,
-                                pauseAfterRound: Duration(seconds: 1),
-                                startPadding: 10.0,
-                                accelerationDuration:
-                                    Duration(milliseconds: 500),
-                                decelerationDuration:
-                                    Duration(milliseconds: 500),
-                                accelerationCurve: Curves.linear,
-                                decelerationCurve: Curves.easeOut,
-                              ),
+                  icon: Icon(Icons.arrow_back)),
+            ],
+          ),
+          actions: [
+            CartIcon(),
+          ],
+          elevation: 1,
+          centerTitle: true,
+          title: Text(
+            "الرئيسية",
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.black),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 50),
+          child: Visibility(
+            visible:
+                widget.sizes == "" || widget.sizes == "null" ? false : true,
+            child: Showcase(
+              key: _one,
+              title: 'اختيار الحجم',
+              description: 'هنا يتم اختيار الحجم',
+              child: InkWell(
+                onTap: () {
+                  NavigatorFunction(
+                      context,
+                      SizesPage(
+                          sizes: widget.sizes,
+                          name: widget.name,
+                          main_category: widget.main_Category,
+                          keys: widget.keys,
+                          containerWidths: widget.containerWidths));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: is_selected_size
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Container(
+                            width: 50,
+                            child: Marquee(
+                              text: "$sizesOutput",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17),
+                              scrollAxis: Axis.horizontal,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              blankSpace: 40.0,
+                              velocity: 50.0,
+                              pauseAfterRound: Duration(seconds: 1),
+                              startPadding: 10.0,
+                              accelerationDuration: Duration(milliseconds: 500),
+                              decelerationDuration: Duration(milliseconds: 500),
+                              accelerationCurve: Curves.linear,
+                              decelerationCurve: Curves.easeOut,
                             ),
-                          )
-                        : Image.asset(
-                            is_selected_size
-                                ? "assets/images/full_tshirt.png"
-                                : "assets/images/tshirt.png",
-                            height: 35,
-                            width: 35,
                           ),
-                  ),
+                        )
+                      : Image.asset(
+                          is_selected_size
+                              ? "assets/images/full_tshirt.png"
+                              : "assets/images/tshirt.png",
+                          height: 35,
+                          width: 35,
+                        ),
                 ),
               ),
             ),
-            Visibility(
-              visible:
-                  widget.sizes == "" || widget.sizes == "null" ? false : true,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.05,
-              ),
-            ),
-            Text(
-              "الرئيسية",
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.black),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

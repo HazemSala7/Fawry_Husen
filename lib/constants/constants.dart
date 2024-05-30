@@ -945,42 +945,38 @@ var sub_categories_SportsOutdoor = [
 var sub_categories_JewelryWatches = [
   {
     "name": "جميع الأقسام",
-    "key": "Women's Fashion Jewelry",
+    "key": "",
   },
   {
     "name": "أقراط واحلق نسائية",
-    "key": "Women's Earrings",
+    "key": "Women's Earrings, Women Earrings",
   },
   {
     "name": "قلادات وسناسيل نسائية",
-    "key": "Women's Necklaces, Women's Brooches",
+    "key":
+        "Women's Necklaces, Women's Brooches, Women Necklaces, Women Brooches",
   },
   {
     "name": "أساور نسائية",
-    "key": "Women's Bracelets",
+    "key": "Women's Bracelets, Women Bracelets",
   },
   {
     "name": "خواتم نسائية",
-    "key": "Women's Rings",
+    "key": "Women's Rings, Women Rings",
   },
   {
     "name": "مجوهرات قدم نسائية",
-    "key": "Women's Foot Jewelry",
+    "key": "Women's Foot Jewelry, Women Foot Jewelry",
   },
   {
     "name": "أطقم مجوهرات نسائية",
     "key":
-        "Women's Jewelry Sets, Women's Body Jewelry, Body Chain, Women's Body Chains",
-  },
-  {
-    "name": "أطقم مجوهرات نسائية",
-    "key":
-        "Women's Jewelry Sets, Women's Body Jewelry, Women's Body Chains, Women's Watches,Jewelry Making",
+        "Women's Jewelry Sets, Women's Body Jewelry, Body Chain, Women's Body Chains, Women Jewelry Sets, Women Body Jewelry,  Women Body Chains",
   },
   {
     "name": "ساعات نسائية",
     "key":
-        "Women's Watches, Women's Watch Sets, Women's Quartz Watches, Jewelry Findings %26 Components",
+        "Women's Watches, Women's Watch Sets, Women's Quartz Watches, Jewelry Findings & Components, Women Watches, Women Watch Sets, Women Quartz Watches",
   },
   {
     "name": "أساور وخواتم رجالية",
@@ -989,8 +985,7 @@ var sub_categories_JewelryWatches = [
   },
   {
     "name": "قلادات وسناسيل رجالية",
-    "key":
-        "Men's Necklaces, Men's Body Jewelry,Jewelry Findings %26 Components",
+    "key": "Men's Necklaces, Men's Body Jewelry,Jewelry Findings & Components",
   },
 ];
 
