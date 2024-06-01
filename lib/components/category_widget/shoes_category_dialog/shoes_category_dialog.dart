@@ -1,5 +1,6 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../../../LocalDB/Database/local_storage.dart';
 import '../../../constants/constants.dart';
@@ -78,17 +79,20 @@ class _ShoesCategoryDialogState extends State<ShoesCategoryDialog> {
                         if (categoryItems[index].name == "الجميع") {
                           NavigatorFunction(
                               context,
-                              ProductsCategories(
-                                SIZES: [],
-                                search: false,
-                                category_id: "Shoes,Kids",
-                                size: "",
-                                containerWidths: "",
-                                main_category: "Shoes,Kids",
-                                keys: "",
-                                sizes: "",
-                                name: "",
-                              ));
+                              ShowCaseWidget(
+                                  builder: Builder(
+                                builder: (context) => ProductsCategories(
+                                  SIZES: [],
+                                  search: false,
+                                  category_id: "Shoes,Kids",
+                                  size: "",
+                                  containerWidths: "",
+                                  main_category: "Shoes,Kids",
+                                  keys: "",
+                                  sizes: "",
+                                  name: "",
+                                ),
+                              )));
                         } else {
                           categoryItems[index].isSelected =
                               !categoryItems[index].isSelected;

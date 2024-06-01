@@ -1392,9 +1392,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
               msg: "لا يوجد المزيد من المنتجات ، قم بتصفح الاقسام الأُخرى");
         }
       } catch (err) {
-        if (kDebugMode) {
-          print('Something went wrong!');
-        }
+        no_internet = true;
+        _isFirstLoadRunning = false;
+        setState(() {});
+        return;
       }
 
       setState(() {

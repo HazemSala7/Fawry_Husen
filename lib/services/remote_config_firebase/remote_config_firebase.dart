@@ -4,8 +4,8 @@ class FirebaseRemoteConfigClass {
   final remoteConfig = FirebaseRemoteConfig.instance;
   Future initilizeConfig() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 10)));
     await remoteConfig.fetchAndActivate();
     var temp = remoteConfig.getString("season");
     return temp;
@@ -13,8 +13,8 @@ class FirebaseRemoteConfigClass {
 
   Future getDomain() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 10)));
     await remoteConfig.fetchAndActivate();
     var temp = remoteConfig.getString("domain");
     return temp;
@@ -22,8 +22,8 @@ class FirebaseRemoteConfigClass {
 
   Future getCategoryIDKey1() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 10)));
     await remoteConfig.fetchAndActivate();
     var temp = remoteConfig.getString("FeaturesUrl_1");
     return temp;
@@ -31,8 +31,8 @@ class FirebaseRemoteConfigClass {
 
   Future getCategoryIDKey2() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 10)));
     await remoteConfig.fetchAndActivate();
     var temp = remoteConfig.getString("FeaturesUrl_2");
     return temp;
@@ -40,8 +40,8 @@ class FirebaseRemoteConfigClass {
 
   Future getCategoryIDKey3() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 1),
-        minimumFetchInterval: Duration(seconds: 1)));
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 10)));
     await remoteConfig.fetchAndActivate();
     var temp = remoteConfig.getString("FeaturesUrl_3");
     return temp;
