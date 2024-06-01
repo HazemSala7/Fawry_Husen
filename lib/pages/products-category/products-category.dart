@@ -1352,9 +1352,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
           AllProducts = _products["items"];
         });
       } catch (err) {
-        if (kDebugMode) {
-          print('Something went wrong . $err');
-        }
+        no_internet = true;
+        _isFirstLoadRunning = false;
+        setState(() {});
+        return;
       }
       setState(() {
         _isFirstLoadRunning = false;

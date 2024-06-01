@@ -308,8 +308,7 @@ sendNotification({context, USER_TOKENS, productImage}) async {
     },
     "registration_ids": registrationTokens
   });
-  print("registrationTokens");
-  print(registrationTokens);
+
   request.headers.addAll(headers);
   http.StreamedResponse response = await request.send();
   if (response.statusCode == 200) {
@@ -339,8 +338,6 @@ getProductByCategory(category_id, sub_category_key, String size,
     if (selected_sizes != '' && selected_sizes.toString() != "null") {
       Final_URL += "&size=$selected_sizes";
     }
-    print("Final_URL");
-    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -357,10 +354,12 @@ getProductByCategory(category_id, sub_category_key, String size,
           "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
     if (selected_sizes != null && selected_sizes.isNotEmpty) {
-      Final_URL += "&selected_sizes=$selected_sizes";
+      Final_URL += "&size=$selected_sizes";
     }
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
+    print("res");
+    print(res);
     return res;
   }
 }
