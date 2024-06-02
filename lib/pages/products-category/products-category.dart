@@ -202,11 +202,14 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   Widget ProductsCategoryMethod() {
     final cartProvider = Provider.of<CartProvider>(context);
     return no_internet
-        ? Padding(
-            padding: const EdgeInsets.only(top: 50),
-            child: Text(
-              "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        ? Container(
+            height: MediaQuery.of(context).size.height - 100,
+            width: double.infinity,
+            child: Center(
+              child: Text(
+                "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
             ),
           )
         : isListView
