@@ -98,7 +98,7 @@ class _FavouriteState extends State<Favourite> {
     );
   }
 
-  NavigatorProduct(favItems, index, image, product_id) {
+  NavigatorProduct(favItems, index, image, product_id, price) {
     List<Map<String, dynamic>> products = [];
 
     for (int i = 0; i < favItems.length; i++) {
@@ -138,6 +138,7 @@ class _FavouriteState extends State<Favourite> {
       context,
       ProductScreen(
         SIZES: [],
+        price: price.toString(),
         ALL: false,
         SubCategories: [],
         Sub_Category_Key: "",
@@ -220,7 +221,8 @@ class _FavouriteState extends State<Favourite> {
                   onPressed: () async {
                     isDeleteAction
                         ? removeProduct!()
-                        : NavigatorProduct(favItems, index, image, product_id);
+                        : NavigatorProduct(favItems, index, image, product_id,
+                            price.toString());
                   },
                   child: Text(isDeleteAction ? 'حذف' : 'اضافه'),
                 ),
@@ -306,6 +308,7 @@ class _FavouriteState extends State<Favourite> {
                 NavigatorFunction(
                   context,
                   ProductScreen(
+                    price: price.toString(),
                     SIZES: [],
                     ALL: false,
                     SubCategories: [],
@@ -444,6 +447,7 @@ class _FavouriteState extends State<Favourite> {
                                     context,
                                     ProductScreen(
                                       SIZES: [],
+                                      price: price.toString(),
                                       ALL: false,
                                       SubCategories: [],
                                       Sub_Category_Key: "",

@@ -412,6 +412,7 @@ class _CartState extends State<Cart> {
               NavigatorFunction(
                 context,
                 ProductScreen(
+                  price: price.toString(),
                   SIZES: [],
                   ALL: false,
                   Sub_Category_Key: "",

@@ -77,7 +77,15 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
         });
       });
     _confettiController = ConfettiController(duration: Duration(seconds: 2));
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final addressprovider =
+          Provider.of<AddressProvider>(context, listen: false);
+      if (addressprovider.addressItems.isNotEmpty) {
+        setState(() {
+          selectedArea = addressprovider.addressItems[0].name;
+        });
+      }
+    });
     super.initState();
   }
 
@@ -352,6 +360,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               List<AddressItem> addressItems = addressprovider.addressItems;
               String? selectedValue =
                   addressItems.isNotEmpty ? addressItems[0].name : null;
+              if (selectedArea == null && addressItems.isNotEmpty) {
+                selectedArea = addressItems[0].name;
+              }
 
               return Visibility(
                 visible: addressItems.isNotEmpty,
@@ -392,8 +403,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 const EdgeInsets.only(top: 15, right: 15, left: 15, bottom: 10),
             child: InkWell(
               onTap: () {
-                print("dropdownValue");
-                print(dropdownValue);
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {

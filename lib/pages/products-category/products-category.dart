@@ -20,6 +20,7 @@ import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../../services/app_bar/app_bar.dart';
 import '../../services/dash_point/dash_point.dart';
+import '../../services/remote_config_firebase/remote_config_firebase.dart';
 import '../home_screen/category-screen/category-screen.dart';
 import '../home_screen/favourite-screen/favourite-screen.dart';
 import '../home_screen/main-screen/main-screen.dart';
@@ -274,7 +275,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                 ),
                               ),
                               suffixIcon: Container(
-                                width: 85,
+                                width: 108,
                                 child: Row(
                                   children: [
                                     Icon(
@@ -283,6 +284,15 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                     ),
                                     SizedBox(
                                       width: 15,
+                                    ),
+                                    Image.asset(
+                                      "assets/images/new-product.png",
+                                      height: 20,
+                                      width: 20,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
                                     ),
                                     Visibility(
                                       visible: SubCategories.length == 0
@@ -833,6 +843,14 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                       context)
                                                   .isProductFavorite(
                                                       AllProducts[index]["id"]);
+
+                                              var _price = double.parse(
+                                                      AllProducts[index]
+                                                              ["price"]
+                                                          .toString()) *
+                                                  double.parse(
+                                                      priceMul.toString());
+
                                               return AnimationConfiguration
                                                   .staggeredList(
                                                 position: index,
@@ -843,9 +861,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                   child: FadeInAnimation(
                                                     curve: Curves.easeOut,
                                                     child: ProductWidget(
-                                                        inCart: cartProvider.isProductCart(
-                                                            AllProducts[index]
-                                                                ["id"]),
+                                                        inCart: cartProvider
+                                                            .isProductCart(
+                                                                AllProducts[index]
+                                                                    ["id"]),
                                                         SIZES: widget.SIZES,
                                                         ALL: false,
                                                         SubCategories:
@@ -854,8 +873,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                         url:
                                                             "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
                                                         isLiked: isLiked,
-                                                        Images: AllProducts[index]["vendor_images_links"] ??
-                                                            [],
+                                                        Images:
+                                                            AllProducts[index]["vendor_images_links"] ??
+                                                                [],
                                                         Products: AllProducts,
                                                         index: index,
                                                         name: AllProducts[index]
@@ -865,19 +885,17 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                                 ["thumbnail"],
                                                         id: AllProducts[index]
                                                             ["id"],
-                                                        new_price:
-                                                            AllProducts[index]
-                                                                ["price"],
-                                                        old_price:
-                                                            AllProducts[index]
-                                                                    ["price"] ??
-                                                                0.0,
+                                                        new_price: _price,
+                                                        old_price: _price,
                                                         image: AllProducts[index]
-                                                            ["vendor_images_links"][0],
-                                                        Sub_Category_Key: Sub_Category_Key,
+                                                                ["vendor_images_links"]
+                                                            [0],
+                                                        Sub_Category_Key:
+                                                            Sub_Category_Key,
                                                         page: _page,
                                                         home: false,
-                                                        category_id: widget.category_id,
+                                                        category_id:
+                                                            widget.category_id,
                                                         size: widget.size),
                                                   ),
                                                 ),
@@ -1408,82 +1426,130 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   }
 
   var SubCategories;
+  var priceMul;
 
-  setStaticSubCategories() {
+  setStaticSubCategories() async {
     if (widget.name == "ملابس نسائيه مقاس كبير") {
       SubCategories = sub_categories_women_plus_sizes;
       Sub_Category_Key.add("Women Plus Clothing");
+      var _pricemul = await FirebaseRemoteConfigClass().getBigPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Apparel") {
       SubCategories = sub_categories_women_appearel;
+
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getWomenPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Men Apparel") {
       SubCategories = sub_categories_Men__sizes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getMenPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids") {
       SubCategories = sub_categories_kids_sizes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Home & Living, Home Living, Home Textile,Tools & Home Improvement") {
       SubCategories = sub_categories_HomeLiving;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Weddings %26 Events, Weddings %26 Events") {
       SubCategories = [];
       Sub_Category_Key.add("Weddings & Events");
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Sports %26 Outdoor, Sports  Outdoor") {
       SubCategories = sub_categories_SportsOutdoor;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getMenPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Underwear & Sleepwear, Underwear Sleepwear") {
       SubCategories = sub_categories_Underware;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Shoes") {
       SubCategories = sub_categories_WomenShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getWomenPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Men Shoes") {
       SubCategories = sub_categories_MenShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getMenPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids Shoes") {
       SubCategories = sub_categories_KidsShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Apparel, Baby") {
       SubCategories = sub_categories_MaternityBaby;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getWomenPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Jewelry %26 Watches, Jewelry  Watches") {
       SubCategories = sub_categories_JewelryWatches;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Apparel Accessories") {
       SubCategories = sub_categories_Accessories;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Beauty %26 Health, Jewelry %26 Watches") {
       SubCategories = sub_categories_BeautyHealth;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Electronics") {
       SubCategories = sub_categories_Electronics;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Bags %26 Luggage, Bags %26 Luggage") {
       SubCategories = sub_categories_BagsLuggage;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Pet Supplies") {
       SubCategories = [];
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Office School Supplies, Office %26 School Supplies") {
       SubCategories = [];
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Automotive") {
       SubCategories = [];
+      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Shoes,Kids") {
       SubCategories = sub_categories_ALLShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids Boys") {
       SubCategories = sub_categories_Boys;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids Girls") {
       SubCategories = sub_categories_Girls;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
+      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      priceMul = _pricemul;
     }
     setState(() {});
   }

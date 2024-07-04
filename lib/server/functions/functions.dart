@@ -629,116 +629,115 @@ void showSearchDialog(
                           hintText: "ابحث من خلال أسم المنتج"),
                     ),
                   ),
-                  Visibility(
-                    visible: searchController.text == "" ? false : true,
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: ListView.builder(
-                        itemCount: searchResults.length,
-                        // shrinkWrap: true,
-                        // physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (BuildContext context, int index) {
-                          return InkWell(
-                            onTap: () {
-                              print(searchController.text);
-                              if (searchResults[index]["type"] == "title") {
-                                NavigatorFunction(
-                                    context,
-                                    ProductsCategories(
-                                        sizes: "",
-                                        SIZES: [],
-                                        name: main_category,
-                                        category_id: main_category,
-                                        size: "",
-                                        title: searchResults[index]["word"]
-                                            .toString(),
-                                        type: searchResults[index]["type"]
-                                            .toString(),
-                                        main_category: main_category,
-                                        keys: "",
-                                        search: true,
-                                        containerWidths: ""));
-                              } else {
-                                NavigatorFunction(
-                                    context,
-                                    ProductsCategories(
-                                        sizes: "",
-                                        SIZES: [],
-                                        name: main_category,
-                                        category_id: main_category,
-                                        size: "",
-                                        title: searchResults[index]["word"]
-                                            .toString(),
-                                        type: searchResults[index]["type"]
-                                            .toString(),
-                                        main_category: main_category,
-                                        keys: "",
-                                        search: true,
-                                        containerWidths: ""));
-                              }
-                            },
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                  searchResults.length == 0
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 50),
+                          child: Text(
+                            "لا يوجد اية نتائج",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Colors.white),
+                          ),
+                        )
+                      : Visibility(
+                          visible: searchController.text == "" ? false : true,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.8,
+                            width: double.infinity,
+                            color: Colors.white,
+                            child: ListView.builder(
+                              itemCount: searchResults.length,
+                              // shrinkWrap: true,
+                              // physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (BuildContext context, int index) {
+                                return InkWell(
+                                  onTap: () {
+                                    print(searchController.text);
+                                    if (searchResults[index]["type"] ==
+                                        "title") {
+                                      NavigatorFunction(
+                                          context,
+                                          ProductsCategories(
+                                              sizes: "",
+                                              SIZES: [],
+                                              name: main_category,
+                                              category_id: main_category,
+                                              size: "",
+                                              title: searchResults[index]
+                                                      ["word"]
+                                                  .toString(),
+                                              type: searchResults[index]["type"]
+                                                  .toString(),
+                                              main_category: main_category,
+                                              keys: "",
+                                              search: true,
+                                              containerWidths: ""));
+                                    } else {
+                                      NavigatorFunction(
+                                          context,
+                                          ProductsCategories(
+                                              sizes: "",
+                                              SIZES: [],
+                                              name: main_category,
+                                              category_id: main_category,
+                                              size: "",
+                                              title: searchResults[index]
+                                                      ["word"]
+                                                  .toString(),
+                                              type: searchResults[index]["type"]
+                                                  .toString(),
+                                              main_category: main_category,
+                                              keys: "",
+                                              search: true,
+                                              containerWidths: ""));
+                                    }
+                                  },
+                                  child: Column(
                                     children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            searchResults[index]["word"]
-                                                        .toString()
-                                                        .length >
-                                                    35
-                                                ? searchResults[index]["word"]
-                                                    .toString()
-                                                    .substring(0, 35)
-                                                : searchResults[index]["word"]
-                                                    .toString(),
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16),
-                                          ),
-                                        ],
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  searchResults[index]["word"]
+                                                              .toString()
+                                                              .length >
+                                                          35
+                                                      ? searchResults[index]
+                                                              ["word"]
+                                                          .toString()
+                                                          .substring(0, 35)
+                                                      : searchResults[index]
+                                                              ["word"]
+                                                          .toString(),
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 16),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      // InkWell(
-                                      //   onTap: () {},
-                                      //   child: Container(
-                                      //     width: 20,
-                                      //     height: 20,
-                                      //     decoration: BoxDecoration(
-                                      //         shape: BoxShape.circle,
-                                      //         border: Border.all(
-                                      //             color: MAIN_COLOR)),
-                                      //     child: Center(
-                                      //       child: FaIcon(
-                                      //         FontAwesomeIcons.plus,
-                                      //         color: MAIN_COLOR,
-                                      //         size: 10,
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      // )
+                                      Container(
+                                        width: double.infinity,
+                                        height: 1,
+                                        color: const Color.fromARGB(
+                                            255, 236, 236, 236),
+                                      )
                                     ],
                                   ),
-                                ),
-                                Container(
-                                  width: double.infinity,
-                                  height: 1,
-                                  color:
-                                      const Color.fromARGB(255, 236, 236, 236),
-                                )
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  )
+                          ),
+                        )
                 ],
               ),
             ),

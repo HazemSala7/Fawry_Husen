@@ -150,6 +150,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      price: widget.old_price.toString(),
                       SIZES: widget.SIZES,
                       ALL: widget.ALL,
                       SubCategories: widget.SubCategories,
@@ -316,12 +317,6 @@ class _ProductWidgetState extends State<ProductWidget> {
                           ));
                     },
                   ),
-
-                  // Icon(
-                  //   Icons.favorite_border,
-                  //   color: Colors.black,
-                  //   size: 25,
-                  // ),
                 ],
               ),
             ),

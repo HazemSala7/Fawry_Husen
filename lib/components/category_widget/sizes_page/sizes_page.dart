@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:vibration/vibration.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../LocalDB/Database/local_storage.dart';
 import '../../../constants/constants.dart';
+import '../../../firebase/selected_sizes/selected_sizes_controller.dart';
+import '../../../firebase/selected_sizes/selected_sizes_model.dart';
 import '../../../pages/products-category/products-category.dart';
 import '../../../server/functions/functions.dart';
 
@@ -174,13 +177,13 @@ class _SizesPageState extends State<SizesPage> {
                             sizeApp.add(k);
                           }
                         });
-                        LocalStorage().setSizeUser(sizeApp);
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setBool('is_selected_size', true);
+                        List<String> selectedSizes = [];
+                        widget.sizes.forEach((key, value) {
+                          if (value) {
+                            selectedSizes.add(key);
+                          }
+                        });
 
-                        print("widget.main_category");
-                        print(widget.sizes);
                         NavigatorFunction(
                             context,
                             ShowCaseWidget(
@@ -197,6 +200,47 @@ class _SizesPageState extends State<SizesPage> {
                                 name: widget.name,
                               ),
                             )));
+                        LocalStorage().setSizeUser(sizeApp);
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setBool('is_selected_size', true);
+                        String? userID = prefs.getString("user_id") ?? "";
+
+                        // Firestore operations
+                        SelectedSizeService selectedSizeService =
+                            SelectedSizeService();
+                        String categoryId =
+                            widget.main_category; // Use the actual category ID
+
+                        SelectedSizeModel? existingSelectedSize =
+                            await selectedSizeService
+                                .getSelectedSizeByUserIdAndCategoryId(
+                                    userID.toString(), categoryId);
+
+                        if (existingSelectedSize != null) {
+                          // Update the existing record
+                          existingSelectedSize.selectedSizes = selectedSizes;
+                          await selectedSizeService
+                              .updateSelectedSize(existingSelectedSize);
+                        } else {
+                          // Create a unique ID for the selected size document
+                          String selectedSizeId = FirebaseFirestore.instance
+                              .collection('selected_sizes')
+                              .doc()
+                              .id;
+
+                          // Create an instance of SelectedSizeModel
+                          SelectedSizeModel newSelectedSize = SelectedSizeModel(
+                            id: selectedSizeId,
+                            userId: userID.toString(),
+                            categoryId: categoryId,
+                            selectedSizes: selectedSizes,
+                          );
+
+                          // Add the new selected sizes to Firestore
+                          await selectedSizeService
+                              .addSelectedSize(newSelectedSize);
+                        }
                       } else {
                         null;
                       }

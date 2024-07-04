@@ -45,11 +45,12 @@ class ProductScreen extends StatefulWidget {
   List SubCategories;
   List sizes;
   var IDs, SIZES;
-  final url;
+  final url, price;
   int page;
   bool ALL;
   ProductScreen({
     Key? key,
+    required this.price,
     required this.url,
     required this.SIZES,
     required this.ALL,
@@ -479,11 +480,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           id: widget.Product[i]["id"],
                                           images: [widget.Product[i]["image"]],
                                           description: [],
-                                          new_price: widget.Product[i]["price"],
-                                          old_price: double.parse(widget
-                                                  .Product[i]["price"]
-                                                  .toString()) *
-                                              1.5,
+                                          new_price: double.parse(
+                                              widget.price.toString()),
+                                          old_price: double.parse(
+                                              widget.price.toString()),
                                           image: widget.Product[i]["image"]
                                               as String,
                                           sizesApi: [],
@@ -543,11 +543,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                           images: widget.Product[i]
                                               ["vendor_images_links"],
                                           description: [],
-                                          new_price: widget.Product[i]["price"],
-                                          old_price: double.parse(widget
-                                                  .Product[i]["price"]
-                                                  .toString()) *
-                                              1.5,
+                                          new_price: double.parse(
+                                              widget.price.toString()),
+                                          old_price: double.parse(
+                                              widget.price.toString()),
                                           image: widget.Product[i]
                                                   ["vendor_images_links"][0]
                                               as String,
@@ -639,11 +638,10 @@ class _ProductScreenState extends State<ProductScreen> {
                                     SKU: item["sku"] ?? "-",
                                     vendor_SKU: item["vendor_sku"] ?? "-",
                                     nickname: item["nickname"] ?? "-",
-                                    new_price: item["variants"][0]["price"],
-                                    old_price: double.parse(item["variants"][0]
-                                                ["price"]
-                                            .toString()) *
-                                        1.5,
+                                    new_price:
+                                        double.parse(widget.price.toString()),
+                                    old_price:
+                                        double.parse(widget.price.toString()),
                                     image: item["vendor_images_links"][0]
                                         as String,
                                     TypeApi: typeApi,
