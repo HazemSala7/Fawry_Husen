@@ -338,6 +338,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String? TOKEN = await prefs.getString('device_token');
       String user_Id = Uuid().v4();
       UserItem newItem = UserItem(
+        name: "",
         id: user_Id,
         token: TOKEN.toString(),
         email: data.user!.email.toString(),
@@ -383,6 +384,7 @@ class _LoginScreenState extends State<LoginScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? TOKEN = await prefs.getString('device_token');
       UserItem newItem = UserItem(
+        name: "",
         id: user_Id,
         token: TOKEN.toString(),
         email: userDate["email"],
@@ -455,6 +457,7 @@ class _LoginScreenState extends State<LoginScreen> {
     String? TOKEN = await prefs.getString('device_token');
     String user_Id = Uuid().v4();
     UserItem newItem = UserItem(
+      name: "",
       id: user_Id,
       token: TOKEN.toString(),
       email: "$user_Id@gmail.com",

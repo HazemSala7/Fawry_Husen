@@ -1,6 +1,7 @@
 class UserItem {
   final String id;
   final String token;
+  final String name;
   final String email;
   final String password;
   final String phone;
@@ -13,6 +14,7 @@ class UserItem {
   UserItem({
     required this.id,
     required this.token,
+    required this.name,
     required this.gender,
     required this.email,
     required this.password,
@@ -27,6 +29,7 @@ class UserItem {
     return {
       'id': id,
       'token': token,
+      'name': name,
       'birthdate': birthdate,
       'gender': gender,
       'email': email,
@@ -42,6 +45,7 @@ class UserItem {
     return UserItem(
       id: map?['id'] ?? '',
       token: map?['token'] ?? '',
+      name: map?['name'] ?? '',
       birthdate: map?['birthdate'] ?? '',
       gender: map?['gender'] ?? '',
       email: map?['email'] ?? '',

@@ -277,11 +277,12 @@ class _ProductWidgetState extends State<ProductWidget> {
                         ],
                       ),
                       Text(
-                        "₪${widget.new_price}",
+                        "₪${widget.new_price.toStringAsFixed(2)}",
                         style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.red),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.red,
+                        ),
                       ),
                     ],
                   ),

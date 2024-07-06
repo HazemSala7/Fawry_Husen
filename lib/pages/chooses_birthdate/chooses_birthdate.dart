@@ -4,9 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../firebase/user/UserController.dart';
+import '../../firebase/user/UserModel.dart';
+
 class ChooseBirthdate extends StatefulWidget {
-  final String name;
-  const ChooseBirthdate({super.key, required this.name});
+  final String name, UserID, TOKEN, PhoneController, selectedArea;
+  ChooseBirthdate(
+      {super.key,
+      required this.name,
+      required this.UserID,
+      required this.PhoneController,
+      required this.TOKEN,
+      required this.selectedArea});
 
   @override
   State<ChooseBirthdate> createState() => _ChooseBirthdateState();
@@ -165,6 +174,20 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
                                 'gender', selectedGender.toString());
                             await prefs.setString('birthdate', birthday);
                             Navigator.pop(context);
+                            UserItem updatedUser = UserItem(
+                              name: "",
+                              id: widget.UserID.toString(),
+                              token: widget.TOKEN.toString(),
+                              email: "${widget.UserID}@email.com",
+                              phone: widget.PhoneController.toString(),
+                              gender: selectedGender.toString(),
+                              birthdate: birthday.toString(),
+                              city: widget.selectedArea.toString(),
+                              area: widget.selectedArea.toString(),
+                              address: widget.selectedArea.toString(),
+                              password: '123',
+                            );
+                            await userService.updateUser(updatedUser);
                           }
                         },
                         BorderRaduis: 10,
@@ -192,4 +215,5 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
 
   final EasyInfiniteDateTimelineController _controller =
       EasyInfiniteDateTimelineController();
+  final UserService userService = UserService();
 }

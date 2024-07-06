@@ -718,6 +718,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               await prefs.setString(
                                   'address', selectedArea.toString());
                               UserItem updatedUser = UserItem(
+                                name: NameController.text,
                                 id: UserID,
                                 token: TOKEN.toString(),
                                 email: "$UserID@email.com",
@@ -764,6 +765,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                                     context,
                                                     ChooseBirthdate(
                                                       name: NameController.text,
+                                                      PhoneController:
+                                                          PhoneController.text,
+                                                      TOKEN: TOKEN.toString(),
+                                                      UserID: UserID.toString(),
+                                                      selectedArea: selectedArea
+                                                          .toString(),
                                                     ))
                                                 : null;
                                           },
@@ -827,6 +834,16 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                                               name:
                                                                   NameController
                                                                       .text,
+                                                              PhoneController:
+                                                                  PhoneController
+                                                                      .text,
+                                                              TOKEN: TOKEN
+                                                                  .toString(),
+                                                              UserID: UserID
+                                                                  .toString(),
+                                                              selectedArea:
+                                                                  selectedArea
+                                                                      .toString(),
                                                             ))
                                                         : null;
                                                   },
