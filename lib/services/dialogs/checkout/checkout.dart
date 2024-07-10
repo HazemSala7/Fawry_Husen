@@ -41,6 +41,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   @override
   String dropdownValue = 'اختر منطقتك';
   ConfettiController? _confettiController;
+  var oldTotal;
 
   bool status = false;
   bool checkCopon = false;
@@ -64,6 +65,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
       NameController.text = "";
       PhoneController.text = "";
     }
+    oldTotal = widget.total.toString();
   }
 
   double _progress = 0;
@@ -1197,7 +1199,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -1209,7 +1211,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()}",
+                "₪${oldTotal.toString().length > 5 ? oldTotal.toString().substring(0, 5) : oldTotal.toString()}",
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,
@@ -1219,7 +1221,38 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
+        ),
+        Visibility(
+          visible: CoponMessage == "" ? false : true,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "مبلغ التوفير : ",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "₪${(double.parse(oldTotal.toString()) - double.parse(widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString())).toStringAsFixed(2)}",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+            ],
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -1241,7 +1274,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -1263,7 +1296,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
           ),
         ),
         SizedBox(
-          height: 20,
+          height: 10,
         ),
         Padding(
           padding: const EdgeInsets.only(right: 30, left: 30),

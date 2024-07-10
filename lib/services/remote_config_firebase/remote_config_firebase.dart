@@ -116,6 +116,11 @@ class FirebaseRemoteConfigClass {
     return remoteConfig.getString('BigPrice');
   }
 
+  Future<String> fetchtitleHomePage() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('titleHomePage');
+  }
+
   Future<void> _configureRemoteConfig() async {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: Duration(seconds: 100),

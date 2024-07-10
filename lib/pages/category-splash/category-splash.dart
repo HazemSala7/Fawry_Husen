@@ -18,9 +18,12 @@ import '../../components/cart_icon/cart_icon.dart';
 import '../../components/product_widget/product-widget.dart';
 import '../../components/slider-widget/slider-widget.dart';
 import '../../model/slider/slider.dart';
+import '../../server/domain/domain.dart';
+import '../../services/remote_config_firebase/remote_config_firebase.dart';
 import '../home_screen/category-screen/category-screen.dart';
 import '../home_screen/favourite-screen/favourite-screen.dart';
 import '../home_screen/profile-screen/profile-screen.dart';
+import '../product-screen/product-screen.dart';
 
 class CategorySplash extends StatefulWidget {
   int selectedIndex = 0;
@@ -60,7 +63,13 @@ class _CategorySplashState extends State<CategorySplash> {
     // _scrollController.addListener(_scrollListener);
   }
 
+  String titleName = "";
   Future<void> _initialize() async {
+    var _titleName = await FirebaseRemoteConfigClass().fetchtitleHomePage();
+    setState(() {
+      titleName = _titleName.toString();
+    });
+
     _prefs = await SharedPreferences.getInstance();
     _checkAndShowCoupon();
   }
@@ -251,7 +260,7 @@ class _CategorySplashState extends State<CategorySplash> {
                     if (snapshot.data != null) {
                       return recentlyShortlistedByYou(
                           shortlisted: snapshot.data["items"],
-                          title: "المنتجات المخفضة");
+                          title: titleName);
                     } else {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.25,
@@ -335,17 +344,47 @@ class _CategorySplashState extends State<CategorySplash> {
                                       right: 10, left: 10),
                                   child: InkWell(
                                     onTap: () {
-                                      // NavigatorFunction(
-                                      //     context,
-                                      //     ProductScreen(
-                                      //       Images: [
-                                      //         widget.image,
-                                      //         widget.image
-                                      //       ],
-                                      //       price: widget.new_price.toString(),
-                                      //       name: widget.name,
-                                      //       id: widget.id,
-                                      //     ));
+                                      List result = [];
+                                      int startIndex = index - 20;
+                                      int endIndex = index + 20;
+                                      if (startIndex < 0) {
+                                        startIndex = 0;
+                                      }
+                                      if (endIndex > shortlisted.length) {
+                                        endIndex = shortlisted.length;
+                                      }
+                                      result.addAll(shortlisted.sublist(
+                                          startIndex, endIndex));
+                                      result.insert(0, shortlisted[index]);
+                                      List<String> idsList = result
+                                          .map((item) => item['id'].toString())
+                                          .toList();
+                                      String commaSeparatedIds =
+                                          idsList.join(', ');
+                                      NavigatorFunction(
+                                          context,
+                                          ProductScreen(
+                                            price: shortlisted[index]["price"]
+                                                .toString(),
+                                            SIZES: [],
+                                            ALL: true,
+                                            SubCategories: [],
+                                            url:
+                                                "${URL}getAllItems?api_key=$key_bath&page=1",
+                                            page: 1,
+                                            Sub_Category_Key:
+                                                sub_categories_women_appearel[0]
+                                                        ["key"]
+                                                    .toString(),
+                                            sizes: [],
+                                            index: index,
+                                            cart_fav: false,
+                                            Images: [],
+                                            favourite: false,
+                                            id: shortlisted[index]["id"],
+                                            Product: result,
+                                            IDs: commaSeparatedIds,
+                                          ));
                                     },
                                     child: Container(
                                       width: 160,
@@ -461,7 +500,7 @@ class _CategorySplashState extends State<CategorySplash> {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 18,
-                                                      color: Color(0xff354EB2)),
+                                                      color: Colors.red),
                                                 ),
                                                 SizedBox(
                                                   width: 5,
@@ -473,7 +512,7 @@ class _CategorySplashState extends State<CategorySplash> {
                                                           Alignment.center,
                                                       children: [
                                                         Text(
-                                                          "₪${double.parse(shortlisted[index]["price"].toString()) * 1.5}",
+                                                          "₪${double.parse(shortlisted[index]["price"].toString()) * 2.5}",
                                                           style: TextStyle(
                                                             fontSize: 14,
                                                           ),

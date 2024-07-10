@@ -278,21 +278,24 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                 width: 108,
                                 child: Row(
                                   children: [
+                                    SizedBox(
+                                      width: 20,
+                                    ),
                                     Icon(
                                       Icons.search,
                                       size: 20,
                                     ),
+                                    // SizedBox(
+                                    //   width: 15,
+                                    // ),
+                                    // Image.asset(
+                                    //   "assets/images/new-product.png",
+                                    //   height: 20,
+                                    //   width: 20,
+                                    //   fit: BoxFit.cover,
+                                    // ),
                                     SizedBox(
-                                      width: 15,
-                                    ),
-                                    Image.asset(
-                                      "assets/images/new-product.png",
-                                      height: 20,
                                       width: 20,
-                                      fit: BoxFit.cover,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
                                     ),
                                     Visibility(
                                       visible: SubCategories.length == 0

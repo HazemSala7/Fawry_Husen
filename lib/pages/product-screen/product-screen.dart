@@ -169,7 +169,7 @@ class _ProductScreenState extends State<ProductScreen> {
           ? InitialData["item"]["categories"][2][0]
           : InitialData["item"]["categories"].length == 2
               ? InitialData["item"]["categories"][1][0]
-              : InitialData["item"]["categories"][0][0];
+              : InitialData["item"]["categories"][0][0] ?? "";
       initMAINKey = InitialData["item"]["categories"][0][0] ?? "";
     });
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
