@@ -240,8 +240,9 @@ class _CartState extends State<Cart> {
                                   }
 
                                   if (allAvailable) {
-                                    showCheckoutDialog()
-                                        .showBottomDialog(context, total);
+                                    showCheckoutDialog().showBottomDialog(
+                                        context,
+                                        double.parse(total.toString()));
                                   } else {}
                                   setState(() {
                                     clicked = false;

@@ -277,7 +277,13 @@ class _ProductWidgetState extends State<ProductWidget> {
                         ],
                       ),
                       Text(
-                        "₪${widget.new_price.toStringAsFixed(2)}",
+                        widget.new_price != null
+                            ? (widget.new_price is double
+                                ? "₪${(widget.new_price as double).toStringAsFixed(2)}"
+                                : (double.tryParse(widget.new_price) != null
+                                    ? "₪${double.parse(widget.new_price).toStringAsFixed(2)}"
+                                    : "₪0.00"))
+                            : "₪0.00",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
