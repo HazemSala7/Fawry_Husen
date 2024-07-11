@@ -160,9 +160,8 @@ class _MainScreenState extends State<MainScreen> {
                                         child: FadeInAnimation(
                                           curve: Curves.easeOut,
                                           child: ProductWidget(
-                                              inCart:
-                                                  cartProvider.isProductCart(
-                                                      AllProducts[index]["id"]),
+                                              inCart: cartProvider.isProductCart(
+                                                  AllProducts[index]["id"]),
                                               SIZES: [],
                                               ALL: true,
                                               url:
@@ -176,9 +175,14 @@ class _MainScreenState extends State<MainScreen> {
                                               home: true,
                                               category_id: "",
                                               size: "",
-                                              Images: AllProducts[index]
-                                                      ["vendor_images_links"] ??
-                                                  [],
+                                              Images: AllProducts[index]["vendor_images_links"].length == 0
+                                                  ? [
+                                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                    ]
+                                                  : AllProducts[index]["vendor_images_links"] ??
+                                                      [
+                                                        "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                      ],
                                               Products: AllProducts,
                                               index: index,
                                               name: AllProducts[index]["title"],
@@ -190,8 +194,13 @@ class _MainScreenState extends State<MainScreen> {
                                               old_price: AllProducts[index]
                                                       ["price"] ??
                                                   0.0,
-                                              image: AllProducts[index]
-                                                  ["vendor_images_links"][0]),
+                                              image: AllProducts[index]["vendor_images_links"]
+                                                          .length ==
+                                                      0
+                                                  ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                  : AllProducts[index]
+                                                          ["vendor_images_links"]
+                                                      [0]),
                                         ),
                                       ),
                                     );

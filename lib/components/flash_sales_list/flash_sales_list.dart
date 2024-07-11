@@ -181,8 +181,17 @@ class _FlashSalesListState extends State<FlashSalesList> {
                                                   height: 180,
                                                   child: FancyShimmerImage(
                                                     imageUrl: widget
-                                                            .shortlisted[index][
-                                                        "vendor_images_links"][0],
+                                                                .shortlisted[
+                                                                    index][
+                                                                    "vendor_images_links"]
+                                                                .length ==
+                                                            0
+                                                        ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                        : widget.shortlisted[
+                                                                        index][
+                                                                    "vendor_images_links"]
+                                                                [0] ??
+                                                            "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
                                                     width: double.infinity,
                                                     height: 240,
                                                     boxFit: BoxFit.cover,

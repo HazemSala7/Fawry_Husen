@@ -66,6 +66,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
       PhoneController.text = "";
     }
     oldTotal = widget.total.toString();
+    setState(() {});
   }
 
   double _progress = 0;
@@ -363,7 +364,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               String? selectedValue =
                   addressItems.isNotEmpty ? addressItems[0].name : null;
               if (selectedArea == null && addressItems.isNotEmpty) {
-                selectedArea = addressItems[0].name;
+                setState(() {
+                  selectedArea = addressItems[0].name;
+                });
               }
 
               return Visibility(
@@ -522,6 +525,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               addressProviderFinal.addToAddress(newItem);
                               Fluttertoast.showToast(
                                   msg: "تم اضافة العنوان بنجاح");
+                              setState(() {
+                                selectedArea = newItem.name.toString();
+                              });
                               Navigator.pop(context);
                             },
                             BorderRaduis: 10,
@@ -658,12 +664,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               },
                             );
                           } else {
-                            // if(editPhone){
-
-                            // }
-                            // else {
-
-                            // }
                             if (_formKey.currentState!.validate()) {
                               setState(() {
                                 loading = true;
@@ -957,6 +957,24 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
     }
   }
 
+  String _calculateTotalDifference(dynamic oldTotal, dynamic newTotal) {
+    // Handle null values by providing a default value of 0.0
+    double oldTotalValue =
+        oldTotal != null ? double.parse(oldTotal.toString()) : 0.0;
+    double newTotalValue = 0.0;
+
+    if (newTotal != null) {
+      String newTotalStr = newTotal.toString();
+      if (newTotalStr.length > 5) {
+        newTotalStr = newTotalStr.substring(0, 5);
+      }
+      newTotalValue = double.parse(newTotalStr);
+    }
+
+    double difference = oldTotalValue - newTotalValue;
+    return difference.toStringAsFixed(2);
+  }
+
   Widget FirstScreen() {
     return Column(
       key: Key("2"),
@@ -1238,7 +1256,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      "₪${(double.parse(oldTotal.toString()) - double.parse(widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString())).toStringAsFixed(2)}",
+                      "₪${_calculateTotalDifference(oldTotal, widget.total)}",
                       style: TextStyle(
                         color: Colors.green,
                         fontSize: 18,

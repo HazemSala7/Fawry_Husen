@@ -62,6 +62,8 @@ getFeatureProducts(DomainName) async {
 
 getProducts(int page) async {
   try {
+    print("1");
+    print("${URL}getAllItems?api_key=$key_bath&page=$page");
     var response = await http.get(
         Uri.parse("${URL}getAllItems?api_key=$key_bath&page=$page"),
         headers: headers);

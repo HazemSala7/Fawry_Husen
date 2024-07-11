@@ -259,13 +259,25 @@ class _ProductItemState extends State<ProductItem> {
                                                   right: 10.0, top: 150),
                                               width: 20.0,
                                               child: DotsIndicator(
-                                                dotsCount:
-                                                    widget.images!.length == 0
-                                                        ? 1
-                                                        : widget.images!.length,
+                                                dotsCount: widget
+                                                            .images!.length ==
+                                                        0
+                                                    ? 1
+                                                    : (widget.images!.length > 5
+                                                        ? 5
+                                                        : widget
+                                                            .images!.length),
                                                 position: _currentIndex >=
-                                                        widget.images!.length
-                                                    ? widget.images!.length - 1
+                                                        (widget.images!.length >
+                                                                5
+                                                            ? 5
+                                                            : widget
+                                                                .images!.length)
+                                                    ? (widget.images!.length > 5
+                                                        ? 4
+                                                        : widget.images!
+                                                                .length -
+                                                            1)
                                                     : _currentIndex,
                                                 axis: Axis.vertical,
                                                 decorator: DotsDecorator(

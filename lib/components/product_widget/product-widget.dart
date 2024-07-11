@@ -203,8 +203,10 @@ class _ProductWidgetState extends State<ProductWidget> {
                                   imageUrl: e,
                                 );
                               } catch (e) {
-                                print('Error loading image: $e');
-                                return Container(); // or an alternative widget to display when image loading fails
+                                return FancyShimmerImage(
+                                  imageUrl:
+                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
+                                );
                               }
                             }).toList()
                           : widget.Images!.map((e) {
@@ -213,8 +215,10 @@ class _ProductWidgetState extends State<ProductWidget> {
                                   imageUrl: e,
                                 );
                               } catch (e) {
-                                print('Error loading image: $e');
-                                return Container(); // or an alternative widget to display when image loading fails
+                                return FancyShimmerImage(
+                                  imageUrl:
+                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
+                                );
                               }
                             }).toList(),
                       onPageChanged: (value) {},

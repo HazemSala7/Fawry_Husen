@@ -175,7 +175,7 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
                             await prefs.setString('birthdate', birthday);
                             Navigator.pop(context);
                             UserItem updatedUser = UserItem(
-                              name: "",
+                              name: widget.name.toString(),
                               id: widget.UserID.toString(),
                               token: widget.TOKEN.toString(),
                               email: "${widget.UserID}@email.com",
@@ -187,7 +187,8 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
                               address: widget.selectedArea.toString(),
                               password: '123',
                             );
-                            await userService.updateUser(updatedUser);
+                            await userService.updateUser(updatedUser,
+                                updateBirthdate: true, updateGender: true);
                           }
                         },
                         BorderRaduis: 10,
