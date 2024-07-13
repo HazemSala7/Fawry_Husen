@@ -3,7 +3,7 @@ import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:intl/intl.dart';
 import '../../firebase/user/UserController.dart';
 import '../../firebase/user/UserModel.dart';
 
@@ -99,7 +99,8 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
                     initialDate: DateTime.now(),
                     onDateChange: (selectedDate) {
                       setState(() {
-                        birthday = selectedDate.toString().substring(0, 10);
+                        birthday = DateFormat('MM-dd')
+                            .format(selectedDate); // Format date as MM-DD
                       });
                     },
                     activeColor: const Color(0xffB04759),

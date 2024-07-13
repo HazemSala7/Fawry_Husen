@@ -539,7 +539,14 @@ class _ProductItemState extends State<ProductItem> {
                         child: Row(
                           children: [
                             Text(
-                              "₪${widget.new_price}",
+                              widget.new_price != null
+                                  ? (widget.new_price is double
+                                      ? "₪${(widget.new_price as double).toStringAsFixed(2)}"
+                                      : (double.tryParse(widget.new_price) !=
+                                              null
+                                          ? "₪${double.parse(widget.new_price).toStringAsFixed(2)}"
+                                          : "₪0.00"))
+                                  : "₪0.00",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.red,

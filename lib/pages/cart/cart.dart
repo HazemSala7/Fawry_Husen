@@ -493,7 +493,7 @@ class _CartState extends State<Cart> {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Text(
-                      "₪$price",
+                      "₪${price.toStringAsFixed(1)}",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
