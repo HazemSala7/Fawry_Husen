@@ -194,36 +194,26 @@ class _ProductWidgetState extends State<ProductWidget> {
                           ? Colors.transparent
                           : MAIN_COLOR,
                       indicatorBackgroundColor: Colors.grey,
-                      children: widget.Images.length != 1
-                          ? widget.Images!
-                              .sublist(0, widget.Images!.length - 1)
-                              .map((e) {
-                              try {
-                                return FancyShimmerImage(
-                                  imageUrl: e,
-                                );
-                              } catch (e) {
-                                return FancyShimmerImage(
-                                  imageUrl:
-                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
-                                );
-                              }
-                            }).toList()
-                          : widget.Images!.map((e) {
-                              try {
-                                return FancyShimmerImage(
-                                  imageUrl: e,
-                                );
-                              } catch (e) {
-                                return FancyShimmerImage(
-                                  imageUrl:
-                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
-                                );
-                              }
-                            }).toList(),
+                      children: (widget.Images.length != 1
+                              ? widget.Images!
+                                  .sublist(0, widget.Images!.length - 1)
+                              : widget.Images!)
+                          .take(5) // Limit the number of images to 5
+                          .map((e) {
+                        try {
+                          return FancyShimmerImage(
+                            imageUrl: e,
+                          );
+                        } catch (e) {
+                          return FancyShimmerImage(
+                            imageUrl:
+                                "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
+                          );
+                        }
+                      }).toList(),
                       onPageChanged: (value) {},
                       autoPlayInterval: 0,
-                      isLoop: false,
+                      isLoop: true,
                     ),
                   ),
                 ),
@@ -268,26 +258,26 @@ class _ProductWidgetState extends State<ProductWidget> {
                         alignment: Alignment.center,
                         children: [
                           Text(
-                            "₪${OLD_PRICE.toString().length > 5 ? OLD_PRICE.toString().substring(0, 5) : OLD_PRICE.toString()}",
+                            "₪${OLD_PRICE is double ? OLD_PRICE.round().toString() : OLD_PRICE.toString().length > 5 ? OLD_PRICE.toString().substring(0, 5) : OLD_PRICE.toString()}",
                             style: TextStyle(
                               fontSize: 16,
                             ),
                           ),
                           Container(
                             height: 1,
-                            width: 50,
+                            width: 40,
                             color: Colors.black,
-                          )
+                          ),
                         ],
                       ),
                       Text(
                         widget.new_price != null
                             ? (widget.new_price is double
-                                ? "₪${(widget.new_price as double).toStringAsFixed(2)}"
+                                ? "₪${(widget.new_price as double).round().toString()}"
                                 : (double.tryParse(widget.new_price) != null
-                                    ? "₪${double.parse(widget.new_price).toStringAsFixed(2)}"
-                                    : "₪0.00"))
-                            : "₪0.00",
+                                    ? "₪${double.parse(widget.new_price).round().toString()}"
+                                    : "₪0"))
+                            : "₪0",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,

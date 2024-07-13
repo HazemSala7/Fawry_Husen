@@ -474,7 +474,7 @@ class _ProductItemState extends State<ProductItem> {
                                   alignment: Alignment.center,
                                   children: [
                                     Text(
-                                      "₪${widget.old_price.toString().length > 5 ? widget.old_price.toString().substring(0, 5) : widget.old_price.toString()}",
+                                      "₪${(widget.old_price * 1.5).round().toString()}",
                                       style: TextStyle(
                                         fontSize: 20,
                                       ),
@@ -483,7 +483,7 @@ class _ProductItemState extends State<ProductItem> {
                                       height: 1,
                                       width: 50,
                                       color: Colors.black,
-                                    )
+                                    ),
                                   ],
                                 ),
                                 Row(
@@ -493,7 +493,7 @@ class _ProductItemState extends State<ProductItem> {
                                           0.0, 0.0, 190, 0.0),
                                       child: Tooltip(
                                         triggerMode: TooltipTriggerMode.tap,
-                                        message: "توصيل فوري",
+                                        message: "תوصيل فوري",
                                         child: FaIcon(
                                           FontAwesomeIcons.truck,
                                           color: Color(0xD9000000),
@@ -526,9 +526,9 @@ class _ProductItemState extends State<ProductItem> {
                                           size: 19,
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
-                                )
+                                ),
                               ],
                             ),
                           ],
@@ -541,12 +541,12 @@ class _ProductItemState extends State<ProductItem> {
                             Text(
                               widget.new_price != null
                                   ? (widget.new_price is double
-                                      ? "₪${(widget.new_price as double).toStringAsFixed(2)}"
+                                      ? "₪${(widget.new_price as double).round().toString()}"
                                       : (double.tryParse(widget.new_price) !=
                                               null
-                                          ? "₪${double.parse(widget.new_price).toStringAsFixed(2)}"
-                                          : "₪0.00"))
-                                  : "₪0.00",
+                                          ? "₪${double.parse(widget.new_price).round().toString()}"
+                                          : "₪0"))
+                                  : "₪0",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.red,

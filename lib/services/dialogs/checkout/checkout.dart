@@ -972,7 +972,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
     }
 
     double difference = oldTotalValue - newTotalValue;
-    return difference.toStringAsFixed(2);
+    return difference.round().toStringAsFixed(2);
   }
 
   Widget FirstScreen() {
@@ -1229,7 +1229,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${oldTotal.toString().length > 5 ? oldTotal.toString().substring(0, 5) : oldTotal.toString()}",
+                "₪${double.parse(oldTotal.toString()).round()}",
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: 18,
@@ -1266,9 +1266,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                   ],
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 10),
             ],
           ),
         ),
@@ -1282,18 +1280,17 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()}",
+                "₪${widget.total.round()}",
                 style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
+        SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -1306,16 +1303,15 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               Text(
                 "₪${dropdownValue.toString() == "الداخل" ? "60" : dropdownValue.toString() == "القدس" ? "30" : dropdownValue.toString() == "الضفه الغربيه" ? "20" : "0"}",
                 style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
         ),
-        SizedBox(
-          height: 10,
-        ),
+        SizedBox(height: 10),
         Padding(
           padding: const EdgeInsets.only(right: 30, left: 30),
           child: Container(
@@ -1324,9 +1320,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
             color: Colors.black,
           ),
         ),
-        SizedBox(
-          height: 20,
-        ),
+        SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -1337,11 +1331,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${dropdownValue.toString() == "الداخل" ? 60.0 + double.parse(widget.total.toString()) : dropdownValue.toString() == "القدس" ? 30.0 + double.parse(widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()) : dropdownValue.toString() == "الضفه الغربيه" ? 20.0 + double.parse(widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()) : widget.total.toString().length > 5 ? widget.total.toString().substring(0, 5) : widget.total.toString()}",
+                "₪${dropdownValue.toString() == "الداخل" ? (60.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "القدس" ? (30.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "الضفه الغربيه" ? (20.0 + double.parse(widget.total.toString())).round() : widget.total.round()}",
                 style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

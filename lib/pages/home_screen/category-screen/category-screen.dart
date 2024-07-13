@@ -97,19 +97,41 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 future: getProducts(1),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: Shimmer.fromColors(
-                        baseColor: const Color.fromARGB(255, 196, 196, 196),
-                        highlightColor:
-                            const Color.fromARGB(255, 129, 129, 129),
-                        child: Container(
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 15, bottom: 15),
+                      child: Container(
                           width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          color: Colors.white,
-                        ),
-                      ),
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          child: ListView.builder(
+                              itemCount: 4,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, int index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.only(right: 5, left: 5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    width: 160,
+                                    height: 100,
+                                    child: Shimmer.fromColors(
+                                      baseColor: const Color.fromARGB(
+                                          255, 196, 196, 196),
+                                      highlightColor: const Color.fromARGB(
+                                          255, 129, 129, 129),
+                                      child: Container(
+                                        width: 120,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              })),
                     );
                   } else {
                     if (snapshot.data != null) {
