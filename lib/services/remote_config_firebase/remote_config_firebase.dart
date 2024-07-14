@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseRemoteConfigClass {
   final remoteConfig = FirebaseRemoteConfig.instance;
-  final int cacheDuration = 60; // 24 hours in seconds
+  final int cacheDuration = 3600; // 24 hours in seconds
 
   Future<String> initilizeConfig() async {
     return _getCachedOrFetch('season', _fetchSeason);
