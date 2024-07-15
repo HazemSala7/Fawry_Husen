@@ -372,10 +372,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.info,
                       iconornot: true,
                       NavigatorFunction: () async {
-                        const url = 'https://www.fawri.co/about';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
+                        final _url = Uri.parse("https://www.fawri.co/about");
+                        if (!await launchUrl(_url,
+                            mode: LaunchMode.externalApplication)) {
                           Fluttertoast.showToast(
                               msg:
                                   "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
@@ -387,10 +386,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.privacy_tip,
                       iconornot: true,
                       NavigatorFunction: () async {
-                        const url = 'https://www.fawri.co/privacy_policy';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
+                        final _url =
+                            Uri.parse("https://www.fawri.co/privacy_policy");
+                        if (!await launchUrl(_url,
+                            mode: LaunchMode.externalApplication)) {
                           Fluttertoast.showToast(
                               msg:
                                   "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
@@ -403,11 +402,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       iconornot: false,
                       image: "assets/images/insurance-policy.png",
                       NavigatorFunction: () async {
-                        const url = 'https://www.fawri.co/switch_policy';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
+                        final _url =
+                            Uri.parse("https://www.fawri.co/switch_policy");
+                        if (!await launchUrl(_url,
+                            mode: LaunchMode.externalApplication)) {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
                         }
                       }),
                   lineMethod(),
@@ -416,12 +417,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       icon: Icons.support,
                       iconornot: true,
                       NavigatorFunction: () async {
-                        const url =
-                            "https://www.facebook.com/FawriCOD?mibextid=LQQJ4d";
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
+                        final _url = Uri.parse(
+                            "https://www.facebook.com/FawriCOD?mibextid=LQQJ4d");
+                        if (!await launchUrl(_url,
+                            mode: LaunchMode.externalApplication)) {
+                          Fluttertoast.showToast(
+                              msg:
+                                  "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
                         }
                       }),
                   lineMethod(),

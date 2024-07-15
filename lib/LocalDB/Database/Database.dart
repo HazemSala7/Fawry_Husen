@@ -9,7 +9,7 @@ import '../Models/FavoriteItem.dart';
 
 class CartDatabaseHelper {
   static final CartDatabaseHelper _instance = CartDatabaseHelper._internal();
-  static final int dbVersion = 3;
+  static final int dbVersion = 4;
 
   factory CartDatabaseHelper() => _instance;
 

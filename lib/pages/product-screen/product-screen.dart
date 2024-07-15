@@ -480,10 +480,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                           id: widget.Product[i]["id"],
                                           images: [widget.Product[i]["image"]],
                                           description: [],
-                                          new_price: double.parse(
-                                              widget.price.toString()),
-                                          old_price: double.parse(
-                                              widget.price.toString()),
+                                          new_price: double.parse(widget
+                                              .Product[i]["price"]
+                                              .toString()),
+                                          old_price: double.parse(widget
+                                              .Product[i]["price"]
+                                              .toString()),
                                           image: widget.Product[i]["image"]
                                               as String,
                                           sizesApi: [],
@@ -543,10 +545,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                           images: widget.Product[i]
                                               ["vendor_images_links"],
                                           description: [],
-                                          new_price: double.parse(
-                                              widget.price.toString()),
-                                          old_price: double.parse(
-                                              widget.price.toString()),
+                                          new_price: double.parse(widget
+                                              .Product[i]["price"]
+                                              .toString()),
+                                          old_price: double.parse(widget
+                                              .Product[i]["price"]
+                                              .toString()),
                                           image: widget.Product[i]
                                                   ["vendor_images_links"][0]
                                               as String,
@@ -638,10 +642,12 @@ class _ProductScreenState extends State<ProductScreen> {
                                     SKU: item["sku"] ?? "-",
                                     vendor_SKU: item["vendor_sku"] ?? "-",
                                     nickname: item["nickname"] ?? "-",
-                                    new_price:
-                                        double.parse(widget.price.toString()),
-                                    old_price:
-                                        double.parse(widget.price.toString()),
+                                    new_price: double.parse(item["variants"][0]
+                                            ["price"]
+                                        .toString()),
+                                    old_price: double.parse(item["variants"][0]
+                                            ["price"]
+                                        .toString()),
                                     image: item["vendor_images_links"][0]
                                         as String,
                                     TypeApi: typeApi,
