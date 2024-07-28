@@ -41,31 +41,24 @@ class _CategorySplashState extends State<CategorySplash> {
   late SharedPreferences _prefs;
   bool _couponShown = false;
   bool _showGoToTopIcon = false;
-  late ScrollController _scrollController;
 
-  // void _scrollListener() {
-  //   if (_scrollController.position.pixels ==
-  //       _scrollController.position.maxScrollExtent) {
-  //     print("test");
-  //     NavigatorFunction(context, AccountInformation());
-  //   } else {
-  //     setState(() {
-  //       _showGoToTopIcon = false;
-  //     });
-  //   }
-  // }
-  late PageController _pageController;
+  PageController _pageController = PageController();
   @override
   void initState() {
     super.initState();
     _initialize();
     _pageController = PageController(initialPage: widget.selectedIndex);
-    // _scrollController = ScrollController();
-    // _scrollController.addListener(_scrollListener);
   }
 
   String titleName = "";
   Future<void> _initialize() async {
+    Size screenSize = MediaQuery.of(context).size;
+    double screenWidth = screenSize.width;
+    double cardWidth = (screenWidth / 2) - 12; // considering crossAxisSpacing
+    double cardHeight = cardWidth * 2; // considering childAspectRatio
+    print("cardWidth");
+    print(cardWidth);
+    print(cardHeight);
     var _titleName = await FirebaseRemoteConfigClass().fetchtitleHomePage();
     setState(() {
       titleName = _titleName.toString();

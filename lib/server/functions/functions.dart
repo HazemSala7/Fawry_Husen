@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fawri_app_refactor/firebase/order/OrderController.dart';
 import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
+import 'package:fawri_app_refactor/services/cache_manager/cache_manager.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,22 +32,37 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
 }
 
 getSliders() async {
+  final cacheManager = CacheManager();
+  const cacheKey = 'sliders';
+  final cachedData = await cacheManager.getCache(cacheKey);
+
+  if (cachedData != null) {
+    return cachedData;
+  }
+
   try {
     var response = await http
         .get(Uri.parse("${URL}getSliders?api_key=$key_bath"), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
+
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      var res = json.decode(utf8.decode(response.bodyBytes));
+      await cacheManager.setCache(cacheKey, res);
       return res;
     } else {
-      // If response is not successful, handle the error
       throw Exception('Failed to load sliders: ${response.statusCode}');
     }
   } catch (e) {
     var response = await http.get(Uri.parse("http://api.well.ps:3002/sliders"),
         headers: headers);
     var res = jsonDecode(response.body)["response"];
-    return res;
+
+    if (response.statusCode == 200) {
+      await cacheManager.setCache(cacheKey, res);
+      return res;
+    } else {
+      throw Exception(
+          'Failed to load sliders from fallback: ${response.statusCode}');
+    }
   }
 }
 
@@ -61,14 +77,26 @@ getFeatureProducts(DomainName) async {
 }
 
 getProducts(int page) async {
+  final cacheManager = CacheManager();
+  final cacheKey = 'products_page_$page';
+  final cachedData = await cacheManager.getCache(cacheKey);
+
+  if (cachedData != null) {
+    return cachedData;
+  }
+
   try {
-    print("1");
-    print("${URL}getAllItems?api_key=$key_bath&page=$page");
     var response = await http.get(
         Uri.parse("${URL}getAllItems?api_key=$key_bath&page=$page"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
-    return res;
+
+    if (response.statusCode == 200) {
+      await cacheManager.setCache(cacheKey, res);
+      return res;
+    } else {
+      throw Exception('Failed to load products: ${response.statusCode}');
+    }
   } catch (e) {
     var DomainName = await FirebaseRemoteConfigClass().getDomain();
     var response = await http.get(
@@ -76,10 +104,13 @@ getProducts(int page) async {
             "http://$DomainName/api/getAllItems?api_key=$key_bath&page=$page"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
-    if (response.statusCode != 200) {
-      return false;
-    } else {
+
+    if (response.statusCode == 200) {
+      await cacheManager.setCache(cacheKey, res);
       return res;
+    } else {
+      throw Exception(
+          'Failed to load products from fallback: ${response.statusCode}');
     }
   }
 }
@@ -327,10 +358,7 @@ getProductByCategory(category_id, sub_category_key, String size,
     var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
     var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
     var Final_URL = "";
-    if (size != null &&
-        size.isNotEmpty &&
-        size.toString() != "null" &&
-        size.toString() != "") {
+    if (size.isNotEmpty && size.toString() != "null" && size.toString() != "") {
       Final_URL =
           "$URL_PRODUCT_BY_CATEGORY?main_category=$category_id&sub_category=${sub_category_key_final}&${size != "null" || size != "" ? "size=${"$size,ONE SIZE"}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     } else {
@@ -348,14 +376,14 @@ getProductByCategory(category_id, sub_category_key, String size,
     var sub_category_key_final = sub_category_key.replaceAll('&', '%26');
     var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
     var Final_URL = "";
-    if (size != null && size.isNotEmpty && size.toString() != "null") {
+    if (size.isNotEmpty && size.toString() != "null") {
       Final_URL =
           "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$sub_category_key_final&${size != "null" || size != "" ? "size=${size}" : ""}&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     } else {
       Final_URL =
           "$DomainName/api/getAvailableItems?main_category=$category_id&sub_category=$sub_category_key_final&season=${seasonName.toString()}&page=$page&api_key=$key_bath";
     }
-    if (selected_sizes != null && selected_sizes.isNotEmpty) {
+    if (selected_sizes.isNotEmpty) {
       Final_URL += "&size=$selected_sizes";
     }
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
@@ -561,6 +589,32 @@ showDelayedDialog(context) {
       },
     );
   });
+}
+
+String getThumbnailUrl(String imageUrl, int width, int height) {
+  if (imageUrl.startsWith('https://img.ltwebstatic.com')) {
+    // Extract the base URL and file extension
+    final uri = Uri.parse(imageUrl);
+    final pathSegments = uri.pathSegments;
+
+    // Handle cases where the path may have multiple segments
+    if (pathSegments.isNotEmpty) {
+      final lastSegment = pathSegments
+          .last; // Last segment, e.g., '1641353828b13dabf0345da19c50e70fd7c116752d.jpg'
+      final extensionIndex = lastSegment.lastIndexOf('.');
+
+      if (extensionIndex != -1) {
+        final baseUrl = uri.toString().substring(
+            0, uri.toString().length - (lastSegment.length - extensionIndex));
+        final extension = lastSegment.substring(extensionIndex);
+
+        // Construct the new thumbnail URL
+        return '${baseUrl}_thumbnail_${width}x$height$extension';
+      }
+    }
+  }
+  // Return original URL if it does not match the criteria
+  return imageUrl;
 }
 
 void showSearchDialog(

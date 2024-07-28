@@ -4,6 +4,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
+import 'package:fawri_app_refactor/services/dimension_utils/dimension_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -27,9 +28,10 @@ class ProductWidget extends StatefulWidget {
       Sub_Category_Key,
       size,
       page,
-      url;
+      url,
+      priceMul;
   var SIZES;
-  int index, id;
+  int index, id, cardWidth, cardHeight;
   List Products;
   List SubCategories;
   List sizes;
@@ -43,6 +45,9 @@ class ProductWidget extends StatefulWidget {
     this.image,
     this.name,
     required this.ALL,
+    required this.cardWidth,
+    required this.cardHeight,
+    required this.priceMul,
     required this.inCart,
     required this.sizes,
     required this.SIZES,
@@ -92,6 +97,15 @@ class _ProductWidgetState extends State<ProductWidget> {
     }
   }
 
+  Size _cardSize = Size(100, 200); // Default values
+
+  Future<void> _loadDimensions() async {
+    Size dimensions = await DimensionUtils.getDimensions();
+    setState(() {
+      _cardSize = dimensions;
+    });
+  }
+
   double calculateDiscountSimple(int id,
       {double minDiscount = 10.0, double maxDiscount = 35.0}) {
     // Extract the last two digits of the ID
@@ -110,6 +124,12 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   int _currentIndex = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadDimensions();
+  }
 
   @override
   void initState() {
@@ -150,6 +170,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      priceMul: double.parse(widget.priceMul.toString()),
                       price: widget.old_price.toString(),
                       SIZES: widget.SIZES,
                       ALL: widget.ALL,
@@ -195,14 +216,17 @@ class _ProductWidgetState extends State<ProductWidget> {
                           : MAIN_COLOR,
                       indicatorBackgroundColor: Colors.grey,
                       children: (widget.Images.length != 1
-                              ? widget.Images!
-                                  .sublist(0, widget.Images!.length - 1)
-                              : widget.Images!)
+                              ? widget.Images.sublist(
+                                  0, widget.Images.length - 1)
+                              : widget.Images)
                           .take(5) // Limit the number of images to 5
                           .map((e) {
                         try {
+                          final thumbnailUrl = getThumbnailUrl(
+                              e, widget.cardWidth, widget.cardHeight);
+
                           return FancyShimmerImage(
-                            imageUrl: e,
+                            imageUrl: thumbnailUrl,
                           );
                         } catch (e) {
                           return FancyShimmerImage(

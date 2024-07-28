@@ -30,7 +30,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
-  late PageController _pageController;
+  PageController _pageController = PageController();
 
   bool _colorful = false;
   @override

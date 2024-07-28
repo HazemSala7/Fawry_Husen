@@ -39,6 +39,7 @@ class ProductScreen extends StatefulWidget {
   var favourite;
   int id;
   int index;
+  double priceMul;
   var Sub_Category_Key;
   bool cart_fav;
   List Images, Product;
@@ -51,6 +52,7 @@ class ProductScreen extends StatefulWidget {
   ProductScreen({
     Key? key,
     required this.price,
+    required this.priceMul,
     required this.url,
     required this.SIZES,
     required this.ALL,
@@ -193,18 +195,16 @@ class _ProductScreenState extends State<ProductScreen> {
     String commaSeparatedIds = idsList.join(', ');
     var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
 
-    if (additionalItems != null) {
-      setState(() {
-        var items = ProductsApiData["item"];
+    setState(() {
+      var items = ProductsApiData["item"];
 
-        if (items is Map) {
-          // If items is an object, wrap it in a list
-          items = [items];
-        }
+      if (items is Map) {
+        // If items is an object, wrap it in a list
+        items = [items];
+      }
 
-        orderedItems.addAll(items);
-      });
-    }
+      orderedItems.addAll(items);
+    });
 
     moveItemToFront(orderedItems, widget.id);
 
@@ -237,11 +237,6 @@ class _ProductScreenState extends State<ProductScreen> {
     String sizesString = widget.SIZES.join(',');
     page += 1;
     final uri = Uri.parse(widget.url);
-    if (uri.host == null) {
-      // Handle the case where the URL does not contain a host
-      print("Invalid URL: No host specified");
-      return;
-    }
     var additionalItems = [];
     var main_category_key_final = initMAINKey.replaceAll('&', '%26');
     var _products = await getProductByCategory(
@@ -278,11 +273,9 @@ class _ProductScreenState extends State<ProductScreen> {
 
     var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
 
-    if (additionalItems != null) {
-      setState(() {
-        orderedItems.addAll(ProductsApiData["item"]);
-      });
-    }
+    setState(() {
+      orderedItems.addAll(ProductsApiData["item"]);
+    });
   }
 
   FeatureCategoryKeyNumber() async {
@@ -314,10 +307,6 @@ class _ProductScreenState extends State<ProductScreen> {
       var main_category_key_final = initMAINKey.replaceAll('&', '%26');
       page += 1;
       final uri = Uri.parse(widget.url);
-      if (uri.host == null) {
-        print("Invalid URL: No host specified");
-        return;
-      }
       var additionalItems = [];
       String categoryString = await FeatureCategoryKeyNumber();
       var _products = await getFeatureProducts(categoryString);
@@ -609,6 +598,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                 typeApi = true;
                               }
                             }
+                            var _price = double.parse(
+                                    item["variants"][0]["price"].toString()) *
+                                double.parse(widget.priceMul.toString());
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
@@ -642,9 +634,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     SKU: item["sku"] ?? "-",
                                     vendor_SKU: item["vendor_sku"] ?? "-",
                                     nickname: item["nickname"] ?? "-",
-                                    new_price: double.parse(item["variants"][0]
-                                            ["price"]
-                                        .toString()),
+                                    new_price: _price,
                                     old_price: double.parse(item["variants"][0]
                                             ["price"]
                                         .toString()),

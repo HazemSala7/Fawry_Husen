@@ -137,6 +137,7 @@ class _FavouriteState extends State<Favourite> {
     NavigatorFunction(
       context,
       ProductScreen(
+        priceMul: 1.0,
         SIZES: [],
         price: price.toString(),
         ALL: false,
@@ -308,6 +309,7 @@ class _FavouriteState extends State<Favourite> {
                 NavigatorFunction(
                   context,
                   ProductScreen(
+                    priceMul: 1.0,
                     price: price.toString(),
                     SIZES: [],
                     ALL: false,
@@ -446,6 +448,7 @@ class _FavouriteState extends State<Favourite> {
                                   NavigatorFunction(
                                     context,
                                     ProductScreen(
+                                      priceMul: 1.0,
                                       SIZES: [],
                                       price: price.toString(),
                                       ALL: false,

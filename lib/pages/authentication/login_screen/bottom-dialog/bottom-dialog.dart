@@ -25,7 +25,7 @@ class _PhoneBottomDialogState extends State<PhoneBottomDialog> {
     '970+',
   ];
   String dropdownValue = "972+";
-  late PageController _pageController;
+  PageController _pageController = PageController();
   double _progress = 0;
   @override
   void initState() {

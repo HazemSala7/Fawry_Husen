@@ -139,6 +139,7 @@ class _FlashSalesListState extends State<FlashSalesList> {
                                   NavigatorFunction(
                                       context,
                                       ProductScreen(
+                                        priceMul: 1.0,
                                         price: widget.shortlisted[index]
                                                 ["price"]
                                             .toString(),

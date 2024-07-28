@@ -826,84 +826,108 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                     child: AnimationLimiter(
                                       child: RefreshIndicator(
                                         onRefresh: _refreshData,
-                                        child: GridView.builder(
-                                            controller: _controller,
-                                            cacheExtent: 5000,
-                                            itemCount: AllProducts.length,
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              crossAxisSpacing: 6,
-                                              mainAxisSpacing: 6,
-                                              childAspectRatio: 0.5,
-                                            ),
-                                            itemBuilder: (context, int index) {
-                                              String concatenatedNames =
-                                                  Sub_Category_Key.join('.')
-                                                      .replaceAll('.', ',');
-                                              final isLiked = Provider.of<
-                                                          FavouriteProvider>(
-                                                      context)
-                                                  .isProductFavorite(
-                                                      AllProducts[index]["id"]);
-
-                                              var _price = double.parse(
-                                                      AllProducts[index]
-                                                              ["price"]
-                                                          .toString()) *
-                                                  double.parse(
-                                                      priceMul.toString());
-
-                                              return AnimationConfiguration
-                                                  .staggeredList(
-                                                position: index,
-                                                duration: const Duration(
-                                                    milliseconds: 500),
-                                                child: SlideAnimation(
-                                                  horizontalOffset: 100.0,
-                                                  child: FadeInAnimation(
-                                                    curve: Curves.easeOut,
-                                                    child: ProductWidget(
-                                                        inCart: cartProvider
-                                                            .isProductCart(
-                                                                AllProducts[index]
-                                                                    ["id"]),
-                                                        SIZES: widget.SIZES,
-                                                        ALL: false,
-                                                        SubCategories:
-                                                            SubCategories,
-                                                        sizes: [widget.size],
-                                                        url:
-                                                            "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
-                                                        isLiked: isLiked,
-                                                        Images:
-                                                            AllProducts[index]["vendor_images_links"] ??
-                                                                [],
-                                                        Products: AllProducts,
-                                                        index: index,
-                                                        name: AllProducts[index]
-                                                            ["title"],
-                                                        thumbnail:
-                                                            AllProducts[index]
-                                                                ["thumbnail"],
-                                                        id: AllProducts[index]
-                                                            ["id"],
-                                                        new_price: _price,
-                                                        old_price: _price,
-                                                        image: AllProducts[index]
-                                                                ["vendor_images_links"]
-                                                            [0],
-                                                        Sub_Category_Key:
-                                                            Sub_Category_Key,
-                                                        page: _page,
-                                                        home: false,
-                                                        category_id:
-                                                            widget.category_id,
-                                                        size: widget.size),
-                                                  ),
+                                        child: LayoutBuilder(
+                                          builder: (context, constraints) {
+                                            double width = constraints.maxWidth;
+                                            double height =
+                                                constraints.maxHeight;
+                                            double cardWidth = (width - 6 * 2) /
+                                                2; // Adjust based on spacing
+                                            double cardHeight = cardWidth *
+                                                0.5; // Adjust based on childAspectRatio
+                                            print("cardWidth");
+                                            print(cardWidth);
+                                            print(cardHeight);
+                                            return GridView.builder(
+                                                controller: _controller,
+                                                cacheExtent: 500,
+                                                itemCount: AllProducts.length,
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 2,
+                                                  crossAxisSpacing: 6,
+                                                  mainAxisSpacing: 6,
+                                                  childAspectRatio: 0.5,
                                                 ),
-                                              );
-                                            }),
+                                                itemBuilder:
+                                                    (context, int index) {
+                                                  String concatenatedNames =
+                                                      Sub_Category_Key.join('.')
+                                                          .replaceAll('.', ',');
+                                                  final isLiked = Provider.of<
+                                                              FavouriteProvider>(
+                                                          context)
+                                                      .isProductFavorite(
+                                                          AllProducts[index]
+                                                              ["id"]);
+
+                                                  var _price = double.parse(
+                                                          AllProducts[index]
+                                                                  ["price"]
+                                                              .toString()) *
+                                                      double.parse(
+                                                          priceMul.toString());
+
+                                                  return AnimationConfiguration
+                                                      .staggeredList(
+                                                    position: index,
+                                                    duration: const Duration(
+                                                        milliseconds: 500),
+                                                    child: SlideAnimation(
+                                                      horizontalOffset: 100.0,
+                                                      child: FadeInAnimation(
+                                                        curve: Curves.easeOut,
+                                                        child: ProductWidget(
+                                                            cardHeight: cardHeight
+                                                                .toInt(),
+                                                            cardWidth: cardWidth
+                                                                .toInt(),
+                                                            priceMul: priceMul,
+                                                            inCart: cartProvider
+                                                                .isProductCart(
+                                                                    AllProducts[index]
+                                                                        ["id"]),
+                                                            SIZES: widget.SIZES,
+                                                            ALL: false,
+                                                            SubCategories:
+                                                                SubCategories,
+                                                            sizes: [
+                                                              widget.size
+                                                            ],
+                                                            url:
+                                                                "$URL_PRODUCT_BY_CATEGORY?main_category=${widget.category_id == "Women Shoes" || widget.category_id == "Men Shoes" || widget.category_id == "Kids Shoes" ? "Shoes" : widget.category_id}&sub_category=$concatenatedNames&size=${widget.size}&season=Summer&page=$_page&api_key=$key_bath",
+                                                            isLiked: isLiked,
+                                                            Images:
+                                                                AllProducts[index]["vendor_images_links"] ??
+                                                                    [],
+                                                            Products:
+                                                                AllProducts,
+                                                            index: index,
+                                                            name:
+                                                                AllProducts[index]
+                                                                    ["title"],
+                                                            thumbnail: AllProducts[index]
+                                                                ["thumbnail"],
+                                                            id: AllProducts[index]
+                                                                ["id"],
+                                                            new_price: _price,
+                                                            old_price: _price,
+                                                            image: AllProducts[index]
+                                                                    ["vendor_images_links"]
+                                                                [0],
+                                                            Sub_Category_Key:
+                                                                Sub_Category_Key,
+                                                            page: _page,
+                                                            home: false,
+                                                            category_id: widget
+                                                                .category_id,
+                                                            size: widget.size),
+                                                      ),
+                                                    ),
+                                                  );
+                                                });
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1391,7 +1415,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     if (_hasNextPage == true &&
         _isFirstLoadRunning == false &&
         _isLoadMoreRunning == false &&
-        _controller!.position.extentAfter < 300) {
+        _controller.position.extentAfter < 300) {
       setState(() {
         _isLoadMoreRunning = true;
       });
@@ -1557,8 +1581,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     setState(() {});
   }
 
-  // The controller for the ListView
-  ScrollController? _controller;
+  ScrollController _controller = ScrollController();
 
   @override
   void initState() {
@@ -1571,7 +1594,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
 
   @override
   void dispose() {
-    _controller?.removeListener(_loadMore);
+    _controller.removeListener(_loadMore);
     super.dispose();
   }
 }

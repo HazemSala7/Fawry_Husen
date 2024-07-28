@@ -160,6 +160,9 @@ class _MainScreenState extends State<MainScreen> {
                                         child: FadeInAnimation(
                                           curve: Curves.easeOut,
                                           child: ProductWidget(
+                                              cardHeight: 0,
+                                              cardWidth: 0,
+                                              priceMul: 1,
                                               inCart: cartProvider.isProductCart(
                                                   AllProducts[index]["id"]),
                                               SIZES: [],
@@ -317,7 +320,7 @@ class _MainScreenState extends State<MainScreen> {
     if (_hasNextPage == true &&
         _isFirstLoadRunning == false &&
         _isLoadMoreRunning == false &&
-        _controller!.position.extentAfter < 300) {
+        _controller.position.extentAfter < 300) {
       setState(() {
         _isLoadMoreRunning = true; // Display a progress indicator at the bottom
       });
@@ -346,8 +349,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Map<String, List<dynamic>> cache = {};
-  // The controller for the ListView
-  ScrollController? _controller;
+  ScrollController _controller = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -357,7 +359,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void dispose() {
-    _controller?.removeListener(_loadMore);
+    _controller.removeListener(_loadMore);
     super.dispose();
   }
 }

@@ -46,7 +46,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   bool status = false;
   bool checkCopon = false;
   bool clicked = false;
-  late PageController _pageController;
+  PageController _pageController = PageController();
   setControllers() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? buy = await prefs.getBool('buy') ?? false;
