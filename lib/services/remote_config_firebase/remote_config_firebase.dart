@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class FirebaseRemoteConfigClass {
   final remoteConfig = FirebaseRemoteConfig.instance;
-  final int cacheDuration = 3600; // 24 hours in seconds
+  final int cacheDuration = 3600;
 
   Future<String> initilizeConfig() async {
     return _getCachedOrFetch('season', _fetchSeason);
@@ -12,6 +12,22 @@ class FirebaseRemoteConfigClass {
   Future<String> getDomain() async {
     return _getCachedOrFetch('domain', _fetchDomain);
   }
+
+  // Future<String> getCategoryName() async {
+  //   return _getCachedOrFetch('category_name', _fetchCategoryName);
+  // }
+
+  // Future<String> getCategoryDesc() async {
+  //   return _getCachedOrFetch('category_description', _fetchCategoryDesc);
+  // }
+
+  // Future<String> getCategoryImage() async {
+  //   return _getCachedOrFetch('category_image_url', _fetchCategoryImage);
+  // }
+
+  // Future<String> getCategoryPath() async {
+  //   return _getCachedOrFetch('category_path', _fetchCategoryPath);
+  // }
 
   Future<String> getCategoryIDKey1() async {
     return _getCachedOrFetch('FeaturesUrl_1', _fetchCategoryIDKey1);
@@ -69,6 +85,26 @@ class FirebaseRemoteConfigClass {
   Future<String> _fetchSeason() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('season');
+  }
+
+  Future<String> fetchCategoryName() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('category_name');
+  }
+
+  Future<String> fetchCategoryDesc() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('category_description');
+  }
+
+  Future<String> fetchCategoryImage() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('category_image_url');
+  }
+
+  Future<String> fetchCategoryPath() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('category_path');
   }
 
   Future<String> _fetchDomain() async {

@@ -1,4 +1,5 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fawri_app_refactor/components/grid_view_categories/grid_view_categories.dart';
 import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
@@ -296,25 +297,7 @@ class _CategorySplashState extends State<CategorySplash> {
                 ],
               ),
             ),
-            GridView.builder(
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: categories.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 6,
-                  mainAxisSpacing: 6,
-                  childAspectRatio: 1.1,
-                ),
-                itemBuilder: (context, int index) {
-                  return CategoryWidget(
-                      main_category: categories[index]["main_category"],
-                      name: categories[index]["name"],
-                      CateImage: categories[index]["icon"],
-                      CateIcon: categories[index]["icon"],
-                      image: categories[index]["image"]);
-                }),
+            GridViewCategories()
           ],
         ),
       ),

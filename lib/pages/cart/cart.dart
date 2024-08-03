@@ -57,8 +57,8 @@ class _CartState extends State<Cart> {
 
         double total = 0;
         for (CartItem item in cartItems) {
-          // total += item.price * item.quantity;
-          total += item.price;
+          total += item.price * item.quantity;
+          // total += item.price;
         }
         return Stack(
           alignment: Alignment.bottomCenter,
@@ -484,6 +484,26 @@ class _CartState extends State<Cart> {
                                 type.toString(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "الكمية : ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: MAIN_COLOR,
+                                    ),
+                                  ),
+                                  Text(
+                                    "${qty.toString()}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

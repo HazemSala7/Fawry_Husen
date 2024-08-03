@@ -451,6 +451,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductItem(
+                                          quantity: 0,
+                                          quantityAvailable: 0,
+                                          showQuantitySelector: false,
                                           featureProduct: false,
                                           Sizes: [],
                                           runAddToCartAnimation:
@@ -515,6 +518,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                     child: FadeInAnimation(
                                       curve: Curves.easeIn,
                                       child: ProductItem(
+                                          quantity: 0,
+                                          quantityAvailable: 0,
+                                          showQuantitySelector: false,
                                           featureProduct: false,
                                           Sizes: [],
                                           runAddToCartAnimation:
@@ -601,6 +607,22 @@ class _ProductScreenState extends State<ProductScreen> {
                             var _price = double.parse(
                                     item["variants"][0]["price"].toString()) *
                                 double.parse(widget.priceMul.toString());
+                            final selectedVariant = item["variants"][0];
+                            int _quantityAvailable = 0;
+                            int _quantity = 0;
+                            bool showQuantitySelector = false;
+
+                            if (selectedVariant != null) {
+                              _quantityAvailable = int.parse(
+                                  selectedVariant['quantity'].toString());
+                              if (_quantityAvailable > 1) {
+                                showQuantitySelector = true;
+                                _quantity = 1;
+                              } else {
+                                showQuantitySelector = false;
+                                _quantity = 1;
+                              }
+                            }
 
                             return AnimationConfiguration.staggeredList(
                               position: itemIndex,
@@ -610,6 +632,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                 child: FadeInAnimation(
                                   curve: Curves.easeIn,
                                   child: ProductItem(
+                                    quantity: _quantity,
+                                    quantityAvailable: _quantityAvailable,
+                                    showQuantitySelector: showQuantitySelector,
                                     featureProduct:
                                         itemIndex == 0 ? false : isFeature,
                                     Sizes: sizesAPI.length == 0

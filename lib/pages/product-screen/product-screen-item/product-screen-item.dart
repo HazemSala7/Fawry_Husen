@@ -33,11 +33,14 @@ class ProductItem extends StatefulWidget {
   var variants, old_price, new_price, description, runAddToCartAnimation;
   Map placeInWarehouse;
   List sizesApi, images, Sizes;
-  int id = 0;
+  int id = 0, quantity, quantityAvailable;
   bool featureProduct = false;
-  bool inCart, isLikedProduct, loadingPage, TypeApi;
+  bool inCart, isLikedProduct, loadingPage, TypeApi, showQuantitySelector;
   ProductItem({
     super.key,
+    required this.showQuantitySelector,
+    required this.quantity,
+    required this.quantityAvailable,
     required this.name,
     required this.Sizes,
     required this.loadingPage,
@@ -79,6 +82,24 @@ class _ProductItemState extends State<ProductItem> {
 
   listClick(GlobalKey widgetKey) async {
     await widget.runAddToCartAnimation(widgetKey);
+  }
+
+  final int maxQuantity = 6;
+
+  void _incrementQuantity() {
+    setState(() {
+      if (widget.quantity < maxQuantity) {
+        widget.quantity++;
+      }
+    });
+  }
+
+  void _decrementQuantity() {
+    setState(() {
+      if (widget.quantity > 1) {
+        widget.quantity--;
+      }
+    });
   }
 
   Widget build(BuildContext context) {
@@ -176,7 +197,7 @@ class _ProductItemState extends State<ProductItem> {
                                       return Stack(
                                         alignment: Alignment.topRight,
                                         children: [
-                                          widget.images!.length == 1
+                                          widget.images.length == 1
                                               ? Container(
                                                   height: MediaQuery.of(context)
                                                           .size
@@ -186,7 +207,7 @@ class _ProductItemState extends State<ProductItem> {
                                                       .size
                                                       .width,
                                                   child: FancyShimmerImage(
-                                                    imageUrl: widget.images![0],
+                                                    imageUrl: widget.images[0],
                                                   ),
                                                 )
                                               : CarouselSlider(
@@ -209,11 +230,10 @@ class _ProductItemState extends State<ProductItem> {
                                                     aspectRatio: 2.0,
                                                     autoPlay: true,
                                                   ),
-                                                  items: widget.images!
+                                                  items: widget.images
                                                       .sublist(
                                                           0,
-                                                          widget.images!
-                                                                  .length -
+                                                          widget.images.length -
                                                               1)
                                                       .map((i) {
                                                     return Builder(
@@ -251,7 +271,7 @@ class _ProductItemState extends State<ProductItem> {
                                                   }).toList(),
                                                 ),
                                           Visibility(
-                                            visible: widget.images!.length == 1
+                                            visible: widget.images.length == 1
                                                 ? false
                                                 : true,
                                             child: Container(
@@ -260,23 +280,21 @@ class _ProductItemState extends State<ProductItem> {
                                               width: 20.0,
                                               child: DotsIndicator(
                                                 dotsCount: widget
-                                                            .images!.length ==
+                                                            .images.length ==
                                                         0
                                                     ? 1
-                                                    : (widget.images!.length > 5
+                                                    : (widget.images.length > 5
                                                         ? 5
-                                                        : widget
-                                                            .images!.length),
+                                                        : widget.images.length),
                                                 position: _currentIndex >=
-                                                        (widget.images!.length >
+                                                        (widget.images.length >
                                                                 5
                                                             ? 5
                                                             : widget
-                                                                .images!.length)
-                                                    ? (widget.images!.length > 5
+                                                                .images.length)
+                                                    ? (widget.images.length > 5
                                                         ? 4
-                                                        : widget.images!
-                                                                .length -
+                                                        : widget.images.length -
                                                             1)
                                                     : _currentIndex,
                                                 axis: Axis.vertical,
@@ -731,15 +749,18 @@ class _ProductItemState extends State<ProductItem> {
         ),
         Container(
           width: double.infinity,
-          height: 70,
-          decoration: BoxDecoration(boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 5,
-              blurRadius: 7,
-              offset: Offset(0, 3), // changes position of shadow
-            ),
-          ], color: Colors.white),
+          height: 75,
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: Offset(0, 3),
+              ),
+            ],
+            color: Colors.white,
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -750,19 +771,20 @@ class _ProductItemState extends State<ProductItem> {
                     ? Matrix4.translationValues(5, 0, 0)
                     : Matrix4.identity(),
                 child: Container(
-                  width: 115,
+                  width: 80,
                   height: 50,
                   decoration: BoxDecoration(
-                      border: Border.all(
-                        color: _hasError ? Colors.red : Colors.transparent,
-                        width: 2.0,
-                      ),
-                      borderRadius: BorderRadius.circular(10)),
+                    border: Border.all(
+                      color: _hasError ? Colors.red : Colors.transparent,
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   child: widget.loadingPage
                       ? InkWell(
                           onTap: () {
                             setState(() {
-                              showLoading = true;
+                              loading = true;
                             });
                           },
                           child: Row(
@@ -771,13 +793,8 @@ class _ProductItemState extends State<ProductItem> {
                                 widget.SelectedSizes,
                                 style: TextStyle(fontSize: 14),
                               ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Icon(
-                                Icons.arrow_drop_down,
-                                size: 25,
-                              )
+                              SizedBox(width: 10),
+                              Icon(Icons.arrow_drop_down, size: 25),
                             ],
                           ),
                         )
@@ -793,21 +810,35 @@ class _ProductItemState extends State<ProductItem> {
                           iconSize: 30.0,
                           underline: Container(),
                           style: TextStyle(
-                              color: MAIN_COLOR, fontWeight: FontWeight.bold),
-                          items: widget.Sizes.map(
-                            (val) {
-                              return DropdownMenuItem<String>(
-                                value: val,
-                                child: Text(
-                                  val,
-                                  style: TextStyle(color: MAIN_COLOR),
-                                ),
-                              );
-                            },
-                          ).toList(),
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                          items: widget.Sizes.map((val) {
+                            return DropdownMenuItem<String>(
+                              value: val,
+                              child: Text(val,
+                                  style: TextStyle(color: Colors.blue)),
+                            );
+                          }).toList(),
                           onChanged: (val) {
                             setState(() {
                               widget.SelectedSizes = val.toString();
+                              // Check the selected size's quantity
+                              final selectedVariant = widget.variants
+                                  .firstWhere(
+                                      (variant) =>
+                                          variant['size'] ==
+                                          widget.SelectedSizes,
+                                      orElse: () => null);
+
+                              if (selectedVariant != null) {
+                                widget.quantityAvailable =
+                                    int.parse(selectedVariant['quantity']);
+                                if (widget.quantityAvailable > 1) {
+                                  widget.showQuantitySelector = true;
+                                } else {
+                                  widget.showQuantitySelector = false;
+                                  widget.quantity = 1;
+                                }
+                              }
                             });
                           },
                         ),
@@ -815,35 +846,197 @@ class _ProductItemState extends State<ProductItem> {
               ),
               if (showLoading && widget.loadingPage)
                 Container(
-                    width: 15,
-                    height: 15,
-                    child: CircularProgressIndicator(
-                      color: MAIN_COLOR,
-                    )),
-              loading
-                  ? Container(
-                      height: 50,
-                      width: 150,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(40),
-                          border: Border.all(color: Colors.black)),
-                      child: Center(
-                          child: Container(
-                        height: 15,
-                        width: 15,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
+                  width: 15,
+                  height: 15,
+                  child: CircularProgressIndicator(color: Colors.blue),
+                ),
+              if (widget.showQuantitySelector)
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, bottom: 5),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (widget.quantity > 1) {
+                                setState(() {
+                                  widget.quantity--;
+                                });
+                              }
+                            },
+                            child: Container(
+                              width: 27,
+                              height: 27,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Color.fromARGB(255, 75, 75, 75),
+                                    width: 3),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.remove,
+                                  size: 22,
+                                  color: Color.fromARGB(255, 61, 61, 61),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          InkWell(
+                            onTap: _incrementQuantity,
+                            child: Container(
+                              width: 27,
+                              height: 27,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                                border: Border.all(
+                                    color: Color.fromARGB(255, 75, 75, 75),
+                                    width: 3),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.add,
+                                  size: 22,
+                                  color: Color.fromARGB(255, 61, 61, 61),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        widget.quantity.toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Color.fromARGB(255, 41, 41, 41),
                         ),
-                      )),
-                    )
-                  : ButtonWidget(
-                      name: widget.inCart ? "ازاله من السله" : "أضف الى السله",
-                      height: 50,
-                      width: 150,
-                      BorderColor: Colors.black,
-                      OnClickFunction: () async {
-                        if (widget.SKU.toString() == "" || widget.SKU == null) {
+                      ),
+                    ),
+                    SizedBox(width: 10),
+                    SizedBox(width: 30),
+                  ],
+                ),
+              Container(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (widget.SKU.toString() == "") {
+                      setState(() {
+                        Vibration.vibrate(duration: 100);
+                        _hasError = true;
+                        Future.delayed(Duration(milliseconds: 1000), () {
+                          setState(() {
+                            _hasError = false;
+                          });
+                        });
+                      });
+                    } else {
+                      if (widget.inCart) {
+                        final newItem = CartItem(
+                            sku: widget.SKU,
+                            availability: 1,
+                            vendor_sku: widget.vendor_SKU,
+                            nickname: widget.nickname,
+                            productId: widget.id,
+                            id: widget.id,
+                            name: widget.name,
+                            image: widget.image.toString(),
+                            price: double.parse(widget.new_price.toString()),
+                            quantity: widget.quantity,
+                            user_id: 0,
+                            type: widget.SelectedSizes.toString() == ""
+                                ? LocalStorage().sizeUser[0]
+                                : widget.SelectedSizes,
+                            placeInWarehouse:
+                                widget.placeInWarehouse[widget.SelectedSizes] ??
+                                    "0000");
+
+                        cartProvider.removeFromCart(widget.id);
+                        setState(() {});
+                      } else {
+                        if (widget.SelectedSizes != "اختر مقاسك" &&
+                            widget.SelectedSizes != "") {
+                          setState(() {
+                            loading = true;
+                            clicked = true;
+                          });
+                          listClick(widgetKey);
+                          Vibration.vibrate(duration: 300);
+                          final newItem = CartItem(
+                              sku: widget.SKU,
+                              availability: 1,
+                              vendor_sku: widget.vendor_SKU,
+                              nickname: widget.nickname,
+                              productId: widget.id,
+                              id: widget.id,
+                              name: widget.name,
+                              image: widget.image.toString(),
+                              price: double.parse(widget.new_price.toString()),
+                              quantity: widget.quantity,
+                              user_id: 0,
+                              type: widget.SelectedSizes.toString() == ""
+                                  ? LocalStorage().sizeUser[0]
+                                  : widget.SelectedSizes,
+                              placeInWarehouse: widget
+                                      .placeInWarehouse[widget.SelectedSizes] ??
+                                  "0000");
+                          cartProvider.addToCart(newItem);
+                          const snackBar = SnackBar(
+                            content: Text('تم اضافه المنتج الى السله بنجاح!'),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          Timer(Duration(milliseconds: 500), () {
+                            Fluttertoast.cancel();
+                          });
+                          Timer(Duration(seconds: 1), () async {
+                            Navigator.pop(context);
+                          });
+                          final CartService cartFirebaseProvider =
+                              CartService();
+                          String idCart = Uuid().v4();
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          String? USER_ID =
+                              await prefs.getString('user_id') ?? "-";
+                          String? TOKEN =
+                              await prefs.getString('device_token') ?? "-";
+
+                          CartFirebaseModel cartFirebaseItem =
+                              CartFirebaseModel(
+                            id: idCart,
+                            user_id: USER_ID.toString(),
+                            product_id: widget.id.toString(),
+                            user_token: TOKEN,
+                          );
+                          cartFirebaseProvider.addToCart(cartFirebaseItem);
+                          favoriteProvider.removeFromFavorite(widget.id);
+                          final selectedSizeItem = widget.variants.firstWhere(
+                            (variant) =>
+                                variant['size'] == widget.SelectedSizes,
+                            orElse: () => null,
+                          );
+                          List<String> userIds = await cartFirebaseProvider
+                              .getUserIdsByProductId(widget.id.toString());
+                          userIds.removeWhere((token) => token == TOKEN);
+
+                          if (int.parse(
+                                  selectedSizeItem["quantity"].toString()) <
+                              2) {
+                            sendNotification(
+                                context: context,
+                                USER_TOKENS: userIds,
+                                productImage: widget.image.toString());
+                          }
+                        } else {
                           setState(() {
                             Vibration.vibrate(duration: 100);
                             _hasError = true;
@@ -853,129 +1046,27 @@ class _ProductItemState extends State<ProductItem> {
                               });
                             });
                           });
-                        } else {
-                          if (widget.inCart) {
-                            final newItem = CartItem(
-                                sku: widget.SKU,
-                                availability: 1,
-                                vendor_sku: widget.vendor_SKU,
-                                nickname: widget.nickname,
-                                productId: widget.id,
-                                id: widget.id,
-                                name: widget.name,
-                                image: widget.image.toString(),
-                                price:
-                                    double.parse(widget.new_price.toString()),
-                                quantity: 1,
-                                user_id: 0,
-                                type: widget.SelectedSizes.toString() == ""
-                                    ? LocalStorage().sizeUser[0]
-                                    : widget.SelectedSizes,
-                                placeInWarehouse: widget.placeInWarehouse[
-                                        widget.SelectedSizes] ??
-                                    "0000");
-
-                            cartProvider.removeFromCart(widget.id);
-                            setState(() {});
-                          } else {
-                            if (widget.SelectedSizes != "اختر مقاسك" &&
-                                widget.SelectedSizes != "") {
-                              setState(() {
-                                loading = true;
-                                clicked = true;
-                              });
-                              listClick(widgetKey);
-                              Vibration.vibrate(duration: 300);
-                              final newItem = CartItem(
-                                  sku: widget.SKU,
-                                  availability: 1,
-                                  vendor_sku: widget.vendor_SKU,
-                                  nickname: widget.nickname,
-                                  productId: widget.id,
-                                  id: widget.id,
-                                  name: widget.name,
-                                  image: widget.image.toString(),
-                                  price:
-                                      double.parse(widget.new_price.toString()),
-                                  quantity: 1,
-                                  user_id: 0,
-                                  type: widget.SelectedSizes.toString() == ""
-                                      ? LocalStorage().sizeUser[0]
-                                      : widget.SelectedSizes,
-                                  placeInWarehouse: widget.placeInWarehouse[
-                                          widget.SelectedSizes] ??
-                                      "0000");
-                              cartProvider.addToCart(newItem);
-                              const snackBar = SnackBar(
-                                content:
-                                    Text('تم اضافه المنتج الى السله بنجاح!'),
-                              );
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(snackBar);
-                              Timer(Duration(milliseconds: 500), () {
-                                Fluttertoast.cancel();
-                              });
-                              Timer(Duration(seconds: 1), () async {
-                                Navigator.pop(context);
-                              });
-                              final CartService cartFirebaseProvider =
-                                  CartService();
-                              String idCart = Uuid().v4();
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String? USER_ID =
-                                  await prefs.getString('user_id') ?? "-";
-                              String? TOKEN =
-                                  await prefs.getString('device_token') ?? "-";
-
-                              CartFirebaseModel cartFirebaseItem =
-                                  CartFirebaseModel(
-                                id: idCart,
-                                user_id: USER_ID.toString(),
-                                product_id: widget.id.toString(),
-                                user_token: TOKEN,
-                              );
-                              cartFirebaseProvider.addToCart(cartFirebaseItem);
-                              favoriteProvider.removeFromFavorite(widget.id);
-                              final selectedSizeItem =
-                                  widget.variants.firstWhere(
-                                (variant) =>
-                                    variant['size'] == widget.SelectedSizes,
-                                orElse: () => null,
-                              );
-                              List<String> userIds = await cartFirebaseProvider
-                                  .getUserIdsByProductId(widget.id.toString());
-                              userIds.removeWhere((token) => token == TOKEN);
-
-                              if (int.parse(
-                                      selectedSizeItem["quantity"].toString()) <
-                                  2) {
-                                sendNotification(
-                                    context: context,
-                                    USER_TOKENS: userIds,
-                                    productImage: widget.image.toString());
-                              }
-                            } else {
-                              setState(() {
-                                Vibration.vibrate(duration: 100);
-                                _hasError = true;
-                                Future.delayed(Duration(milliseconds: 1000),
-                                    () {
-                                  setState(() {
-                                    _hasError = false;
-                                  });
-                                });
-                              });
-                            }
-                          }
                         }
-                      },
-                      BorderRaduis: 10,
-                      ButtonColor: Colors.black,
-                      NameColor: Colors.white)
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
+                    widget.inCart ? "ازاله من السله" : "أضف الى السله",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
+        )
       ],
     );
   }
