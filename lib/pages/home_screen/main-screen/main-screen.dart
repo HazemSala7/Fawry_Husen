@@ -134,80 +134,90 @@ class _MainScreenState extends State<MainScreen> {
                           child: AnimationLimiter(
                             child: RefreshIndicator(
                               onRefresh: _refreshData,
-                              child: GridView.builder(
-                                  cacheExtent: 5000,
-                                  controller: _controller,
-                                  itemCount: AllProducts.length,
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 6,
-                                    mainAxisSpacing: 10,
-                                    childAspectRatio: 0.48,
-                                  ),
-                                  itemBuilder: (context, int index) {
-                                    final isLiked =
-                                        Provider.of<FavouriteProvider>(context)
-                                            .isProductFavorite(
-                                                AllProducts[index]["id"]);
-                                    return AnimationConfiguration.staggeredList(
-                                      position: index,
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      child: SlideAnimation(
-                                        horizontalOffset: 100.0,
-                                        // verticalOffset: 100.0,
-                                        child: FadeInAnimation(
-                                          curve: Curves.easeOut,
-                                          child: ProductWidget(
-                                              cardHeight: 0,
-                                              cardWidth: 0,
-                                              priceMul: 1,
-                                              inCart: cartProvider.isProductCart(
-                                                  AllProducts[index]["id"]),
-                                              SIZES: [],
-                                              ALL: true,
-                                              url:
-                                                  "${URL}getAllItems?api_key=$key_bath&page=$_page",
-                                              isLiked: isLiked,
-                                              Sub_Category_Key:
-                                                  Sub_Category_Key,
-                                              SubCategories: [],
-                                              page: _page,
-                                              sizes: [],
-                                              home: true,
-                                              category_id: "",
-                                              size: "",
-                                              Images: AllProducts[index]["vendor_images_links"].length == 0
-                                                  ? [
-                                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                    ]
-                                                  : AllProducts[index]["vendor_images_links"] ??
-                                                      [
+                              child: LayoutBuilder(
+                                  builder: (context, constraints) {
+                                double width = constraints.maxWidth;
+                                double height = constraints.maxHeight;
+
+                                double cardWidth = (width - 6);
+                                double cardHeight = cardWidth * 0.5;
+                                return GridView.builder(
+                                    cacheExtent: 5000,
+                                    controller: _controller,
+                                    itemCount: AllProducts.length,
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 6,
+                                      mainAxisSpacing: 10,
+                                      childAspectRatio: 0.48,
+                                    ),
+                                    itemBuilder: (context, int index) {
+                                      final isLiked =
+                                          Provider.of<FavouriteProvider>(
+                                                  context)
+                                              .isProductFavorite(
+                                                  AllProducts[index]["id"]);
+                                      return AnimationConfiguration
+                                          .staggeredList(
+                                        position: index,
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        child: SlideAnimation(
+                                          horizontalOffset: 100.0,
+                                          // verticalOffset: 100.0,
+                                          child: FadeInAnimation(
+                                            curve: Curves.easeOut,
+                                            child: ProductWidget(
+                                                cardHeight: cardHeight.toInt(),
+                                                cardWidth: cardWidth.toInt(),
+                                                priceMul: 1,
+                                                inCart: cartProvider.isProductCart(
+                                                    AllProducts[index]["id"]),
+                                                SIZES: [],
+                                                ALL: true,
+                                                url:
+                                                    "${URL}getAllItems?api_key=$key_bath&page=$_page",
+                                                isLiked: isLiked,
+                                                Sub_Category_Key:
+                                                    Sub_Category_Key,
+                                                SubCategories: [],
+                                                page: _page,
+                                                sizes: [],
+                                                home: true,
+                                                category_id: "",
+                                                size: "",
+                                                Images: AllProducts[index]["vendor_images_links"].length == 0
+                                                    ? [
                                                         "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                      ],
-                                              Products: AllProducts,
-                                              index: index,
-                                              name: AllProducts[index]["title"],
-                                              thumbnail: AllProducts[index]
-                                                  ["thumbnail"],
-                                              id: AllProducts[index]["id"],
-                                              new_price: AllProducts[index]
-                                                  ["price"],
-                                              old_price: AllProducts[index]
-                                                      ["price"] ??
-                                                  0.0,
-                                              image: AllProducts[index]["vendor_images_links"]
-                                                          .length ==
-                                                      0
-                                                  ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                  : AllProducts[index]
-                                                          ["vendor_images_links"]
-                                                      [0]),
+                                                      ]
+                                                    : AllProducts[index]["vendor_images_links"] ??
+                                                        [
+                                                          "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                        ],
+                                                Products: AllProducts,
+                                                index: index,
+                                                name: AllProducts[index]
+                                                    ["title"],
+                                                thumbnail: AllProducts[index]
+                                                    ["thumbnail"],
+                                                id: AllProducts[index]["id"],
+                                                new_price: AllProducts[index]
+                                                    ["price"],
+                                                old_price: AllProducts[index]
+                                                        ["price"] ??
+                                                    0.0,
+                                                image: AllProducts[index]["vendor_images_links"]
+                                                            .length ==
+                                                        0
+                                                    ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                    : AllProducts[index]
+                                                        ["vendor_images_links"][0]),
+                                          ),
                                         ),
-                                      ),
-                                    );
-                                  }),
+                                      );
+                                    });
+                              }),
                             ),
                           ),
                         ),

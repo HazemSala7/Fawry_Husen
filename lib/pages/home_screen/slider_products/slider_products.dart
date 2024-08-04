@@ -136,7 +136,7 @@ class _SliderProductsState extends State<SliderProducts> {
                                 child: RefreshIndicator(
                                   onRefresh: _refreshData,
                                   child: GridView.builder(
-                                      cacheExtent: 5000,
+                                      cacheExtent: 1000,
                                       controller: _controller,
                                       itemCount: AllProducts.length,
                                       gridDelegate:
@@ -224,7 +224,7 @@ class _SliderProductsState extends State<SliderProducts> {
                 padding: const EdgeInsets.only(top: 30, bottom: 40),
                 color: MAIN_COLOR,
                 child: const Center(
-                  child: Text('You have fetched all of the products'),
+                  child: Text('لا يوجد المزيد من المنتجات'),
                 ),
               ),
           ],
@@ -253,7 +253,7 @@ class _SliderProductsState extends State<SliderProducts> {
     await Future.delayed(Duration(seconds: 2)); // Simulate a delay
     _page += 1; // Increase _page by 1
     try {
-      var _products = await getSliderProducts(widget.url);
+      var _products = await getSliderProducts(widget.url, _page);
       if (_products.isNotEmpty) {
         setState(() {
           AllProducts = [];
@@ -300,7 +300,7 @@ class _SliderProductsState extends State<SliderProducts> {
       return;
     } else {
       try {
-        var _products = await getSliderProducts(widget.url);
+        var _products = await getSliderProducts(widget.url, _page);
         setState(() {
           AllProducts = _products["items"];
           // Store the fetched data in the cache
@@ -330,7 +330,7 @@ class _SliderProductsState extends State<SliderProducts> {
       _page += 1; // Increase _page by 1
       try {
         // Fetch data from the API
-        var _products = await getSliderProducts(widget.url);
+        var _products = await getSliderProducts(widget.url, _page);
         if (_products.isNotEmpty) {
           setState(() {
             AllProducts.addAll(_products["items"]);

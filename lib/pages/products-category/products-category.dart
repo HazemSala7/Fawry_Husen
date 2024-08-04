@@ -831,13 +831,10 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                             double width = constraints.maxWidth;
                                             double height =
                                                 constraints.maxHeight;
-                                            double cardWidth = (width - 6 * 2) /
-                                                2; // Adjust based on spacing
-                                            double cardHeight = cardWidth *
-                                                0.5; // Adjust based on childAspectRatio
-                                            print("cardWidth");
-                                            print(cardWidth);
-                                            print(cardHeight);
+
+                                            double cardWidth = (width - 6);
+                                            double cardHeight = cardWidth * 0.5;
+
                                             return GridView.builder(
                                                 controller: _controller,
                                                 cacheExtent: 500,

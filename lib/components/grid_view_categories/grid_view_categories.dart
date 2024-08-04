@@ -47,27 +47,6 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GridView.builder(
-          scrollDirection: Axis.vertical,
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: 4,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 6,
-            mainAxisSpacing: 6,
-            childAspectRatio: 1.1,
-          ),
-          itemBuilder: (context, index) {
-            return CategoryWidget(
-              main_category: categories[index]["main_category"],
-              name: categories[index]["name"],
-              CateImage: categories[index]["icon"],
-              CateIcon: categories[index]["icon"],
-              image: categories[index]["image"],
-            );
-          },
-        ),
         InkWell(
           onTap: () {
             bool All = false;
@@ -334,12 +313,12 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                   blurRadius: 7,
                   offset: Offset(0, 2),
                 ),
-              ], borderRadius: BorderRadius.circular(20)),
+              ], borderRadius: BorderRadius.circular(6)),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(6),
                     child: Stack(
                       children: [
                         FancyShimmerImage(
@@ -393,6 +372,27 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
               ),
             ),
           ),
+        ),
+        GridView.builder(
+          scrollDirection: Axis.vertical,
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 4,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 6,
+            mainAxisSpacing: 6,
+            childAspectRatio: 1.1,
+          ),
+          itemBuilder: (context, index) {
+            return CategoryWidget(
+              main_category: categories[index]["main_category"],
+              name: categories[index]["name"],
+              CateImage: categories[index]["icon"],
+              CateIcon: categories[index]["icon"],
+              image: categories[index]["image"],
+            );
+          },
         ),
         GridView.builder(
           scrollDirection: Axis.vertical,

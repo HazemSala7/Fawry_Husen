@@ -270,7 +270,20 @@ class _FlashSalesListState extends State<FlashSalesList> {
                                         child: Row(
                                           children: [
                                             Text(
-                                              "₪${widget.shortlisted[index]["price"]}",
+                                              widget.shortlisted[index]
+                                                          ["price"] !=
+                                                      null
+                                                  ? (widget.shortlisted[index]
+                                                          ["price"] is double
+                                                      ? "₪${(widget.shortlisted[index]["price"] as double).round().toString()}"
+                                                      : (double.tryParse(widget
+                                                                          .shortlisted[
+                                                                      index]
+                                                                  ["price"]) !=
+                                                              null
+                                                          ? "₪${double.parse(widget.shortlisted[index]["price"]).round().toString()}"
+                                                          : "₪0"))
+                                                  : "₪0",
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 18,

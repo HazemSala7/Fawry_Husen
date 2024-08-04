@@ -57,7 +57,8 @@ class _CartState extends State<Cart> {
 
         double total = 0;
         for (CartItem item in cartItems) {
-          total += item.price * item.quantity;
+          total += (double.tryParse(item.price.toString())?.toInt() ?? 0) *
+              item.quantity;
           // total += item.price;
         }
         return Stack(
@@ -503,6 +504,14 @@ class _CartState extends State<Cart> {
                                       color: Colors.red,
                                     ),
                                   ),
+                                  Text(
+                                    " * ${(double.tryParse(price.toString())?.toInt() ?? 0)}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 124, 21, 138),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ],
@@ -514,14 +523,14 @@ class _CartState extends State<Cart> {
                   Padding(
                     padding: const EdgeInsets.all(6.0),
                     child: Text(
-                      "₪${price.round().toString()}",
+                      "₪${(double.tryParse(price.toString())?.toInt() ?? 0) * qty}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: Colors.red,
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ),

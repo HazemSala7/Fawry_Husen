@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       border: Border.all(color: Colors.black)),
                                   child: Center(
                                       child: Text(
-                                    "تخطي",
+                                    "! إكتشف الفرص",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -230,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                             child: Container(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
+                                                                        .all(
                                                                         50),
                                                                 child:
                                                                     const CircularProgressIndicator())),
@@ -273,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                             child: Container(
                                                                 padding:
                                                                     const EdgeInsets
-                                                                            .all(
+                                                                        .all(
                                                                         50),
                                                                 child:
                                                                     const CircularProgressIndicator())),

@@ -115,8 +115,8 @@ getProducts(int page) async {
   }
 }
 
-getSliderProducts(url) async {
-  var response = await http.get(Uri.parse(url), headers: headers);
+getSliderProducts(url, page) async {
+  var response = await http.get(Uri.parse("$url&page=$page"), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
 }
