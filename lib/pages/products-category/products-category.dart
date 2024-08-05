@@ -832,8 +832,8 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                             double height =
                                                 constraints.maxHeight;
 
-                                            double cardWidth = (width - 6);
-                                            double cardHeight = cardWidth * 0.5;
+                                            double cardWidth = 420;
+                                            double cardHeight = 420;
 
                                             return GridView.builder(
                                                 controller: _controller,

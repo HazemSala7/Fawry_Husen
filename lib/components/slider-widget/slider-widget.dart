@@ -39,7 +39,7 @@ class _SlideImageState extends State<SlideImage> {
                     NavigatorFunction(
                         context,
                         HomeScreen(
-                          title: e.title == null || e.title.toString() == ""
+                          title: e.title.toString() == ""
                               ? "سلايدر 1 سلايدر 1"
                               : e.title,
                           url: e.action,
@@ -58,62 +58,62 @@ class _SlideImageState extends State<SlideImage> {
                             width: double.infinity,
                             height: MediaQuery.of(context).size.height * 0.4,
                           ),
-                          Visibility(
-                            visible: widget.showShadow,
-                            child: Container(
-                                width: double.infinity,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.4,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Color.fromARGB(183, 0, 0, 0),
-                                      Color.fromARGB(45, 0, 0, 0)
-                                    ],
-                                  ),
-                                )),
-                          ),
+                          // Visibility(
+                          //   visible: widget.showShadow,
+                          //   child: Container(
+                          //       width: double.infinity,
+                          //       height:
+                          //           MediaQuery.of(context).size.height * 0.4,
+                          //       decoration: BoxDecoration(
+                          //         gradient: LinearGradient(
+                          //           begin: Alignment.topCenter,
+                          //           end: Alignment.bottomCenter,
+                          //           colors: [
+                          //             Color.fromARGB(183, 0, 0, 0),
+                          //             Color.fromARGB(45, 0, 0, 0)
+                          //           ],
+                          //         ),
+                          //       )),
+                          // ),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20, top: 20),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Text(
-                                  e.title == null || e.title.toString() == ""
-                                      ? "سلايدر 1 سلايدر 1"
-                                      : e.title,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontSize: 30),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Row(
-                              children: [
-                                Text(
-                                  e.description == null ||
-                                          e.description.toString() == ""
-                                      ? "وصف عن منتج"
-                                      : e.description,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                      fontSize: 20),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(right: 20, top: 20),
+                      //   child: Column(
+                      //     children: [
+                      //       Row(
+                      //         children: [
+                      //           Text(
+                      //             e.title == null || e.title.toString() == ""
+                      //                 ? "سلايدر 1 سلايدر 1"
+                      //                 : e.title,
+                      //             style: TextStyle(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: Colors.white,
+                      //                 fontSize: 30),
+                      //           )
+                      //         ],
+                      //       ),
+                      //       SizedBox(
+                      //         height: 30,
+                      //       ),
+                      //       Row(
+                      //         children: [
+                      //           Text(
+                      //             e.description == null ||
+                      //                     e.description.toString() == ""
+                      //                 ? "وصف عن منتج"
+                      //                 : e.description,
+                      //             style: TextStyle(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: Colors.white,
+                      //                 fontSize: 20),
+                      //           )
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ))

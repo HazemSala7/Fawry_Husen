@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       border: Border.all(color: Colors.black)),
                                   child: Center(
                                       child: Text(
-                                    "! إكتشف الفرص",
+                                    "إكتشف الفرص !",
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -203,49 +203,49 @@ class _LoginScreenState extends State<LoginScreen> {
                                     //     ),
                                     //   ),
                                     // ),
-                                    SizedBox(
-                                      width: 15,
-                                    ),
-                                    Container(
-                                      height: 50,
-                                      width: 50,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: MAIN_COLOR),
-                                      child: Center(
-                                        child: IconButton(
-                                            onPressed: () async {
-                                              showDialog(
-                                                  context: context,
-                                                  barrierDismissible: false,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Card(
-                                                            color: Colors.white,
-                                                            child: Container(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        50),
-                                                                child:
-                                                                    const CircularProgressIndicator())),
-                                                      ],
-                                                    );
-                                                  });
-                                              await signInWithFacebook();
-                                            },
-                                            icon: Icon(
-                                              FontAwesome.facebook,
-                                              color: Colors.white,
-                                              size: 30,
-                                            )),
-                                      ),
-                                    ),
+                                    // SizedBox(
+                                    //   width: 15,
+                                    // ),
+                                    // Container(
+                                    //   height: 50,
+                                    //   width: 50,
+                                    //   decoration: BoxDecoration(
+                                    //       shape: BoxShape.circle,
+                                    //       color: MAIN_COLOR),
+                                    //   child: Center(
+                                    //     child: IconButton(
+                                    //         onPressed: () async {
+                                    //           showDialog(
+                                    //               context: context,
+                                    //               barrierDismissible: false,
+                                    //               builder:
+                                    //                   (BuildContext context) {
+                                    //                 return Column(
+                                    //                   mainAxisAlignment:
+                                    //                       MainAxisAlignment
+                                    //                           .center,
+                                    //                   children: [
+                                    //                     Card(
+                                    //                         color: Colors.white,
+                                    //                         child: Container(
+                                    //                             padding:
+                                    //                                 const EdgeInsets
+                                    //                                     .all(
+                                    //                                     50),
+                                    //                             child:
+                                    //                                 const CircularProgressIndicator())),
+                                    //                   ],
+                                    //                 );
+                                    //               });
+                                    //           await signInWithFacebook();
+                                    //         },
+                                    //         icon: Icon(
+                                    //           FontAwesome.facebook,
+                                    //           color: Colors.white,
+                                    //           size: 30,
+                                    //         )),
+                                    //   ),
+                                    // ),
                                     SizedBox(
                                       width: 15,
                                     ),
