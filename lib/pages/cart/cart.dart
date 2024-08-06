@@ -205,37 +205,50 @@ class _CartState extends State<Cart> {
                                   setState(() {
                                     clicked = true;
                                   });
+
                                   bool allAvailable = true;
+                                  var itemsToCheck = cartItems
+                                      .map((item) => {
+                                            'id': item.productId,
+                                            'size': item.type,
+                                            'quantity': item.quantity
+                                          })
+                                      .toList();
+
+                                  var availabilityMap =
+                                      await checkProductAvailability(
+                                          itemsToCheck);
 
                                   for (var i = 0; i < cartItems.length; i++) {
-                                    bool availability =
-                                        await checkProductAvailability(
-                                            cartItems[i].productId,
-                                            cartItems[i].type);
-                                    if (availability == false) {
+                                    var item = cartItems[i];
+                                    bool isAvailable =
+                                        availabilityMap[item.productId] ??
+                                            false;
+
+                                    if (!isAvailable) {
                                       Fluttertoast.showToast(
                                           msg:
-                                              "المنتج :${cartItems[i].name} لم يتبقى أي كمية منه , الرجاء حذف المنتج من الطلبية",
+                                              "المنتج :${item.name} لم يتبقى أي كمية منه , الرجاء حذف المنتج من الطلبية",
                                           backgroundColor: Colors.red);
+
                                       allAvailable = false;
                                       CartItem updatedItem = CartItem(
-                                        image: cartItems[i].image,
-                                        name: cartItems[i].name,
-                                        nickname: cartItems[i].nickname,
-                                        placeInWarehouse:
-                                            cartItems[i].placeInWarehouse,
-                                        price: cartItems[i].price,
-                                        sku: cartItems[i].sku,
-                                        type: cartItems[i].type,
-                                        user_id: cartItems[i].user_id,
-                                        vendor_sku: cartItems[i].vendor_sku,
-                                        quantity: cartItems[i].quantity,
-                                        id: cartItems[i].id,
-                                        productId: cartItems[i].productId,
+                                        image: item.image,
+                                        name: item.name,
+                                        nickname: item.nickname,
+                                        placeInWarehouse: item.placeInWarehouse,
+                                        price: item.price,
+                                        sku: item.sku,
+                                        type: item.type,
+                                        user_id: item.user_id,
+                                        vendor_sku: item.vendor_sku,
+                                        quantity: item.quantity,
+                                        id: item.id,
+                                        productId: item.productId,
                                         availability: 0,
                                       );
                                       cartProvider.updateCartItemById(
-                                          cartItems[i].productId, updatedItem);
+                                          item.productId, updatedItem);
                                       break;
                                     }
                                   }
@@ -244,7 +257,8 @@ class _CartState extends State<Cart> {
                                     showCheckoutDialog().showBottomDialog(
                                         context,
                                         double.parse(total.toString()));
-                                  } else {}
+                                  }
+
                                   setState(() {
                                     clicked = false;
                                   });

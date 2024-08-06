@@ -975,6 +975,17 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
     return difference.round().toStringAsFixed(2);
   }
 
+  int _safeRound(dynamic value) {
+    if (value == null) {
+      return 0; // Default value if `oldTotal` is null
+    }
+    try {
+      return double.parse(value.toString()).round();
+    } catch (e) {
+      return 0; // Default value in case of a parsing error
+    }
+  }
+
   Widget FirstScreen() {
     return Column(
       key: Key("2"),
@@ -1229,11 +1240,12 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "₪${double.parse(oldTotal.toString()).round()}",
+                "₪${_safeRound(oldTotal)}",
                 style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  color: Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

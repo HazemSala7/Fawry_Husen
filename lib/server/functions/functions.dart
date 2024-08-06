@@ -447,21 +447,35 @@ getCoupunRedeem(code) async {
   var res = json.decode(utf8.decode(response.bodyBytes));
 }
 
-checkProductAvailability(prodct_id, size) async {
+Future<Map<int, bool>> checkProductAvailability(
+    List<Map<String, dynamic>> items) async {
   try {
-    var Final_URL =
-        "$URL_CHECK_PRODUCT_AVAILABILITY?id=$prodct_id&size=$size&api_key=$key_bath";
-    var response = await http.get(Uri.parse(Final_URL), headers: headers);
-    var res = json.decode(utf8.decode(response.bodyBytes));
-    return res["availabilty"];
-  } catch (e) {
-    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+    var url =
+        'https://fawri-f7ab5f0e45b8.herokuapp.com/api/checkProductAvailabilityList';
+    var headers = {'Content-Type': 'application/json'};
+    var body = json.encode({'items': items});
 
-    var Final_URL =
-        "$DomainName/api/checkProductAvailability?id=$prodct_id&size=$size&api_key=$key_bath";
-    var response = await http.get(Uri.parse(Final_URL), headers: headers);
-    var res = json.decode(utf8.decode(response.bodyBytes));
-    return res["availabilty"];
+    var response =
+        await http.post(Uri.parse(url), headers: headers, body: body);
+
+    var res = json.decode(response.body);
+    print("res");
+    print(res);
+    var availabilityMap = <int, bool>{};
+
+    for (var item in res['items']) {
+      var id = item['id'];
+      var availabilityStr = item['availability'];
+
+      // Check if the availability string contains 'true'
+      var isAvailable = availabilityStr.contains('true');
+      availabilityMap[id] = isAvailable;
+    }
+
+    return availabilityMap;
+  } catch (e) {
+    print('Error checking product availability: $e');
+    return {};
   }
 }
 
