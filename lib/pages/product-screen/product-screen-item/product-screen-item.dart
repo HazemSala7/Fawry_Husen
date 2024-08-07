@@ -382,7 +382,7 @@ class _ProductItemState extends State<ProductItem> {
                                         // Share.share(
                                         //     "https://www.fawri.co/product-details-one/${widget.id}?offset=1");
                                         Share.share(
-                                            "https://www.fawri.co/product-details-one/${widget.id}?offset=1");
+                                            "https://www.fawri.co/product-details-one?id=${widget.id}&offset=1");
                                       },
                                       child: Opacity(
                                         opacity: 0.75,
