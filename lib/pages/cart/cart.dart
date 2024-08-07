@@ -221,18 +221,20 @@ class _CartState extends State<Cart> {
 
                                   for (var i = 0; i < cartItems.length; i++) {
                                     var item = cartItems[i];
+                                    var availabilityData =
+                                        availabilityMap[item.productId];
+
                                     bool isAvailable =
-                                        availabilityMap[item.productId] ??
+                                        availabilityData?['isAvailable'] ??
                                             false;
+                                    int availableQty =
+                                        availabilityData?['availableQty'] ?? 0;
 
                                     if (!isAvailable) {
-                                      Fluttertoast.showToast(
-                                          msg:
-                                              "المنتج :${item.name} لم يتبقى أي كمية منه , الرجاء حذف المنتج من الطلبية",
-                                          backgroundColor: Colors.red);
-
                                       allAvailable = false;
+
                                       CartItem updatedItem = CartItem(
+                                        quantityExist: availableQty,
                                         image: item.image,
                                         name: item.name,
                                         nickname: item.nickname,
@@ -242,13 +244,20 @@ class _CartState extends State<Cart> {
                                         type: item.type,
                                         user_id: item.user_id,
                                         vendor_sku: item.vendor_sku,
-                                        quantity: item.quantity,
+                                        quantity: availableQty,
                                         id: item.id,
                                         productId: item.productId,
-                                        availability: 0,
+                                        availability: availableQty,
                                       );
                                       cartProvider.updateCartItemById(
                                           item.productId, updatedItem);
+
+                                      Fluttertoast.showToast(
+                                        msg:
+                                            "تم تحديث كمية المنتج :${item.name} إلى $availableQty",
+                                        backgroundColor:
+                                            Color.fromARGB(255, 43, 145, 17),
+                                      );
                                       break;
                                     }
                                   }
@@ -448,7 +457,7 @@ class _CartState extends State<Cart> {
               );
             },
             child: Container(
-              height: 140,
+              height: 160,
               width: double.infinity,
               decoration: BoxDecoration(boxShadow: [
                 BoxShadow(
@@ -495,15 +504,10 @@ class _CartState extends State<Cart> {
                                       fontSize: 16),
                                 ),
                               ),
-                              Text(
-                                type.toString(),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
                               Row(
                                 children: [
                                   Text(
-                                    "الكمية : ",
+                                    "الحجم : ",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -511,15 +515,134 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                   Text(
-                                    "${qty.toString()}",
+                                    type.toString(),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                              Visibility(
+                                visible: item!.quantityExist > 1 ? true : false,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "الكمية : ",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: MAIN_COLOR,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(bottom: 5),
+                                      child: Row(
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              if (item.quantity > 1) {
+                                                int quantity = int.parse(
+                                                    item.quantity.toString());
+                                                // Call the updateCartItem function in CartProvider
+                                                cartProvider.updateCartItem(
+                                                  item.copyWith(
+                                                    quantity: quantity - 1,
+                                                  ),
+                                                );
+                                                setState(() {});
+                                              }
+                                            },
+                                            child: Container(
+                                              width: 27,
+                                              height: 27,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                    color: Color.fromARGB(
+                                                        255, 75, 75, 75),
+                                                    width: 2),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.remove,
+                                                  size: 22,
+                                                  color: Color.fromARGB(
+                                                      255, 61, 61, 61),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            "$qty",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16),
+                                          ),
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          InkWell(
+                                            onTap: () {
+                                              int quantity = int.parse(
+                                                  item.quantity.toString());
+                                              int quantityExist = int.parse(item
+                                                  .quantityExist
+                                                  .toString());
+                                              if (quantity < quantityExist) {
+                                                cartProvider.updateCartItem(
+                                                  item.copyWith(
+                                                    quantity: quantity + 1,
+                                                  ),
+                                                );
+                                                setState(() {});
+                                              }
+                                            },
+                                            child: Container(
+                                              width: 27,
+                                              height: 27,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                    color: Color.fromARGB(
+                                                        255, 75, 75, 75),
+                                                    width: 2),
+                                              ),
+                                              child: Center(
+                                                child: Icon(
+                                                  Icons.add,
+                                                  size: 20,
+                                                  color: Color.fromARGB(
+                                                      255, 61, 61, 61),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "السعر : ",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: Colors.red,
+                                      color: MAIN_COLOR,
                                     ),
                                   ),
                                   Text(
-                                    " * ${(double.tryParse(price.toString())?.toInt() ?? 0)}",
+                                    "₪${(double.tryParse(price.toString())?.toInt() ?? 0)}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -527,7 +650,7 @@ class _CartState extends State<Cart> {
                                     ),
                                   ),
                                 ],
-                              ),
+                              )
                             ],
                           ),
                         )
@@ -540,7 +663,7 @@ class _CartState extends State<Cart> {
                       "₪${(double.tryParse(price.toString())?.toInt() ?? 0) * qty}",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                        fontSize: 20,
                         color: Colors.red,
                       ),
                     ),

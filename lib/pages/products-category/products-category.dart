@@ -1456,123 +1456,123 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
     if (widget.name == "ملابس نسائيه مقاس كبير") {
       SubCategories = sub_categories_women_plus_sizes;
       Sub_Category_Key.add("Women Plus Clothing");
-      var _pricemul = await FirebaseRemoteConfigClass().getBigPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchBigPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Apparel") {
       SubCategories = sub_categories_women_appearel;
 
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getWomenPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchWomenPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Men Apparel") {
       SubCategories = sub_categories_Men__sizes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getMenPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchMenPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids") {
       SubCategories = sub_categories_kids_sizes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchKidsPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Home & Living, Home Living, Home Textile,Tools & Home Improvement") {
       SubCategories = sub_categories_HomeLiving;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Weddings %26 Events, Weddings %26 Events") {
       SubCategories = [];
       Sub_Category_Key.add("Weddings & Events");
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Sports %26 Outdoor, Sports  Outdoor") {
       SubCategories = sub_categories_SportsOutdoor;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getMenPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchMenPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Underwear & Sleepwear, Underwear Sleepwear") {
       SubCategories = sub_categories_Underware;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Shoes") {
       SubCategories = sub_categories_WomenShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getWomenPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchWomenPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Men Shoes") {
       SubCategories = sub_categories_MenShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getMenPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchMenPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids Shoes") {
       SubCategories = sub_categories_KidsShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchKidsPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Apparel, Baby") {
       SubCategories = sub_categories_MaternityBaby;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getWomenPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchWomenPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Jewelry %26 Watches, Jewelry  Watches") {
       SubCategories = sub_categories_JewelryWatches;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Apparel Accessories") {
       SubCategories = sub_categories_Accessories;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Beauty %26 Health, Jewelry %26 Watches") {
       SubCategories = sub_categories_BeautyHealth;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Electronics") {
       SubCategories = sub_categories_Electronics;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Bags %26 Luggage, Bags %26 Luggage") {
       SubCategories = sub_categories_BagsLuggage;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Pet Supplies") {
       SubCategories = [];
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() ==
         "Office School Supplies, Office %26 School Supplies") {
       SubCategories = [];
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Automotive") {
       SubCategories = [];
-      var _pricemul = await FirebaseRemoteConfigClass().getOtherPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchOtherPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Shoes,Kids") {
       SubCategories = sub_categories_ALLShoes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchKidsPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids Boys") {
       SubCategories = sub_categories_Boys;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchKidsPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Kids Girls") {
       SubCategories = sub_categories_Girls;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
-      var _pricemul = await FirebaseRemoteConfigClass().getKidsPrice();
+      var _pricemul = await FirebaseRemoteConfigClass().fetchKidsPrice();
       priceMul = _pricemul;
     }
     setState(() {});

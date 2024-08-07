@@ -42,23 +42,23 @@ class FirebaseRemoteConfigClass {
   }
 
   Future<String> getMenPrice() async {
-    return _getCachedOrFetch('MenPrice', _fetchMenPrice);
+    return _getCachedOrFetch('MenPrice', fetchMenPrice);
   }
 
   Future<String> getOtherPrice() async {
-    return _getCachedOrFetch('OtherPrice', _fetchOtherPrice);
+    return _getCachedOrFetch('OtherPrice', fetchOtherPrice);
   }
 
   Future<String> getWomenPrice() async {
-    return _getCachedOrFetch('WomenPrice', _fetchWomenPrice);
+    return _getCachedOrFetch('WomenPrice', fetchWomenPrice);
   }
 
   Future<String> getBigPrice() async {
-    return _getCachedOrFetch('BigPrice', _fetchBigPrice);
+    return _getCachedOrFetch('BigPrice', fetchBigPrice);
   }
 
   Future<String> getKidsPrice() async {
-    return _getCachedOrFetch('KidsPrice', _fetchKidsPrice);
+    return _getCachedOrFetch('KidsPrice', fetchKidsPrice);
   }
 
   Future<String> _getCachedOrFetch(
@@ -127,27 +127,27 @@ class FirebaseRemoteConfigClass {
     return remoteConfig.getString('FeaturesUrl_3');
   }
 
-  Future<String> _fetchKidsPrice() async {
+  Future<String> fetchKidsPrice() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('KidsPrice');
   }
 
-  Future<String> _fetchMenPrice() async {
+  Future<String> fetchMenPrice() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('MenPrice');
   }
 
-  Future<String> _fetchOtherPrice() async {
+  Future<String> fetchOtherPrice() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('OtherPrice');
   }
 
-  Future<String> _fetchWomenPrice() async {
+  Future<String> fetchWomenPrice() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('WomenPrice');
   }
 
-  Future<String> _fetchBigPrice() async {
+  Future<String> fetchBigPrice() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('BigPrice');
   }

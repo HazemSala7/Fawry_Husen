@@ -141,7 +141,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   if (snapshot.data != null) {
                     return FlashSalesList(
                       shortlisted: snapshot.data["items"],
-                      title: titleName,
                     );
                   } else {
                     return Container(

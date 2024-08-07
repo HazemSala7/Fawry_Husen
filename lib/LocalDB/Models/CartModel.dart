@@ -10,6 +10,7 @@ class CartItem {
   final String vendor_sku;
   final String placeInWarehouse;
   int quantity;
+  int quantityExist;
   int availability;
   int user_id;
 
@@ -25,6 +26,7 @@ class CartItem {
       required this.user_id,
       required this.sku,
       required this.nickname,
+      required this.quantityExist,
       required this.vendor_sku,
       this.quantity = 1});
 
@@ -33,6 +35,7 @@ class CartItem {
       'id': id,
       'productId': productId,
       'availability': availability,
+      'quantityExist': quantityExist,
       'name': name,
       'sku': sku,
       'nickname': nickname,
@@ -50,6 +53,7 @@ class CartItem {
     return CartItem(
       id: json['id'],
       productId: json['productId'],
+      quantityExist: json['quantityExist'],
       availability: json['availability'],
       name: json['name'],
       placeInWarehouse: json['place_in_warehouse'],
@@ -67,6 +71,7 @@ class CartItem {
   CartItem copyWith({
     int? id,
     int? productId,
+    int? quantityExist,
     int? availability,
     String? name,
     String? type,
@@ -82,6 +87,7 @@ class CartItem {
     return CartItem(
       id: id ?? this.id,
       productId: productId ?? this.productId,
+      quantityExist: quantityExist ?? this.quantityExist,
       availability: availability ?? this.availability,
       name: name ?? this.name,
       price: price ?? this.price,

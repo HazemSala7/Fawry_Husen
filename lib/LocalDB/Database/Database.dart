@@ -67,6 +67,7 @@ class CartDatabaseHelper {
         vendor_sku TEXT NOT NULL,
         price REAL NOT NULL,
         quantity INTEGER NOT NULL,
+        quantityExist INTEGER NOT NULL,
         user_id INTEGER NOT NULL,
         availability INTEGER NOT NULL
       )

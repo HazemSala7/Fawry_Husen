@@ -173,6 +173,7 @@ addOrder(
         Provider.of<CartProvider>(context, listen: false).cartItems;
     List<Map<String, dynamic>> products = [];
     double totalPrice = 0.0;
+
     for (var i = 0; i < cartProvider.length; i++) {
       products.add({
         "id": cartProvider[i].productId.toString(),
@@ -182,7 +183,7 @@ addOrder(
             "sku": cartProvider[i].sku.toString(),
             "name": cartProvider[i].name.toString(),
             "price": cartProvider[i].price.toString(),
-            "quantity": 1,
+            "quantity": cartProvider[i].quantity.toString(),
             "size": cartProvider[i].type.toString(),
             "nickname": cartProvider[i].nickname.toString(),
             "vendor_sku": cartProvider[i].vendor_sku.toString(),
@@ -191,10 +192,9 @@ addOrder(
           }
         ]
       });
-      totalPrice += double.parse(cartProvider[i].price.toString());
+      totalPrice += double.parse(cartProvider[i].price.toString()) *
+          double.parse(cartProvider[i].quantity.toString());
     }
-    print("totalPrice");
-    print(totalPrice);
 
     var headers = {'Content-Type': 'application/json'};
     var request = http.Request(
@@ -368,6 +368,8 @@ getProductByCategory(category_id, sub_category_key, String size,
     if (selected_sizes != '' && selected_sizes.toString() != "null") {
       Final_URL += "&size=$selected_sizes";
     }
+    print("Final_URL");
+    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -447,7 +449,7 @@ getCoupunRedeem(code) async {
   var res = json.decode(utf8.decode(response.bodyBytes));
 }
 
-Future<Map<int, bool>> checkProductAvailability(
+Future<Map<int, Map<String, dynamic>>> checkProductAvailability(
     List<Map<String, dynamic>> items) async {
   try {
     var url =
@@ -459,17 +461,20 @@ Future<Map<int, bool>> checkProductAvailability(
         await http.post(Uri.parse(url), headers: headers, body: body);
 
     var res = json.decode(response.body);
-    print("res");
-    print(res);
-    var availabilityMap = <int, bool>{};
-
+    var availabilityMap = <int, Map<String, dynamic>>{};
     for (var item in res['items']) {
       var id = item['id'];
       var availabilityStr = item['availability'];
-
-      // Check if the availability string contains 'true'
       var isAvailable = availabilityStr.contains('true');
-      availabilityMap[id] = isAvailable;
+      var availableQtyStr = availabilityStr.contains('available quantity:')
+          ? availabilityStr.split('available quantity:').last.trim()
+          : '0';
+      var availableQty = int.tryParse(availableQtyStr) ?? 0;
+
+      availabilityMap[id] = {
+        'isAvailable': isAvailable,
+        'availableQty': availableQty
+      };
     }
 
     return availabilityMap;

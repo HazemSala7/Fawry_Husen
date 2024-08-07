@@ -98,6 +98,7 @@ class CartProvider extends ChangeNotifier {
         'vendor_sku': item.vendor_sku,
         'nickname': item.nickname,
         'availability': item.availability,
+        'quantityExist': item.quantityExist,
       };
       productsArray.add(productData);
     }

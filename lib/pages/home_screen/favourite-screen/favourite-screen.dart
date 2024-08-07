@@ -157,34 +157,6 @@ class _FavouriteState extends State<Favourite> {
     );
   }
 
-  addToCart(product_ID, name, image, price, sku, vendorski, nickname,
-      cartProvider, favoriteProvider) async {
-    final newItem = CartItem(
-      availability: 1,
-      productId: product_ID,
-      name: name,
-      sku: sku,
-      vendor_sku: vendorski,
-      nickname: nickname,
-      image: image.toString(),
-      price: double.parse(price.toString()),
-      quantity: 1,
-      user_id: 0,
-      type: '',
-      placeInWarehouse: '',
-    );
-    cartProvider.addToCart(newItem);
-    Navigator.pop(context);
-    Fluttertoast.showToast(
-      msg: "تم اضافه هذا المنتج الى سله المنتجات بنجاح",
-    );
-    favoriteProvider.removeFromFavorite(product_ID);
-    setState(() {});
-    Timer(Duration(milliseconds: 500), () {
-      Fluttertoast.cancel(); // Dismiss the toast after the specified duration
-    });
-  }
-
   Widget cartCard(
       {String image = "",
       var price,

@@ -55,15 +55,8 @@ class _CategorySplashState extends State<CategorySplash> {
   Future<void> _initialize() async {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
-    double cardWidth = (screenWidth / 2) - 12; // considering crossAxisSpacing
-    double cardHeight = cardWidth * 2; // considering childAspectRatio
-    print("cardWidth");
-    print(cardWidth);
-    print(cardHeight);
-    var _titleName = await FirebaseRemoteConfigClass().fetchtitleHomePage();
-    setState(() {
-      titleName = _titleName.toString();
-    });
+    double cardWidth = (screenWidth / 2) - 12;
+    double cardHeight = cardWidth * 2;
 
     _prefs = await SharedPreferences.getInstance();
     _checkAndShowCoupon();
@@ -276,8 +269,8 @@ class _CategorySplashState extends State<CategorySplash> {
                   } else {
                     if (snapshot.data != null) {
                       return FlashSalesList(
-                          shortlisted: snapshot.data["items"],
-                          title: titleName);
+                        shortlisted: snapshot.data["items"],
+                      );
                     } else {
                       return Container(
                         height: MediaQuery.of(context).size.height * 0.25,
@@ -287,16 +280,6 @@ class _CategorySplashState extends State<CategorySplash> {
                     }
                   }
                 }),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Text("الأقسام الرئيسية : ",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20))
-                ],
-              ),
-            ),
             GridViewCategories()
           ],
         ),

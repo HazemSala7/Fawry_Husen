@@ -776,7 +776,7 @@ class _ProductItemState extends State<ProductItem> {
                           ? Matrix4.translationValues(5, 0, 0)
                           : Matrix4.identity(),
                       child: Container(
-                        width: 100,
+                        width: 120,
                         height: 50,
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -873,6 +873,7 @@ class _ProductItemState extends State<ProductItem> {
                           } else {
                             if (widget.inCart) {
                               final newItem = CartItem(
+                                  quantityExist: widget.quantityAvailable,
                                   sku: widget.SKU,
                                   availability: 1,
                                   vendor_sku: widget.vendor_SKU,
@@ -904,6 +905,7 @@ class _ProductItemState extends State<ProductItem> {
                                 listClick(widgetKey);
                                 Vibration.vibrate(duration: 300);
                                 final newItem = CartItem(
+                                    quantityExist: widget.quantityAvailable,
                                     sku: widget.SKU,
                                     availability: 1,
                                     vendor_sku: widget.vendor_SKU,

@@ -1,3 +1,4 @@
+import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:lottie/lottie.dart';
@@ -10,12 +11,10 @@ import '../../server/functions/functions.dart';
 
 class FlashSalesList extends StatefulWidget {
   final List shortlisted;
-  final String title;
 
   FlashSalesList({
     Key? key,
     required this.shortlisted,
-    required this.title,
   }) : super(key: key);
 
   @override
@@ -28,8 +27,17 @@ class _FlashSalesListState extends State<FlashSalesList> {
   bool _isLoading = false;
   bool _isEndReached = false;
 
+  String titleName = "";
+  Future<void> _initialize() async {
+    var _titleName = await FirebaseRemoteConfigClass().fetchtitleHomePage();
+    setState(() {
+      titleName = _titleName.toString();
+    });
+  }
+
   @override
   void initState() {
+    _initialize();
     super.initState();
     _scrollController.addListener(_onScroll);
   }
@@ -89,7 +97,7 @@ class _FlashSalesListState extends State<FlashSalesList> {
             child: Row(
               children: [
                 Text(
-                  widget.title,
+                  titleName,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
               ],

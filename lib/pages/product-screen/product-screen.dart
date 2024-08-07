@@ -473,13 +473,14 @@ class _ProductScreenState extends State<ProductScreen> {
                                           images: [widget.Product[i]["image"]],
                                           description: [],
                                           new_price: double.parse(widget
-                                              .Product[i]["price"]
-                                              .toString()),
-                                          old_price: double.parse(widget
-                                              .Product[i]["price"]
-                                              .toString()),
-                                          image: widget.Product[i]["image"]
-                                              as String,
+                                                  .Product[i]["price"]
+                                                  .toString()) *
+                                              double.parse(
+                                                  widget.priceMul.toString()),
+                                          old_price: double.parse(
+                                                  widget.Product[i]["price"].toString()) *
+                                              double.parse(widget.priceMul.toString()),
+                                          image: widget.Product[i]["image"] as String,
                                           sizesApi: [],
                                           TypeApi: false,
                                           placeInWarehouse: {}),
@@ -540,15 +541,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                           images: widget.Product[i]
                                               ["vendor_images_links"],
                                           description: [],
-                                          new_price: double.parse(widget
-                                              .Product[i]["price"]
-                                              .toString()),
-                                          old_price: double.parse(widget
-                                              .Product[i]["price"]
-                                              .toString()),
+                                          new_price: double.parse(widget.Product[i]["price"].toString()) *
+                                              double.parse(
+                                                  widget.priceMul.toString()),
+                                          old_price:
+                                              double.parse(widget.Product[i]["price"].toString()) *
+                                                  double.parse(widget.priceMul
+                                                      .toString()),
                                           image: widget.Product[i]
-                                                  ["vendor_images_links"][0]
-                                              as String,
+                                              ["vendor_images_links"][0] as String,
                                           sizesApi: [],
                                           TypeApi: false,
                                           placeInWarehouse: {}),
