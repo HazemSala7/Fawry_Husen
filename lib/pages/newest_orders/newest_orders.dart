@@ -132,9 +132,9 @@ class _NewestOrdersState extends State<NewestOrders> {
                               onTap: () {
                                 setState(() {
                                   _heightList[index] =
-                                      _heightList[index] == 100.0
+                                      _heightList[index] == 110.0
                                           ? 550.0
-                                          : 100.0;
+                                          : 110.0;
                                 });
                               },
                               child: Padding(
@@ -199,7 +199,7 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                       Padding(
                                                         padding:
                                                             const EdgeInsets
-                                                                    .only(
+                                                                .only(
                                                                 right: 10),
                                                         child: Text(
                                                           "# ${orders[index].order_id}",
@@ -282,7 +282,17 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                       height: 30,
                                                     ),
                                                     Text(
-                                                      "${orders[index].sum}₪",
+                                                      orders[index].sum != null
+                                                          ? (orders[index].sum
+                                                                  is double
+                                                              ? "₪${(orders[index].sum as double).round().toString()}"
+                                                              : (double.tryParse(
+                                                                          orders[index]
+                                                                              .sum) !=
+                                                                      null
+                                                                  ? "₪${double.parse(orders[index].sum).round().toString()}"
+                                                                  : "₪0"))
+                                                          : "₪0",
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -340,8 +350,9 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                                                 context,
                                                                             int indexProducts) {
                                                                       return Padding(
-                                                                        padding:
-                                                                            const EdgeInsets.all(8.0),
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
                                                                         child:
                                                                             Container(
                                                                           width:
@@ -465,5 +476,5 @@ class _NewestOrdersState extends State<NewestOrders> {
     );
   }
 
-  List<double> _heightList = List.generate(6, (index) => 100.0);
+  List<double> _heightList = List.generate(6, (index) => 110.0);
 }

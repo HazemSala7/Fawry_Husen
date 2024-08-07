@@ -265,7 +265,13 @@ class Oorder_detaDsState extends State<OrderDetails> {
                           ],
                         ),
                         Text(
-                          "${widget.sun}₪",
+                          widget.sun != null
+                              ? (widget.sun is double
+                                  ? "₪${(widget.sun as double).round().toString()}"
+                                  : (double.tryParse(widget.sun) != null
+                                      ? "₪${double.parse(widget.sun).round().toString()}"
+                                      : "₪0"))
+                              : "₪0",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 28,

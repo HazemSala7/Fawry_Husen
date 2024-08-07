@@ -379,6 +379,8 @@ class _ProductItemState extends State<ProductItem> {
                                 children: [
                                   InkWell(
                                       onTap: () {
+                                        // Share.share(
+                                        //     "https://www.fawri.co/product-details-one/${widget.id}?offset=1");
                                         Share.share(
                                             "https://www.fawri.co/product-details-one/${widget.id}?offset=1");
                                       },
