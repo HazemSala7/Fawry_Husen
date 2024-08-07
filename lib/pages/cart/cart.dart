@@ -602,6 +602,10 @@ class _CartState extends State<Cart> {
                                                   ),
                                                 );
                                                 setState(() {});
+                                              } else {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        "لا يمكن اضافة المزيد");
                                               }
                                             },
                                             child: Container(

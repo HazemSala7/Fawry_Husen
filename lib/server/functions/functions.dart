@@ -175,6 +175,8 @@ addOrder(
     double totalPrice = 0.0;
 
     for (var i = 0; i < cartProvider.length; i++) {
+      print("cartProvider[i].quantity.toString()");
+      print(cartProvider[i].quantity.toString());
       products.add({
         "id": cartProvider[i].productId.toString(),
         "image": cartProvider[i].image.toString(),
@@ -183,7 +185,7 @@ addOrder(
             "sku": cartProvider[i].sku.toString(),
             "name": cartProvider[i].name.toString(),
             "price": cartProvider[i].price.toString(),
-            "quantity": cartProvider[i].quantity.toString(),
+            "quantity": int.parse(cartProvider[i].quantity.toString()),
             "size": cartProvider[i].type.toString(),
             "nickname": cartProvider[i].nickname.toString(),
             "vendor_sku": cartProvider[i].vendor_sku.toString(),
@@ -197,8 +199,8 @@ addOrder(
     }
 
     var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-        'POST', Uri.parse('$URL_ADD_ORDER?api_key=H93J48593HFNWIEUTR287TG3'));
+    var request =
+        http.Request('POST', Uri.parse('$URL_ADD_ORDER?api_key=$key_bath'));
     request.body = json.encode({
       "name": name.toString(),
       "page": "Fawri App",
@@ -222,6 +224,7 @@ addOrder(
       var now = new DateTime.now();
       var formatter = new DateFormat('yyyy-MM-dd');
       String formattedDate = formatter.format(now);
+      print("1");
 
       OrderFirebaseModel newItem = OrderFirebaseModel(
           id: Order_ID,
@@ -232,6 +235,7 @@ addOrder(
           user_id: UserID.toString(),
           created_at: formattedDate.toString());
       orderService.addUser(newItem);
+      print("2");
       UsedCoponsFirebaseModel newUsedCoponItem = UsedCoponsFirebaseModel(
         id: usedCopon_ID,
         copon: usedCopon_ID.toString(),
@@ -239,6 +243,7 @@ addOrder(
         user_id: UserID.toString(),
       );
       usedCoponService.addUsedCopon(newUsedCoponItem);
+      print("3");
     } else {
       print(response.reasonPhrase);
     }

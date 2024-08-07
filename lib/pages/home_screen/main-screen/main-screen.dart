@@ -139,8 +139,8 @@ class _MainScreenState extends State<MainScreen> {
                                 double width = constraints.maxWidth;
                                 double height = constraints.maxHeight;
 
-                                double cardWidth = (width - 6);
-                                double cardHeight = cardWidth * 0.5;
+                                double cardWidth = 420;
+                                double cardHeight = 420;
                                 return GridView.builder(
                                     cacheExtent: 5000,
                                     controller: _controller,
