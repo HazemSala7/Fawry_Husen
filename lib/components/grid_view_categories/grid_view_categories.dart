@@ -24,18 +24,28 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   String categoryDesc = "";
   String categoryImage = "";
   String categoryPath = "";
+  List<int> discountCategories = [];
 
   setControllers() async {
+    var _discountCategories =
+        await FirebaseRemoteConfigClass().fetchDiscountCategories();
     var _categoryName = await FirebaseRemoteConfigClass().fetchCategoryName();
     var _categoryDesc = await FirebaseRemoteConfigClass().fetchCategoryDesc();
     var _categoryImage = await FirebaseRemoteConfigClass().fetchCategoryImage();
     var _categoryPath = await FirebaseRemoteConfigClass().fetchCategoryPath();
     setState(() {
+      discountCategories = (_discountCategories)
+          .map((category) => int.parse(category.toString()))
+          .toList();
       categoryName = _categoryName.toString();
       categoryDesc = _categoryDesc.toString();
       categoryImage = _categoryImage.toString();
       categoryPath = _categoryPath.toString();
     });
+  }
+
+  bool _isDiscountCategory() {
+    return discountCategories.contains(int.tryParse(categoryPath));
   }
 
   @override
@@ -55,16 +65,13 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
     return Column(
       children: [
         Visibility(
-          visible: _isCategoryDataValid(), // Check if all data is valid
+          visible: _isCategoryDataValid(),
           child: InkWell(
             onTap: () {
-              // Your existing onTap logic here
               bool All = false;
               bool Women = false;
               bool Men = false;
               bool Kids = false;
-
-              // Replace the following logic with the original `onTap` functionality
               if (categoryPath.toString() == "5") {
                 NavigatorFunction(context, ShoesCategoryDialog());
               } else if (categoryPath.toString() == "3") {
@@ -406,12 +413,35 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             childAspectRatio: 1.1,
           ),
           itemBuilder: (context, index) {
-            return CategoryWidget(
-              main_category: categories[index]["main_category"],
-              name: categories[index]["name"],
-              CateImage: categories[index]["icon"],
-              CateIcon: categories[index]["icon"],
-              image: categories[index]["image"],
+            bool isDiscounted = discountCategories
+                .contains(int.parse(categories[index]["id"].toString()));
+            return Stack(
+              children: [
+                CategoryWidget(
+                  main_category: categories[index]["main_category"],
+                  name: categories[index]["name"],
+                  CateImage: categories[index]["icon"],
+                  CateIcon: categories[index]["icon"],
+                  image: categories[index]["image"],
+                ),
+                if (isDiscounted)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(4.0),
+                      color: Colors.red,
+                      child: Text(
+                        'SALE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),

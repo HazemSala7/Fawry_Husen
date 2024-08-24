@@ -37,16 +37,18 @@ class CartProvider extends ChangeNotifier {
   }
 
   Future<void> addToCart(CartItem item) async {
-    final existingIndex = _cartItems
-        .indexWhere((cartItem) => cartItem.productId == item.productId);
+    final existingIndex = _cartItems.indexWhere(
+      (cartItem) =>
+          cartItem.productId == item.productId && cartItem.type == item.type,
+    );
 
     if (existingIndex != -1) {
-      // Item already exists in the cart, increment the quantity
+      // Item with the same product ID and size already exists in the cart, increment the quantity
       _cartItems[existingIndex].quantity += item.quantity;
       await _dbHelper.updateCartItem(
           _cartItems[existingIndex]); // Update the item in the database
     } else {
-      // Item does not exist in the cart, add it as a new item
+      // Item does not exist in the cart or has a different size, add it as a new item
       await _dbHelper.insertCartItem(item);
       _cartItems.add(item);
     }
@@ -57,9 +59,19 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> removeFromCart(int productId) async {
-    await _dbHelper.deleteCartItem(productId);
-    _cartItems.removeWhere((item) => item.productId == productId);
+  Future<void> removeFromCart(int productId, {String? selectedSize}) async {
+    if (selectedSize != null) {
+      // Remove the item with the specific product ID and size
+      await _dbHelper.deleteCartItemByProductIdAndSize(productId, selectedSize);
+      _cartItems.removeWhere(
+          (item) => item.productId == productId && item.type == selectedSize);
+    } else {
+      // Remove all items with the specific product ID, regardless of size
+      await _dbHelper.deleteCartItemByProductIdAndSize(
+          productId, selectedSize!);
+      _cartItems.removeWhere((item) => item.productId == productId);
+    }
+
     notifyListeners();
   }
 
@@ -76,8 +88,14 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool isProductCart(int productId) {
-    return _cartItems.any((item) => item.productId == productId);
+  bool isProductCart(int productId, {String? selectedSize}) {
+    return _cartItems.any((item) {
+      if (selectedSize != null) {
+        return item.productId == productId && item.type == selectedSize;
+      } else {
+        return item.productId == productId;
+      }
+    });
   }
 
   Future<CartItem?> getCartItemByProductId(int productId) async {

@@ -206,46 +206,46 @@ class _LoginScreenState extends State<LoginScreen> {
                                     // SizedBox(
                                     //   width: 15,
                                     // ),
-                                    // Container(
-                                    //   height: 50,
-                                    //   width: 50,
-                                    //   decoration: BoxDecoration(
-                                    //       shape: BoxShape.circle,
-                                    //       color: MAIN_COLOR),
-                                    //   child: Center(
-                                    //     child: IconButton(
-                                    //         onPressed: () async {
-                                    //           showDialog(
-                                    //               context: context,
-                                    //               barrierDismissible: false,
-                                    //               builder:
-                                    //                   (BuildContext context) {
-                                    //                 return Column(
-                                    //                   mainAxisAlignment:
-                                    //                       MainAxisAlignment
-                                    //                           .center,
-                                    //                   children: [
-                                    //                     Card(
-                                    //                         color: Colors.white,
-                                    //                         child: Container(
-                                    //                             padding:
-                                    //                                 const EdgeInsets
-                                    //                                     .all(
-                                    //                                     50),
-                                    //                             child:
-                                    //                                 const CircularProgressIndicator())),
-                                    //                   ],
-                                    //                 );
-                                    //               });
-                                    //           await signInWithFacebook();
-                                    //         },
-                                    //         icon: Icon(
-                                    //           FontAwesome.facebook,
-                                    //           color: Colors.white,
-                                    //           size: 30,
-                                    //         )),
-                                    //   ),
-                                    // ),
+                                    Container(
+                                      height: 50,
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: MAIN_COLOR),
+                                      child: Center(
+                                        child: IconButton(
+                                            onPressed: () async {
+                                              showDialog(
+                                                  context: context,
+                                                  barrierDismissible: false,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Card(
+                                                            color: Colors.white,
+                                                            child: Container(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .all(
+                                                                        50),
+                                                                child:
+                                                                    const CircularProgressIndicator())),
+                                                      ],
+                                                    );
+                                                  });
+                                              await signInWithFacebook();
+                                            },
+                                            icon: Icon(
+                                              FontAwesome.facebook,
+                                              color: Colors.white,
+                                              size: 30,
+                                            )),
+                                      ),
+                                    ),
                                     SizedBox(
                                       width: 15,
                                     ),
@@ -360,6 +360,8 @@ class _LoginScreenState extends State<LoginScreen> {
               selectedIndex: 0,
             ));
       }).catchError((error) {
+        print("error1");
+        print(error);
         Navigator.pop(context);
         Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
       });
@@ -367,6 +369,8 @@ class _LoginScreenState extends State<LoginScreen> {
       // Once signed in, return the UserCredential
       return data;
     } catch (e) {
+      print("error2");
+      print(e);
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "حدث خطأ ما , الرجاء المحاوله فيما بعد");
     }

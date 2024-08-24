@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:firebase_app_installations/firebase_app_installations.dart'; // Ensure this is the correct import
 import 'local_notification_service.dart';
 
 Future<void> onBackgroundMessage(RemoteMessage message) async {
@@ -12,12 +12,10 @@ Future<void> onBackgroundMessage(RemoteMessage message) async {
   if (message.data.containsKey('type')) {
     final type = message.data['type'];
     // Handle data message based on type
-    // You can perform background operations or save to local storage here
   }
 
-  // Handle notification message
   if (message.notification != null) {
-    // Perform actions based on notification details if needed
+    // Handle notification message
   }
 }
 
@@ -71,11 +69,8 @@ class FCM {
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
         LocalNotificationService.display(message);
-        // Handle foreground notification
         print(message.notification!.body);
         print(message.notification!.title);
-        // Add logic to navigate to page if needed
-        // You might use local state or other mechanisms here
       }
     });
 
@@ -86,6 +81,8 @@ class FCM {
     final token = await _firebaseMessaging.getToken();
     print("token");
     print(token);
+    // final installationId = await FirebaseAppInstallations.instance.getId();
+    // print('Firebase Installation ID: $installationId');
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('device_token', token.toString());
   }

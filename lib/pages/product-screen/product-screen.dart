@@ -95,12 +95,37 @@ class _ProductScreenState extends State<ProductScreen> {
   }
 
   var orderedItems = [];
+  final CarouselController _carouselController = CarouselController();
+  bool _hasShownTutorial = false;
+
+  Future<void> _checkIfTutorialShown() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _hasShownTutorial = prefs.getBool('hasShownTutorial') ?? false;
+
+    if (!_hasShownTutorial) {
+      _showSwipeTutorial();
+    }
+  }
+
+  Future<void> _showSwipeTutorial() async {
+    // Perform swipe animation
+    await Future.delayed(Duration(seconds: 1)); // Initial delay before starting
+    _carouselController.nextPage(
+        duration: Duration(milliseconds: 800), curve: Curves.easeInOut);
+    await Future.delayed(Duration(milliseconds: 900));
+    _carouselController.previousPage(
+        duration: Duration(milliseconds: 800), curve: Curves.easeInOut);
+
+    // Mark the tutorial as shown
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('hasShownTutorial', true);
+  }
 
   int _currentPage = 0;
   @override
   void initState() {
     super.initState();
-
+    _checkIfTutorialShown();
     setUserID();
     loadInitialData();
   }
@@ -425,6 +450,7 @@ class _ProductScreenState extends State<ProductScreen> {
                 ? widget.cart_fav
                     ? AnimationLimiter(
                         child: CarouselSlider(
+                          carouselController: _carouselController,
                           options: CarouselOptions(
                             aspectRatio: 2.5,
                             autoPlay: false,
@@ -465,8 +491,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                           nickname: "",
                                           variants: [],
                                           vendor_SKU: "",
-                                          inCart: cartProvider.isProductCart(
-                                              widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
@@ -477,10 +501,13 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   .toString()) *
                                               double.parse(
                                                   widget.priceMul.toString()),
-                                          old_price: double.parse(
-                                                  widget.Product[i]["price"].toString()) *
-                                              double.parse(widget.priceMul.toString()),
-                                          image: widget.Product[i]["image"] as String,
+                                          old_price: double.parse(widget
+                                                  .Product[i]["price"]
+                                                  .toString()) *
+                                              double.parse(
+                                                  widget.priceMul.toString()),
+                                          image: widget.Product[i]["image"]
+                                              as String,
                                           sizesApi: [],
                                           TypeApi: false,
                                           placeInWarehouse: {}),
@@ -494,6 +521,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       )
                     : AnimationLimiter(
                         child: CarouselSlider(
+                          carouselController: _carouselController,
                           options: CarouselOptions(
                             aspectRatio: 2.5,
                             autoPlay: false,
@@ -533,15 +561,15 @@ class _ProductScreenState extends State<ProductScreen> {
                                           nickname: "",
                                           variants: [],
                                           vendor_SKU: "",
-                                          inCart: cartProvider.isProductCart(
-                                              widget.Product[i]["id"]),
                                           name: widget.Product[i]["title"]
                                               as String,
                                           id: widget.Product[i]["id"],
                                           images: widget.Product[i]
                                               ["vendor_images_links"],
                                           description: [],
-                                          new_price: double.parse(widget.Product[i]["price"].toString()) *
+                                          new_price: double.parse(widget
+                                                  .Product[i]["price"]
+                                                  .toString()) *
                                               double.parse(
                                                   widget.priceMul.toString()),
                                           old_price:
@@ -549,7 +577,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                                   double.parse(widget.priceMul
                                                       .toString()),
                                           image: widget.Product[i]
-                                              ["vendor_images_links"][0] as String,
+                                                  ["vendor_images_links"][0]
+                                              as String,
                                           sizesApi: [],
                                           TypeApi: false,
                                           placeInWarehouse: {}),
@@ -563,6 +592,7 @@ class _ProductScreenState extends State<ProductScreen> {
                       )
                 : AnimationLimiter(
                     child: CarouselSlider(
+                      carouselController: _carouselController,
                       options: CarouselOptions(
                         aspectRatio: 2.5,
                         autoPlay: false,
@@ -649,8 +679,6 @@ class _ProductScreenState extends State<ProductScreen> {
                                         : "اختر مقاسك",
                                     isLikedProduct: favouriteProvider
                                         .isProductFavorite(item["id"]),
-                                    inCart:
-                                        cartProvider.isProductCart(item["id"]),
                                     name: item["title"] ?? "-",
                                     sizesApi: sizesAPI,
                                     id: item["id"],

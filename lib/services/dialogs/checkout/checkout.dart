@@ -1,14 +1,19 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:confetti/confetti.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/firebase/order/OrderFirebaseModel.dart';
+import 'package:fawri_app_refactor/model/Area/area.dart';
+import 'package:fawri_app_refactor/model/City/city.dart';
 import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
+import 'package:fawri_app_refactor/services/dialogs/checkout/area_city_service/area_city_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -17,7 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vibration/vibration.dart';
-
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../../LocalDB/Models/AddressItem.dart';
 import '../../../LocalDB/Provider/AddressProvider.dart';
 import '../../../LocalDB/Provider/CartProvider.dart';
@@ -42,6 +47,11 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   String dropdownValue = 'اختر منطقتك';
   ConfettiController? _confettiController;
   var oldTotal;
+  String? selectedCityId;
+  City? selectedCity1;
+  Area? selectedArea1;
+  List<City> cities = [];
+  List<Area> areas = [];
 
   bool status = false;
   bool checkCopon = false;
@@ -66,6 +76,13 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
       PhoneController.text = "";
     }
     oldTotal = widget.total.toString();
+    cities = CityService().loadCities();
+    final addressItems = context.read<AddressProvider>().addressItems;
+    if (addressItems.isNotEmpty && selectedArea == null) {
+      setState(() {
+        finalSelectedArea = addressItems[0].name;
+      });
+    }
     setState(() {});
   }
 
@@ -80,15 +97,6 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
         });
       });
     _confettiController = ConfettiController(duration: Duration(seconds: 2));
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final addressprovider =
-          Provider.of<AddressProvider>(context, listen: false);
-      if (addressprovider.addressItems.isNotEmpty) {
-        setState(() {
-          selectedArea = addressprovider.addressItems[0].name;
-        });
-      }
-    });
     super.initState();
   }
 
@@ -168,8 +176,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
   bool editName = false;
   bool editPhone = false;
   bool chooseAddress = false;
-  String selectedCity = 'الخليل';
-  String selectedArea = 'اختر العنوان';
+  City? selectedCity;
+  Area? selectedArea;
+  String finalSelectedArea = "";
   TextEditingController cityController = TextEditingController();
   TextEditingController addressController = TextEditingController();
 
@@ -364,9 +373,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
               String? selectedValue =
                   addressItems.isNotEmpty ? addressItems[0].name : null;
               if (selectedArea == null && addressItems.isNotEmpty) {
-                setState(() {
-                  selectedArea = addressItems[0].name;
-                });
+                finalSelectedArea = addressItems[0].name;
               }
 
               return Visibility(
@@ -386,7 +393,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                           .toList(),
                       onChanged: (value) {
                         setState(() {
-                          selectedArea = value!;
+                          selectedArea = value! as Area?;
                         });
                       },
                       decoration: InputDecoration(
@@ -411,129 +418,147 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return AlertDialog(
-                      backgroundColor: Colors.white,
-                      shadowColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(4.0))),
-                      elevation: 0,
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5, left: 15, bottom: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "المنطقة",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                          ),
-                          dropdownValue.toString() == "الضفه الغربيه"
-                              ? DropdownButtonFormField(
+                    return StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return AlertDialog(
+                          backgroundColor: Colors.white,
+                          shadowColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4.0))),
+                          elevation: 0,
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 5, left: 15, bottom: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "المنطقة",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                        color: MAIN_COLOR, width: 2.0)),
+                                child: DropdownButtonFormField<City>(
                                   value: selectedCity,
-                                  items: defaCities
-                                      .map((area) => DropdownMenuItem(
-                                            child: Text(area),
-                                            value: area,
-                                          ))
-                                      .toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedCity = value.toString();
-                                    });
-                                  },
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: MAIN_COLOR, width: 2.0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1.0, color: MAIN_COLOR),
-                                    ),
+                                  hint: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text('اختر المنطقة التابعة'),
+                                    ],
                                   ),
-                                )
-                              : TextFormField(
-                                  controller: cityController,
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: MAIN_COLOR, width: 2.0),
+                                  onChanged: (City? city) async {
+                                    setState(() {
+                                      areas = [];
+                                      selectedCity = city;
+                                      selectedArea = null;
+                                    });
+                                    areas = await CityService()
+                                        .loadAreasFromCsv(city!);
+                                    setState(() {});
+                                  },
+                                  items: cities.map((city) {
+                                    return DropdownMenuItem<City>(
+                                      value: city,
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(city.name),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              if (selectedCity != null)
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(4),
+                                      border: Border.all(
+                                          color: MAIN_COLOR, width: 2.0)),
+                                  child: DropdownButtonFormField<Area>(
+                                    value: selectedArea,
+                                    hint: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text('اختر المنطقة التابعة'),
+                                      ],
                                     ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          width: 1.0, color: MAIN_COLOR),
-                                    ),
+                                    onChanged: (Area? area) {
+                                      setState(() {
+                                        selectedArea = area!;
+                                      });
+                                    },
+                                    items: areas.map((area) {
+                                      return DropdownMenuItem<Area>(
+                                        value: area,
+                                        child: Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 10,
+                                            ),
+                                            Text(area.name),
+                                          ],
+                                        ),
+                                      );
+                                    }).toList(),
                                   ),
                                 ),
-                          SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 5, bottom: 10, left: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "العنوان",
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
+                            ],
                           ),
-                          TextFormField(
-                            controller: addressController,
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: MAIN_COLOR, width: 2.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1.0, color: MAIN_COLOR),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      actions: <Widget>[
-                        ButtonWidget(
-                            name: "تأكيد العنوان",
-                            height: 40,
-                            width: double.infinity,
-                            BorderColor: MAIN_COLOR,
-                            OnClickFunction: () async {
-                              final addressProviderFinal =
-                                  Provider.of<AddressProvider>(context,
-                                      listen: false);
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String UserID = prefs.getString('user_id') ?? "";
-                              final newItem = AddressItem(
-                                user_id: UserID,
-                                name:
-                                    "${dropdownValue.toString() == "الضفه الغربيه" ? selectedCity : cityController.text} ,${addressController.text} ",
-                              );
-                              addressProviderFinal.addToAddress(newItem);
-                              Fluttertoast.showToast(
-                                  msg: "تم اضافة العنوان بنجاح");
-                              setState(() {
-                                selectedArea = newItem.name.toString();
-                              });
-                              Navigator.pop(context);
-                            },
-                            BorderRaduis: 10,
-                            ButtonColor: MAIN_COLOR,
-                            NameColor: Colors.white)
-                      ],
+                          actions: <Widget>[
+                            if (selectedCity != null && selectedArea != null)
+                              ButtonWidget(
+                                  name: "تأكيد العنوان",
+                                  height: 40,
+                                  width: double.infinity,
+                                  BorderColor: MAIN_COLOR,
+                                  OnClickFunction: () async {
+                                    final addressProviderFinal =
+                                        Provider.of<AddressProvider>(context,
+                                            listen: false);
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    String UserID =
+                                        prefs.getString('user_id') ?? "";
+                                    final newItem = AddressItem(
+                                      user_id: UserID,
+                                      name:
+                                          "${dropdownValue.toString() == "الضفه الغربيه" ? selectedCity!.name : cityController.text} ,${selectedArea!.name}",
+                                    );
+
+                                    addressProviderFinal.addToAddress(newItem);
+                                    Fluttertoast.showToast(
+                                        msg: "تم اضافة العنوان بنجاح");
+
+                                    Navigator.pop(context);
+                                  },
+                                  BorderRaduis: 10,
+                                  ButtonColor: MAIN_COLOR,
+                                  NameColor: Colors.white)
+                          ],
+                        );
+                      },
                     );
                   },
                 );
@@ -545,9 +570,7 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                     FontAwesomeIcons.plus,
                     size: 20,
                   ),
-                  SizedBox(
-                    width: 10,
-                  ),
+                  SizedBox(width: 10),
                   Text(
                     "اضافة عنوان جديد",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
@@ -697,8 +720,8 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                               : widget.total.toString();
                               await addOrder(
                                   context: context,
-                                  address: selectedArea.toString(),
-                                  city: selectedArea.toString(),
+                                  address: finalSelectedArea.toString(),
+                                  city: finalSelectedArea.toString(),
                                   phone: PhoneController.text,
                                   name: NameController.text,
                                   description: OrderController.text,
@@ -712,13 +735,13 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                               await prefs.setString(
                                   'name', NameController.text);
                               await prefs.setString(
-                                  'city', selectedArea.toString());
+                                  'city', finalSelectedArea.toString());
                               await prefs.setString(
                                   'area', AreaController.text);
                               await prefs.setString(
                                   'phone', PhoneController.text);
                               await prefs.setString(
-                                  'address', selectedArea.toString());
+                                  'address', finalSelectedArea.toString());
                               UserItem updatedUser = UserItem(
                                 name: NameController.text,
                                 id: UserID,
@@ -727,9 +750,9 @@ class _CheckoutBottomDialogState extends State<CheckoutBottomDialog> {
                                 phone: PhoneController.text,
                                 gender: '',
                                 birthdate: '',
-                                city: selectedArea.toString(),
-                                area: selectedArea.toString(),
-                                address: selectedArea.toString(),
+                                city: finalSelectedArea.toString(),
+                                area: finalSelectedArea.toString(),
+                                address: finalSelectedArea.toString(),
                                 password: '123',
                               );
                               try {

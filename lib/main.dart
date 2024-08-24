@@ -1,6 +1,7 @@
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/AddressProvider.dart';
 import 'package:fawri_app_refactor/pages/authentication/login_screen/login_screen.dart';
+import 'package:fawri_app_refactor/pages/cart/cart.dart';
 import 'package:fawri_app_refactor/pages/choose-size-shoes/choose-size-shoes.dart';
 import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/code_birthdate/code_birthdate.dart';
@@ -9,6 +10,7 @@ import 'package:fawri_app_refactor/pages/privacy_policy/privacy_policy.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/pages/remain_birthdate/remain_birthdate.dart';
 import 'package:fawri_app_refactor/services/notifications/notifications.dart';
+import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
+import 'package:uni_links/uni_links.dart';
 import 'LocalDB/Provider/CartProvider.dart';
 import 'LocalDB/Provider/FavouriteProvider.dart';
 import 'firebase/cart/CartProvider.dart';
@@ -29,6 +32,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseInAppMessaging.instance.setAutomaticDataCollectionEnabled(true);
   await LocalStorage().initHive();
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   runApp(MultiProvider(
@@ -48,12 +52,50 @@ class Fawri extends StatefulWidget {
   State<Fawri> createState() => _FawriState();
 }
 
+void handleDeepLink(String link, BuildContext context) {
+  final Uri uri = Uri.parse(link);
+  final String? productId = uri.queryParameters['product_id'];
+
+  NavigatorFunction(context, Cart());
+}
+
 class _FawriState extends State<Fawri> {
   bool FirstScreen = false;
+  Future<void> _initDeepLinkHandler() async {
+    try {
+      // For app launches from a cold state
+      final initialLink = await getInitialLink();
+      _handleDeepLink(initialLink);
+
+      // For app launches from a background state
+      linkStream.listen((link) {
+        _handleDeepLink(link);
+      });
+    } catch (e) {
+      print('Error handling deep link: $e');
+    }
+  }
+
+  void _handleDeepLink(String? link) {
+    if (link != null) {
+      final uri = Uri.parse(link);
+      final category = uri.queryParameters['category'];
+      final productId = uri.queryParameters['productId'];
+
+      if (category != null) {
+        // Navigate to category page
+        print('Navigate to category: $category');
+      } else if (productId != null) {
+        // Navigate to product page
+        print('Navigate to product: $productId');
+      }
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _initDeepLinkHandler();
     ios_push();
     final firebaseMessaging = FCM();
     firebaseMessaging.setNotifications(context);

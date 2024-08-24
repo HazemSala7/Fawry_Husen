@@ -35,7 +35,7 @@ class ProductItem extends StatefulWidget {
   List sizesApi, images, Sizes;
   int id = 0, quantity, quantityAvailable;
   bool featureProduct = false;
-  bool inCart, isLikedProduct, loadingPage, TypeApi, showQuantitySelector;
+  bool isLikedProduct, loadingPage, TypeApi, showQuantitySelector;
   ProductItem({
     super.key,
     required this.showQuantitySelector,
@@ -55,7 +55,6 @@ class ProductItem extends StatefulWidget {
     required this.description,
     required this.old_price,
     required this.new_price,
-    required this.inCart,
     required this.isLikedProduct,
     required this.placeInWarehouse,
     required this.sizesApi,
@@ -873,7 +872,8 @@ class _ProductItemState extends State<ProductItem> {
                               });
                             });
                           } else {
-                            if (widget.inCart) {
+                            if (cartProvider.isProductCart(widget.id,
+                                selectedSize: widget.SelectedSizes)) {
                               final newItem = CartItem(
                                   quantityExist: widget.quantityAvailable,
                                   sku: widget.SKU,
@@ -895,7 +895,8 @@ class _ProductItemState extends State<ProductItem> {
                                           widget.SelectedSizes] ??
                                       "0000");
 
-                              cartProvider.removeFromCart(widget.id);
+                              cartProvider.removeFromCart(widget.id,
+                                  selectedSize: widget.SelectedSizes);
                               setState(() {});
                             } else {
                               if (widget.SelectedSizes != "اختر مقاسك" &&
@@ -913,7 +914,6 @@ class _ProductItemState extends State<ProductItem> {
                                     vendor_sku: widget.vendor_SKU,
                                     nickname: widget.nickname,
                                     productId: widget.id,
-                                    id: widget.id,
                                     name: widget.name,
                                     image: widget.image.toString(),
                                     price: double.parse(
@@ -1004,7 +1004,10 @@ class _ProductItemState extends State<ProductItem> {
                           ),
                         ),
                         child: Text(
-                          widget.inCart ? "ازاله من السله" : "أضف الى السله",
+                          cartProvider.isProductCart(widget.id,
+                                  selectedSize: widget.SelectedSizes)
+                              ? "ازاله من السله"
+                              : "أضف الى السله",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),

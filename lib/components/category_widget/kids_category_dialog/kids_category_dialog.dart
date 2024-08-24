@@ -23,6 +23,8 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
         image: "assets/images/icons8-human-head-96 (1).png"),
     CategoryItem(name: "قسم البنات", image: "assets/images/icons8-girl-96.png"),
     CategoryItem(
+        name: "للأم و الرضيع", image: "assets/images/icons8-girl-96.png"),
+    CategoryItem(
         name: "كلاهما", image: "assets/images/icons8-select-all-100.png"),
   ];
   bool isAnyItemSelected = false;
@@ -145,17 +147,19 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                     ),
                   ],
                 ),
+
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: categoryMethodForShoes(
-                    name: categoryItems[2].name,
-                    image: categoryItems[2].image,
-                    isSelected: categoryItems[2].isSelected,
+                    name: categoryItems[3].name,
+                    image: categoryItems[3].image,
+                    isSelected: categoryItems[3].isSelected,
                     onTaped: () {
                       setState(() {
-                        categoryItems[2].isSelected =
-                            !categoryItems[2].isSelected;
+                        categoryItems[3].isSelected =
+                            !categoryItems[3].isSelected;
                       });
+
                       NavigatorFunction(
                           context,
                           ShowCaseWidget(
@@ -170,6 +174,37 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
                               keys: "null",
                               sizes: "null",
                               name: "قسم الأولاد و البنات",
+                            ),
+                          )));
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: categoryMethodForShoes(
+                    name: categoryItems[2].name,
+                    image: categoryItems[2].image,
+                    isSelected: categoryItems[2].isSelected,
+                    onTaped: () {
+                      setState(() {
+                        categoryItems[2].isSelected =
+                            !categoryItems[2].isSelected;
+                      });
+
+                      NavigatorFunction(
+                          context,
+                          ShowCaseWidget(
+                              builder: Builder(
+                            builder: (context) => ProductsCategories(
+                              SIZES: [],
+                              category_id: "Women Apparel, Baby",
+                              search: false,
+                              size: "",
+                              containerWidths: "null",
+                              main_category: "Women Apparel, Baby",
+                              keys: "null",
+                              sizes: "null",
+                              name: "للرضيع و الأم",
                             ),
                           )));
                     },
@@ -257,7 +292,7 @@ class _KidsCategoryDialogState extends State<KidsCategoryDialog> {
     return Column(
       children: [
         Visibility(
-          visible: name == "كلاهما" ? false : true,
+          visible: name == "كلاهما" || name == "للأم و الرضيع" ? false : true,
           child: Image.asset(
             image,
             height: 40,

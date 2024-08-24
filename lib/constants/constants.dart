@@ -5,48 +5,56 @@ import '../services/custom_icons/custom_icons.dart';
 var MAIN_COLOR = Colors.black;
 var categories = [
   {
+    "id": "2",
     "name": "ملابس نسائيه",
     "image": "assets/images/WLanding.jpg",
     "main_category": "Women Apparel",
     "icon": "assets/categories_icons/woman-clothes.png"
   },
   {
+    "id": "1",
     "name": "ملابس رجاليه",
     "image": "assets/images/Mencat.jpg",
     "main_category": "Men Apparel",
     "icon": "assets/categories_icons/men_clothes.png"
   },
   {
+    "id": "4",
     "name": "ملابس نسائيه مقاس كبير",
     "image": "assets/images/Womenpluscat.jpg",
     "main_category": "Women Apparel",
     "icon": "assets/categories_icons/t-shirt_women.png"
   },
   {
+    "id": "3",
     "name": "ملابس أطفال",
     "image": "assets/images/KLanding.jpg",
     "main_category": "Kids",
     "icon": "assets/categories_icons/baby.png"
   },
   {
+    "id": "6",
     "name": "للرضيع و الأم",
     "image": "assets/images/Pregcat.jpg",
     "main_category": "Women Apparel, Baby",
     "icon": "assets/categories_icons/mother.png"
   },
   {
+    "id": "5",
     "name": "الأحذيه",
     "image": "assets/images/Shoescat.jpg",
     "main_category": "Shoes",
     "icon": "assets/categories_icons/shoes.png"
   },
   {
+    "id": "8",
     "name": "ملابس داخليه",
     "image": "assets/images/Undercat.jpg",
     "main_category": "Underwear & Sleepwear, Underwear Sleepwear",
     "icon": "assets/categories_icons/bikini.png"
   },
   {
+    "id": "7",
     "name": "للمنزل",
     "image": "assets/images/Homecat.jpg",
     "main_category":
@@ -54,61 +62,71 @@ var categories = [
     "icon": "assets/categories_icons/house.png"
   },
   {
+    "id": "10",
     "name": "مجوهرات و ساعات",
     "image": "assets/images/Jwelerycat.jpg",
     "main_category": "Jewelry %26 Watches, Jewelry  Watches",
     "icon": "assets/categories_icons/jewelry.png"
   },
   {
+    "id": "9",
     "name": "اكسسوارات",
     "image": "assets/images/ALanding.jpg",
     "main_category": "Apparel Accessories",
     "icon": "assets/categories_icons/bags.png"
   },
   {
+    "id": "12",
     "name": "مستلزمات سيارات",
     "image": "assets/images/carcat.jpg",
     "main_category": "Automotive",
     "icon": "assets/categories_icons/car.png"
   },
   {
+    "id": "11",
     "name": "للحيوانات الاليفة",
     "image": "assets/images/Petcat.jpg",
     "main_category": "Pet Supplies",
     "icon": "assets/categories_icons/rabbit.png"
   },
   {
-    "name": "مستلزمات مكاتب",
+    "id": "14",
+    "name": "قرطاسية ومكاتب",
     "image": "assets/images/Officecat.jpg",
     "main_category": "Office School Supplies, Office %26 School Supplies",
     "icon": "assets/categories_icons/worker.png"
   },
   {
+    "id": "13",
     "name": "مستحضرات تجميلية",
     "image": "assets/images/Beautycat.jpg",
     "main_category": "Beauty %26 Health, Jewelry %26 Watches",
     "icon": "assets/categories_icons/cosmetics.png"
   },
   {
+    "id": "16",
     "name": "الكترونيات",
     "image": "assets/images/ElectCat.jpg",
     "main_category": "Electronics",
     "icon": "assets/categories_icons/responsive.png"
   },
   {
+    "id": "15",
     "name": "حقائب",
     "image": "assets/images/Bagcat.jpg",
     "main_category": "Bags %26 Luggage, Bags %26 Luggage",
     "icon": "assets/categories_icons/travel.png"
   },
   {
+    "id": "18",
     "name": "مستلزمات اعراس",
     "image": "assets/images/Weddingcat.jpg",
     "main_category": "Weddings %26 Events, Weddings %26 Events",
     "icon": "assets/categories_icons/wedding-arch.png"
   },
   {
-    "name": "مستلزمات رياضية",
+    "id": "17",
+    "name": "ملابس رياضية",
     "image": "assets/images/Sportcat.jpg",
     "main_category": "Sports %26 Outdoor, Sports  Outdoor",
     "icon": "assets/categories_icons/dumbbell.png"

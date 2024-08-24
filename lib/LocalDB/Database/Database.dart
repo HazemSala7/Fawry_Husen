@@ -9,7 +9,7 @@ import '../Models/FavoriteItem.dart';
 
 class CartDatabaseHelper {
   static final CartDatabaseHelper _instance = CartDatabaseHelper._internal();
-  static final int dbVersion = 5;
+  static final int dbVersion = 6;
 
   factory CartDatabaseHelper() => _instance;
 
@@ -187,10 +187,14 @@ class CartDatabaseHelper {
     });
   }
 
-  Future<void> deleteCartItem(int id) async {
+  Future<void> deleteCartItemByProductIdAndSize(
+      int productId, String size) async {
     final db = await database;
-    print(id);
-    await db!.delete('cart', where: 'productId = ?', whereArgs: [id]);
+    await db!.delete(
+      'cart',
+      where: 'productId = ? AND type = ?',
+      whereArgs: [productId, size],
+    );
   }
 
   Future<void> deleteAddressItem(int id) async {

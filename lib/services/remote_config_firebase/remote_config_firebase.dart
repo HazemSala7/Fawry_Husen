@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -90,6 +92,12 @@ class FirebaseRemoteConfigClass {
   Future<String> fetchCategoryName() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('category_name');
+  }
+
+  Future<List<dynamic>> fetchDiscountCategories() async {
+    await _configureRemoteConfig();
+    String categoriesString = remoteConfig.getString('DiscountCategories');
+    return jsonDecode(categoriesString) as List<dynamic>;
   }
 
   Future<String> fetchCategoryDesc() async {

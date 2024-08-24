@@ -138,7 +138,8 @@ class _CartState extends State<Cart> {
                                 name: item.name,
                                 qty: item.quantity,
                                 removeProduct: () {
-                                  cartProvider.removeFromCart(item.productId);
+                                  cartProvider.removeFromCart(item.productId,
+                                      selectedSize: item.type);
                                   setState(() {});
                                 },
                                 image: item.image,
