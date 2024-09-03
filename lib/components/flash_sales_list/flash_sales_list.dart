@@ -92,22 +92,22 @@ class _FlashSalesListState extends State<FlashSalesList> {
       color: Colors.transparent,
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
-            child: Row(
-              children: [
-                Text(
-                  titleName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ],
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
+          //   child: Row(
+          //     children: [
+          //       Text(
+          //         titleName,
+          //         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           Padding(
             padding:
-                const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 10),
+                const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 0),
             child: Container(
-              height: 250,
+              height: 224,
               width: MediaQuery.of(context).size.width,
               child: AnimationLimiter(
                 child: ListView.builder(
@@ -171,159 +171,195 @@ class _FlashSalesListState extends State<FlashSalesList> {
                                         IDs: commaSeparatedIds,
                                       ));
                                 },
-                                child: Container(
-                                  width: 160,
-                                  decoration:
-                                      BoxDecoration(color: Colors.transparent),
-                                  child: Column(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(20),
-                                        child: Stack(
-                                          alignment: Alignment.topRight,
+                                child: Stack(
+                                  alignment: Alignment.topRight,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          height: 20,
+                                        ),
+                                        Row(
                                           children: [
-                                            Stack(
-                                              alignment: Alignment.bottomCenter,
-                                              children: [
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 180,
-                                                  child: FancyShimmerImage(
-                                                    imageUrl: widget
-                                                                .shortlisted[
-                                                                    index][
-                                                                    "vendor_images_links"]
-                                                                .length ==
-                                                            0
-                                                        ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                        : widget.shortlisted[
-                                                                        index][
-                                                                    "vendor_images_links"]
-                                                                [0] ??
-                                                            "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
-                                                    width: double.infinity,
-                                                    height: 240,
-                                                    boxFit: BoxFit.cover,
-                                                    errorWidget: Image.asset(
-                                                      "assets/images/splash.png",
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            Container(
+                                              width: 20,
                                             ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Opacity(
-                                                opacity: 0.75,
-                                                child: Container(
-                                                  width: 35,
-                                                  height: 35,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
+                                            Container(
+                                              width: 130,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.transparent),
+                                              child: Column(
+                                                children: [
+                                                  ClipRRect(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Center(
-                                                    child: Lottie.asset(
-                                                      "assets/lottie_animations/Animation - 1720525210493.json",
-                                                      height: 50,
-                                                      reverse: true,
-                                                      repeat: true,
-                                                      fit: BoxFit.cover,
+                                                            20),
+                                                    child: Stack(
+                                                      alignment: Alignment
+                                                          .bottomCenter,
+                                                      children: [
+                                                        Container(
+                                                          width:
+                                                              double.infinity,
+                                                          height: 150,
+                                                          child:
+                                                              FancyShimmerImage(
+                                                            shimmerDuration:
+                                                                Duration(
+                                                                    milliseconds:
+                                                                        0),
+                                                            imageUrl: widget
+                                                                        .shortlisted[
+                                                                            index]
+                                                                            [
+                                                                            "vendor_images_links"]
+                                                                        .length ==
+                                                                    0
+                                                                ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                                : widget.shortlisted[
+                                                                            index]
+                                                                        [
+                                                                        "vendor_images_links"][0] ??
+                                                                    "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
+                                                            width:
+                                                                double.infinity,
+                                                            height: 180,
+                                                            boxFit:
+                                                                BoxFit.cover,
+                                                            errorWidget:
+                                                                Image.asset(
+                                                              "assets/images/splash.png",
+                                                              fit: BoxFit.cover,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Container(
-                                            width: 160,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 5, right: 5, top: 3),
-                                              child: Text(
-                                                widget
-                                                            .shortlisted[index]
-                                                                ["title"]
-                                                            .length >
-                                                        15
-                                                    ? widget.shortlisted[index]
-                                                            ["title"]
-                                                        .substring(0, 15)
-                                                    : widget.shortlisted[index]
-                                                        ["title"],
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 5, right: 5),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              widget.shortlisted[index]
-                                                          ["price"] !=
-                                                      null
-                                                  ? (widget.shortlisted[index]
-                                                          ["price"] is double
-                                                      ? "₪${(widget.shortlisted[index]["price"] as double).round().toString()}"
-                                                      : (double.tryParse(widget
-                                                                          .shortlisted[
-                                                                      index]
-                                                                  ["price"]) !=
-                                                              null
-                                                          ? "₪${double.parse(widget.shortlisted[index]["price"]).round().toString()}"
-                                                          : "₪0"))
-                                                  : "₪0",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
-                                                color: Colors.red,
-                                              ),
-                                            ),
-                                            SizedBox(width: 5),
-                                            Column(
-                                              children: [
-                                                Stack(
-                                                  alignment: Alignment.center,
-                                                  children: [
-                                                    Text(
-                                                      "₪${double.parse(widget.shortlisted[index]["price"].toString()) * 2.5}",
-                                                      style: TextStyle(
-                                                        fontSize: 14,
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Container(
+                                                        width: 130,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 5,
+                                                                  right: 5,
+                                                                  top: 3),
+                                                          child: Text(
+                                                            widget
+                                                                        .shortlisted[index]
+                                                                            [
+                                                                            "title"]
+                                                                        .length >
+                                                                    15
+                                                                ? widget
+                                                                    .shortlisted[
+                                                                        index][
+                                                                        "title"]
+                                                                    .substring(
+                                                                        0, 15)
+                                                                : widget.shortlisted[
+                                                                        index]
+                                                                    ["title"],
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: 5, right: 5),
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          widget.shortlisted[
+                                                                          index]
+                                                                      [
+                                                                      "price"] !=
+                                                                  null
+                                                              ? (widget.shortlisted[
+                                                                              index]
+                                                                          [
+                                                                          "price"]
+                                                                      is double
+                                                                  ? "₪${(widget.shortlisted[index]["price"] as double).round().toString()}"
+                                                                  : (double.tryParse(widget.shortlisted[index]
+                                                                              [
+                                                                              "price"]) !=
+                                                                          null
+                                                                      ? "₪${double.parse(widget.shortlisted[index]["price"]).round().toString()}"
+                                                                      : "₪0"))
+                                                              : "₪0",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18,
+                                                            color: Colors.red,
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 5),
+                                                        Column(
+                                                          children: [
+                                                            Stack(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  "₪${double.parse(widget.shortlisted[index]["price"].toString()) * 2.5}",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        14,
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  height: 1,
+                                                                  width: 50,
+                                                                  color: Colors
+                                                                      .black,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
-                                                    Container(
-                                                      height: 1,
-                                                      width: 50,
-                                                      color: Colors.black,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ],
                                         ),
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(0.0),
+                                      child: Lottie.asset(
+                                        "assets/lottie_animations/Animation - 1720525210493.json",
+                                        height: 40,
+                                        reverse: true,
+                                        repeat: true,
+                                        fit: BoxFit.cover,
                                       ),
-                                    ],
-                                  ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),

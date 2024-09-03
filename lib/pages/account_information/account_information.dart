@@ -447,6 +447,9 @@ class AaccounIinformationState extends State<AccountInformation> {
                                           String UserID =
                                               prefs.getString('user_id') ?? "";
                                           final newItem = AddressItem(
+                                            area_id: "1",
+                                            area_name: "",
+                                            city_id: "",
                                             user_id: UserID,
                                             name:
                                                 "$selectedCity ,${addressController.text} ",

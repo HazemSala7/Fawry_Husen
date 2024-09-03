@@ -400,43 +400,66 @@ class _NewestOrdersState extends State<NewestOrders> {
                                                         padding:
                                                             const EdgeInsets
                                                                 .all(8.0),
-                                                        child: ButtonWidget(
-                                                            name:
-                                                                "تتبع حالة طلبك",
-                                                            height: 50,
-                                                            width: 150,
-                                                            BorderColor:
-                                                                MAIN_COLOR,
-                                                            OnClickFunction:
-                                                                () {
-                                                              NavigatorFunction(
-                                                                  context,
-                                                                  OrderDetails(
-                                                                    created_at:
-                                                                        orders[index]
-                                                                            .created_at,
-                                                                    order_id: orders[
+                                                        child: Row(
+                                                          children: [
+                                                            ButtonWidget(
+                                                                name:
+                                                                    "تتبع حالة طلبك",
+                                                                height: 50,
+                                                                width: 150,
+                                                                BorderColor:
+                                                                    MAIN_COLOR,
+                                                                OnClickFunction:
+                                                                    () {
+                                                                  NavigatorFunction(
+                                                                      context,
+                                                                      OrderDetails(
+                                                                        created_at:
+                                                                            orders[index].created_at,
+                                                                        order_id:
+                                                                            orders[index].order_id,
+                                                                        done:
+                                                                            false,
+                                                                        expected_date:
+                                                                            "05/08/2023",
+                                                                        sku: orders[index]
+                                                                            .order_id,
+                                                                        sun: snapshot
+                                                                            .data["data"]["total_price"]
+                                                                            .toString(),
+                                                                      ));
+                                                                },
+                                                                BorderRaduis:
+                                                                    40,
+                                                                ButtonColor:
+                                                                    MAIN_COLOR,
+                                                                NameColor:
+                                                                    Colors
+                                                                        .white),
+                                                            SizedBox(
+                                                              width: 20,
+                                                            ),
+                                                            ButtonWidget(
+                                                                name:
+                                                                    "الغي طلبي",
+                                                                height: 50,
+                                                                width: 150,
+                                                                BorderColor:
+                                                                    Colors.red,
+                                                                OnClickFunction: () =>
+                                                                    showCancelOrderDialog(int.parse(orders[
                                                                             index]
-                                                                        .order_id,
-                                                                    done: false,
-                                                                    expected_date:
-                                                                        "05/08/2023",
-                                                                    sku: orders[
-                                                                            index]
-                                                                        .order_id,
-                                                                    sun: snapshot
-                                                                        .data[
-                                                                            "data"]
-                                                                            [
-                                                                            "total_price"]
-                                                                        .toString(),
-                                                                  ));
-                                                            },
-                                                            BorderRaduis: 40,
-                                                            ButtonColor:
-                                                                MAIN_COLOR,
-                                                            NameColor:
-                                                                Colors.white),
+                                                                        .order_id
+                                                                        .toString())),
+                                                                BorderRaduis:
+                                                                    40,
+                                                                ButtonColor:
+                                                                    Colors.red,
+                                                                NameColor:
+                                                                    Colors
+                                                                        .white),
+                                                          ],
+                                                        ),
                                                       )
                                                     ],
                                                   );
@@ -477,4 +500,41 @@ class _NewestOrdersState extends State<NewestOrders> {
   }
 
   List<double> _heightList = List.generate(6, (index) => 110.0);
+  String orderStatus = "Pending"; // Example status, change as needed
+  final TextEditingController _reasonController = TextEditingController();
+  showCancelOrderDialog(int orderId) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('الغاء الطلبية'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('الرجاء أدخل سبب الغاء الطلبية'),
+              TextField(
+                controller: _reasonController,
+                decoration: InputDecoration(hintText: 'أدخل سبب الالغاء'),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('رجوع'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('الغاء الطلب'),
+              onPressed: () {
+                cancelOrder(orderId, _reasonController.text, context);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }

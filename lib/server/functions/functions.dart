@@ -1,5 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fawri_app_refactor/firebase/order/OrderController.dart';
+import 'package:fawri_app_refactor/firebase/selected_sizes/selected_sizes_controller.dart';
+import 'package:fawri_app_refactor/firebase/selected_sizes/selected_sizes_model.dart';
 import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
 import 'package:fawri_app_refactor/services/cache_manager/cache_manager.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
@@ -29,6 +31,30 @@ var headers = {'ContentType': 'application/json', "Connection": "Keep-Alive"};
 
 NavigatorFunction(BuildContext context, Widget Widget) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Widget));
+}
+
+fetchRecommendedItems() async {
+  SelectedSizeService selectedSizeService = SelectedSizeService();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String UserID = prefs.getString('user_id') ?? "";
+  String categoryId = "";
+  List<String> sizes = [];
+  List<SelectedSizeModel> selectedSizes =
+      await selectedSizeService.getSelectedSizes().first;
+  String userId = UserID;
+  Map<String, dynamic> combinedResponse = {"items": []};
+  for (var selectedSize in selectedSizes) {
+    categoryId = selectedSize.categoryId;
+    sizes = selectedSize.selectedSizes;
+    String sizesParam = sizes.join(',');
+  }
+  var response =
+      await getProductByCategory(categoryId, '', '', sizes.join(','), 1);
+  if (response != null && response["items"] != null) {
+    combinedResponse["items"].addAll(response["items"]);
+  }
+
+  return combinedResponse;
 }
 
 getSliders() async {
@@ -210,6 +236,11 @@ addOrder(
       "city": city.toString(),
       "total_price": double.parse(total.toString()),
       "user_id": 38,
+      "location_ids": {
+        "city_id": "1",
+        "area_id": "1027",
+        "area_name": "شارع القدس/رام الله"
+      },
       "products": products
     });
     request.headers.addAll(headers);
@@ -373,8 +404,6 @@ getProductByCategory(category_id, sub_category_key, String size,
     if (selected_sizes != '' && selected_sizes.toString() != "null") {
       Final_URL += "&size=$selected_sizes";
     }
-    print("Final_URL");
-    print(Final_URL);
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -395,9 +424,53 @@ getProductByCategory(category_id, sub_category_key, String size,
     }
     var response = await http.get(Uri.parse(Final_URL), headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
-    print("res");
-    print(res);
     return res;
+  }
+}
+
+getHomeData(int page) async {
+  try {
+    var response = await http.get(
+        Uri.parse(
+            "https://fawri-f7ab5f0e45b8.herokuapp.com/api/getAvailableItems?main_category=Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement&sub_category=&season=Summer, All&page=1&api_key=H93J48593HFNWIEUTR287TG3"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  } catch (e) {
+    var response = await http.get(
+        Uri.parse(
+            "https://fawri-f7ab5f0e45b8.herokuapp.com/api/getAvailableItems?main_category=Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement&sub_category=&season=Summer, All&page=1&api_key=H93J48593HFNWIEUTR287TG3"),
+        headers: headers);
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
+  }
+}
+
+cancelOrder(int orderId, String reason, BuildContext context) async {
+  final String apiKey = 'H93J48593HFNWIEUTR287TG3';
+  final String url = 'https://fawri-f7ab5f0e45b8.herokuapp.com/api/cancelOrder';
+
+  try {
+    final response = await http.get(
+      Uri.parse('$url?order_id=$orderId&reason=$reason&api_key=$apiKey'),
+    );
+
+    if (!context.mounted) return; // Ensure the widget is still mounted
+
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+      Fluttertoast.showToast(msg: "تم حذف الطلبية بنجاح!");
+    } else {
+      Navigator.pop(context);
+      Fluttertoast.showToast(
+          msg: 'فشلت عملية الحذف , الرجاء المحاولة مرة أخرى');
+    }
+  } catch (e) {
+    print('Error: $e');
+    if (!context.mounted) return; // Ensure the widget is still mounted
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred. Please try again.')),
+    );
   }
 }
 

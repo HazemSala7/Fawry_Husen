@@ -77,6 +77,9 @@ class CartDatabaseHelper {
       CREATE TABLE IF NOT EXISTS addresses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        area_id TEXT NOT NULL,
+        area_name TEXT NOT NULL,
+        city_id TEXT NOT NULL,
         user_id INTEGER NOT NULL
       )
     ''');
@@ -182,6 +185,9 @@ class CartDatabaseHelper {
       return AddressItem(
         id: maps[i]['id'],
         user_id: maps[i]['user_id'],
+        area_id: maps[i]['area_id'],
+        city_id: maps[i]['city_id'],
+        area_name: maps[i]['area_name'],
         name: maps[i]['name'],
       );
     });

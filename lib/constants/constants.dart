@@ -20,7 +20,7 @@ var categories = [
   },
   {
     "id": "4",
-    "name": "ملابس نسائيه مقاس كبير",
+    "name": "مقاسات كبيرة",
     "image": "assets/images/Womenpluscat.jpg",
     "main_category": "Women Apparel",
     "icon": "assets/categories_icons/t-shirt_women.png"

@@ -37,8 +37,10 @@ double getTextWidth(String text, TextStyle style) {
 
 class CategoryWidget extends StatefulWidget {
   final image, name, main_category, CateIcon, CateImage;
+  bool setBorder;
   CategoryWidget({
     Key? key,
+    required this.setBorder,
     required this.name,
     required this.image,
     required this.CateImage,
@@ -290,7 +292,13 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
+              border: Border.all(
+                  color: widget.setBorder
+                      ? Color.fromARGB(255, 79, 231, 9)
+                      : Colors.transparent,
+                  width: widget.setBorder ? 2 : 0),
               color: Color(0xFFFFFFFF),
+              borderRadius: BorderRadius.circular(10),
               image: DecorationImage(
                 fit: BoxFit.cover,
                 image: Image.asset(
@@ -303,44 +311,19 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             width: double.infinity,
             height: double.infinity,
             decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
               color: Color(0x80000000),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      widget.CateImage,
-                      height: 60,
-                      width: 60,
-                      fit: BoxFit.cover,
-                    )
-                  ],
+            child: Center(
+              child: Text(
+                widget.name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
-                Row(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 180,
-                      child: Center(
-                        child: Text(
-                          widget.name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: widget.name.length >= 13 ? 16 : 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ],

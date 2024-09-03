@@ -10,6 +10,7 @@ import 'package:fawri_app_refactor/pages/privacy_policy/privacy_policy.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/pages/remain_birthdate/remain_birthdate.dart';
 import 'package:fawri_app_refactor/services/notifications/notifications.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_in_app_messaging/firebase_in_app_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -52,50 +53,44 @@ class Fawri extends StatefulWidget {
   State<Fawri> createState() => _FawriState();
 }
 
-void handleDeepLink(String link, BuildContext context) {
-  final Uri uri = Uri.parse(link);
-  final String? productId = uri.queryParameters['product_id'];
-
-  NavigatorFunction(context, Cart());
-}
-
 class _FawriState extends State<Fawri> {
   bool FirstScreen = false;
-  Future<void> _initDeepLinkHandler() async {
-    try {
-      // For app launches from a cold state
-      final initialLink = await getInitialLink();
-      _handleDeepLink(initialLink);
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-      // For app launches from a background state
-      linkStream.listen((link) {
-        _handleDeepLink(link);
-      });
-    } catch (e) {
-      print('Error handling deep link: $e');
+  void handleDynamicLinks() async {
+    FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) {
+      final Uri deepLink = dynamicLinkData.link;
+      handleDeepLink(deepLink);
+    }).onError((error) {
+      print('onLinkError: $error');
+    });
+
+    // Handle deep link when app is opened initially
+    final PendingDynamicLinkData? initialLink =
+        await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri? deepLink = initialLink?.link;
+    if (deepLink != null) {
+      handleDeepLink(deepLink);
     }
   }
 
-  void _handleDeepLink(String? link) {
-    if (link != null) {
-      final uri = Uri.parse(link);
-      final category = uri.queryParameters['category'];
-      final productId = uri.queryParameters['productId'];
-
-      if (category != null) {
-        // Navigate to category page
-        print('Navigate to category: $category');
-      } else if (productId != null) {
-        // Navigate to product page
-        print('Navigate to product: $productId');
-      }
+  void handleDeepLink(Uri deepLink) {
+    if (deepLink.path == '/product') {
+      final productId = deepLink.queryParameters['id'];
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (context) => Cart()),
+      );
+    } else {
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(builder: (context) => Cart()),
+      );
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _initDeepLinkHandler();
+    handleDynamicLinks();
     ios_push();
     final firebaseMessaging = FCM();
     firebaseMessaging.setNotifications(context);
@@ -128,6 +123,7 @@ class _FawriState extends State<Fawri> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
       title: 'Fawri',
       localizationsDelegates: [

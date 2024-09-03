@@ -828,6 +828,7 @@ class _ProductItemState extends State<ProductItem> {
                                 onChanged: (val) {
                                   setState(() {
                                     widget.SelectedSizes = val.toString();
+
                                     // Check the selected size's quantity
                                     final selectedVariant = widget.variants
                                         .firstWhere(
@@ -838,8 +839,11 @@ class _ProductItemState extends State<ProductItem> {
 
                                     if (selectedVariant != null) {
                                       widget.quantityAvailable = int.parse(
-                                          selectedVariant['quantity']);
-                                      if (widget.quantityAvailable > 1) {
+                                          selectedVariant['quantity']
+                                              .toString());
+                                      if (int.parse(widget.quantityAvailable
+                                              .toString()) >
+                                          1) {
                                         widget.showQuantitySelector = true;
                                       } else {
                                         widget.showQuantitySelector = false;
