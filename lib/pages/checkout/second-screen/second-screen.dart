@@ -100,677 +100,667 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
-          child: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(50),
-            child: AppBarWidgetBack(
-              cartKey: null,
-              showCart: false,
-            )),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              right: 25,
-              left: 25,
-            ),
-            child: Column(
-              key: Key("1"),
-              children: [
-                Column(
+          child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Scaffold(
+            appBar: PreferredSize(
+                preferredSize: Size.fromHeight(50),
+                child: AppBarWidgetBack(
+                  cartKey: null,
+                  showCart: false,
+                )),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  right: 25,
+                  left: 25,
+                ),
+                child: Column(
+                  key: Key("1"),
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                Row(
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
                                   children: [
-                                    Text(
-                                      "أسم المستخدم",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: MAIN_COLOR),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "أسم المستخدم",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: MAIN_COLOR),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                                editName
-                                    ? CustomTextField(
-                                        onEdit: () {},
-                                        showEdit: false,
-                                        validator: null,
-                                        controller: NameController,
-                                        hintText: 'أسم المستخدم',
-                                        icon: Icons.person,
-                                        height: _formKey.currentState != null
-                                            ? _formKey.currentState!.validate()
-                                                ? 50
-                                                : 70
-                                            : 50,
-                                        keyboardType: TextInputType.text,
-                                        onChanged: (value) {
-                                          // Handle email text changes
-                                        },
-                                        borderRadius: 0,
-                                        borderColor: Colors.black,
-                                        backgroundColor: Colors.white,
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 15, left: 25),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                    editName
+                                        ? CustomTextField(
+                                            onEdit: () {},
+                                            showEdit: false,
+                                            validator: null,
+                                            controller: NameController,
+                                            hintText: 'أسم المستخدم',
+                                            icon: Icons.person,
+                                            height:
+                                                _formKey.currentState != null
+                                                    ? _formKey.currentState!
+                                                            .validate()
+                                                        ? 50
+                                                        : 70
+                                                    : 50,
+                                            keyboardType: TextInputType.text,
+                                            onChanged: (value) {
+                                              // Handle email text changes
+                                            },
+                                            borderRadius: 0,
+                                            borderColor: Colors.black,
+                                            backgroundColor: Colors.white,
+                                          )
+                                        : Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 15, left: 25),
+                                            child: Column(
                                               children: [
-                                                Text(
-                                                  NameController.text,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          255, 83, 83, 83),
-                                                      fontSize: 20),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Text(
+                                                      NameController.text,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Color.fromARGB(
+                                                              255, 83, 83, 83),
+                                                          fontSize: 20),
+                                                    ),
+                                                    IconButton(
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            editName = true;
+                                                          });
+                                                        },
+                                                        icon: Icon(Icons.edit))
+                                                  ],
                                                 ),
-                                                IconButton(
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        editName = true;
-                                                      });
-                                                    },
-                                                    icon: Icon(Icons.edit))
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 1,
+                                                  color: Color.fromARGB(
+                                                      255, 39, 38, 38),
+                                                )
                                               ],
                                             ),
-                                            Container(
-                                              width: double.infinity,
-                                              height: 1,
-                                              color: Color.fromARGB(
-                                                  255, 39, 38, 38),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 15),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            flex: 1,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "رقم الهاتف",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16,
-                                          color: MAIN_COLOR),
-                                    ),
+                                          ),
                                   ],
                                 ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                editPhone
-                                    ? Form(
-                                        key: _formKey,
-                                        child: CustomTextField(
-                                          onEdit: () {},
-                                          showEdit: false,
-                                          validator: validatePhoneNumber,
-                                          controller: PhoneController,
-                                          hintText: 'رقم الهاتف',
-                                          icon: Icons.phone,
-                                          height: _formKey.currentState != null
-                                              ? _formKey.currentState!
-                                                      .validate()
-                                                  ? 50
-                                                  : 70
-                                              : 50,
-                                          keyboardType: TextInputType.text,
-                                          onChanged: (value) {
-                                            // Handle email text changes
-                                          },
-                                          borderRadius: 0,
-                                          borderColor: Colors.black,
-                                          backgroundColor: Colors.white,
-                                        ))
-                                    : Form(
-                                        key: _formKey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 15, left: 25),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "رقم الهاتف",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16,
+                                              color: MAIN_COLOR),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    editPhone
+                                        ? Form(
+                                            key: _formKey,
+                                            child: CustomTextField(
+                                              onEdit: () {},
+                                              showEdit: false,
+                                              validator: validatePhoneNumber,
+                                              controller: PhoneController,
+                                              hintText: 'رقم الهاتف',
+                                              icon: Icons.phone,
+                                              height:
+                                                  _formKey.currentState != null
+                                                      ? _formKey.currentState!
+                                                              .validate()
+                                                          ? 50
+                                                          : 70
+                                                      : 50,
+                                              keyboardType: TextInputType.text,
+                                              onChanged: (value) {
+                                                // Handle email text changes
+                                              },
+                                              borderRadius: 0,
+                                              borderColor: Colors.black,
+                                              backgroundColor: Colors.white,
+                                            ))
+                                        : Form(
+                                            key: _formKey,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 15, left: 25),
+                                              child: Column(
                                                 children: [
-                                                  Text(
-                                                    PhoneController.text,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Color.fromARGB(
-                                                            255, 83, 83, 83),
-                                                        fontSize: 20),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        PhoneController.text,
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    255,
+                                                                    83,
+                                                                    83,
+                                                                    83),
+                                                            fontSize: 20),
+                                                      ),
+                                                      IconButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              editPhone = true;
+                                                            });
+                                                          },
+                                                          icon:
+                                                              Icon(Icons.edit))
+                                                    ],
                                                   ),
-                                                  IconButton(
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          editPhone = true;
-                                                        });
-                                                      },
-                                                      icon: Icon(Icons.edit))
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 1,
+                                                    color: Color.fromARGB(
+                                                        255, 39, 38, 38),
+                                                  )
                                                 ],
                                               ),
-                                              Container(
-                                                width: double.infinity,
-                                                height: 1,
-                                                color: Color.fromARGB(
-                                                    255, 39, 38, 38),
-                                              )
-                                            ],
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                              ],
-                            ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        "العنوان : ",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                ),
-                Consumer<AddressProvider>(
-                  builder: (context, addressprovider, _) {
-                    List<AddressItem> addressItems =
-                        addressprovider.addressItems;
-                    String? selectedValue =
-                        addressItems.isNotEmpty ? addressItems[0].name : null;
-                    if (selectedArea == null && addressItems.isNotEmpty) {
-                      finalSelectedArea = addressItems[0].name;
-                    }
-
-                    return Visibility(
-                      visible: addressItems.isNotEmpty,
-                      child: Container(
-                        height: 65,
-                        child: DropdownButtonFormField<String>(
-                          hint: Text("اختر العنوان"),
-                          value: selectedValue,
-                          items: addressItems
-                              .map((address) => DropdownMenuItem<String>(
-                                    child: Text(address.name),
-                                    value: address.name,
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedArea = value! as Area?;
-                            });
-                          },
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: MAIN_COLOR, width: 2.0),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 1.0, color: MAIN_COLOR),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: 15, right: 15, left: 15, bottom: 10),
-                  child: InkWell(
-                    onTap: () {
-                      NavigatorFunction(context, AddAddress());
-                    },
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 20,
-                          height: 20,
-                          child: Image.asset("assets/images/add.png"),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "اضافة عنوان جديد ؟ ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
                         ),
                       ],
                     ),
-                  ),
-                ),
-                Column(
-                  children: [
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, right: 15, left: 15),
+                      padding: const EdgeInsets.only(top: 20, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Text(
-                            "ملاحظات",
+                            "العنوان : ",
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.bold),
                           )
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Container(
-                        height: 80,
-                        width: double.infinity,
-                        child: TextField(
-                          controller: OrderController,
-                          obscureText: false,
-                          maxLines: 5,
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: MAIN_COLOR, width: 2.0),
+                    Consumer<AddressProvider>(
+                      builder: (context, addressprovider, _) {
+                        List<AddressItem> addressItems =
+                            addressprovider.addressItems;
+                        String? selectedValue = addressItems.isNotEmpty
+                            ? addressItems[0].name
+                            : null;
+                        if (selectedArea == null && addressItems.isNotEmpty) {
+                          finalSelectedArea = addressItems[0].name;
+                        }
+
+                        return Visibility(
+                          visible: addressItems.isNotEmpty,
+                          child: Container(
+                            height: 65,
+                            child: DropdownButtonFormField<String>(
+                              hint: Text("اختر العنوان"),
+                              value: selectedValue,
+                              items: addressItems
+                                  .map((address) => DropdownMenuItem<String>(
+                                        child: Text(address.name),
+                                        value: address.name,
+                                      ))
+                                  .toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedArea = value! as Area?;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: MAIN_COLOR, width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 1.0, color: MAIN_COLOR),
+                                ),
+                              ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(width: 1.0, color: MAIN_COLOR),
-                            ),
-                            hintText: "أضف ملاحظاتك",
                           ),
+                        );
+                      },
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 15, right: 15, left: 15, bottom: 10),
+                      child: InkWell(
+                        onTap: () {
+                          NavigatorFunction(context, AddAddress());
+                        },
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              child: Image.asset("assets/images/add.png"),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              "اضافة عنوان جديد ؟ ",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 15),
+                            ),
+                          ],
                         ),
                       ),
                     ),
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 5, right: 15, left: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "ملاحظات",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Container(
+                            height: 80,
+                            width: double.infinity,
+                            child: TextField(
+                              controller: OrderController,
+                              obscureText: false,
+                              maxLines: 5,
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: MAIN_COLOR, width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(width: 1.0, color: MAIN_COLOR),
+                                ),
+                                hintText: "أضف ملاحظاتك",
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-                loading
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 30),
-                        child: Container(
-                          height: 50,
-                          width: 300,
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(40),
-                              border: Border.all(color: Colors.black)),
-                          child: Center(
-                              child: Container(
-                            height: 15,
-                            width: 15,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          )),
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.only(top: 30),
-                        child: BouncingWidget(
-                          child: ButtonWidget(
-                              name: "تأكيد عمليه الشراء",
-                              height: 50,
-                              width: double.infinity,
-                              BorderColor: Colors.black,
-                              OnClickFunction: () async {
-                                if (PhoneController.text == "" ||
-                                    selectedArea.toString() == "" ||
-                                    selectedArea.toString() == "اختر العنوان") {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        content: Text(
-                                          "الرجاء تعبئه جميع البيانات",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                        ),
-                                        actions: <Widget>[
-                                          InkWell(
-                                            onTap: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Container(
-                                              width: 100,
-                                              height: 40,
-                                              decoration: BoxDecoration(
-                                                  color: MAIN_COLOR,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10)),
-                                              child: Center(
-                                                child: Text(
-                                                  "حسنا",
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                } else {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      loading = true;
-                                    });
-                                    var TOTALFINAL = widget.dropdownValue
-                                                .toString() ==
-                                            "الداخل"
-                                        ? 60.0 +
-                                            double.parse(
-                                                widget.total.toString())
-                                        : widget.dropdownValue.toString() ==
-                                                "القدس"
-                                            ? 30.0 +
-                                                double.parse(widget.total
-                                                            .toString()
-                                                            .length >
-                                                        5
-                                                    ? widget.total
-                                                        .toString()
-                                                        .substring(0, 5)
-                                                    : widget.total.toString())
-                                            : widget.dropdownValue.toString() ==
-                                                    "الضفه الغربيه"
-                                                ? 20.0 +
-                                                    double.parse(widget.total
-                                                                .toString()
-                                                                .length >
-                                                            5
-                                                        ? widget.total
-                                                            .toString()
-                                                            .substring(0, 5)
-                                                        : widget.total.toString())
-                                                : widget.total.toString().length > 5
-                                                    ? widget.total.toString().substring(0, 5)
-                                                    : widget.total.toString();
-                                    await addOrder(
-                                        context: context,
-                                        address: finalSelectedArea.toString(),
-                                        city: finalSelectedArea.toString(),
-                                        phone: PhoneController.text,
-                                        name: NameController.text,
-                                        description: OrderController.text,
-                                        total: TOTALFINAL.toString(),
-                                        copon: CoponController.text);
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    String UserID =
-                                        prefs.getString('user_id') ?? "";
-                                    String? TOKEN =
-                                        await prefs.getString('device_token');
-                                    await prefs.setString(
-                                        'name', NameController.text);
-                                    await prefs.setString(
-                                        'city', finalSelectedArea.toString());
-                                    await prefs.setString(
-                                        'area', AreaController.text);
-                                    await prefs.setString(
-                                        'phone', PhoneController.text);
-                                    await prefs.setString('address',
-                                        finalSelectedArea.toString());
-                                    UserItem updatedUser = UserItem(
-                                      name: NameController.text,
-                                      id: UserID,
-                                      token: TOKEN.toString(),
-                                      email: "$UserID@email.com",
-                                      phone: PhoneController.text,
-                                      gender: '',
-                                      birthdate: '',
-                                      city: finalSelectedArea.toString(),
-                                      area: finalSelectedArea.toString(),
-                                      address: finalSelectedArea.toString(),
-                                      password: '123',
-                                    );
-                                    try {
-                                      final cartProvider =
-                                          Provider.of<CartProvider>(context,
-                                              listen: false);
-                                      await userService.updateUser(updatedUser);
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                      getCoupunRedeem(CoponController.text);
-                                      showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return Dialog(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              insetPadding: EdgeInsets.all(0),
-                                              child: InkWell(
-                                                onTap: () async {
-                                                  NavigatorFunction(
-                                                      context,
-                                                      HomeScreen(
-                                                        title: "",
-                                                        selectedIndex: 0,
-                                                        slider: false,
-                                                        url: "",
-                                                      ));
-                                                  SharedPreferences prefs =
-                                                      await SharedPreferences
-                                                          .getInstance();
-                                                  bool? show =
-                                                      await prefs.getBool(
-                                                              'show_birthday') ??
-                                                          true;
-                                                  show
-                                                      ? NavigatorFunction(
-                                                          context,
-                                                          ChooseBirthdate(
-                                                            name: NameController
-                                                                .text,
-                                                            PhoneController:
-                                                                PhoneController
-                                                                    .text,
-                                                            TOKEN: TOKEN
-                                                                .toString(),
-                                                            UserID: UserID
-                                                                .toString(),
-                                                            selectedArea:
-                                                                selectedArea
-                                                                    .toString(),
-                                                          ))
-                                                      : null;
-                                                },
-                                                child: Container(
-                                                  height: MediaQuery.of(context)
-                                                      .size
-                                                      .height,
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Lottie.asset(
-                                                          "assets/lottie_animations/Animation - 1701597212878.json",
-                                                          height: 300,
-                                                          reverse: true,
-                                                          repeat: true,
-                                                          fit: BoxFit.cover),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      Padding(
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal: 10),
-                                                        child: Text(
-                                                          "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                            fontSize: 20,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 40,
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          NavigatorFunction(
-                                                              context,
-                                                              HomeScreen(
-                                                                  title: "",
-                                                                  slider: false,
-                                                                  url: "",
-                                                                  selectedIndex:
-                                                                      0));
-                                                          SharedPreferences
-                                                              prefs =
-                                                              await SharedPreferences
-                                                                  .getInstance();
-                                                          bool? show =
-                                                              await prefs.getBool(
-                                                                      'show_birthday') ??
-                                                                  true;
-                                                          show
-                                                              ? NavigatorFunction(
-                                                                  context,
-                                                                  ChooseBirthdate(
-                                                                    name: NameController
-                                                                        .text,
-                                                                    PhoneController:
-                                                                        PhoneController
-                                                                            .text,
-                                                                    TOKEN: TOKEN
-                                                                        .toString(),
-                                                                    UserID: UserID
-                                                                        .toString(),
-                                                                    selectedArea:
-                                                                        selectedArea
-                                                                            .toString(),
-                                                                  ))
-                                                              : null;
-                                                        },
-                                                        child: Container(
-                                                          width: 200,
-                                                          height: 40,
-                                                          child: Center(
-                                                              child: Text(
-                                                            "الصفحة الرئيسية",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
-                                                          )),
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 20,
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          NavigatorFunction(
-                                                              context,
-                                                              NewestOrders(
-                                                                user_id: UserID
-                                                                    .toString(),
-                                                              ));
-                                                        },
-                                                        child: Container(
-                                                          width: 200,
-                                                          height: 40,
-                                                          child: Center(
-                                                              child: Text(
-                                                            "تتبع طلبياتي",
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: Colors
-                                                                    .white),
-                                                          )),
-                                                          decoration: BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10),
-                                                              color:
-                                                                  Colors.black),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ));
-                                        },
-                                      );
-
-                                      cartProvider.clearCart();
-                                      SharedPreferences prefs =
-                                          await SharedPreferences.getInstance();
-                                      await prefs.setBool('buy', true);
-                                    } catch (e) {
-                                      print('Error updating user data: $e');
-                                    }
-                                  }
-                                }
-                              },
-                              BorderRaduis: 10,
-                              ButtonColor: Colors.black,
-                              NameColor: Colors.white),
-                        ),
-                      ),
-              ],
+              ),
             ),
           ),
-        ),
+          loading
+              ? Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: Container(
+                    height: 50,
+                    width: 300,
+                    decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(40),
+                        border: Border.all(color: Colors.black)),
+                    child: Center(
+                        child: Container(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                    )),
+                  ),
+                )
+              : Padding(
+                  padding:
+                      const EdgeInsets.only(bottom: 20, left: 25, right: 25),
+                  child: BouncingWidget(
+                    child: ButtonWidget(
+                        name: "تأكيد عمليه الشراء",
+                        height: 60,
+                        width: double.infinity,
+                        BorderColor: Colors.black,
+                        OnClickFunction: () async {
+                          if (PhoneController.text == "" ||
+                              selectedArea.toString() == "" ||
+                              selectedArea.toString() == "اختر العنوان") {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: Text(
+                                    "الرجاء تعبئه جميع البيانات",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
+                                  ),
+                                  actions: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        height: 40,
+                                        decoration: BoxDecoration(
+                                            color: MAIN_COLOR,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Center(
+                                          child: Text(
+                                            "حسنا",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                loading = true;
+                              });
+                              var TOTALFINAL = widget.dropdownValue
+                                          .toString() ==
+                                      "الداخل"
+                                  ? 60.0 + double.parse(widget.total.toString())
+                                  : widget.dropdownValue.toString() == "القدس"
+                                      ? 30.0 +
+                                          double.parse(
+                                              widget.total.toString().length > 5
+                                                  ? widget.total
+                                                      .toString()
+                                                      .substring(0, 5)
+                                                  : widget.total.toString())
+                                      : widget.dropdownValue.toString() ==
+                                              "الضفه الغربيه"
+                                          ? 20.0 +
+                                              double.parse(widget.total
+                                                          .toString()
+                                                          .length >
+                                                      5
+                                                  ? widget.total
+                                                      .toString()
+                                                      .substring(0, 5)
+                                                  : widget.total.toString())
+                                          : widget.total.toString().length > 5
+                                              ? widget.total
+                                                  .toString()
+                                                  .substring(0, 5)
+                                              : widget.total.toString();
+                              await addOrder(
+                                  context: context,
+                                  address: finalSelectedArea.toString(),
+                                  city: finalSelectedArea.toString(),
+                                  phone: PhoneController.text,
+                                  name: NameController.text,
+                                  description: OrderController.text,
+                                  total: TOTALFINAL.toString(),
+                                  copon: CoponController.text);
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              String UserID = prefs.getString('user_id') ?? "";
+                              String? TOKEN =
+                                  await prefs.getString('device_token');
+                              await prefs.setString(
+                                  'name', NameController.text);
+                              await prefs.setString(
+                                  'city', finalSelectedArea.toString());
+                              await prefs.setString(
+                                  'area', AreaController.text);
+                              await prefs.setString(
+                                  'phone', PhoneController.text);
+                              await prefs.setString(
+                                  'address', finalSelectedArea.toString());
+                              UserItem updatedUser = UserItem(
+                                name: NameController.text,
+                                id: UserID,
+                                token: TOKEN.toString(),
+                                email: "$UserID@email.com",
+                                phone: PhoneController.text,
+                                gender: '',
+                                birthdate: '',
+                                city: finalSelectedArea.toString(),
+                                area: finalSelectedArea.toString(),
+                                address: finalSelectedArea.toString(),
+                                password: '123',
+                              );
+                              try {
+                                final cartProvider = Provider.of<CartProvider>(
+                                    context,
+                                    listen: false);
+                                await userService.updateUser(updatedUser);
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                                getCoupunRedeem(CoponController.text);
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: EdgeInsets.all(0),
+                                        child: InkWell(
+                                          onTap: () async {
+                                            NavigatorFunction(
+                                                context,
+                                                HomeScreen(
+                                                  title: "",
+                                                  selectedIndex: 0,
+                                                  slider: false,
+                                                  url: "",
+                                                ));
+                                            SharedPreferences prefs =
+                                                await SharedPreferences
+                                                    .getInstance();
+                                            bool? show = await prefs
+                                                    .getBool('show_birthday') ??
+                                                true;
+                                            show
+                                                ? NavigatorFunction(
+                                                    context,
+                                                    ChooseBirthdate(
+                                                      name: NameController.text,
+                                                      PhoneController:
+                                                          PhoneController.text,
+                                                      TOKEN: TOKEN.toString(),
+                                                      UserID: UserID.toString(),
+                                                      selectedArea: selectedArea
+                                                          .toString(),
+                                                    ))
+                                                : null;
+                                          },
+                                          child: Container(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Lottie.asset(
+                                                    "assets/lottie_animations/Animation - 1701597212878.json",
+                                                    height: 300,
+                                                    reverse: true,
+                                                    repeat: true,
+                                                    fit: BoxFit.cover),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                                  child: Text(
+                                                    "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 40,
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                    NavigatorFunction(
+                                                        context,
+                                                        HomeScreen(
+                                                            title: "",
+                                                            slider: false,
+                                                            url: "",
+                                                            selectedIndex: 0));
+                                                    SharedPreferences prefs =
+                                                        await SharedPreferences
+                                                            .getInstance();
+                                                    bool? show =
+                                                        await prefs.getBool(
+                                                                'show_birthday') ??
+                                                            true;
+                                                    show
+                                                        ? NavigatorFunction(
+                                                            context,
+                                                            ChooseBirthdate(
+                                                              name:
+                                                                  NameController
+                                                                      .text,
+                                                              PhoneController:
+                                                                  PhoneController
+                                                                      .text,
+                                                              TOKEN: TOKEN
+                                                                  .toString(),
+                                                              UserID: UserID
+                                                                  .toString(),
+                                                              selectedArea:
+                                                                  selectedArea
+                                                                      .toString(),
+                                                            ))
+                                                        : null;
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    child: Center(
+                                                        child: Text(
+                                                      "الصفحة الرئيسية",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
+                                                    NavigatorFunction(
+                                                        context,
+                                                        NewestOrders(
+                                                          user_id:
+                                                              UserID.toString(),
+                                                        ));
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    child: Center(
+                                                        child: Text(
+                                                      "تتبع طلبياتي",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ));
+                                  },
+                                );
+
+                                cartProvider.clearCart();
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                await prefs.setBool('buy', true);
+                              } catch (e) {
+                                print('Error updating user data: $e');
+                              }
+                            }
+                          }
+                        },
+                        BorderRaduis: 10,
+                        ButtonColor: Colors.black,
+                        NameColor: Colors.white),
+                  ),
+                ),
+        ],
       )),
     );
   }

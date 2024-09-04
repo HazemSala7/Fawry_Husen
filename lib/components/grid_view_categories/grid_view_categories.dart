@@ -5,6 +5,8 @@ import 'package:fawri_app_refactor/components/category_widget/kids_category_dial
 import 'package:fawri_app_refactor/components/category_widget/shoes_category_dialog/shoes_category_dialog.dart';
 import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
 import 'package:fawri_app_refactor/components/flash_sales_list/flash_sales_list.dart';
+import 'package:fawri_app_refactor/components/home_tools_products/home_tools_products.dart';
+import 'package:fawri_app_refactor/components/recommended_products/recommended_products.dart';
 import 'package:fawri_app_refactor/components/slider-widget/slider-widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/model/slider/slider.dart';
@@ -12,6 +14,7 @@ import 'package:fawri_app_refactor/pages/products-category/products-category.dar
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
+import 'package:marquee/marquee.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -28,6 +31,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   String categoryDesc = "";
   String categoryImage = "";
   String categoryPath = "";
+  String marque = "";
   bool setBigCategories = false;
   List<int> discountCategories = [];
 
@@ -35,6 +39,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
     var _discountCategories =
         await FirebaseRemoteConfigClass().fetchDiscountCategories();
     var _categoryName = await FirebaseRemoteConfigClass().fetchCategoryName();
+    var _marque = await FirebaseRemoteConfigClass().fetchMarque();
     var _categoryDesc = await FirebaseRemoteConfigClass().fetchCategoryDesc();
     var _categoryImage = await FirebaseRemoteConfigClass().fetchCategoryImage();
     var _categoryPath = await FirebaseRemoteConfigClass().fetchCategoryPath();
@@ -46,6 +51,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
       categoryDesc = _categoryDesc.toString();
       categoryImage = _categoryImage.toString();
       categoryPath = _categoryPath.toString();
+      marque = _marque.toString();
     });
   }
 
@@ -146,6 +152,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
               } else {
                 if (snapshot.data != null) {
                   return FlashSalesList(
+                    productStyleNumber: 2,
                     shortlisted: snapshot.data["items"],
                   );
                 } else {
@@ -698,7 +705,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           ),
         ),
         FutureBuilder(
-          future: fetchRecommendedItems(),
+          future: fetchRecommendedItems(1),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Padding(
@@ -738,7 +745,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                 ),
               );
             } else if (snapshot.hasData && snapshot.data != null) {
-              return FlashSalesList(
+              return RecommendedProducts(
                 shortlisted: snapshot.data["items"],
               );
             } else {
@@ -751,31 +758,22 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           },
         ),
         Container(
-          width: double.infinity,
           height: 40,
+          width: double.infinity,
           color: Colors.red,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Back to school sale 50%",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Colors.white),
-                ),
-                Text(
-                  "SALE 50%",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: Colors.yellow),
-                ),
-              ],
-            ),
+          child: Marquee(
+            text: marque,
+            style: TextStyle(
+                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 17),
+            scrollAxis: Axis.horizontal,
+            blankSpace: 20.0,
+            velocity: 100.0,
+            pauseAfterRound: Duration(seconds: 1),
+            startPadding: 10.0,
+            accelerationDuration: Duration(milliseconds: 500),
+            decelerationDuration: Duration(milliseconds: 500),
+            accelerationCurve: Curves.linear,
+            decelerationCurve: Curves.easeOut,
           ),
         ),
         FutureBuilder(
@@ -819,6 +817,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
               } else {
                 if (snapshot.data != null) {
                   return FlashSalesList(
+                    productStyleNumber: 3,
                     shortlisted: snapshot.data["items"],
                   );
                 } else {
@@ -882,7 +881,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                 ),
               );
             } else if (snapshot.hasData && snapshot.data != null) {
-              return FlashSalesList(
+              return HomeToolsProducts(
                 shortlisted: snapshot.data["items"],
               );
             } else {

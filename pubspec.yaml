@@ -86,6 +86,7 @@ dependencies:
   app_links: ^6.2.0
   flutter_typeahead: ^5.2.0
   csv: ^6.0.0
+  dropdown_search: ^5.0.6
   uni_links:
 
 dependency_overrides:

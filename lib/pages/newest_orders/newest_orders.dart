@@ -507,31 +507,74 @@ class _NewestOrdersState extends State<NewestOrders> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('الغاء الطلبية'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('الرجاء أدخل سبب الغاء الطلبية'),
-              TextField(
-                controller: _reasonController,
-                decoration: InputDecoration(hintText: 'أدخل سبب الالغاء'),
-              ),
-            ],
+          content: Text(
+            "الرجاء أدخل سبب الغاء الطلبية",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
-          actions: [
-            TextButton(
-              child: Text('رجوع'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('الغاء الطلب'),
-              onPressed: () {
-                cancelOrder(orderId, _reasonController.text, context);
-                Navigator.of(context).pop();
-              },
-            ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                InkWell(
+                  onTap: () async {
+                    showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Card(
+                                  color: Colors.white,
+                                  child: Container(
+                                      padding: const EdgeInsets.all(50),
+                                      child:
+                                          const CircularProgressIndicator())),
+                            ],
+                          );
+                        });
+                    cancelOrder(orderId, _reasonController.text, context);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: MAIN_COLOR),
+                    child: Center(
+                      child: Text(
+                        "الغاء الطلب",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 50,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: MAIN_COLOR),
+                    child: Center(
+                      child: Text(
+                        "رجوع",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         );
       },

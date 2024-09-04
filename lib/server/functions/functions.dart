@@ -33,23 +33,24 @@ NavigatorFunction(BuildContext context, Widget Widget) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Widget));
 }
 
-fetchRecommendedItems() async {
+fetchRecommendedItems(int page) async {
   SelectedSizeService selectedSizeService = SelectedSizeService();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String UserID = prefs.getString('user_id') ?? "";
   String categoryId = "";
   List<String> sizes = [];
-  List<SelectedSizeModel> selectedSizes =
-      await selectedSizeService.getSelectedSizes().first;
   String userId = UserID;
+  List<SelectedSizeModel> selectedSizes =
+      await selectedSizeService.getSelectedSizesByUserId(userId);
   Map<String, dynamic> combinedResponse = {"items": []};
   for (var selectedSize in selectedSizes) {
     categoryId = selectedSize.categoryId;
+    categoryId = categoryId.replaceAll('&', '%26');
     sizes = selectedSize.selectedSizes;
     String sizesParam = sizes.join(',');
   }
   var response =
-      await getProductByCategory(categoryId, '', '', sizes.join(','), 1);
+      await getProductByCategory(categoryId, '', '', sizes.join(','), page);
   if (response != null && response["items"] != null) {
     combinedResponse["items"].addAll(response["items"]);
   }
@@ -429,17 +430,18 @@ getProductByCategory(category_id, sub_category_key, String size,
 }
 
 getHomeData(int page) async {
+  var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
   try {
     var response = await http.get(
         Uri.parse(
-            "https://fawri-f7ab5f0e45b8.herokuapp.com/api/getAvailableItems?main_category=Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement&sub_category=&season=Summer, All&page=1&api_key=H93J48593HFNWIEUTR287TG3"),
+            "https://fawri-f7ab5f0e45b8.herokuapp.com/api/getAvailableItems?main_category=Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement&sub_category=&season=${seasonName.toString()}&page=1&api_key=H93J48593HFNWIEUTR287TG3"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
   } catch (e) {
     var response = await http.get(
         Uri.parse(
-            "https://fawri-f7ab5f0e45b8.herokuapp.com/api/getAvailableItems?main_category=Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement&sub_category=&season=Summer, All&page=1&api_key=H93J48593HFNWIEUTR287TG3"),
+            "https://fawri-f7ab5f0e45b8.herokuapp.com/api/getAvailableItems?main_category=Home %26 Living, Home Living, Home Textile,Tools %26 Home Improvement&sub_category=&season=${seasonName.toString()}&page=1&api_key=H93J48593HFNWIEUTR287TG3"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res;
@@ -455,11 +457,12 @@ cancelOrder(int orderId, String reason, BuildContext context) async {
       Uri.parse('$url?order_id=$orderId&reason=$reason&api_key=$apiKey'),
     );
 
-    if (!context.mounted) return; // Ensure the widget is still mounted
+    if (!context.mounted) return;
 
     if (response.statusCode == 200) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "تم حذف الطلبية بنجاح!");
+      Navigator.pop(context);
     } else {
       Navigator.pop(context);
       Fluttertoast.showToast(

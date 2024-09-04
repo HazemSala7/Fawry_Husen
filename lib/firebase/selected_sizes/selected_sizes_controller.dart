@@ -44,4 +44,15 @@ class SelectedSizeService {
       return null;
     }
   }
+
+  Future<List<SelectedSizeModel>> getSelectedSizesByUserId(
+      String userId) async {
+    QuerySnapshot querySnapshot =
+        await selectedSizesCollection.where('userId', isEqualTo: userId).get();
+
+    return querySnapshot.docs
+        .map((doc) =>
+            SelectedSizeModel.fromMap(doc.data() as Map<String, dynamic>?))
+        .toList();
+  }
 }

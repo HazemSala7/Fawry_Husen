@@ -1,4 +1,3 @@
-import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-three/product-widget-style-three.dart';
 import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-two/product-widget-style-two.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
@@ -11,21 +10,19 @@ import '../../pages/product-screen/product-screen.dart';
 import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
-class FlashSalesList extends StatefulWidget {
+class RecommendedProducts extends StatefulWidget {
   final List shortlisted;
-  int productStyleNumber;
 
-  FlashSalesList({
+  RecommendedProducts({
     Key? key,
     required this.shortlisted,
-    required this.productStyleNumber,
   }) : super(key: key);
 
   @override
-  _FlashSalesListState createState() => _FlashSalesListState();
+  _RecommendedProductsState createState() => _RecommendedProductsState();
 }
 
-class _FlashSalesListState extends State<FlashSalesList> {
+class _RecommendedProductsState extends State<RecommendedProducts> {
   ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   bool _isLoading = false;
@@ -70,20 +67,14 @@ class _FlashSalesListState extends State<FlashSalesList> {
     setState(() {
       _isLoading = true;
     });
-
-    // Simulate a delay to fetch more data (replace with your actual data fetching logic)
     await Future.delayed(Duration(seconds: 1));
-
-    // Example logic to fetch more data and update the list
-    var newItems = await getProducts(
-        _currentPage + 1); // Replace with your actual data fetching logic
+    var newItems = await fetchRecommendedItems(_currentPage + 1);
 
     setState(() {
       if (newItems.isEmpty) {
-        _isEndReached = true; // Indicates no more data available
+        _isEndReached = true;
       } else {
-        widget.shortlisted
-            .addAll(newItems["items"]); // Append new items to the existing list
+        widget.shortlisted.addAll(newItems["items"]);
         _currentPage++;
       }
       _isLoading = false;
@@ -100,7 +91,7 @@ class _FlashSalesListState extends State<FlashSalesList> {
             padding:
                 const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 0),
             child: Container(
-              height: widget.productStyleNumber == 2 ? 224 : 300,
+              height: 224,
               width: MediaQuery.of(context).size.width,
               child: AnimationLimiter(
                 child: ListView.builder(
@@ -116,23 +107,11 @@ class _FlashSalesListState extends State<FlashSalesList> {
                         child: SlideAnimation(
                           horizontalOffset: 100.0,
                           child: FadeInAnimation(
-                              child: widget.productStyleNumber == 2
-                                  ? ProductWidgetStyleTwo(
-                                      fire: true,
-                                      index: index,
-                                      shortlisted: widget.shortlisted,
-                                    )
-                                  : widget.productStyleNumber == 3
-                                      ? ProductWidgetStyleThree(
-                                          fire: false,
-                                          index: index,
-                                          shortlisted: widget.shortlisted,
-                                        )
-                                      : ProductWidgetStyleTwo(
-                                          fire: true,
-                                          index: index,
-                                          shortlisted: widget.shortlisted,
-                                        )),
+                              child: ProductWidgetStyleTwo(
+                            fire: true,
+                            index: index,
+                            shortlisted: widget.shortlisted,
+                          )),
                         ),
                       );
                     } else {

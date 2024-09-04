@@ -52,317 +52,297 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
     return Container(
       color: MAIN_COLOR,
       child: SafeArea(
-          child: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(50),
-            child: AppBarWidgetBack(
-              cartKey: null,
-              showCart: false,
-            )),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25, right: 25),
-            child: Column(
-              key: Key("2"),
-              children: [
-                Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 1000),
-                      curve: Curves.easeInOut,
-                      transform: _hasError
-                          ? Matrix4.translationValues(5, 0, 0)
-                          : Matrix4.identity(),
-                      child: Container(
-                        width: double.infinity,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              color: _hasError ? Colors.red : Colors.black,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: DropdownButton<String>(
-                          underline: Container(),
-                          icon: Icon(Icons.arrow_drop_down_rounded),
-                          isExpanded: true,
-                          value: dropdownValue,
-                          items: <String>[
-                            "اختر منطقتك",
-                            'القدس',
-                            'الداخل',
-                            'الضفه الغربيه'
-                          ].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  value,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              dropdownValue = newValue!;
-                            });
-                          },
-                        ),
-                      ),
-                    )),
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "اظهار كود الخصم",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      FlutterSwitch(
-                        activeColor: Colors.green,
-                        width: 60.0,
-                        height: 30.0,
-                        valueFontSize: 25.0,
-                        toggleSize: 27.0,
-                        value: status,
-                        borderRadius: 30.0,
-                        padding: 3.0,
-                        // showOnOff: true,
-                        onToggle: (val) {
-                          setState(() {
-                            status = !status;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Visibility(
-                  visible: status ? true : false,
-                  child: Column(
-                    children: [
-                      Padding(
+          child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Scaffold(
+            appBar: PreferredSize(
+                preferredSize: Size.fromHeight(50),
+                child: AppBarWidgetBack(
+                  cartKey: null,
+                  showCart: false,
+                )),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25),
+                child: Column(
+                  key: Key("2"),
+                  children: [
+                    Padding(
                         padding: const EdgeInsets.only(top: 20),
-                        child: Stack(
-                          alignment: Alignment.topLeft,
-                          children: [
-                            Container(
-                              height: 50,
-                              width: double.infinity,
-                              child: TextField(
-                                controller: CoponController,
-                                obscureText: false,
-                                onChanged: (_) {
-                                  if (_ != "") {
-                                    setState(() {
-                                      checkCopon = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      checkCopon = false;
-                                    });
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  hintText: "كود الخصم",
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 1000),
+                          curve: Curves.easeInOut,
+                          transform: _hasError
+                              ? Matrix4.translationValues(5, 0, 0)
+                              : Matrix4.identity(),
+                          child: Container(
+                            width: double.infinity,
+                            height: 60,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: _hasError ? Colors.red : Colors.black,
+                                  width: 2.0,
                                 ),
-                              ),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: DropdownButton<String>(
+                              underline: Container(),
+                              icon: Icon(Icons.arrow_drop_down_rounded),
+                              isExpanded: true,
+                              value: dropdownValue,
+                              items: <String>[
+                                "اختر منطقتك",
+                                'القدس',
+                                'الداخل',
+                                'الضفه الغربيه'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      value,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                              },
                             ),
-                            Visibility(
-                              visible: checkCopon,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: () async {
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    String UserID =
-                                        prefs.getString('user_id') ?? "";
-                                    bool couponExists =
-                                        await checkCouponInFirebase(
-                                            CoponController.text,
-                                            UserID.toString());
-                                    if (couponExists) {
-                                      CoponMessage =
-                                          "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
-                                      setState(() {});
-                                      _couponMessageTimer?.cancel();
-
-                                      // Set a new timer to clear the message after 15 seconds
-                                      _couponMessageTimer =
-                                          Timer(Duration(seconds: 5), () {
+                          ),
+                        )),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "اظهار كود الخصم",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          FlutterSwitch(
+                            activeColor: Colors.green,
+                            width: 60.0,
+                            height: 30.0,
+                            valueFontSize: 25.0,
+                            toggleSize: 27.0,
+                            value: status,
+                            borderRadius: 30.0,
+                            padding: 3.0,
+                            // showOnOff: true,
+                            onToggle: (val) {
+                              setState(() {
+                                status = !status;
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Visibility(
+                      visible: status ? true : false,
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Stack(
+                              alignment: Alignment.topLeft,
+                              children: [
+                                Container(
+                                  height: 50,
+                                  width: double.infinity,
+                                  child: TextField(
+                                    controller: CoponController,
+                                    obscureText: false,
+                                    onChanged: (_) {
+                                      if (_ != "") {
                                         setState(() {
-                                          CoponMessage = "";
-                                        });
-                                      });
-                                    } else {
-                                      var res = await getCoupun(
-                                              CoponController.text) ??
-                                          null;
-                                      if (res.toString() == "null" ||
-                                          res.toString() == "false") {
-                                        CoponMessage =
-                                            "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
-                                        setState(() {});
-                                        _couponMessageTimer?.cancel();
-
-                                        // Set a new timer to clear the message after 15 seconds
-                                        _couponMessageTimer =
-                                            Timer(Duration(seconds: 5), () {
-                                          setState(() {
-                                            CoponMessage = "";
-                                          });
+                                          checkCopon = true;
                                         });
                                       } else {
-                                        CoponMessage =
-                                            "تم خصم قيمة الكوبون من مجموع الطلبية";
-
-                                        if (!coponed) {
-                                          widget.total =
-                                              widget.total * (1 - res);
-                                        }
-                                        coponed = true;
-                                        setState(() {});
-                                        _couponMessageTimer =
-                                            Timer(Duration(seconds: 15), () {
-                                          setState(() {
-                                            CoponMessage = "";
-                                          });
+                                        setState(() {
+                                          checkCopon = false;
                                         });
                                       }
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 70,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: MAIN_COLOR),
-                                    child: Center(
-                                      child: Text(
-                                        "فحص",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontSize: 16),
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: "كود الخصم",
+                                    ),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: checkCopon,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        String UserID =
+                                            prefs.getString('user_id') ?? "";
+                                        bool couponExists =
+                                            await checkCouponInFirebase(
+                                                CoponController.text,
+                                                UserID.toString());
+                                        if (couponExists) {
+                                          CoponMessage =
+                                              "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
+                                          setState(() {});
+                                          _couponMessageTimer?.cancel();
+
+                                          // Set a new timer to clear the message after 15 seconds
+                                          _couponMessageTimer =
+                                              Timer(Duration(seconds: 5), () {
+                                            setState(() {
+                                              CoponMessage = "";
+                                            });
+                                          });
+                                        } else {
+                                          var res = await getCoupun(
+                                                  CoponController.text) ??
+                                              null;
+                                          if (res.toString() == "null" ||
+                                              res.toString() == "false") {
+                                            CoponMessage =
+                                                "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
+                                            setState(() {});
+                                            _couponMessageTimer?.cancel();
+
+                                            // Set a new timer to clear the message after 15 seconds
+                                            _couponMessageTimer =
+                                                Timer(Duration(seconds: 5), () {
+                                              setState(() {
+                                                CoponMessage = "";
+                                              });
+                                            });
+                                          } else {
+                                            CoponMessage =
+                                                "تم خصم قيمة الكوبون من مجموع الطلبية";
+
+                                            if (!coponed) {
+                                              widget.total =
+                                                  widget.total * (1 - res);
+                                            }
+                                            coponed = true;
+                                            setState(() {});
+                                            _couponMessageTimer = Timer(
+                                                Duration(seconds: 15), () {
+                                              setState(() {
+                                                CoponMessage = "";
+                                              });
+                                            });
+                                          }
+                                        }
+                                      },
+                                      child: Container(
+                                        width: 70,
+                                        height: 30,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: MAIN_COLOR),
+                                        child: Center(
+                                          child: Text(
+                                            "فحص",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                                fontSize: 16),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: CoponMessage == "" ? false : true,
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                CoponMessage,
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
                           ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Container(
-                  // height: 400,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "مجموع القطع : ",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "₪${_safeRound(oldTotal)}",
-                              style: TextStyle(
-                                color: Color(0xff8F5C4B),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                          Visibility(
+                            visible: CoponMessage == "" ? false : true,
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    CoponMessage,
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
+                          )
+                        ],
                       ),
-                      Visibility(
-                        visible: CoponMessage == "" ? false : true,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "نسبة الخصم : ",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "₪${_safeRound(oldTotal)}",
-                                style: TextStyle(
-                                  color: Color(0xffC01C1C),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Container(
+                      // height: 400,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "مجموع القطع : ",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  "₪${_safeRound(oldTotal)}",
+                                  style: TextStyle(
+                                    color: Color(0xff8F5C4B),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: CoponMessage == "" ? false : true,
-                        child: Column(
-                          children: [
-                            Padding(
+                          Visibility(
+                            visible: CoponMessage == "" ? false : true,
+                            child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "مبلغ التوفير : ",
+                                    "نسبة الخصم : ",
                                     style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    "₪${_calculateTotalDifference(oldTotal, widget.total)}",
+                                    "₪${_safeRound(oldTotal)}",
                                     style: TextStyle(
-                                      color: Color(0xffA8AA57),
+                                      color: Color(0xffC01C1C),
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -370,125 +350,159 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 10),
-                          ],
-                        ),
+                          ),
+                          Visibility(
+                            visible: CoponMessage == "" ? false : true,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "مبلغ التوفير : ",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        "₪${_calculateTotalDifference(oldTotal, widget.total)}",
+                                        style: TextStyle(
+                                          color: Color(0xffA8AA57),
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "المبلغ النهائي بعد الخصم",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "₪${widget.total.round()}",
+                                  style: TextStyle(
+                                    color: Color(0xff905D4C),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "التوصيل : ",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "₪${dropdownValue.toString() == "الداخل" ? "60" : dropdownValue.toString() == "القدس" ? "30" : dropdownValue.toString() == "الضفه الغربيه" ? "20" : "0"}",
+                                  style: TextStyle(
+                                    color: Color(0xffA8AA57),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 30, left: 30),
+                            child: Container(
+                              width: double.infinity,
+                              height: 1,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "المبلغ للدفع : ",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "₪${dropdownValue.toString() == "الداخل" ? (60.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "القدس" ? (30.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "الضفه الغربيه" ? (20.0 + double.parse(widget.total.toString())).round() : widget.total.round()}",
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "المبلغ النهائي بعد الخصم",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "₪${widget.total.round()}",
-                              style: TextStyle(
-                                color: Color(0xff905D4C),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "التوصيل : ",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "₪${dropdownValue.toString() == "الداخل" ? "60" : dropdownValue.toString() == "القدس" ? "30" : dropdownValue.toString() == "الضفه الغربيه" ? "20" : "0"}",
-                              style: TextStyle(
-                                color: Color(0xffA8AA57),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 30, left: 30),
-                        child: Container(
-                          width: double.infinity,
-                          height: 1,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "المبلغ للدفع : ",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              "₪${dropdownValue.toString() == "الداخل" ? (60.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "القدس" ? (30.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "الضفه الغربيه" ? (20.0 + double.parse(widget.total.toString())).round() : widget.total.round()}",
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: BouncingWidget(
-                    child: ButtonWidget(
-                        name: "متابعة عملية الشراء",
-                        height: 50,
-                        width: double.infinity,
-                        BorderColor: Colors.black,
-                        OnClickFunction: () {
-                          if (dropdownValue.toString() == "اختر منطقتك") {
-                            setState(() {
-                              _hasError = true;
-                              Vibration.vibrate(duration: 100);
-                              // Resetting error state after a short duration
-                              Future.delayed(Duration(milliseconds: 1000), () {
-                                setState(() {
-                                  _hasError = false;
-                                });
-                              });
-                            });
-                          } else {
-                            NavigatorFunction(
-                                context,
-                                CheckoutSecondScreen(
-                                  dropdownValue: dropdownValue.toString(),
-                                  total: double.parse(widget.total.toString()),
-                                ));
-                          }
-                        },
-                        BorderRaduis: 10,
-                        ButtonColor: Colors.black,
-                        NameColor: Colors.white),
-                  ),
-                )
-              ],
+              ),
             ),
           ),
-        ),
+          Padding(
+            padding:
+                const EdgeInsets.only(top: 20, bottom: 20, right: 25, left: 25),
+            child: BouncingWidget(
+              child: ButtonWidget(
+                  name: "متابعة عملية الشراء",
+                  height: 60,
+                  width: double.infinity,
+                  BorderColor: Colors.black,
+                  OnClickFunction: () {
+                    if (dropdownValue.toString() == "اختر منطقتك") {
+                      setState(() {
+                        _hasError = true;
+                        Vibration.vibrate(duration: 100);
+                        // Resetting error state after a short duration
+                        Future.delayed(Duration(milliseconds: 1000), () {
+                          setState(() {
+                            _hasError = false;
+                          });
+                        });
+                      });
+                    } else {
+                      NavigatorFunction(
+                          context,
+                          CheckoutSecondScreen(
+                            dropdownValue: dropdownValue.toString(),
+                            total: double.parse(widget.total.toString()),
+                          ));
+                    }
+                  },
+                  BorderRaduis: 10,
+                  ButtonColor: Colors.black,
+                  NameColor: Colors.white),
+            ),
+          )
+        ],
       )),
     );
   }
