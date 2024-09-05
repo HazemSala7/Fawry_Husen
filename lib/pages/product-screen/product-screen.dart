@@ -635,6 +635,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                 typeApi = true;
                               }
                             }
+
                             var _price = double.parse(
                                     item["variants"][0]["price"].toString()) *
                                 double.parse(widget.priceMul.toString());

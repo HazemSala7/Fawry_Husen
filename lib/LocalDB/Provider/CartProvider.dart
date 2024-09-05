@@ -36,6 +36,13 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
+  void updateCartItem(CartItem item) async {
+    await _dbHelper.updateCartItem(item);
+    // Refresh _cartItems with the latest data from the database
+    _cartItems = await _dbHelper.getCartItems();
+    notifyListeners();
+  }
+
   Future<void> addToCart(CartItem item) async {
     final existingIndex = _cartItems.indexWhere(
       (cartItem) =>
@@ -79,13 +86,6 @@ class CartProvider extends ChangeNotifier {
     _cartItems.clear(); // Clear the cart items in memory
     await _dbHelper.clearCart(); // Clear the cart items from the local database
     notifyListeners(); // Notify the listeners about the change
-  }
-
-  void updateCartItem(CartItem item) async {
-    await _dbHelper.updateCartItem(item);
-    // Refresh _cartItems with the latest data from the database
-    _cartItems = await _dbHelper.getCartItems();
-    notifyListeners();
   }
 
   bool isProductCart(int productId, {String? selectedSize}) {

@@ -223,8 +223,8 @@ addOrder(
     double totalPrice = 0.0;
 
     for (var i = 0; i < cartProvider.length; i++) {
-      print("cartProvider[i].quantity.toString()");
-      print(cartProvider[i].quantity.toString());
+      print("cartProvider[i].placeInWarehouse.toString()");
+      print(cartProvider[i].placeInWarehouse.toString());
       products.add({
         "id": cartProvider[i].productId.toString(),
         "image": cartProvider[i].image.toString(),

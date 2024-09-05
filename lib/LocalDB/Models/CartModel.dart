@@ -97,8 +97,8 @@ class CartItem {
       vendor_sku: vendor_sku ?? this.vendor_sku,
       image: image ?? this.image,
       quantity: quantity ?? this.quantity,
-      user_id: quantity ?? this.user_id,
-      placeInWarehouse: '',
+      user_id: user_id ?? this.user_id,
+      placeInWarehouse: placeInWarehouse ?? this.placeInWarehouse,
     );
   }
 }

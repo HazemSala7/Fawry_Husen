@@ -71,6 +71,7 @@ class _ProductItemState extends State<ProductItem> {
   @override
   final FlareControls flareControls = FlareControls();
   int _currentIndex = 0;
+  String placeInWhereHouse = "";
   bool clicked = false;
   bool loadingcart = false;
   bool loadingfav = false;
@@ -845,6 +846,8 @@ class _ProductItemState extends State<ProductItem> {
                                       widget.quantityAvailable = int.parse(
                                           selectedVariant['quantity']
                                               .toString());
+                                      placeInWhereHouse =
+                                          selectedVariant['place_in_warehouse'];
                                       if (int.parse(widget.quantityAvailable
                                               .toString()) >
                                           1) {
@@ -855,6 +858,8 @@ class _ProductItemState extends State<ProductItem> {
                                       }
                                     }
                                   });
+                                  print("placeInWhereHouse");
+                                  print(placeInWhereHouse);
                                 },
                               ),
                       ),
