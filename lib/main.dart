@@ -77,10 +77,35 @@ class _FawriState extends State<Fawri> {
   void handleDeepLink(Uri deepLink) {
     if (deepLink.path == '/product') {
       final productId = deepLink.queryParameters['id'];
-      navigatorKey.currentState?.push(
-        MaterialPageRoute(builder: (context) => Cart()),
-      );
+      if (productId != null) {
+        navigatorKey.currentState?.push(
+          MaterialPageRoute(
+            builder: (context) => ProductScreen(
+              id: int.parse(productId.toString()),
+              SubCategories: [],
+              Sub_Category_Key: "",
+              cart_fav: false,
+              favourite: false,
+              index: 1,
+              page: 1,
+              price: 0,
+              priceMul: 1,
+              sizes: [],
+              url: "",
+              ALL: false,
+              IDs: [],
+              Images: [],
+              Product: [],
+              SIZES: [],
+            ),
+          ),
+        );
+      } else {
+        // Handle the case where 'id' parameter is missing
+        print('Product ID not found in the deep link.');
+      }
     } else {
+      // Handle other paths or default behavior
       navigatorKey.currentState?.push(
         MaterialPageRoute(builder: (context) => Cart()),
       );

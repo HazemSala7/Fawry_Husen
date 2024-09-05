@@ -377,11 +377,15 @@ class _ProductItemState extends State<ProductItem> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   InkWell(
-                                      onTap: () {
+                                      onTap: () async {
+                                        String dynamicLink =
+                                            await createDynamicLink(
+                                                widget.id.toString());
+
+                                        print('Dynamic Link: $dynamicLink');
                                         // Share.share(
                                         //     "https://www.fawri.co/product-details-one/${widget.id}?offset=1");
-                                        Share.share(
-                                            "https://www.fawri.co/product-details-one?id=${widget.id}&offset=1");
+                                        Share.share(dynamicLink);
                                       },
                                       child: Opacity(
                                         opacity: 0.75,

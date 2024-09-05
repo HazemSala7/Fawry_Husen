@@ -5,6 +5,7 @@ import 'package:fawri_app_refactor/firebase/selected_sizes/selected_sizes_model.
 import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
 import 'package:fawri_app_refactor/services/cache_manager/cache_manager.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,6 +29,26 @@ import '../../firebase/used_copons/UsedCoponsFirebaseModel.dart';
 import '../domain/domain.dart';
 
 var headers = {'ContentType': 'application/json', "Connection": "Keep-Alive"};
+
+Future<String> createDynamicLink(String productId) async {
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+    uriPrefix: 'https://fawri.page.link', // Use your dynamic link URL prefix
+    link: Uri.parse(
+        'https://fawri-f7ab5f0e45b8.herokuapp.com/product?id=$productId'),
+    androidParameters: AndroidParameters(
+      packageName: 'fawri.app.shop', // Replace with your app's package name
+      minimumVersion: 0,
+    ),
+    iosParameters: IOSParameters(
+      bundleId: 'fawri.app.shop', // Replace with your app's bundle ID
+      minimumVersion: '1.0.0',
+    ),
+  );
+
+  final ShortDynamicLink shortLink =
+      await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+  return shortLink.shortUrl.toString();
+}
 
 NavigatorFunction(BuildContext context, Widget Widget) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Widget));
