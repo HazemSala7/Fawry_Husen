@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,36 +97,71 @@ class _ProductScreenState extends State<ProductScreen> {
 
   var orderedItems = [];
   final CarouselController _carouselController = CarouselController();
-  bool _hasShownTutorial = false;
+  bool showTutorial = true;
+  bool isFirstOpen = true;
+  int currentIndex = 0;
+  bool tutorialActive = true;
 
-  Future<void> _checkIfTutorialShown() async {
+  Future<void> _checkFirstOpen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _hasShownTutorial = prefs.getBool('hasShownTutorial') ?? false;
+    bool _isFirstOpen = prefs.getBool('isFirstOpen') ?? true;
+    setState(() {
+      isFirstOpen = _isFirstOpen;
+    });
 
-    if (!_hasShownTutorial) {
-      _showSwipeTutorial();
+    if (isFirstOpen) {
+      setState(() {
+        showTutorial = true;
+
+        startTutorial();
+      });
+      await prefs.setBool('isFirstOpen', false);
     }
   }
 
-  Future<void> _showSwipeTutorial() async {
-    // Perform swipe animation
-    await Future.delayed(Duration(seconds: 1)); // Initial delay before starting
-    _carouselController.nextPage(
-        duration: Duration(milliseconds: 800), curve: Curves.easeInOut);
-    await Future.delayed(Duration(milliseconds: 900));
-    _carouselController.previousPage(
-        duration: Duration(milliseconds: 800), curve: Curves.easeInOut);
+  void startTutorial() async {
+    bool forward = true;
 
-    // Mark the tutorial as shown
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('hasShownTutorial', true);
+    while (tutorialActive) {
+      await Future.delayed(Duration(seconds: 1));
+      if (mounted && tutorialActive) {
+        if (forward) {
+          _carouselController.nextPage();
+          setState(() {
+            currentIndex++;
+          });
+          if (currentIndex >= 1) {
+            forward = false;
+          }
+        } else {
+          _carouselController.previousPage();
+          setState(() {
+            currentIndex--;
+          });
+          if (currentIndex <= 0) {
+            forward = true;
+          }
+        }
+      }
+    }
+
+    // End the tutorial and hide the black screen
+    setState(() {
+      showTutorial = false;
+    });
   }
 
-  int _currentPage = 0;
+  void stopTutorial() {
+    setState(() {
+      tutorialActive = false;
+      showTutorial = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _checkIfTutorialShown();
+    _checkFirstOpen();
     setUserID();
     loadInitialData();
   }
@@ -396,317 +432,364 @@ class _ProductScreenState extends State<ProductScreen> {
             this.runAddToCartAnimation = runAddToCartAnimation;
           },
           child: Scaffold(
-            appBar: PreferredSize(
-              preferredSize: Size.fromHeight(40),
-              child: AppBar(
-                backgroundColor: MAIN_COLOR,
-                centerTitle: true,
-                title: Text(
-                  "فوري",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.white),
-                ),
-                actions: [
-                  Container(
-                    key: cartKey,
-                    child: Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            NavigatorFunction(context, Cart());
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Image.asset(
-                              "assets/images/shopping-cart.png",
-                              height: 35,
-                              width: 35,
-                              color: Colors.white,
+              appBar: PreferredSize(
+                preferredSize: Size.fromHeight(40),
+                child: AppBar(
+                  backgroundColor: MAIN_COLOR,
+                  centerTitle: true,
+                  title: Text(
+                    "فوري",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  actions: [
+                    Container(
+                      key: cartKey,
+                      child: Stack(
+                        alignment: Alignment.topRight,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              NavigatorFunction(context, Cart());
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(6.0),
+                              child: Image.asset(
+                                "assets/images/shopping-cart.png",
+                                height: 35,
+                                width: 35,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                        Consumer<CartProvider>(
-                          builder: (context, cartProvider, _) {
-                            int itemCount = cartProvider.cartItemsCount;
-                            return CartIcon(itemCount);
-                          },
-                        )
-                      ],
-                    ),
-                  )
-                ],
-                leading: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: Icon(
-                      Icons.arrow_back_rounded,
-                      color: Colors.white,
-                    )),
-              ),
-            ),
-            body: loadingPage
-                ? widget.cart_fav
-                    ? AnimationLimiter(
-                        child: CarouselSlider(
-                          carouselController: _carouselController,
-                          options: CarouselOptions(
-                            aspectRatio: 2.5,
-                            autoPlay: false,
-                            // reverse: true,
-                            initialPage: 0,
-                            enlargeCenterPage: true,
-                            viewportFraction: 1,
-                            height: MediaQuery.of(context).size.height,
-                            onPageChanged: (index, reason) async {
-                              if (index == orderedItems.length - 1 &&
-                                  reason == CarouselPageChangedReason.manual) {
-                                await loadAdditionalData();
-                              }
+                          Consumer<CartProvider>(
+                            builder: (context, cartProvider, _) {
+                              int itemCount = cartProvider.cartItemsCount;
+                              return CartIcon(itemCount);
                             },
-                          ),
-                          items: newArray.map((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return AnimationConfiguration.staggeredList(
-                                  position: i,
-                                  duration: const Duration(milliseconds: 700),
-                                  child: SlideAnimation(
-                                    verticalOffset: 100.0,
-                                    child: FadeInAnimation(
-                                      curve: Curves.easeIn,
-                                      child: ProductItem(
-                                          quantity: 0,
-                                          quantityAvailable: 0,
-                                          showQuantitySelector: false,
-                                          featureProduct: false,
-                                          Sizes: [],
-                                          runAddToCartAnimation:
-                                              runAddToCartAnimation,
-                                          loadingPage: true,
-                                          SKU: "",
-                                          isLikedProduct: false,
-                                          SelectedSizes: "اختر مقاسك",
-                                          nickname: "",
-                                          variants: [],
-                                          vendor_SKU: "",
-                                          name: widget.Product[i]["title"]
-                                              as String,
-                                          id: widget.Product[i]["id"],
-                                          images: [widget.Product[i]["image"]],
-                                          description: [],
-                                          new_price: double.parse(widget
-                                                  .Product[i]["price"]
-                                                  .toString()) *
-                                              double.parse(
-                                                  widget.priceMul.toString()),
-                                          old_price: double.parse(widget
-                                                  .Product[i]["price"]
-                                                  .toString()) *
-                                              double.parse(
-                                                  widget.priceMul.toString()),
-                                          image: widget.Product[i]["image"]
-                                              as String,
-                                          sizesApi: [],
-                                          TypeApi: false,
-                                          placeInWarehouse: {}),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      )
-                    : AnimationLimiter(
-                        child: CarouselSlider(
-                          carouselController: _carouselController,
-                          options: CarouselOptions(
-                            aspectRatio: 2.5,
-                            autoPlay: false,
-                            enlargeCenterPage: true,
-                            viewportFraction: 1,
-                            initialPage: 0,
-                            height: MediaQuery.of(context).size.height,
-                            onPageChanged: (index, reason) async {
-                              if (index == orderedItems.length - 5 &&
-                                  reason == CarouselPageChangedReason.manual) {
-                                await loadAdditionalData();
-                              }
-                            },
-                          ),
-                          items: newArray.map((i) {
-                            return Builder(
-                              builder: (BuildContext context) {
-                                return AnimationConfiguration.staggeredList(
-                                  position: i,
-                                  duration: const Duration(milliseconds: 700),
-                                  child: SlideAnimation(
-                                    verticalOffset: 100.0,
-                                    child: FadeInAnimation(
-                                      curve: Curves.easeIn,
-                                      child: ProductItem(
-                                          quantity: 0,
-                                          quantityAvailable: 0,
-                                          showQuantitySelector: false,
-                                          featureProduct: false,
-                                          Sizes: [],
-                                          runAddToCartAnimation:
-                                              runAddToCartAnimation,
-                                          loadingPage: true,
-                                          SKU: "",
-                                          isLikedProduct: false,
-                                          SelectedSizes: "اختر مقاسك",
-                                          nickname: "",
-                                          variants: [],
-                                          vendor_SKU: "",
-                                          name: widget.Product[i]["title"]
-                                              as String,
-                                          id: widget.Product[i]["id"],
-                                          images: widget.Product[i]
-                                              ["vendor_images_links"],
-                                          description: [],
-                                          new_price: double.parse(widget
-                                                  .Product[i]["price"]
-                                                  .toString()) *
-                                              double.parse(
-                                                  widget.priceMul.toString()),
-                                          old_price:
-                                              double.parse(widget.Product[i]["price"].toString()) *
-                                                  double.parse(widget.priceMul
-                                                      .toString()),
-                                          image: widget.Product[i]
-                                                  ["vendor_images_links"][0]
-                                              as String,
-                                          sizesApi: [],
-                                          TypeApi: false,
-                                          placeInWarehouse: {}),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      )
-                : AnimationLimiter(
-                    child: CarouselSlider(
-                      carouselController: _carouselController,
-                      options: CarouselOptions(
-                        aspectRatio: 2.5,
-                        autoPlay: false,
-                        // enableInfiniteScroll: false,
-                        padEnds: false,
-                        enlargeCenterPage: true,
-                        viewportFraction: 1,
-                        reverse: false,
-                        scrollDirection: Axis.horizontal,
-                        height: MediaQuery.of(context).size.height,
-                        initialPage: 0,
-                        onPageChanged: (index, reason) async {
-                          if (index == orderedItems.length - 8 &&
-                              reason == CarouselPageChangedReason.manual) {
-                            await loadAdditionalData();
-                          }
-                        },
+                          )
+                        ],
                       ),
-                      items: orderedItems.map((item) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            // print("1");
-                            List<String> images =
-                                (item["vendor_images_links"] as List)
-                                    .cast<String>();
-                            // print("2");
-                            int itemIndex = orderedItems.indexOf(item);
-                            bool isFeature = (itemIndex) % 7 == 0;
-                            List sizesAPI = widget.sizes;
-                            // print("4");
-                            sizesAPI = [];
-                            Map placeInWarehouse = {};
-                            bool typeApi = false;
-                            for (int i = 0; i < item["variants"].length; i++) {
-                              if (!sizesAPI
-                                  .contains(item["variants"][i]["size"])) {
-                                sizesAPI.add(item["variants"][i]["size"]);
-                                placeInWarehouse[item["variants"][i]["size"]] =
-                                    item["variants"][i]["place_in_warehouse"];
-                                typeApi = true;
-                              }
-                            }
+                    )
+                  ],
+                  leading: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: Colors.white,
+                      )),
+                ),
+              ),
+              body: Stack(
+                children: [
+                  loadingPage
+                      ? widget.cart_fav
+                          ? AnimationLimiter(
+                              child: CarouselSlider(
+                                carouselController: _carouselController,
+                                options: CarouselOptions(
+                                  aspectRatio: 2.5,
+                                  autoPlay: false,
+                                  // reverse: true,
+                                  initialPage: 0,
+                                  enlargeCenterPage: true,
+                                  viewportFraction: 1,
+                                  height: MediaQuery.of(context).size.height,
+                                  onPageChanged: (index, reason) async {
+                                    if (index == orderedItems.length - 1 &&
+                                        reason ==
+                                            CarouselPageChangedReason.manual) {
+                                      await loadAdditionalData();
+                                    }
+                                  },
+                                ),
+                                items: newArray.map((i) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return AnimationConfiguration
+                                          .staggeredList(
+                                        position: i,
+                                        duration:
+                                            const Duration(milliseconds: 700),
+                                        child: SlideAnimation(
+                                          verticalOffset: 100.0,
+                                          child: FadeInAnimation(
+                                            curve: Curves.easeIn,
+                                            child: ProductItem(
+                                                quantity: 0,
+                                                quantityAvailable: 0,
+                                                showQuantitySelector: false,
+                                                featureProduct: false,
+                                                Sizes: [],
+                                                runAddToCartAnimation:
+                                                    runAddToCartAnimation,
+                                                loadingPage: true,
+                                                SKU: "",
+                                                isLikedProduct: false,
+                                                SelectedSizes: "اختر مقاسك",
+                                                nickname: "",
+                                                variants: [],
+                                                vendor_SKU: "",
+                                                name: widget.Product[i]["title"]
+                                                    as String,
+                                                id: widget.Product[i]["id"],
+                                                images: [
+                                                  widget.Product[i]["image"]
+                                                ],
+                                                description: [],
+                                                new_price: double.parse(widget
+                                                        .Product[i]["price"]
+                                                        .toString()) *
+                                                    double.parse(widget.priceMul
+                                                        .toString()),
+                                                old_price: double.parse(widget
+                                                        .Product[i]["price"]
+                                                        .toString()) *
+                                                    double.parse(widget.priceMul.toString()),
+                                                image: widget.Product[i]["image"] as String,
+                                                sizesApi: [],
+                                                TypeApi: false,
+                                                placeInWarehouse: {}),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                          : AnimationLimiter(
+                              child: CarouselSlider(
+                                carouselController: _carouselController,
+                                options: CarouselOptions(
+                                  aspectRatio: 2.5,
+                                  autoPlay: false,
+                                  enlargeCenterPage: true,
+                                  viewportFraction: 1,
+                                  initialPage: 0,
+                                  height: MediaQuery.of(context).size.height,
+                                  onPageChanged: (index, reason) async {
+                                    if (index == orderedItems.length - 5 &&
+                                        reason ==
+                                            CarouselPageChangedReason.manual) {
+                                      await loadAdditionalData();
+                                    }
+                                  },
+                                ),
+                                items: newArray.map((i) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return AnimationConfiguration
+                                          .staggeredList(
+                                        position: i,
+                                        duration:
+                                            const Duration(milliseconds: 700),
+                                        child: SlideAnimation(
+                                          verticalOffset: 100.0,
+                                          child: FadeInAnimation(
+                                            curve: Curves.easeIn,
+                                            child: ProductItem(
+                                                quantity: 0,
+                                                quantityAvailable: 0,
+                                                showQuantitySelector: false,
+                                                featureProduct: false,
+                                                Sizes: [],
+                                                runAddToCartAnimation:
+                                                    runAddToCartAnimation,
+                                                loadingPage: true,
+                                                SKU: "",
+                                                isLikedProduct: false,
+                                                SelectedSizes: "اختر مقاسك",
+                                                nickname: "",
+                                                variants: [],
+                                                vendor_SKU: "",
+                                                name: widget.Product[i]["title"]
+                                                    as String,
+                                                id: widget.Product[i]["id"],
+                                                images: widget.Product[i]
+                                                    ["vendor_images_links"],
+                                                description: [],
+                                                new_price: double.parse(widget.Product[i]["price"].toString()) *
+                                                    double.parse(widget.priceMul
+                                                        .toString()),
+                                                old_price:
+                                                    double.parse(widget.Product[i]["price"].toString()) *
+                                                        double.parse(widget
+                                                            .priceMul
+                                                            .toString()),
+                                                image: widget.Product[i]
+                                                        ["vendor_images_links"]
+                                                    [0] as String,
+                                                sizesApi: [],
+                                                TypeApi: false,
+                                                placeInWarehouse: {}),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                              ),
+                            )
+                      : AnimationLimiter(
+                          child: CarouselSlider(
+                            carouselController: _carouselController,
+                            options: CarouselOptions(
+                              aspectRatio: 2.5,
+                              autoPlay: false,
+                              // enableInfiniteScroll: false,
+                              padEnds: false,
+                              enlargeCenterPage: true,
+                              viewportFraction: 1,
+                              reverse: false,
+                              scrollDirection: Axis.horizontal,
+                              height: MediaQuery.of(context).size.height,
+                              initialPage: 0,
+                              onPageChanged: (index, reason) async {
+                                if (index == orderedItems.length - 8 &&
+                                    reason ==
+                                        CarouselPageChangedReason.manual) {
+                                  await loadAdditionalData();
+                                }
+                              },
+                            ),
+                            items: orderedItems.map((item) {
+                              return Builder(
+                                builder: (BuildContext context) {
+                                  // print("1");
+                                  List<String> images =
+                                      (item["vendor_images_links"] as List)
+                                          .cast<String>();
+                                  // print("2");
+                                  int itemIndex = orderedItems.indexOf(item);
+                                  bool isFeature = (itemIndex) % 7 == 0;
+                                  List sizesAPI = widget.sizes;
+                                  // print("4");
+                                  sizesAPI = [];
+                                  Map placeInWarehouse = {};
+                                  bool typeApi = false;
+                                  for (int i = 0;
+                                      i < item["variants"].length;
+                                      i++) {
+                                    if (!sizesAPI.contains(
+                                        item["variants"][i]["size"])) {
+                                      sizesAPI.add(item["variants"][i]["size"]);
+                                      placeInWarehouse[item["variants"][i]
+                                              ["size"]] =
+                                          item["variants"][i]
+                                              ["place_in_warehouse"];
+                                      typeApi = true;
+                                    }
+                                  }
 
-                            var _price = double.parse(
-                                    item["variants"][0]["price"].toString()) *
-                                double.parse(widget.priceMul.toString());
-                            final selectedVariant = item["variants"][0];
-                            int _quantityAvailable = 0;
-                            int _quantity = 0;
-                            bool showQuantitySelector = false;
+                                  var _price = double.parse(item["variants"][0]
+                                              ["price"]
+                                          .toString()) *
+                                      double.parse(widget.priceMul.toString());
+                                  final selectedVariant = item["variants"][0];
+                                  int _quantityAvailable = 0;
+                                  int _quantity = 0;
+                                  bool showQuantitySelector = false;
 
-                            if (selectedVariant != null) {
-                              _quantityAvailable = int.parse(
-                                  selectedVariant['quantity'].toString());
-                              if (_quantityAvailable > 1) {
-                                showQuantitySelector = true;
-                                _quantity = 1;
-                              } else {
-                                showQuantitySelector = false;
-                                _quantity = 1;
-                              }
-                            }
+                                  if (selectedVariant != null) {
+                                    _quantityAvailable = int.parse(
+                                        selectedVariant['quantity'].toString());
+                                    if (_quantityAvailable > 1) {
+                                      showQuantitySelector = true;
+                                      _quantity = 1;
+                                    } else {
+                                      showQuantitySelector = false;
+                                      _quantity = 1;
+                                    }
+                                  }
 
-                            return AnimationConfiguration.staggeredList(
-                              position: itemIndex,
-                              duration: const Duration(milliseconds: 500),
-                              child: SlideAnimation(
-                                verticalOffset: 100.0,
-                                child: FadeInAnimation(
-                                  curve: Curves.easeIn,
-                                  child: ProductItem(
-                                    quantity: _quantity,
-                                    quantityAvailable: _quantityAvailable,
-                                    showQuantitySelector: showQuantitySelector,
-                                    featureProduct:
-                                        itemIndex == 0 ? false : isFeature,
-                                    Sizes: sizesAPI.length == 0
-                                        ? LocalStorage().sizeUser
-                                        : sizesAPI,
-                                    runAddToCartAnimation:
-                                        runAddToCartAnimation,
-                                    loadingPage: false,
-                                    SelectedSizes: sizesAPI.length == 1
-                                        ? sizesAPI[0]
-                                        : "اختر مقاسك",
-                                    isLikedProduct: favouriteProvider
-                                        .isProductFavorite(item["id"]),
-                                    name: item["title"] ?? "-",
-                                    sizesApi: sizesAPI,
-                                    id: item["id"],
-                                    images: images,
-                                    description: item["description"],
-                                    variants: item["variants"],
-                                    SKU: item["sku"] ?? "-",
-                                    vendor_SKU: item["vendor_sku"] ?? "-",
-                                    nickname: item["nickname"] ?? "-",
-                                    new_price: _price,
-                                    old_price: double.parse(item["variants"][0]
-                                            ["price"]
-                                        .toString()),
-                                    image: item["vendor_images_links"][0]
-                                        as String,
-                                    TypeApi: typeApi,
-                                    placeInWarehouse: placeInWarehouse,
-                                  ),
+                                  return AnimationConfiguration.staggeredList(
+                                    position: itemIndex,
+                                    duration: const Duration(milliseconds: 500),
+                                    child: SlideAnimation(
+                                      verticalOffset: 100.0,
+                                      child: FadeInAnimation(
+                                        curve: Curves.easeIn,
+                                        child: ProductItem(
+                                          quantity: _quantity,
+                                          quantityAvailable: _quantityAvailable,
+                                          showQuantitySelector:
+                                              showQuantitySelector,
+                                          featureProduct: itemIndex == 0
+                                              ? false
+                                              : isFeature,
+                                          Sizes: sizesAPI.length == 0
+                                              ? LocalStorage().sizeUser
+                                              : sizesAPI,
+                                          runAddToCartAnimation:
+                                              runAddToCartAnimation,
+                                          loadingPage: false,
+                                          SelectedSizes: sizesAPI.length == 1
+                                              ? sizesAPI[0]
+                                              : "اختر مقاسك",
+                                          isLikedProduct: favouriteProvider
+                                              .isProductFavorite(item["id"]),
+                                          name: item["title"] ?? "-",
+                                          sizesApi: sizesAPI,
+                                          id: item["id"],
+                                          images: images,
+                                          description: item["description"],
+                                          variants: item["variants"],
+                                          SKU: item["sku"] ?? "-",
+                                          vendor_SKU: item["vendor_sku"] ?? "-",
+                                          nickname: item["nickname"] ?? "-",
+                                          new_price: _price,
+                                          old_price: double.parse(
+                                              item["variants"][0]["price"]
+                                                  .toString()),
+                                          image: item["vendor_images_links"][0]
+                                              as String,
+                                          TypeApi: typeApi,
+                                          placeInWarehouse: placeInWarehouse,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                  if (showTutorial && isFirstOpen)
+                    Positioned.fill(
+                      child: GestureDetector(
+                        onTap: stopTutorial,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.7),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Lottie.asset(
+                                  "assets/lottie_animations/Animation - 1725705248604.json",
+                                  height: 200,
+                                  reverse: true,
+                                  repeat: true,
+                                  fit: BoxFit.cover),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              Text(
+                                "قم بالتمرير لمشاهدة القطع المتشابهة",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            );
-                          },
-                        );
-                      }).toList(),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-          ),
+                ],
+              )),
         ),
       ),
     );

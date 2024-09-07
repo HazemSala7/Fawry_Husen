@@ -757,23 +757,28 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             }
           },
         ),
-        Container(
-          height: 40,
-          width: double.infinity,
-          color: Colors.red,
-          child: Marquee(
-            text: marque,
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: Colors.white, fontSize: 17),
-            scrollAxis: Axis.horizontal,
-            blankSpace: 20.0,
-            velocity: 100.0,
-            pauseAfterRound: Duration(seconds: 1),
-            startPadding: 10.0,
-            accelerationDuration: Duration(milliseconds: 500),
-            decelerationDuration: Duration(milliseconds: 500),
-            accelerationCurve: Curves.linear,
-            decelerationCurve: Curves.easeOut,
+        Visibility(
+          visible: marque.toString() == "" ? false : true,
+          child: Container(
+            height: 40,
+            width: double.infinity,
+            color: Colors.red,
+            child: Marquee(
+              text: marque,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: 17),
+              scrollAxis: Axis.horizontal,
+              blankSpace: 20.0,
+              velocity: 100.0,
+              pauseAfterRound: Duration(seconds: 1),
+              startPadding: 10.0,
+              accelerationDuration: Duration(milliseconds: 500),
+              decelerationDuration: Duration(milliseconds: 500),
+              accelerationCurve: Curves.linear,
+              decelerationCurve: Curves.easeOut,
+            ),
           ),
         ),
         FutureBuilder(
