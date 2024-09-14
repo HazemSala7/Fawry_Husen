@@ -536,7 +536,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                   .toString()
                                                   .substring(0, 5)
                                               : widget.total.toString();
-                              await addOrder(
+                              final orderSuccess = await addOrder(
                                   context: context,
                                   address: finalSelectedArea.toString(),
                                   city: finalSelectedArea.toString(),
@@ -545,6 +545,9 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                   description: OrderController.text,
                                   total: TOTALFINAL.toString(),
                                   copon: CoponController.text);
+                              print("orderSuccess");
+                              print(orderSuccess);
+                              return;
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               String UserID = prefs.getString('user_id') ?? "";

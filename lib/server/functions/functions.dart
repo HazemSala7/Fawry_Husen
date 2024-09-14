@@ -277,7 +277,6 @@ addOrder(
       var now = new DateTime.now();
       var formatter = new DateFormat('yyyy-MM-dd');
       String formattedDate = formatter.format(now);
-      print("1");
 
       OrderFirebaseModel newItem = OrderFirebaseModel(
           id: Order_ID,
@@ -288,7 +287,7 @@ addOrder(
           user_id: UserID.toString(),
           created_at: formattedDate.toString());
       orderService.addUser(newItem);
-      print("2");
+
       UsedCoponsFirebaseModel newUsedCoponItem = UsedCoponsFirebaseModel(
         id: usedCopon_ID,
         copon: usedCopon_ID.toString(),
@@ -296,7 +295,6 @@ addOrder(
         user_id: UserID.toString(),
       );
       usedCoponService.addUsedCopon(newUsedCoponItem);
-      print("3");
     } else {
       print(response.reasonPhrase);
     }
@@ -375,7 +373,7 @@ addOrder(
       );
       usedCoponService.addUsedCopon(newUsedCoponItem);
     } else {
-      print(response.reasonPhrase);
+      return "false";
     }
   }
 }
