@@ -639,7 +639,6 @@ class _ProductScreenState extends State<ProductScreen> {
                             options: CarouselOptions(
                               aspectRatio: 2.5,
                               autoPlay: false,
-                              // enableInfiniteScroll: false,
                               padEnds: false,
                               enlargeCenterPage: true,
                               viewportFraction: 1,
@@ -658,18 +657,16 @@ class _ProductScreenState extends State<ProductScreen> {
                             items: orderedItems.map((item) {
                               return Builder(
                                 builder: (BuildContext context) {
-                                  // print("1");
                                   List<String> images =
                                       (item["vendor_images_links"] as List)
                                           .cast<String>();
-                                  // print("2");
                                   int itemIndex = orderedItems.indexOf(item);
                                   bool isFeature = (itemIndex) % 7 == 0;
                                   List sizesAPI = widget.sizes;
-                                  // print("4");
                                   sizesAPI = [];
                                   Map placeInWarehouse = {};
                                   bool typeApi = false;
+
                                   for (int i = 0;
                                       i < item["variants"].length;
                                       i++) {
@@ -684,11 +681,17 @@ class _ProductScreenState extends State<ProductScreen> {
                                     }
                                   }
 
-                                  var _price = double.parse(item["variants"][0]
-                                              ["price"]
-                                          .toString()) *
+                                  var _price = double.parse(
+                                          item["variants"].isNotEmpty
+                                              ? item["variants"][0]["price"]
+                                                  .toString()
+                                              : "0") *
                                       double.parse(widget.priceMul.toString());
-                                  final selectedVariant = item["variants"][0];
+
+                                  final selectedVariant =
+                                      item["variants"].isNotEmpty
+                                          ? item["variants"][0]
+                                          : null;
                                   int _quantityAvailable = 0;
                                   int _quantity = 0;
                                   bool showQuantitySelector = false;
@@ -705,6 +708,59 @@ class _ProductScreenState extends State<ProductScreen> {
                                     }
                                   }
 
+                                  // If variants array is empty, show the grey overlay and message
+                                  if (item["variants"].isEmpty) {
+                                    return Stack(
+                                      children: [
+                                        ProductItem(
+                                          // You can pass some default values here for the ProductItem widget
+                                          quantity: 0,
+                                          quantityAvailable: 0,
+                                          showQuantitySelector: false,
+                                          featureProduct: false,
+                                          Sizes: [],
+                                          runAddToCartAnimation: () {},
+                                          loadingPage: false,
+                                          SelectedSizes: "No size available",
+                                          isLikedProduct: false,
+                                          name: item["title"] ?? "-",
+                                          sizesApi: [],
+                                          id: item["id"],
+                                          images: images,
+                                          description:
+                                              item["description"] ?? "-",
+                                          variants: [],
+                                          SKU: item["sku"] ?? "-",
+                                          vendor_SKU: item["vendor_sku"] ?? "-",
+                                          nickname: item["nickname"] ?? "-",
+                                          new_price: _price,
+                                          old_price: 0,
+                                          image: item["vendor_images_links"]
+                                                  .isNotEmpty
+                                              ? item["vendor_images_links"][0]
+                                                  as String
+                                              : "",
+                                          TypeApi: false,
+                                          placeInWarehouse: {},
+                                        ),
+                                        Container(
+                                          color: Colors.black
+                                              .withOpacity(0.5), // Grey shadow
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            'لا يوجد كمية متبقية من هذا المنتج',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+
+                                  // Normal product display when variants exist
                                   return AnimationConfiguration.staggeredList(
                                     position: itemIndex,
                                     duration: const Duration(milliseconds: 500),
@@ -735,7 +791,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                           sizesApi: sizesAPI,
                                           id: item["id"],
                                           images: images,
-                                          description: item["description"],
+                                          description:
+                                              item["description"] ?? "-",
                                           variants: item["variants"],
                                           SKU: item["sku"] ?? "-",
                                           vendor_SKU: item["vendor_sku"] ?? "-",
@@ -744,8 +801,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                           old_price: double.parse(
                                               item["variants"][0]["price"]
                                                   .toString()),
-                                          image: item["vendor_images_links"][0]
-                                              as String,
+                                          image: item["vendor_images_links"]
+                                                  .isNotEmpty
+                                              ? item["vendor_images_links"][0]
+                                                  as String
+                                              : "",
                                           TypeApi: typeApi,
                                           placeInWarehouse: placeInWarehouse,
                                         ),

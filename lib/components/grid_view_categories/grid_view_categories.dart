@@ -14,6 +14,7 @@ import 'package:fawri_app_refactor/pages/products-category/products-category.dar
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -31,6 +32,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   String categoryDesc = "";
   String categoryImage = "";
   String categoryPath = "";
+  String featuresUrl3 = "";
   String marque = "";
   bool setBigCategories = false;
   List<int> discountCategories = [];
@@ -38,6 +40,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   setControllers() async {
     var _discountCategories =
         await FirebaseRemoteConfigClass().fetchDiscountCategories();
+    var _featuresUrl3 = await FirebaseRemoteConfigClass().getCategoryIDKey3();
     var _categoryName = await FirebaseRemoteConfigClass().fetchCategoryName();
     var _marque = await FirebaseRemoteConfigClass().fetchMarque();
     var _categoryDesc = await FirebaseRemoteConfigClass().fetchCategoryDesc();
@@ -52,6 +55,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
       categoryImage = _categoryImage.toString();
       categoryPath = _categoryPath.toString();
       marque = _marque.toString();
+      featuresUrl3 = _featuresUrl3.toString();
     });
   }
 
@@ -298,17 +302,12 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                             Positioned(
                               top: 0,
                               right: 0,
-                              child: Container(
-                                padding: EdgeInsets.all(4.0),
-                                color: Colors.red,
-                                child: Text(
-                                  'SALE',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                              child: Lottie.asset(
+                                "assets/lottie_animations/Animation - 1726302974575.json",
+                                height: 40,
+                                reverse: true,
+                                repeat: true,
+                                fit: BoxFit.cover,
                               ),
                             ),
                         ],
@@ -782,7 +781,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           ),
         ),
         FutureBuilder(
-            future: getProducts(1),
+            future: getFeatureProducts(featuresUrl3),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Padding(
@@ -842,6 +841,14 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                 "يجب أن تكون في كل منزل",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
+              SizedBox(
+                width: 10,
+              ),
+              Image.asset(
+                "assets/images/house.png",
+                height: 25,
+                width: 25,
+              )
             ],
           ),
         ),

@@ -24,6 +24,7 @@ import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/pages/newest_orders/newest_orders.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:fawri_app_refactor/services/dialogs/checkout/area_city_service/area_city_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CheckoutSecondScreen extends StatefulWidget {
   var total;
@@ -46,7 +47,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
   bool loading = false;
   bool coponed = false;
   City? selectedCity;
-  Area? selectedArea;
+  AddressItem? selectedArea;
   String finalSelectedArea = "";
   City? selectedCity1;
   Area? selectedArea1;
@@ -323,29 +324,30 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                       builder: (context, addressprovider, _) {
                         List<AddressItem> addressItems =
                             addressprovider.addressItems;
-                        String? selectedValue = addressItems.isNotEmpty
-                            ? addressItems[0].name
-                            : null;
+                        AddressItem? selectedValue =
+                            addressItems.isNotEmpty ? addressItems[0] : null;
                         if (selectedArea == null && addressItems.isNotEmpty) {
                           finalSelectedArea = addressItems[0].name;
+                          selectedArea = addressItems[0] as AddressItem?;
                         }
 
                         return Visibility(
                           visible: addressItems.isNotEmpty,
                           child: Container(
                             height: 65,
-                            child: DropdownButtonFormField<String>(
+                            child: DropdownButtonFormField<AddressItem>(
                               hint: Text("اختر العنوان"),
                               value: selectedValue,
                               items: addressItems
-                                  .map((address) => DropdownMenuItem<String>(
+                                  .map((address) =>
+                                      DropdownMenuItem<AddressItem>(
                                         child: Text(address.name),
-                                        value: address.name,
+                                        value: address,
                                       ))
                                   .toList(),
                               onChanged: (value) {
                                 setState(() {
-                                  selectedArea = value! as Area?;
+                                  selectedArea = value! as AddressItem?;
                                 });
                               },
                               decoration: InputDecoration(
@@ -436,10 +438,10 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
           ),
           loading
               ? Padding(
-                  padding: EdgeInsets.only(top: 30),
+                  padding: EdgeInsets.only(top: 30, left: 25, right: 25),
                   child: Container(
                     height: 50,
-                    width: 300,
+                    width: double.infinity,
                     decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(40),
@@ -508,6 +510,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                               setState(() {
                                 loading = true;
                               });
+
                               var TOTALFINAL = widget.dropdownValue
                                           .toString() ==
                                       "الداخل"
@@ -544,46 +547,233 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                   name: NameController.text,
                                   description: OrderController.text,
                                   total: TOTALFINAL.toString(),
-                                  copon: CoponController.text);
-                              print("orderSuccess");
-                              print(orderSuccess);
-                              return;
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              String UserID = prefs.getString('user_id') ?? "";
-                              String? TOKEN =
-                                  await prefs.getString('device_token');
-                              await prefs.setString(
-                                  'name', NameController.text);
-                              await prefs.setString(
-                                  'city', finalSelectedArea.toString());
-                              await prefs.setString(
-                                  'area', AreaController.text);
-                              await prefs.setString(
-                                  'phone', PhoneController.text);
-                              await prefs.setString(
-                                  'address', finalSelectedArea.toString());
-                              UserItem updatedUser = UserItem(
-                                name: NameController.text,
-                                id: UserID,
-                                token: TOKEN.toString(),
-                                email: "$UserID@email.com",
-                                phone: PhoneController.text,
-                                gender: '',
-                                birthdate: '',
-                                city: finalSelectedArea.toString(),
-                                area: finalSelectedArea.toString(),
-                                address: finalSelectedArea.toString(),
-                                password: '123',
-                              );
-                              try {
-                                final cartProvider = Provider.of<CartProvider>(
-                                    context,
-                                    listen: false);
-                                await userService.updateUser(updatedUser);
-                                Navigator.of(context).pop();
-                                Navigator.of(context).pop();
-                                getCoupunRedeem(CoponController.text);
+                                  copon: CoponController.text,
+                                  areaID: selectedArea!.area_id.toString(),
+                                  areaName: selectedArea!.area_name.toString(),
+                                  cityID: selectedArea!.city_id.toString());
+                              if (orderSuccess.toString() == "200" ||
+                                  orderSuccess.toString() == "201") {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                String UserID =
+                                    prefs.getString('user_id') ?? "";
+                                String? TOKEN =
+                                    await prefs.getString('device_token');
+                                await prefs.setString(
+                                    'name', NameController.text);
+                                await prefs.setString(
+                                    'city', finalSelectedArea.toString());
+                                await prefs.setString(
+                                    'area', AreaController.text);
+                                await prefs.setString(
+                                    'phone', PhoneController.text);
+                                await prefs.setString(
+                                    'address', finalSelectedArea.toString());
+                                UserItem updatedUser = UserItem(
+                                  name: NameController.text,
+                                  id: UserID,
+                                  token: TOKEN.toString(),
+                                  email: "$UserID@email.com",
+                                  phone: PhoneController.text,
+                                  gender: '',
+                                  birthdate: '',
+                                  city: finalSelectedArea.toString(),
+                                  area: finalSelectedArea.toString(),
+                                  address: finalSelectedArea.toString(),
+                                  password: '123',
+                                );
+                                try {
+                                  final cartProvider =
+                                      Provider.of<CartProvider>(context,
+                                          listen: false);
+                                  await userService.updateUser(updatedUser);
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  getCoupunRedeem(CoponController.text);
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Dialog(
+                                          backgroundColor: Colors.transparent,
+                                          insetPadding: EdgeInsets.all(0),
+                                          child: InkWell(
+                                            onTap: () async {
+                                              NavigatorFunction(
+                                                  context,
+                                                  HomeScreen(
+                                                    title: "",
+                                                    selectedIndex: 0,
+                                                    slider: false,
+                                                    url: "",
+                                                  ));
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              bool? show = await prefs.getBool(
+                                                      'show_birthday') ??
+                                                  true;
+                                              show
+                                                  ? NavigatorFunction(
+                                                      context,
+                                                      ChooseBirthdate(
+                                                        name:
+                                                            NameController.text,
+                                                        PhoneController:
+                                                            PhoneController
+                                                                .text,
+                                                        TOKEN: TOKEN.toString(),
+                                                        UserID:
+                                                            UserID.toString(),
+                                                        selectedArea:
+                                                            selectedArea
+                                                                .toString(),
+                                                      ))
+                                                  : null;
+                                            },
+                                            child: Container(
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .height,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Lottie.asset(
+                                                      "assets/lottie_animations/Animation - 1701597212878.json",
+                                                      height: 300,
+                                                      reverse: true,
+                                                      repeat: true,
+                                                      fit: BoxFit.cover),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 10),
+                                                    child: Text(
+                                                      "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                        fontSize: 20,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 40,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      NavigatorFunction(
+                                                          context,
+                                                          HomeScreen(
+                                                              title: "",
+                                                              slider: false,
+                                                              url: "",
+                                                              selectedIndex:
+                                                                  0));
+                                                      SharedPreferences prefs =
+                                                          await SharedPreferences
+                                                              .getInstance();
+                                                      bool? show =
+                                                          await prefs.getBool(
+                                                                  'show_birthday') ??
+                                                              true;
+                                                      show
+                                                          ? NavigatorFunction(
+                                                              context,
+                                                              ChooseBirthdate(
+                                                                name:
+                                                                    NameController
+                                                                        .text,
+                                                                PhoneController:
+                                                                    PhoneController
+                                                                        .text,
+                                                                TOKEN: TOKEN
+                                                                    .toString(),
+                                                                UserID: UserID
+                                                                    .toString(),
+                                                                selectedArea:
+                                                                    selectedArea
+                                                                        .toString(),
+                                                              ))
+                                                          : null;
+                                                    },
+                                                    child: Container(
+                                                      width: 200,
+                                                      height: 40,
+                                                      child: Center(
+                                                          child: Text(
+                                                        "الصفحة الرئيسية",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white),
+                                                      )),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      NavigatorFunction(
+                                                          context,
+                                                          NewestOrders(
+                                                            user_id: UserID
+                                                                .toString(),
+                                                          ));
+                                                    },
+                                                    child: Container(
+                                                      width: 200,
+                                                      height: 40,
+                                                      child: Center(
+                                                          child: Text(
+                                                        "تتبع طلبياتي",
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color:
+                                                                Colors.white),
+                                                      )),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: Colors.black),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ));
+                                    },
+                                  );
+
+                                  cartProvider.clearCart();
+                                  SharedPreferences prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setBool('buy', true);
+                                } catch (e) {
+                                  print('Error updating user data: $e');
+                                }
+                              } else {
+                                setState(() {
+                                  loading = false;
+                                });
                                 showDialog(
                                   context: context,
                                   builder: (context) {
@@ -595,30 +785,10 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                             NavigatorFunction(
                                                 context,
                                                 HomeScreen(
-                                                  title: "",
-                                                  selectedIndex: 0,
-                                                  slider: false,
-                                                  url: "",
-                                                ));
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            bool? show = await prefs
-                                                    .getBool('show_birthday') ??
-                                                true;
-                                            show
-                                                ? NavigatorFunction(
-                                                    context,
-                                                    ChooseBirthdate(
-                                                      name: NameController.text,
-                                                      PhoneController:
-                                                          PhoneController.text,
-                                                      TOKEN: TOKEN.toString(),
-                                                      UserID: UserID.toString(),
-                                                      selectedArea: selectedArea
-                                                          .toString(),
-                                                    ))
-                                                : null;
+                                                    title: "",
+                                                    slider: false,
+                                                    url: "",
+                                                    selectedIndex: 0));
                                           },
                                           child: Container(
                                             height: MediaQuery.of(context)
@@ -632,7 +802,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Lottie.asset(
-                                                    "assets/lottie_animations/Animation - 1701597212878.json",
+                                                    "assets/lottie_animations/Animation - 1726476947033.json",
                                                     height: 300,
                                                     reverse: true,
                                                     repeat: true,
@@ -644,7 +814,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                   padding: EdgeInsets.symmetric(
                                                       horizontal: 10),
                                                   child: Text(
-                                                    "شكرا لشرائك من فوري ستحتاج الطلبية من ٣-٤ ايام ، يمكنك متابعة الطلب من قسم طلباتي الحالية",
+                                                    "حدث خطأ ما , الرجاء التواصل معنا على فريق الدعم الفني",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
                                                       fontWeight:
@@ -659,6 +829,39 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                 ),
                                                 InkWell(
                                                   onTap: () async {
+                                                    final _url = Uri.parse(
+                                                        "https://www.facebook.com/FawriCOD?mibextid=LQQJ4d");
+                                                    if (!await launchUrl(_url,
+                                                        mode: LaunchMode
+                                                            .externalApplication)) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              "لم يتم التمكن من الدخول الرابط , الرجاء المحاولة فيما بعد");
+                                                    }
+                                                  },
+                                                  child: Container(
+                                                    width: 200,
+                                                    height: 40,
+                                                    child: Center(
+                                                        child: Text(
+                                                      "التواصل معنا",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white),
+                                                    )),
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                InkWell(
+                                                  onTap: () async {
                                                     NavigatorFunction(
                                                         context,
                                                         HomeScreen(
@@ -666,32 +869,6 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                             slider: false,
                                                             url: "",
                                                             selectedIndex: 0));
-                                                    SharedPreferences prefs =
-                                                        await SharedPreferences
-                                                            .getInstance();
-                                                    bool? show =
-                                                        await prefs.getBool(
-                                                                'show_birthday') ??
-                                                            true;
-                                                    show
-                                                        ? NavigatorFunction(
-                                                            context,
-                                                            ChooseBirthdate(
-                                                              name:
-                                                                  NameController
-                                                                      .text,
-                                                              PhoneController:
-                                                                  PhoneController
-                                                                      .text,
-                                                              TOKEN: TOKEN
-                                                                  .toString(),
-                                                              UserID: UserID
-                                                                  .toString(),
-                                                              selectedArea:
-                                                                  selectedArea
-                                                                      .toString(),
-                                                            ))
-                                                        : null;
                                                   },
                                                   child: Container(
                                                     width: 200,
@@ -711,49 +888,12 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                         color: Colors.black),
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  height: 20,
-                                                ),
-                                                InkWell(
-                                                  onTap: () async {
-                                                    NavigatorFunction(
-                                                        context,
-                                                        NewestOrders(
-                                                          user_id:
-                                                              UserID.toString(),
-                                                        ));
-                                                  },
-                                                  child: Container(
-                                                    width: 200,
-                                                    height: 40,
-                                                    child: Center(
-                                                        child: Text(
-                                                      "تتبع طلبياتي",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white),
-                                                    )),
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
                                         ));
                                   },
                                 );
-
-                                cartProvider.clearCart();
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                await prefs.setBool('buy', true);
-                              } catch (e) {
-                                print('Error updating user data: $e');
                               }
                             }
                           }

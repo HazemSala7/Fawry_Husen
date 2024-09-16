@@ -108,7 +108,7 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
                           horizontalOffset: 100.0,
                           child: FadeInAnimation(
                               child: ProductWidgetStyleTwo(
-                            fire: true,
+                            fire: false,
                             index: index,
                             shortlisted: widget.shortlisted,
                           )),

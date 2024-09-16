@@ -65,7 +65,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
           NavigatorFunction(context, ShoesCategoryDialog());
         } else if (widget.name == "ملابس أطفال") {
           NavigatorFunction(context, KidsCategoryDialog());
-        } else if (widget.name == "مستلزمات رياضية") {
+        } else if (widget.name == "ملابس رياضية") {
           NavigatorFunction(
               context,
               ShowCaseWidget(
@@ -235,7 +235,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
                   main_category: widget.main_category,
                 ),
               )));
-        } else if (widget.name == "مستلزمات مكاتب") {
+        } else if (widget.name == "قرطاسية ومكاتب") {
           NavigatorFunction(
               context,
               ShowCaseWidget(
@@ -258,7 +258,7 @@ class _CategoryWidgetState extends State<CategoryWidget> {
             sizes = LocalStorage().getSize("womenSizes");
           } else if (widget.name == "ملابس رجاليه") {
             sizes = LocalStorage().getSize("menSizes");
-          } else if (widget.name == "ملابس نسائيه مقاس كبير") {
+          } else if (widget.name == "مقاسات كبيرة") {
             sizes = LocalStorage().getSize("womenPlusSizes");
           } else if (widget.name == "مستلزمات اعراس") {
             sizes = LocalStorage().getSize("Weddings & Events");

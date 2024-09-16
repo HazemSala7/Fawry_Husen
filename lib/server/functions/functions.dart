@@ -132,10 +132,11 @@ getProducts(int page) async {
   if (cachedData != null) {
     return cachedData;
   }
-
+  var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
   try {
     var response = await http.get(
-        Uri.parse("${URL}getAllItems?api_key=$key_bath&page=$page"),
+        Uri.parse(
+            "${URL}getAllItems?api_key=$key_bath&season=${seasonName.toString()}&page=$page"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
 
@@ -149,7 +150,7 @@ getProducts(int page) async {
     var DomainName = await FirebaseRemoteConfigClass().getDomain();
     var response = await http.get(
         Uri.parse(
-            "http://$DomainName/api/getAllItems?api_key=$key_bath&page=$page"),
+            "http://$DomainName/api/getAllItems?api_key=$key_bath&season=${seasonName.toString()}&page=$page"),
         headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
 
@@ -213,7 +214,17 @@ getOrderDetails(id) async {
 }
 
 addOrder(
-    {context, address, phone, city, name, description, total, copon}) async {
+    {context,
+    address,
+    phone,
+    city,
+    name,
+    description,
+    total,
+    copon,
+    cityID,
+    areaName,
+    areaID}) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
@@ -223,8 +234,6 @@ addOrder(
     double totalPrice = 0.0;
 
     for (var i = 0; i < cartProvider.length; i++) {
-      print("cartProvider[i].placeInWarehouse.toString()");
-      print(cartProvider[i].placeInWarehouse.toString());
       products.add({
         "id": cartProvider[i].productId.toString(),
         "image": cartProvider[i].image.toString(),
@@ -248,7 +257,7 @@ addOrder(
 
     var headers = {'Content-Type': 'application/json'};
     var request =
-        http.Request('POST', Uri.parse('$URL_ADD_ORDER?api_key=$key_bath'));
+        http.Request('POST', Uri.parse('${URL_ADD_ORDER}?api_key=$key_bath'));
     request.body = json.encode({
       "name": name.toString(),
       "page": "Fawri App",
@@ -259,9 +268,9 @@ addOrder(
       "total_price": double.parse(total.toString()),
       "user_id": 38,
       "location_ids": {
-        "city_id": "1",
-        "area_id": "1027",
-        "area_name": "شارع القدس/رام الله"
+        "city_id": cityID.toString(),
+        "area_id": areaID.toString(),
+        "area_name": areaName.toString()
       },
       "products": products
     });
@@ -295,85 +304,90 @@ addOrder(
         user_id: UserID.toString(),
       );
       usedCoponService.addUsedCopon(newUsedCoponItem);
+      return response.statusCode;
     } else {
-      print(response.reasonPhrase);
+      return 404;
     }
   } catch (e) {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String UserID = prefs.getString('user_id') ?? "";
-    final cartProvider =
-        Provider.of<CartProvider>(context, listen: false).cartItems;
-    List<Map<String, dynamic>> products = [];
-    double totalPrice = 0.0;
-    for (var i = 0; i < cartProvider.length; i++) {
-      products.add({
-        "id": cartProvider[i].productId.toString(),
-        "image": cartProvider[i].image.toString(),
-        "data": [
-          {
-            "sku": cartProvider[i].sku.toString(),
-            "name": cartProvider[i].name.toString(),
-            "price": cartProvider[i].price.toString(),
-            "quantity": 1,
-            "size": cartProvider[i].type.toString(),
-            "nickname": cartProvider[i].nickname.toString(),
-            "vendor_sku": cartProvider[i].vendor_sku.toString(),
-            "variant_index": 0,
-            "place_in_warehouse": cartProvider[i].placeInWarehouse.toString()
-          }
-        ]
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String UserID = prefs.getString('user_id') ?? "";
+      final cartProvider =
+          Provider.of<CartProvider>(context, listen: false).cartItems;
+      List<Map<String, dynamic>> products = [];
+      double totalPrice = 0.0;
+      for (var i = 0; i < cartProvider.length; i++) {
+        products.add({
+          "id": cartProvider[i].productId.toString(),
+          "image": cartProvider[i].image.toString(),
+          "data": [
+            {
+              "sku": cartProvider[i].sku.toString(),
+              "name": cartProvider[i].name.toString(),
+              "price": cartProvider[i].price.toString(),
+              "quantity": 1,
+              "size": cartProvider[i].type.toString(),
+              "nickname": cartProvider[i].nickname.toString(),
+              "vendor_sku": cartProvider[i].vendor_sku.toString(),
+              "variant_index": 0,
+              "place_in_warehouse": cartProvider[i].placeInWarehouse.toString()
+            }
+          ]
+        });
+        totalPrice += double.parse(cartProvider[i].price.toString());
+      }
+      var DomainName = await FirebaseRemoteConfigClass().getDomain();
+
+      var headers = {'Content-Type': 'application/json'};
+      var request = http.Request(
+          'POST',
+          Uri.parse(
+              '$DomainName/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
+      request.body = json.encode({
+        "name": name.toString(),
+        "page": "Fawri App",
+        "description": "description Test",
+        "phone": phone.toString(),
+        "address": address.toString(),
+        "city": city.toString(),
+        "total_price": double.parse(total.toString()),
+        "user_id": 38,
+        "products": products
       });
-      totalPrice += double.parse(cartProvider[i].price.toString());
-    }
-    var DomainName = await FirebaseRemoteConfigClass().getDomain();
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        String stream = await response.stream.bytesToString();
+        final decodedMap = json.decode(stream);
+        final OrderController orderService = OrderController();
+        final UsedCoponsController usedCoponService = UsedCoponsController();
+        String Order_ID = Uuid().v4();
+        String usedCopon_ID = Uuid().v4();
+        var now = new DateTime.now();
+        var formatter = new DateFormat('yyyy-MM-dd');
+        String formattedDate = formatter.format(now);
 
-    var headers = {'Content-Type': 'application/json'};
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            '$DomainName/api/orders/submitOrder?api_key=H93J48593HFNWIEUTR287TG3'));
-    request.body = json.encode({
-      "name": name.toString(),
-      "page": "Fawri App",
-      "description": "description Test",
-      "phone": phone.toString(),
-      "address": address.toString(),
-      "city": city.toString(),
-      "total_price": double.parse(total.toString()),
-      "user_id": 38,
-      "products": products
-    });
-    request.headers.addAll(headers);
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      String stream = await response.stream.bytesToString();
-      final decodedMap = json.decode(stream);
-      final OrderController orderService = OrderController();
-      final UsedCoponsController usedCoponService = UsedCoponsController();
-      String Order_ID = Uuid().v4();
-      String usedCopon_ID = Uuid().v4();
-      var now = new DateTime.now();
-      var formatter = new DateFormat('yyyy-MM-dd');
-      String formattedDate = formatter.format(now);
-
-      OrderFirebaseModel newItem = OrderFirebaseModel(
-          id: Order_ID,
-          tracking_number: "123456",
-          number_of_products: cartProvider.length.toString(),
-          sum: totalPrice.toString(),
+        OrderFirebaseModel newItem = OrderFirebaseModel(
+            id: Order_ID,
+            tracking_number: "123456",
+            number_of_products: cartProvider.length.toString(),
+            sum: totalPrice.toString(),
+            order_id: decodedMap["id"].toString(),
+            user_id: UserID.toString(),
+            created_at: formattedDate.toString());
+        orderService.addUser(newItem);
+        UsedCoponsFirebaseModel newUsedCoponItem = UsedCoponsFirebaseModel(
+          id: usedCopon_ID,
+          copon: usedCopon_ID.toString(),
           order_id: decodedMap["id"].toString(),
           user_id: UserID.toString(),
-          created_at: formattedDate.toString());
-      orderService.addUser(newItem);
-      UsedCoponsFirebaseModel newUsedCoponItem = UsedCoponsFirebaseModel(
-        id: usedCopon_ID,
-        copon: usedCopon_ID.toString(),
-        order_id: decodedMap["id"].toString(),
-        user_id: UserID.toString(),
-      );
-      usedCoponService.addUsedCopon(newUsedCoponItem);
-    } else {
-      return "false";
+        );
+        usedCoponService.addUsedCopon(newUsedCoponItem);
+      } else {
+        return 404;
+      }
+    } catch (e) {
+      return 404;
     }
   }
 }
