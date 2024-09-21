@@ -255,17 +255,12 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                           Positioned(
                             top: 0,
                             right: 0,
-                            child: Container(
-                              padding: EdgeInsets.all(4.0),
-                              color: Colors.red,
-                              child: Text(
-                                'SALE',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                            child: Lottie.asset(
+                              "assets/lottie_animations/Animation - 1726302974575.json",
+                              height: 40,
+                              reverse: true,
+                              repeat: true,
+                              fit: BoxFit.cover,
                             ),
                           ),
                       ],

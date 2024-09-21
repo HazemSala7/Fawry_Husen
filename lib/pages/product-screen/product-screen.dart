@@ -745,15 +745,29 @@ class _ProductScreenState extends State<ProductScreen> {
                                         ),
                                         Container(
                                           color: Colors.black
-                                              .withOpacity(0.5), // Grey shadow
+                                              .withOpacity(0.7), // Grey shadow
                                           alignment: Alignment.center,
-                                          child: Text(
-                                            'لا يوجد كمية متبقية من هذا المنتج',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          child: Column(
+                                            children: [
+                                              Lottie.asset(
+                                                  "assets/lottie_animations/Animation - 1726740976006.json",
+                                                  height: 200,
+                                                  reverse: true,
+                                                  repeat: true,
+                                                  fit: BoxFit.cover),
+                                              SizedBox(
+                                                height: 20,
+                                              ),
+                                              Text(
+                                                'عذرا لم يعد متوفر كمية من هذا المنتج يمكنك التمرير لمشاهدة المنتجات الشبيهة',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -827,7 +841,7 @@ class _ProductScreenState extends State<ProductScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Lottie.asset(
-                                  "assets/lottie_animations/Animation - 1725705248604.json",
+                                  "assets/lottie_animations/Animation - 1726740976006.json",
                                   height: 200,
                                   reverse: true,
                                   repeat: true,
