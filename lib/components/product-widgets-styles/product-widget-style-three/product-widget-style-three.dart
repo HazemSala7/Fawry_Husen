@@ -105,7 +105,7 @@ class _ProductWidgetStyleThreeState extends State<ProductWidgetStyleThree> {
                                   height: 210,
                                   boxFit: BoxFit.cover,
                                   errorWidget: Image.asset(
-                                    "assets/images/splash.png",
+                                    "assets/images/playstore.png",
                                     fit: BoxFit.cover,
                                   ),
                                 ),

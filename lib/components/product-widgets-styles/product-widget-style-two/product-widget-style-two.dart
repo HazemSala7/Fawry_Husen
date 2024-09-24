@@ -106,7 +106,7 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
                                     height: 180,
                                     boxFit: BoxFit.cover,
                                     errorWidget: Image.asset(
-                                      "assets/images/splash.png",
+                                      "assets/images/playstore.png",
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -151,11 +151,11 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
                                           null
                                       ? (widget.shortlisted[widget.index]
                                               ["price"] is double
-                                          ? "₪${(widget.shortlisted[widget.index]["price"] as double).round().toString()}"
+                                          ? "₪${(widget.shortlisted[widget.index]["price"] as double).toStringAsFixed(2)}"
                                           : (double.tryParse(widget.shortlisted[
                                                       widget.index]["price"]) !=
                                                   null
-                                              ? "₪${double.parse(widget.shortlisted[widget.index]["price"]).round().toString()}"
+                                              ? "₪${double.parse(widget.shortlisted[widget.index]["price"]).toStringAsFixed(2)}"
                                               : "₪0"))
                                       : "₪0",
                                   style: TextStyle(
@@ -171,7 +171,7 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
                                       alignment: Alignment.center,
                                       children: [
                                         Text(
-                                          "₪${double.parse(widget.shortlisted[widget.index]["price"].toString()) * 2.5}",
+                                          "₪${(double.parse(widget.shortlisted[widget.index]["price"].toString()) * 2.5).toStringAsFixed(2)}",
                                           style: TextStyle(
                                             fontSize: 14,
                                           ),
