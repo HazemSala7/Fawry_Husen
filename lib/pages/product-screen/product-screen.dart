@@ -518,6 +518,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           child: FadeInAnimation(
                                             curve: Curves.easeIn,
                                             child: ProductItem(
+                                                shopId: "",
                                                 quantity: 0,
                                                 quantityAvailable: 0,
                                                 showQuantitySelector: false,
@@ -591,6 +592,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           child: FadeInAnimation(
                                             curve: Curves.easeIn,
                                             child: ProductItem(
+                                                shopId: "",
                                                 quantity: 0,
                                                 quantityAvailable: 0,
                                                 showQuantitySelector: false,
@@ -724,6 +726,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           SelectedSizes: "No size available",
                                           isLikedProduct: false,
                                           name: item["title"] ?? "-",
+                                          shopId: item["shop_id"] ?? "-",
                                           sizesApi: [],
                                           id: item["id"],
                                           images: images,
@@ -783,6 +786,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       child: FadeInAnimation(
                                         curve: Curves.easeIn,
                                         child: ProductItem(
+                                          shopId: item["shop_id"] ?? "-",
                                           quantity: _quantity,
                                           quantityAvailable: _quantityAvailable,
                                           showQuantitySelector:

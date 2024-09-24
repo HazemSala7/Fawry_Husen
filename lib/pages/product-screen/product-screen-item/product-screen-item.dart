@@ -29,7 +29,7 @@ import '../../../server/domain/domain.dart';
 import '../../../server/functions/functions.dart';
 
 class ProductItem extends StatefulWidget {
-  String image, name, nickname, SKU, vendor_SKU, SelectedSizes;
+  String image, name, nickname, SKU, vendor_SKU, SelectedSizes, shopId;
   var variants, old_price, new_price, description, runAddToCartAnimation;
   Map placeInWarehouse;
   List sizesApi, images, Sizes;
@@ -40,6 +40,7 @@ class ProductItem extends StatefulWidget {
     super.key,
     required this.showQuantitySelector,
     required this.quantity,
+    required this.shopId,
     required this.quantityAvailable,
     required this.name,
     required this.Sizes,
@@ -383,7 +384,6 @@ class _ProductItemState extends State<ProductItem> {
                                             await createDynamicLink(
                                                 widget.id.toString());
 
-                                        print('Dynamic Link: $dynamicLink');
                                         // Share.share(
                                         //     "https://www.fawri.co/product-details-one/${widget.id}?offset=1");
                                         Share.share(dynamicLink);
@@ -888,6 +888,7 @@ class _ProductItemState extends State<ProductItem> {
                             if (cartProvider.isProductCart(widget.id,
                                 selectedSize: widget.SelectedSizes)) {
                               final newItem = CartItem(
+                                  shopId: widget.shopId,
                                   quantityExist: widget.quantityAvailable,
                                   sku: widget.SKU,
                                   availability: 1,
@@ -921,6 +922,7 @@ class _ProductItemState extends State<ProductItem> {
                                 listClick(widgetKey);
                                 Vibration.vibrate(duration: 300);
                                 final newItem = CartItem(
+                                    shopId: widget.shopId,
                                     quantityExist: widget.quantityAvailable,
                                     sku: widget.SKU,
                                     availability: 1,

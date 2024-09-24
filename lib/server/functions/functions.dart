@@ -50,6 +50,46 @@ Future<String> createDynamicLink(String productId) async {
   return shortLink.shortUrl.toString();
 }
 
+Future<String> createCartDynamicLink() async {
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+    uriPrefix: 'https://fawri.page.link', // Your dynamic link URL prefix
+    link: Uri.parse(
+        'https://fawri-f7ab5f0e45b8.herokuapp.com/cart'), // Link for Cart screen
+    androidParameters: AndroidParameters(
+      packageName: 'fawri.app.shop', // Your app's package name
+      minimumVersion: 0,
+    ),
+    iosParameters: IOSParameters(
+      bundleId: 'fawri.app.shop', // Your app's bundle ID
+      minimumVersion: '1.0.0',
+    ),
+  );
+
+  final ShortDynamicLink shortLink =
+      await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+  return shortLink.shortUrl.toString();
+}
+
+Future<String> createNewestOrdersDynamicLink() async {
+  final DynamicLinkParameters parameters = DynamicLinkParameters(
+    uriPrefix: 'https://fawri.page.link', // Your dynamic link URL prefix
+    link: Uri.parse(
+        'https://fawri-f7ab5f0e45b8.herokuapp.com/track_order'), // Link for NewestOrders screen
+    androidParameters: AndroidParameters(
+      packageName: 'fawri.app.shop', // Your app's package name
+      minimumVersion: 0,
+    ),
+    iosParameters: IOSParameters(
+      bundleId: 'fawri.app.shop', // Your app's bundle ID
+      minimumVersion: '1.0.0',
+    ),
+  );
+
+  final ShortDynamicLink shortLink =
+      await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+  return shortLink.shortUrl.toString();
+}
+
 NavigatorFunction(BuildContext context, Widget Widget) async {
   Navigator.push(context, MaterialPageRoute(builder: (context) => Widget));
 }
@@ -128,16 +168,13 @@ getProducts(int page) async {
   final cacheManager = CacheManager();
   final cacheKey = 'products_page_$page';
   final cachedData = await cacheManager.getCache(cacheKey);
-
-  if (cachedData != null) {
-    return cachedData;
-  }
   var seasonName = await FirebaseRemoteConfigClass().initilizeConfig();
   try {
     var response = await http.get(
         Uri.parse(
             "${URL}getAllItems?api_key=$key_bath&season=${seasonName.toString()}&page=$page"),
         headers: headers);
+
     var res = json.decode(utf8.decode(response.bodyBytes));
 
     if (response.statusCode == 200) {
@@ -547,6 +584,17 @@ getCoupun(code) async {
   if (response.statusCode == 200) {
     var res = json.decode(utf8.decode(response.bodyBytes));
     return res["discount_amount"];
+  } else {
+    return "false";
+  }
+}
+
+getCoupunDeleteCose() async {
+  var Final_URL = "$URL_DELETE_COST?api_key=$key_bath";
+  var response = await http.get(Uri.parse(Final_URL), headers: headers);
+  if (response.statusCode == 200) {
+    var res = json.decode(utf8.decode(response.bodyBytes));
+    return res;
   } else {
     return "false";
   }

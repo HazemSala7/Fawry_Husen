@@ -6,6 +6,7 @@ import 'package:fawri_app_refactor/pages/choose-size-shoes/choose-size-shoes.dar
 import 'package:fawri_app_refactor/pages/chooses_birthdate/chooses_birthdate.dart';
 import 'package:fawri_app_refactor/pages/code_birthdate/code_birthdate.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
+import 'package:fawri_app_refactor/pages/newest_orders/newest_orders.dart';
 import 'package:fawri_app_refactor/pages/privacy_policy/privacy_policy.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/pages/remain_birthdate/remain_birthdate.dart';
@@ -74,7 +75,9 @@ class _FawriState extends State<Fawri> {
     }
   }
 
-  void handleDeepLink(Uri deepLink) {
+  void handleDeepLink(Uri deepLink) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String UserID = prefs.getString('user_id') ?? "";
     if (deepLink.path == '/product') {
       final productId = deepLink.queryParameters['id'];
       if (productId != null) {
@@ -104,10 +107,18 @@ class _FawriState extends State<Fawri> {
         // Handle the case where 'id' parameter is missing
         print('Product ID not found in the deep link.');
       }
-    } else {
-      // Handle other paths or default behavior
+    } else if (deepLink.path == '/cart') {
       navigatorKey.currentState?.push(
         MaterialPageRoute(builder: (context) => Cart()),
+      );
+    } else if (deepLink.path == '/track_order') {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String UserID = prefs.getString('user_id') ?? "";
+      navigatorKey.currentState?.push(
+        MaterialPageRoute(
+            builder: (context) => NewestOrders(
+                  user_id: UserID,
+                )),
       );
     }
   }

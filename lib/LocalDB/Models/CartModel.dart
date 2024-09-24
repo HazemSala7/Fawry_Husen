@@ -2,6 +2,7 @@ class CartItem {
   final int? id;
   final int productId; // Unique identifier for the product
   final String name;
+  final String shopId;
   final String image;
   final double price;
   final String type;
@@ -20,6 +21,7 @@ class CartItem {
       required this.availability,
       required this.placeInWarehouse,
       required this.name,
+      required this.shopId,
       required this.type,
       required this.image,
       required this.price,
@@ -37,6 +39,7 @@ class CartItem {
       'availability': availability,
       'quantityExist': quantityExist,
       'name': name,
+      'shopId': shopId,
       'sku': sku,
       'nickname': nickname,
       'vendor_sku': vendor_sku,
@@ -56,6 +59,7 @@ class CartItem {
       quantityExist: json['quantityExist'],
       availability: json['availability'],
       name: json['name'],
+      shopId: json['shopId'],
       placeInWarehouse: json['place_in_warehouse'],
       type: json['type'],
       sku: json['sku'],
@@ -74,6 +78,7 @@ class CartItem {
     int? quantityExist,
     int? availability,
     String? name,
+    String? shopId,
     String? type,
     String? sku,
     String? nickname,
@@ -90,6 +95,7 @@ class CartItem {
       quantityExist: quantityExist ?? this.quantityExist,
       availability: availability ?? this.availability,
       name: name ?? this.name,
+      shopId: shopId ?? this.shopId,
       price: price ?? this.price,
       type: type ?? this.type,
       sku: sku ?? this.sku,

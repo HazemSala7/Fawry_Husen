@@ -236,6 +236,7 @@ class _CartState extends State<Cart> {
                                       allAvailable = false;
 
                                       CartItem updatedItem = CartItem(
+                                        shopId: item.shopId,
                                         quantityExist: availableQty,
                                         image: item.image,
                                         name: item.name,

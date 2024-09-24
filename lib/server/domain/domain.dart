@@ -22,6 +22,7 @@ var URL_COPUN = URL + "coupons/redeemCoupon";
 var URL_SINGLE_COMPANY = URL + "single_company";
 var URL_CANCEL_ORDER = URL + "cancel_order";
 var URL_CARTS = URL + "carts";
+var URL_DELETE_COST = URL + "rmDelCost";
 var URL_EDIT_CART = URL + "edit_cart";
 var URL_REMOVE_CART = URL + "remove_cart";
 var URL_FAVOURITES = URL + "favourites";

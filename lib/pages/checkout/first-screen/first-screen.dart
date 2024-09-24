@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fawri_app_refactor/components/app-bar-widget/app-bar-widget.dart';
@@ -31,11 +32,39 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
   String dropdownValue = 'اختر منطقتك';
   bool _hasError = false;
   String CoponMessage = "";
+  bool coponApplied = false;
   String discountPercentage = "0.0";
   bool checkCopon = false;
   bool status = false;
   bool coponed = false;
   var oldTotal;
+  double delivery_price = 0.0;
+  double discountPrice = 0.0;
+  void _setDeliveryPrice() {
+    if (dropdownValue == "الداخل") {
+      if (discountPrice == 0) {
+        delivery_price = 60.0;
+      } else {
+        delivery_price = 60.0 - discountPrice;
+      }
+    } else if (dropdownValue == "القدس") {
+      if (discountPrice == 0) {
+        delivery_price = 30.0;
+      } else {
+        delivery_price = 30.0 - discountPrice;
+      }
+    } else if (dropdownValue == "الضفه الغربيه") {
+      if (discountPrice == 0) {
+        delivery_price = 20.0;
+      } else {
+        delivery_price = 20.0 - discountPrice;
+      }
+    } else {
+      delivery_price = 0.0;
+    }
+    setState(() {});
+  }
+
   Timer? _couponMessageTimer;
   PageController _pageController = PageController();
   setControllers() async {
@@ -45,6 +74,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
 
   @override
   void initState() {
+    _setDeliveryPrice();
     setControllers();
     super.initState();
   }
@@ -112,6 +142,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                             setState(() {
                               dropdownValue = newValue!;
                             });
+                            _setDeliveryPrice();
                           },
                         ),
                       ),
@@ -182,69 +213,134 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
                                   onTap: () async {
-                                    SharedPreferences prefs =
-                                        await SharedPreferences.getInstance();
-                                    String UserID =
-                                        prefs.getString('user_id') ?? "";
-                                    bool couponExists =
-                                        await checkCouponInFirebase(
-                                            CoponController.text,
-                                            UserID.toString());
-                                    if (couponExists) {
-                                      CoponMessage =
-                                          "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
-                                      setState(() {});
-                                      _couponMessageTimer?.cancel();
+                                    if (!coponApplied) {
+                                      if (CoponController.text == "noTawseel") {
+                                        var res =
+                                            await getCoupunDeleteCose() ?? null;
+                                        if (res["active"] == true) {
+                                          if (double.parse(
+                                                  widget.total.toString()) >
+                                              double.parse(
+                                                  res["above"].toString())) {
+                                            setState(() {
+                                              discountPrice = double.parse(
+                                                  res["remove"].toString());
+                                              delivery_price = delivery_price -
+                                                  double.parse(
+                                                      res["remove"].toString());
+                                              coponApplied = true;
+                                            });
 
-                                      // Set a new timer to clear the message after 15 seconds
-                                      _couponMessageTimer =
-                                          Timer(Duration(seconds: 5), () {
+                                            AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.success,
+                                              animType: AnimType.rightSlide,
+                                              btnOkText: "حسنا",
+                                              btnCancelText: "اغلاق",
+                                              title: 'تم الخصم بنجاح!',
+                                              desc:
+                                                  'تم خصم سعر التوصيل بقيمة ${res["remove"].toString()} شيكل',
+                                              btnCancelOnPress: () {},
+                                              btnOkOnPress: () {},
+                                            )..show();
+                                          } else {
+                                            AwesomeDialog(
+                                              context: context,
+                                              dialogType: DialogType.error,
+                                              animType: AnimType.rightSlide,
+                                              btnOkText: "حسنا",
+                                              btnCancelText: "اغلاق",
+                                              title:
+                                                  'قيمة الطلبية يجب أن تكون اعلى من ${res["above"].toString()}',
+                                              btnCancelOnPress: () {},
+                                              btnOkOnPress: () {},
+                                            )..show();
+                                          }
+                                        } else {
+                                          AwesomeDialog(
+                                            context: context,
+                                            dialogType: DialogType.error,
+                                            animType: AnimType.rightSlide,
+                                            btnOkText: "حسنا",
+                                            btnCancelText: "اغلاق",
+                                            title: 'الكود غير مفعل',
+                                            desc: 'لم يعد هذا الكود مفعل',
+                                            btnCancelOnPress: () {},
+                                            btnOkOnPress: () {},
+                                          )..show();
+                                        }
+                                      } else {
+                                        SharedPreferences prefs =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        String UserID =
+                                            prefs.getString('user_id') ?? "";
+                                        bool couponExists =
+                                            await checkCouponInFirebase(
+                                                CoponController.text,
+                                                UserID.toString());
+                                        if (couponExists) {
+                                          CoponMessage =
+                                              "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
+                                          setState(() {});
+                                          _couponMessageTimer?.cancel();
+
+                                          // Set a new timer to clear the message after 15 seconds
+                                          _couponMessageTimer =
+                                              Timer(Duration(seconds: 5), () {
+                                            setState(() {
+                                              CoponMessage = "";
+                                            });
+                                          });
+                                        } else {
+                                          var res = await getCoupun(
+                                                  CoponController.text) ??
+                                              null;
+                                          if (res.toString() == "null" ||
+                                              res.toString() == "false") {
+                                            CoponMessage =
+                                                "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
+                                            setState(() {});
+                                            _couponMessageTimer?.cancel();
+
+                                            // Set a new timer to clear the message after 15 seconds
+                                            _couponMessageTimer =
+                                                Timer(Duration(seconds: 5), () {
+                                              setState(() {
+                                                CoponMessage = "";
+                                              });
+                                            });
+                                          } else {
+                                            CoponMessage =
+                                                "تم خصم قيمة الكوبون من مجموع الطلبية";
+
+                                            if (!coponed) {
+                                              widget.total =
+                                                  widget.total * (1 - res);
+
+                                              double _discountPercentage = 100 *
+                                                  double.parse(res.toString());
+
+                                              discountPercentage =
+                                                  _discountPercentage
+                                                      .toString();
+                                            }
+                                            coponed = true;
+                                            setState(() {});
+                                          }
+                                        }
+                                      }
+                                    } else {
+                                      setState(() {
+                                        CoponMessage =
+                                            "تم استخدام الكوبون من قبل";
+                                      });
+                                      // Optionally, you can use a timer to clear the message after a few seconds
+                                      Timer(Duration(seconds: 5), () {
                                         setState(() {
                                           CoponMessage = "";
                                         });
                                       });
-                                    } else {
-                                      var res = await getCoupun(
-                                              CoponController.text) ??
-                                          null;
-                                      if (res.toString() == "null" ||
-                                          res.toString() == "false") {
-                                        CoponMessage =
-                                            "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
-                                        setState(() {});
-                                        _couponMessageTimer?.cancel();
-
-                                        // Set a new timer to clear the message after 15 seconds
-                                        _couponMessageTimer =
-                                            Timer(Duration(seconds: 5), () {
-                                          setState(() {
-                                            CoponMessage = "";
-                                          });
-                                        });
-                                      } else {
-                                        CoponMessage =
-                                            "تم خصم قيمة الكوبون من مجموع الطلبية";
-
-                                        if (!coponed) {
-                                          widget.total =
-                                              widget.total * (1 - res);
-
-                                          double _discountPercentage = 100 *
-                                              double.parse(res.toString());
-
-                                          discountPercentage =
-                                              _discountPercentage.toString();
-                                        }
-                                        coponed = true;
-                                        setState(() {});
-
-                                        // _couponMessageTimer =
-                                        //     Timer(Duration(seconds: 15), () {
-                                        //   setState(() {
-                                        //     CoponMessage = "";
-                                        //   });
-                                        // });
-                                      }
                                     }
                                   },
                                   child: Container(
@@ -415,7 +511,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "₪${dropdownValue.toString() == "الداخل" ? "60" : dropdownValue.toString() == "القدس" ? "30" : dropdownValue.toString() == "الضفه الغربيه" ? "20" : "0"}",
+                              "₪$delivery_price",
                               style: TextStyle(
                                 color: Color(0xffA8AA57),
                                 fontSize: 20,
@@ -446,7 +542,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                   fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              "₪${dropdownValue.toString() == "الداخل" ? (60.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "القدس" ? (30.0 + double.parse(widget.total.toString())).round() : dropdownValue.toString() == "الضفه الغربيه" ? (20.0 + double.parse(widget.total.toString())).round() : widget.total.round()}",
+                              "₪${(delivery_price + widget.total).round()}",
                               style: TextStyle(
                                 color: Colors.red,
                                 fontSize: 18,

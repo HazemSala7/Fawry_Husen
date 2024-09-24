@@ -109,6 +109,7 @@ class CartProvider extends ChangeNotifier {
       Map<String, dynamic> productData = {
         'product_id': item.productId,
         'name': item.name,
+        'shopId': item.shopId,
         'image': item.image,
         'price': item.price,
         'quantity': item.quantity,
