@@ -128,6 +128,7 @@ class _AddAddressState extends State<AddAddress> {
                             controller: notesController,
                             obscureText: false,
                             maxLines: 5,
+                            textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
@@ -162,6 +163,7 @@ class _AddAddressState extends State<AddAddress> {
                       await SharedPreferences.getInstance();
                   String UserID = prefs.getString('user_id') ?? "";
                   final newItem = AddressItem(
+                    city_name:selectedCity!.name.toString(),
                     area_id: selectedArea!.id.toString(),
                     city_id: selectedCity!.id.toString(),
                     area_name: selectedArea!.name.toString(),

@@ -9,7 +9,7 @@ import '../Models/FavoriteItem.dart';
 
 class CartDatabaseHelper {
   static final CartDatabaseHelper _instance = CartDatabaseHelper._internal();
-  static final int dbVersion = 8;
+  static final int dbVersion = 10;
 
   factory CartDatabaseHelper() => _instance;
 
@@ -81,6 +81,7 @@ class CartDatabaseHelper {
         area_id TEXT NOT NULL,
         area_name TEXT NOT NULL,
         city_id TEXT NOT NULL,
+        city_name TEXT NOT NULL,
         user_id INTEGER NOT NULL
       )
     ''');
@@ -99,6 +100,7 @@ class CartDatabaseHelper {
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     // Drop existing tables
     await db.execute('DROP TABLE IF EXISTS cart');
+    await db.execute('DROP TABLE IF EXISTS addresses');
     await db.execute('DROP TABLE IF EXISTS favorites');
 
     // Recreate tables with updated schema
@@ -190,6 +192,7 @@ class CartDatabaseHelper {
         city_id: maps[i]['city_id'],
         area_name: maps[i]['area_name'],
         name: maps[i]['name'],
+        city_name: maps[i]['city_name'],
       );
     });
   }

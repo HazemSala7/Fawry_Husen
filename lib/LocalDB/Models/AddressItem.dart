@@ -3,6 +3,7 @@ class AddressItem {
   final String name;
   final String user_id;
   final String city_id;
+  final String city_name;
   final String area_id;
   final String area_name;
 
@@ -11,6 +12,7 @@ class AddressItem {
     required this.user_id,
     required this.area_id,
     required this.city_id,
+    required this.city_name,
     required this.area_name,
     required this.name,
   });
@@ -23,6 +25,7 @@ class AddressItem {
       'area_name': area_name,
       'area_id': area_id,
       'city_id': city_id,
+      'city_name': city_name,
     };
   }
 
@@ -34,6 +37,7 @@ class AddressItem {
       area_name: json['area_name'],
       area_id: json['area_id'],
       city_id: json['city_id'],
+      city_name: json['city_name'],
     );
   }
 
@@ -43,6 +47,7 @@ class AddressItem {
     String? city_id,
     String? area_id,
     String? area_name,
+    String? city_name,
     String? name,
   }) {
     return AddressItem(
@@ -50,6 +55,7 @@ class AddressItem {
       user_id: user_id ?? this.user_id,
       area_id: area_id ?? this.area_id,
       city_id: city_id ?? this.city_id,
+      city_name: city_name ?? this.city_name,
       area_name: area_name ?? this.area_name,
       name: name ?? this.name,
     );

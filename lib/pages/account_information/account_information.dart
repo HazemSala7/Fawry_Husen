@@ -448,6 +448,7 @@ class AaccounIinformationState extends State<AccountInformation> {
                                               prefs.getString('user_id') ?? "";
                                           final newItem = AddressItem(
                                             area_id: "1",
+                                            city_name: "",
                                             area_name: "",
                                             city_id: "",
                                             user_id: UserID,

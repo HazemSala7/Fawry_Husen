@@ -416,6 +416,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                               controller: OrderController,
                               obscureText: false,
                               maxLines: 5,
+                              textInputAction: TextInputAction.done,
                               decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                   borderSide:
@@ -540,10 +541,11 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                   .toString()
                                                   .substring(0, 5)
                                               : widget.total.toString();
+
                               final orderSuccess = await addOrder(
                                   context: context,
                                   address: finalSelectedArea.toString(),
-                                  city: finalSelectedArea.toString(),
+                                  city: selectedArea!.city_name.toString(),
                                   phone: PhoneController.text,
                                   name: NameController.text,
                                   description: OrderController.text,
