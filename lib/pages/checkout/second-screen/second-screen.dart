@@ -246,7 +246,8 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                           ? 50
                                                           : 70
                                                       : 50,
-                                              keyboardType: TextInputType.text,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               onChanged: (value) {
                                                 // Handle email text changes
                                               },

@@ -786,7 +786,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                       child: FadeInAnimation(
                                         curve: Curves.easeIn,
                                         child: ProductItem(
-                                          shopId: item["shop_id"] ?? "-",
+                                          shopId:
+                                              item["shop_id"].toString() ?? "-",
                                           quantity: _quantity,
                                           quantityAvailable: _quantityAvailable,
                                           showQuantitySelector:

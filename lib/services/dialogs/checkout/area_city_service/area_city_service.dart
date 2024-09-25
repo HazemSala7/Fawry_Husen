@@ -17,7 +17,7 @@ class CityService {
     'القدس الشرقية': [12, 645, 687],
     'قلقيلة': [9, 688, 722],
     'مناطق الداخل': [13, 723, 971],
-    'نابلس': [5, 972, 1152]
+    'نابلس': [5, 972, 1152],
   };
 
   List<City> loadCities() {
@@ -32,15 +32,34 @@ class CityService {
 
   Future<List<Area>> loadAreasFromCsv(City city) async {
     final data = await rootBundle.loadString('assets/pdfs/Cities&Areas.csv');
-    final rows = const CsvToListConverter().convert(data);
-    List<Area> areas = [];
-    for (int i = city.startIndex; i <= city.endIndex; i++) {
-      // Ensure the conversion to the expected types.
-      String name = rows[i][0].toString(); // Convert to String if not already
-      int id = int.parse(rows[i][1].toString()); // Convert to int safely
 
-      areas.add(Area(name: name, id: id, cityId: city.id));
+    // Split the data manually to ensure it captures all rows
+    final List<List<dynamic>> rows =
+        data.split('\n').map((line) => line.split(',')).toList();
+
+    if (rows.isEmpty || rows.length < 2)
+      return []; // Return empty if not enough data
+
+    List<Area> areas = [];
+
+    int newStartIndex = city.startIndex < rows.length ? city.startIndex : 0;
+    int newEndIndex =
+        city.endIndex < rows.length ? city.endIndex : rows.length - 1;
+
+    // Iterate through the specified rows
+    for (int i = newStartIndex; i <= newEndIndex; i++) {
+      if (i < rows.length) {
+        if (rows[i].length >= 2) {
+          String name = rows[i][0].toString().trim(); // Trim whitespace
+          int id = int.tryParse(rows[i][1].toString()) ?? 0;
+
+          areas.add(Area(name: name, id: id, cityId: city.id));
+        } else {
+          print('Row $i is missing data: ${rows[i]}');
+        }
+      }
     }
+
     return areas;
   }
 }
