@@ -1464,7 +1464,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
       var _pricemul = await FirebaseRemoteConfigClass().fetchWomenPrice();
       priceMul = _pricemul;
-    } else if (widget.category_id.toString() == "Men Apparel") {
+    } else if (widget.category_id.toString() == "Men Apparel, Men") {
       SubCategories = sub_categories_Men__sizes;
       Sub_Category_Key.add(SubCategories[0]["key"].toString());
       var _pricemul = await FirebaseRemoteConfigClass().fetchMenPrice();

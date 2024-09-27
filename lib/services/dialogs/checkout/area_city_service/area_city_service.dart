@@ -20,10 +20,28 @@ class CityService {
     'نابلس': [5, 972, 1152],
   };
 
+  final Map<String, String> cityTranslations = {
+    'أريحا': 'Jericho',
+    'الخليل': 'Hebron',
+    'القدس': 'Quds',
+    'بيت لحم': 'beitlahm',
+    'جنين': 'Jenin',
+    'رام الله': 'Ramallah',
+    'سلفيت': 'Salfit',
+    'طوباس': 'Tubas',
+    'طولكرم': 'Tulkarem',
+    'القدس الشرقية': 'QudsV',
+    'قلقيلة': 'Qaliqilya',
+    'مناطق الداخل': 'Manateq',
+    'نابلس': 'Nablus',
+  };
+
   List<City> loadCities() {
     return cityInfo.entries
         .map((entry) => City(
             name: entry.key,
+            translatedName:
+                cityTranslations[entry.key] ?? entry.key, // Add translation
             id: entry.value[0],
             startIndex: entry.value[1],
             endIndex: entry.value[2]))

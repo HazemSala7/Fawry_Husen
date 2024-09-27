@@ -163,7 +163,7 @@ class _AddAddressState extends State<AddAddress> {
                       await SharedPreferences.getInstance();
                   String UserID = prefs.getString('user_id') ?? "";
                   final newItem = AddressItem(
-                    city_name:selectedCity!.name.toString(),
+                    city_name: selectedCity!.translatedName.toString(),
                     area_id: selectedArea!.id.toString(),
                     city_id: selectedCity!.id.toString(),
                     area_name: selectedArea!.name.toString(),

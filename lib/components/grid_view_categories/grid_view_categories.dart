@@ -591,7 +591,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                         main_category: categoryPath.toString() == "2"
                             ? "Women Apparel"
                             : categoryPath.toString() == "1"
-                                ? "Men Apparel"
+                                ? "Men Apparel, Men"
                                 : categoryPath.toString() == "4"
                                     ? "Women Apparel"
                                     : categoryPath.toString() == "18"

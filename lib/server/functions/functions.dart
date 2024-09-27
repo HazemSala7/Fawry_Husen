@@ -274,6 +274,9 @@ addOrder(
       products.add({
         "id": cartProvider[i].productId.toString(),
         "image": cartProvider[i].image.toString(),
+        "shop_id": cartProvider[i].shopId == "null"
+            ? "1"
+            : cartProvider[i].shopId.toString(),
         "data": [
           {
             "sku": cartProvider[i].sku.toString(),
@@ -311,6 +314,7 @@ addOrder(
       },
       "products": products
     });
+
     request.headers.addAll(headers);
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -346,6 +350,8 @@ addOrder(
       return 404;
     }
   } catch (e) {
+    print("response");
+    print(e);
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String UserID = prefs.getString('user_id') ?? "";
@@ -357,6 +363,9 @@ addOrder(
         products.add({
           "id": cartProvider[i].productId.toString(),
           "image": cartProvider[i].image.toString(),
+          "shop_id": cartProvider[i].shopId.toString() == "null"
+              ? "1"
+              : cartProvider[i].shopId.toString(),
           "data": [
             {
               "sku": cartProvider[i].sku.toString(),

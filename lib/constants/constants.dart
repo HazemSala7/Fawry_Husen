@@ -15,7 +15,7 @@ var categories = [
     "id": "1",
     "name": "ملابس رجاليه",
     "image": "assets/images/Mencat.jpg",
-    "main_category": "Men Apparel",
+    "main_category": "Men Apparel, Men",
     "icon": "assets/categories_icons/men_clothes.png"
   },
   {
