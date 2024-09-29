@@ -1453,9 +1453,9 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
   var priceMul;
 
   setStaticSubCategories() async {
-    if (widget.name == "ملابس نسائيه مقاس كبير") {
+    if (widget.name == "مقاسات كبيرة") {
       SubCategories = sub_categories_women_plus_sizes;
-      Sub_Category_Key.add("Women Plus Clothing");
+      Sub_Category_Key.add(SubCategories[0]["key"].toString());
       var _pricemul = await FirebaseRemoteConfigClass().fetchBigPrice();
       priceMul = _pricemul;
     } else if (widget.category_id.toString() == "Women Apparel") {
