@@ -16,10 +16,11 @@ import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 
 class CheckoutFirstScreen extends StatefulWidget {
-  var total;
+  var total, freeShipValue;
   CheckoutFirstScreen({
     Key? key,
     required this.total,
+    required this.freeShipValue,
   }) : super(key: key);
 
   @override
@@ -61,6 +62,9 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
       }
     } else {
       delivery_price = 0.0;
+    }
+    if (widget.total >= int.parse(widget.freeShipValue.toString())) {
+      delivery_price = delivery_price - 20;
     }
     setState(() {});
   }
@@ -147,241 +151,33 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                         ),
                       ),
                     )),
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "اظهار كود الخصم",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      FlutterSwitch(
-                        activeColor: Colors.green,
-                        width: 60.0,
-                        height: 30.0,
-                        valueFontSize: 25.0,
-                        toggleSize: 27.0,
-                        value: status,
-                        borderRadius: 30.0,
-                        padding: 3.0,
-                        // showOnOff: true,
-                        onToggle: (val) {
-                          setState(() {
-                            status = !status;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
                 Visibility(
-                  visible: status ? true : false,
+                  visible: int.parse(widget.freeShipValue.toString()) > 0,
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Stack(
-                          alignment: Alignment.topLeft,
-                          children: [
-                            Container(
-                              height: 50,
-                              width: double.infinity,
-                              child: TextField(
-                                controller: CoponController,
-                                obscureText: false,
-                                onChanged: (_) {
-                                  if (_ != "") {
-                                    setState(() {
-                                      checkCopon = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      checkCopon = false;
-                                    });
-                                  }
-                                },
-                                decoration: InputDecoration(
-                                  hintText: "كود الخصم",
-                                ),
-                              ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.yellow[100],
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            "🛒 قم بشراء منتجات بقيمة ₪${int.parse(widget.freeShipValue.toString())} أو أكثر واحصل على 🚚 توصيل مجاني للضفة، و💰 10 شيكل فقط للقدس، و💸 40 شيكل للمناطق الأخرى!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
-                            Visibility(
-                              visible: checkCopon,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: InkWell(
-                                  onTap: () async {
-                                    if (!coponApplied) {
-                                      if (CoponController.text == "noTawseel") {
-                                        var res =
-                                            await getCoupunDeleteCose() ?? null;
-                                        if (res["active"] == true) {
-                                          if (double.parse(
-                                                  widget.total.toString()) >
-                                              double.parse(
-                                                  res["above"].toString())) {
-                                            setState(() {
-                                              discountPrice = double.parse(
-                                                  res["remove"].toString());
-                                              delivery_price = delivery_price -
-                                                  double.parse(
-                                                      res["remove"].toString());
-                                              coponApplied = true;
-                                            });
-
-                                            AwesomeDialog(
-                                              context: context,
-                                              dialogType: DialogType.success,
-                                              animType: AnimType.rightSlide,
-                                              btnOkText: "حسنا",
-                                              btnCancelText: "اغلاق",
-                                              title: 'تم الخصم بنجاح!',
-                                              desc:
-                                                  'تم خصم سعر التوصيل بقيمة ${res["remove"].toString()} شيكل',
-                                              btnCancelOnPress: () {},
-                                              btnOkOnPress: () {},
-                                            )..show();
-                                          } else {
-                                            AwesomeDialog(
-                                              context: context,
-                                              dialogType: DialogType.error,
-                                              animType: AnimType.rightSlide,
-                                              btnOkText: "حسنا",
-                                              btnCancelText: "اغلاق",
-                                              title:
-                                                  'قيمة الطلبية يجب أن تكون اعلى من ${res["above"].toString()}',
-                                              btnCancelOnPress: () {},
-                                              btnOkOnPress: () {},
-                                            )..show();
-                                          }
-                                        } else {
-                                          AwesomeDialog(
-                                            context: context,
-                                            dialogType: DialogType.error,
-                                            animType: AnimType.rightSlide,
-                                            btnOkText: "حسنا",
-                                            btnCancelText: "اغلاق",
-                                            title: 'الكود غير مفعل',
-                                            desc: 'لم يعد هذا الكود مفعل',
-                                            btnCancelOnPress: () {},
-                                            btnOkOnPress: () {},
-                                          )..show();
-                                        }
-                                      } else {
-                                        SharedPreferences prefs =
-                                            await SharedPreferences
-                                                .getInstance();
-                                        String UserID =
-                                            prefs.getString('user_id') ?? "";
-                                        bool couponExists =
-                                            await checkCouponInFirebase(
-                                                CoponController.text,
-                                                UserID.toString());
-                                        if (couponExists) {
-                                          CoponMessage =
-                                              "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
-                                          setState(() {});
-                                          _couponMessageTimer?.cancel();
-
-                                          // Set a new timer to clear the message after 15 seconds
-                                          _couponMessageTimer =
-                                              Timer(Duration(seconds: 5), () {
-                                            setState(() {
-                                              CoponMessage = "";
-                                            });
-                                          });
-                                        } else {
-                                          var res = await getCoupun(
-                                                  CoponController.text) ??
-                                              null;
-                                          if (res.toString() == "null" ||
-                                              res.toString() == "false") {
-                                            CoponMessage =
-                                                "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
-                                            setState(() {});
-                                            _couponMessageTimer?.cancel();
-
-                                            // Set a new timer to clear the message after 15 seconds
-                                            _couponMessageTimer =
-                                                Timer(Duration(seconds: 5), () {
-                                              setState(() {
-                                                CoponMessage = "";
-                                              });
-                                            });
-                                          } else {
-                                            CoponMessage =
-                                                "تم خصم قيمة الكوبون من مجموع الطلبية";
-
-                                            if (!coponed) {
-                                              widget.total =
-                                                  widget.total * (1 - res);
-
-                                              double _discountPercentage = 100 *
-                                                  double.parse(res.toString());
-
-                                              discountPercentage =
-                                                  _discountPercentage
-                                                      .toString();
-                                            }
-                                            coponed = true;
-                                            setState(() {});
-                                          }
-                                        }
-                                      }
-                                    } else {
-                                      setState(() {
-                                        CoponMessage =
-                                            "تم استخدام الكوبون من قبل";
-                                      });
-                                      // Optionally, you can use a timer to clear the message after a few seconds
-                                      Timer(Duration(seconds: 5), () {
-                                        setState(() {
-                                          CoponMessage = "";
-                                        });
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 70,
-                                    height: 30,
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: MAIN_COLOR),
-                                    child: Center(
-                                      child: Text(
-                                        "فحص",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white,
-                                            fontSize: 16),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: CoponMessage == "" ? false : true,
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Row(
-                            children: [
-                              Text(
-                                CoponMessage,
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ],
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
+                copounField(context),
                 SizedBox(
                   height: 30,
                 ),
@@ -568,24 +364,59 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                         width: double.infinity,
                         BorderColor: Colors.black,
                         OnClickFunction: () {
-                          if (dropdownValue.toString() == "اختر منطقتك") {
+                          if (dropdownValue == "اختر منطقتك") {
                             setState(() {
                               _hasError = true;
                               Vibration.vibrate(duration: 100);
-                              // Resetting error state after a short duration
                               Future.delayed(Duration(milliseconds: 1000), () {
                                 setState(() {
                                   _hasError = false;
                                 });
                               });
                             });
+                          } else if (widget.total <
+                              int.parse(widget.freeShipValue.toString())) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                      "📦 أضف المزيد من المنتجات ليصبح مجموعك ₪${int.parse(widget.freeShipValue.toString())} لتحصل على 🚚 خصم على التوصيل!"),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text("لا، شكرا"),
+                                      onPressed: () {
+                                        NavigatorFunction(
+                                          context,
+                                          CheckoutSecondScreen(
+                                            dropdownValue:
+                                                dropdownValue.toString(),
+                                            total: double.parse(
+                                                widget.total.toString()),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text("تصفح المزيد"),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           } else {
                             NavigatorFunction(
-                                context,
-                                CheckoutSecondScreen(
-                                  dropdownValue: dropdownValue.toString(),
-                                  total: double.parse(widget.total.toString()),
-                                ));
+                              context,
+                              CheckoutSecondScreen(
+                                dropdownValue: dropdownValue.toString(),
+                                total: double.parse(widget.total.toString()),
+                              ),
+                            );
                           }
                         },
                         BorderRaduis: 10,
@@ -598,6 +429,238 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
           ),
         ),
       )),
+    );
+  }
+
+  Column copounField(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 25),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "اظهار كود الخصم",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              FlutterSwitch(
+                activeColor: Colors.green,
+                width: 60.0,
+                height: 30.0,
+                valueFontSize: 25.0,
+                toggleSize: 27.0,
+                value: status,
+                borderRadius: 30.0,
+                padding: 3.0,
+                // showOnOff: true,
+                onToggle: (val) {
+                  setState(() {
+                    status = !status;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+        Visibility(
+          visible: status ? true : false,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Stack(
+                  alignment: Alignment.topLeft,
+                  children: [
+                    Container(
+                      height: 50,
+                      width: double.infinity,
+                      child: TextField(
+                        controller: CoponController,
+                        obscureText: false,
+                        onChanged: (_) {
+                          if (_ != "") {
+                            setState(() {
+                              checkCopon = true;
+                            });
+                          } else {
+                            setState(() {
+                              checkCopon = false;
+                            });
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: "كود الخصم",
+                        ),
+                      ),
+                    ),
+                    Visibility(
+                      visible: checkCopon,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: () async {
+                            if (!coponApplied) {
+                              if (CoponController.text == "noTawseel") {
+                                var res = await getCoupunDeleteCose() ?? null;
+                                if (res["active"] == true) {
+                                  if (double.parse(widget.total.toString()) >
+                                      double.parse(res["above"].toString())) {
+                                    setState(() {
+                                      discountPrice = double.parse(
+                                          res["remove"].toString());
+                                      delivery_price = delivery_price -
+                                          double.parse(
+                                              res["remove"].toString());
+                                      coponApplied = true;
+                                    });
+
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.success,
+                                      animType: AnimType.rightSlide,
+                                      btnOkText: "حسنا",
+                                      btnCancelText: "اغلاق",
+                                      title: 'تم الخصم بنجاح!',
+                                      desc:
+                                          'تم خصم سعر التوصيل بقيمة ${res["remove"].toString()} شيكل',
+                                      btnCancelOnPress: () {},
+                                      btnOkOnPress: () {},
+                                    )..show();
+                                  } else {
+                                    AwesomeDialog(
+                                      context: context,
+                                      dialogType: DialogType.error,
+                                      animType: AnimType.rightSlide,
+                                      btnOkText: "حسنا",
+                                      btnCancelText: "اغلاق",
+                                      title:
+                                          'قيمة الطلبية يجب أن تكون اعلى من ${res["above"].toString()}',
+                                      btnCancelOnPress: () {},
+                                      btnOkOnPress: () {},
+                                    )..show();
+                                  }
+                                } else {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.error,
+                                    animType: AnimType.rightSlide,
+                                    btnOkText: "حسنا",
+                                    btnCancelText: "اغلاق",
+                                    title: 'الكود غير مفعل',
+                                    desc: 'لم يعد هذا الكود مفعل',
+                                    btnCancelOnPress: () {},
+                                    btnOkOnPress: () {},
+                                  )..show();
+                                }
+                              } else {
+                                SharedPreferences prefs =
+                                    await SharedPreferences.getInstance();
+                                String UserID =
+                                    prefs.getString('user_id') ?? "";
+                                bool couponExists = await checkCouponInFirebase(
+                                    CoponController.text, UserID.toString());
+                                if (couponExists) {
+                                  CoponMessage =
+                                      "الكوبون المدخل مستخدم من قبل , الرجاء المحاولة فيما بعد";
+                                  setState(() {});
+                                  _couponMessageTimer?.cancel();
+
+                                  // Set a new timer to clear the message after 15 seconds
+                                  _couponMessageTimer =
+                                      Timer(Duration(seconds: 5), () {
+                                    setState(() {
+                                      CoponMessage = "";
+                                    });
+                                  });
+                                } else {
+                                  var res =
+                                      await getCoupun(CoponController.text) ??
+                                          null;
+                                  if (res.toString() == "null" ||
+                                      res.toString() == "false") {
+                                    CoponMessage =
+                                        "الكوبون المدخل خاطئ , الرجاء المحاولة فيما بعد";
+                                    setState(() {});
+                                    _couponMessageTimer?.cancel();
+
+                                    // Set a new timer to clear the message after 15 seconds
+                                    _couponMessageTimer =
+                                        Timer(Duration(seconds: 5), () {
+                                      setState(() {
+                                        CoponMessage = "";
+                                      });
+                                    });
+                                  } else {
+                                    CoponMessage =
+                                        "تم خصم قيمة الكوبون من مجموع الطلبية";
+
+                                    if (!coponed) {
+                                      widget.total = widget.total * (1 - res);
+
+                                      double _discountPercentage =
+                                          100 * double.parse(res.toString());
+
+                                      discountPercentage =
+                                          _discountPercentage.toString();
+                                    }
+                                    coponed = true;
+                                    setState(() {});
+                                  }
+                                }
+                              }
+                            } else {
+                              setState(() {
+                                CoponMessage = "تم استخدام الكوبون من قبل";
+                              });
+                              // Optionally, you can use a timer to clear the message after a few seconds
+                              Timer(Duration(seconds: 5), () {
+                                setState(() {
+                                  CoponMessage = "";
+                                });
+                              });
+                            }
+                          },
+                          child: Container(
+                            width: 70,
+                            height: 30,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: MAIN_COLOR),
+                            child: Center(
+                              child: Text(
+                                "فحص",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 16),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Visibility(
+                visible: CoponMessage == "" ? false : true,
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Row(
+                    children: [
+                      Text(
+                        CoponMessage,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
     );
   }
 

@@ -89,6 +89,11 @@ class FirebaseRemoteConfigClass {
     return remoteConfig.getString('season');
   }
 
+  Future<String> fetchFreeShip() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('FreeShip');
+  }
+
   Future<String> fetchMarque() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('marque');

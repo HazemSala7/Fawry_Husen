@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/pages/checkout/first-screen/first-screen.dart';
+import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
@@ -266,12 +267,13 @@ class _CartState extends State<Cart> {
                                   }
 
                                   if (allAvailable) {
-                                    // showCheckoutDialog().showBottomDialog(
-                                    //     context,
-                                    //     double.parse(total.toString()));
+                                    var freeShipValue =
+                                        await FirebaseRemoteConfigClass()
+                                            .fetchFreeShip();
                                     NavigatorFunction(
                                         context,
                                         CheckoutFirstScreen(
+                                            freeShipValue: freeShipValue,
                                             total: double.parse(
                                                 total.toString())));
                                   }
