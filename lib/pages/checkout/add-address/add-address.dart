@@ -44,6 +44,7 @@ class _AddAddressState extends State<AddAddress> {
       selectedCity = cities.firstWhere(
           (city) => city.name == widget.initialCity,
           orElse: () => cities.first); // Return the first city as a default
+      areas = await CityService().loadAreasFromCsv(selectedCity!);
     }
 
     setState(() {});

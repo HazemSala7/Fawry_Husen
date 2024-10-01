@@ -270,40 +270,50 @@ class _CartState extends State<Cart> {
                                     var freeShipValue =
                                         await FirebaseRemoteConfigClass()
                                             .fetchFreeShip();
-                                    if (double.parse(total.toString()) >
-                                        double.parse(
-                                            freeShipValue.toString())) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text(
-                                                "مبروك , بقد حصلت على خصم التوصيل"),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: Text("حسنا"),
-                                                onPressed: () {
-                                                  NavigatorFunction(
-                                                      context,
-                                                      CheckoutFirstScreen(
-                                                          freeShipValue:
-                                                              freeShipValue,
-                                                          total: double.parse(
-                                                              total
-                                                                  .toString())));
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    } else {
+                                    if (int.parse(freeShipValue.toString()) ==
+                                        0) {
                                       NavigatorFunction(
                                           context,
                                           CheckoutFirstScreen(
                                               freeShipValue: freeShipValue,
                                               total: double.parse(
                                                   total.toString())));
+                                    } else {
+                                      if (double.parse(total.toString()) >
+                                          double.parse(
+                                              freeShipValue.toString())) {
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                  "مبروك , بقد حصلت على خصم التوصيل"),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text("حسنا"),
+                                                  onPressed: () {
+                                                    NavigatorFunction(
+                                                        context,
+                                                        CheckoutFirstScreen(
+                                                            freeShipValue:
+                                                                freeShipValue,
+                                                            total: double.parse(
+                                                                total
+                                                                    .toString())));
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        NavigatorFunction(
+                                            context,
+                                            CheckoutFirstScreen(
+                                                freeShipValue: freeShipValue,
+                                                total: double.parse(
+                                                    total.toString())));
+                                      }
                                     }
                                   }
 

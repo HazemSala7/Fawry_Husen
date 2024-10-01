@@ -315,9 +315,13 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Visibility(
-                                  visible: widget.total >=
-                                      int.parse(
-                                          widget.freeShipValue.toString()),
+                                  visible: int.parse(widget.freeShipValue
+                                              .toString()) ==
+                                          0
+                                      ? false
+                                      : widget.total >=
+                                          int.parse(
+                                              widget.freeShipValue.toString()),
                                   child: Text(
                                     "لقد حصلت على خصم ₪20 على التوصيل",
                                     style: TextStyle(
@@ -416,7 +420,8 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                             dropdownValue:
                                                 dropdownValue.toString(),
                                             total: double.parse(
-                                                widget.total.toString()),
+                                                (delivery_price + widget.total)
+                                                    .toString()),
                                           ),
                                         );
                                       },
@@ -439,7 +444,8 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                               CheckoutSecondScreen(
                                 initialCity: dropdownValue.toString(),
                                 dropdownValue: dropdownValue.toString(),
-                                total: double.parse(widget.total.toString()),
+                                total: double.parse(
+                                    (delivery_price + widget.total).toString()),
                               ),
                             );
                           }
