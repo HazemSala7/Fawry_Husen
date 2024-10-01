@@ -78,8 +78,6 @@ class _FawriState extends State<Fawri> {
   void handleDeepLink(Uri deepLink) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String UserID = prefs.getString('user_id') ?? "";
-    print("deepLink");
-    print(deepLink);
     if (deepLink.path == '/product') {
       final productId = deepLink.queryParameters['id'];
       if (productId != null) {

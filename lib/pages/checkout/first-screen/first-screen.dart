@@ -63,9 +63,14 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
     } else {
       delivery_price = 0.0;
     }
-    if (widget.total >= int.parse(widget.freeShipValue.toString())) {
-      delivery_price = delivery_price - 20;
+    if (dropdownValue == "اختر منطقتك") {
+      delivery_price = 0.0;
+    } else {
+      if (widget.total >= int.parse(widget.freeShipValue.toString())) {
+        delivery_price = delivery_price - 20;
+      }
     }
+
     setState(() {});
   }
 
@@ -301,10 +306,27 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "التوصيل : ",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
+                            Row(
+                              children: [
+                                Text(
+                                  "التوصيل : ",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Visibility(
+                                  visible: widget.total >=
+                                      int.parse(
+                                          widget.freeShipValue.toString()),
+                                  child: Text(
+                                    "لقد حصلت على خصم ₪20 على التوصيل",
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red),
+                                  ),
+                                ),
+                              ],
                             ),
                             Text(
                               "₪$delivery_price",
