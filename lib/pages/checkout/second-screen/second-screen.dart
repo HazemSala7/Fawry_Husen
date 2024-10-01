@@ -28,11 +28,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CheckoutSecondScreen extends StatefulWidget {
   var total;
-  String dropdownValue = 'اختر منطقتك';
+  String dropdownValue = 'اختر منطقتك', initialCity = "";
   CheckoutSecondScreen({
     Key? key,
     required this.total,
     required this.dropdownValue,
+    required this.initialCity,
   }) : super(key: key);
 
   @override
@@ -371,7 +372,11 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                           top: 15, right: 15, left: 15, bottom: 10),
                       child: InkWell(
                         onTap: () {
-                          NavigatorFunction(context, AddAddress());
+                          NavigatorFunction(
+                              context,
+                              AddAddress(
+                                initialCity: widget.initialCity.toString(),
+                              ));
                         },
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,

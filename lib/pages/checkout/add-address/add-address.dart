@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-
 import 'package:fawri_app_refactor/LocalDB/Models/AddressItem.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/AddressProvider.dart';
 import 'package:fawri_app_refactor/components/app-bar-widget/app-bar-widget.dart';
@@ -12,9 +7,16 @@ import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/model/Area/area.dart';
 import 'package:fawri_app_refactor/model/City/city.dart';
 import 'package:fawri_app_refactor/services/dialogs/checkout/area_city_service/area_city_service.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddAddress extends StatefulWidget {
-  const AddAddress({super.key});
+  final String? initialCity; // Add a parameter for the initial city
+
+  const AddAddress(
+      {super.key, required this.initialCity}); // Update constructor
 
   @override
   State<AddAddress> createState() => _AddAddressState();
@@ -36,6 +38,14 @@ class _AddAddressState extends State<AddAddress> {
         finalSelectedArea = addressItems[0].name;
       });
     }
+
+    if (widget.initialCity != null) {
+      // Safely find the city, or set to the first city or throw an error
+      selectedCity = cities.firstWhere(
+          (city) => city.name == widget.initialCity,
+          orElse: () => cities.first); // Return the first city as a default
+    }
+
     setState(() {});
   }
 

@@ -389,6 +389,8 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                         NavigatorFunction(
                                           context,
                                           CheckoutSecondScreen(
+                                            initialCity:
+                                                dropdownValue.toString(),
                                             dropdownValue:
                                                 dropdownValue.toString(),
                                             total: double.parse(
@@ -413,6 +415,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                             NavigatorFunction(
                               context,
                               CheckoutSecondScreen(
+                                initialCity: dropdownValue.toString(),
                                 dropdownValue: dropdownValue.toString(),
                                 total: double.parse(widget.total.toString()),
                               ),

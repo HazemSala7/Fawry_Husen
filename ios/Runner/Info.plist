@@ -23,14 +23,40 @@
     <key>CFBundleSignature</key>
     <string>????</string>
     <key>FirebaseDynamicLinksCustomDomains</key>
+    <array>
+        <string>https://fawri.page.link</string>
+    </array>
+    <key>com.apple.developer.associated-domains</key>
+    <array>
+        <string>applinks:fawri.page.link</string>
+    </array>
+    <key>CFBundleURLTypes</key>
 <array>
-    <string>https://fawri.page.link</string>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>fawri.page.link</string>
+        </array>
+    </dict>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>com.googleusercontent.apps.47403596173-ke12nt4tuvta17nvp3t9ghogpj4l0lh0</string>
+        </array>
+    </dict>
+    <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+            <string>***Something here***</string>
+        </array>
+    </dict>
 </array>
-<key>com.apple.developer.associated-domains</key>
-<array>
-    <string>applinks:fawri.page.link</string>
-</array>
-
     <key>FacebookAppID</key>
     <string>3606217462947603</string>
     <key>FacebookClientToken</key>
