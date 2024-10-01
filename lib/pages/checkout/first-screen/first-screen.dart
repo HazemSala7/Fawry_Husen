@@ -43,31 +43,23 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
   double discountPrice = 0.0;
   void _setDeliveryPrice() {
     if (dropdownValue == "الداخل") {
-      if (discountPrice == 0) {
-        delivery_price = 60.0;
-      } else {
-        delivery_price = 60.0 - discountPrice;
-      }
+      delivery_price = 60.0;
     } else if (dropdownValue == "القدس") {
-      if (discountPrice == 0) {
-        delivery_price = 30.0;
-      } else {
-        delivery_price = 30.0 - discountPrice;
-      }
+      delivery_price = 30.0;
     } else if (dropdownValue == "الضفه الغربيه") {
-      if (discountPrice == 0) {
-        delivery_price = 20.0;
-      } else {
-        delivery_price = 20.0 - discountPrice;
-      }
+      delivery_price = 20.0;
     } else {
       delivery_price = 0.0;
     }
     if (dropdownValue == "اختر منطقتك") {
       delivery_price = 0.0;
     } else {
-      if (widget.total >= int.parse(widget.freeShipValue.toString())) {
-        delivery_price = delivery_price - 20;
+      if (int.parse(widget.freeShipValue.toString()) == 0) {
+        delivery_price = delivery_price;
+      } else {
+        if (widget.total >= int.parse(widget.freeShipValue.toString())) {
+          delivery_price = delivery_price - 20;
+        }
       }
     }
 
