@@ -518,35 +518,6 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                 loading = true;
                               });
 
-                              var TOTALFINAL = widget.dropdownValue
-                                          .toString() ==
-                                      "الداخل"
-                                  ? 60.0 + double.parse(widget.total.toString())
-                                  : widget.dropdownValue.toString() == "القدس"
-                                      ? 30.0 +
-                                          double.parse(
-                                              widget.total.toString().length > 5
-                                                  ? widget.total
-                                                      .toString()
-                                                      .substring(0, 5)
-                                                  : widget.total.toString())
-                                      : widget.dropdownValue.toString() ==
-                                              "الضفه الغربيه"
-                                          ? 20.0 +
-                                              double.parse(widget.total
-                                                          .toString()
-                                                          .length >
-                                                      5
-                                                  ? widget.total
-                                                      .toString()
-                                                      .substring(0, 5)
-                                                  : widget.total.toString())
-                                          : widget.total.toString().length > 5
-                                              ? widget.total
-                                                  .toString()
-                                                  .substring(0, 5)
-                                              : widget.total.toString();
-
                               final orderSuccess = await addOrder(
                                   context: context,
                                   address: finalSelectedArea.toString(),
@@ -554,7 +525,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                   phone: PhoneController.text,
                                   name: NameController.text,
                                   description: OrderController.text,
-                                  total: TOTALFINAL.toString(),
+                                  total: widget.total.toString(),
                                   copon: CoponController.text,
                                   areaID: selectedArea!.area_id.toString(),
                                   areaName: selectedArea!.area_name.toString(),
