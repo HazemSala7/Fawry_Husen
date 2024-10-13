@@ -110,7 +110,7 @@ class _CategorySplashState extends State<CategorySplash> {
             elevation: 1,
             leading: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: CartIcon(),
+              child: CartIcon(0),
             ),
             actions: [
               InkWell(

@@ -141,7 +141,7 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             ],
           ),
           actions: [
-            CartIcon(),
+            CartIcon(0),
           ],
           elevation: 1,
           centerTitle: true,

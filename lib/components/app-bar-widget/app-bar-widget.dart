@@ -51,7 +51,7 @@ class AppBarWidgetBack extends StatelessWidget {
                 Consumer<CartProvider>(
                   builder: (context, cartProvider, _) {
                     int itemCount = cartProvider.cartItemsCount;
-                    return CartIcon();
+                    return CartIcon(itemCount);
                   },
                 )
               ],

@@ -164,6 +164,39 @@ getFeatureProducts(DomainName) async {
   }
 }
 
+getFlashSales(int page) async {
+  var response = await http.get(Uri.parse("$URL_FLASH_SALES?page=$page"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
+getShops(int page) async {
+  var response =
+      await http.get(Uri.parse("$URL_GET_SHOPS?page=$page"), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
+getBestSellersProducts(int page) async {
+  var response = await http.get(Uri.parse("$URL_TOP_SELLERS?page=$page"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
 getProducts(int page) async {
   final cacheManager = CacheManager();
   final cacheKey = 'products_page_$page';

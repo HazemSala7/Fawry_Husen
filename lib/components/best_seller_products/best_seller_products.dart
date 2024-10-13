@@ -11,21 +11,19 @@ import '../../pages/product-screen/product-screen.dart';
 import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
-class RecommendedProducts extends StatefulWidget {
-  int productCardStyle;
+class BestSellerProducts extends StatefulWidget {
   final List shortlisted;
 
-  RecommendedProducts({
+  BestSellerProducts({
     Key? key,
-    required this.productCardStyle,
     required this.shortlisted,
   }) : super(key: key);
 
   @override
-  _RecommendedProductsState createState() => _RecommendedProductsState();
+  _BestSellerProductsState createState() => _BestSellerProductsState();
 }
 
-class _RecommendedProductsState extends State<RecommendedProducts> {
+class _BestSellerProductsState extends State<BestSellerProducts> {
   ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   bool _isLoading = false;
@@ -71,12 +69,12 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
       _isLoading = true;
     });
     await Future.delayed(Duration(seconds: 1));
-    var newItems = await fetchRecommendedItems(_currentPage + 1);
+    var newItems = await getFlashSales(_currentPage + 1);
     setState(() {
       if (newItems.isEmpty) {
         _isEndReached = true;
       } else {
-        widget.shortlisted.addAll(newItems["items"]);
+        widget.shortlisted.addAll(newItems["data"]);
         _currentPage++;
       }
       _isLoading = false;
@@ -92,7 +90,7 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
           Padding(
             padding: const EdgeInsets.only(top: 15, left: 10, bottom: 0),
             child: Container(
-              height: widget.productCardStyle == 2 ? 224 : 300,
+              height: 300,
               width: MediaQuery.of(context).size.width,
               child: AnimationLimiter(
                 child: ListView.builder(
@@ -108,17 +106,11 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
                         child: SlideAnimation(
                           horizontalOffset: 100.0,
                           child: FadeInAnimation(
-                              child: widget.productCardStyle == 2
-                                  ? ProductWidgetStyleTwo(
-                                      fire: false,
-                                      index: index,
-                                      shortlisted: widget.shortlisted,
-                                    )
-                                  : ProductWidgetStyleFour(
-                                      fire: false,
-                                      index: index,
-                                      shortlisted: widget.shortlisted,
-                                    )),
+                              child: ProductWidgetStyleFour(
+                            fire: false,
+                            index: index,
+                            shortlisted: widget.shortlisted,
+                          )),
                         ),
                       );
                     } else {

@@ -11,21 +11,21 @@ import '../../pages/product-screen/product-screen.dart';
 import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
-class RecommendedProducts extends StatefulWidget {
+class FlashSalesProducts extends StatefulWidget {
   int productCardStyle;
   final List shortlisted;
 
-  RecommendedProducts({
+  FlashSalesProducts({
     Key? key,
     required this.productCardStyle,
     required this.shortlisted,
   }) : super(key: key);
 
   @override
-  _RecommendedProductsState createState() => _RecommendedProductsState();
+  _FlashSalesProductsState createState() => _FlashSalesProductsState();
 }
 
-class _RecommendedProductsState extends State<RecommendedProducts> {
+class _FlashSalesProductsState extends State<FlashSalesProducts> {
   ScrollController _scrollController = ScrollController();
   int _currentPage = 1;
   bool _isLoading = false;
@@ -71,7 +71,7 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
       _isLoading = true;
     });
     await Future.delayed(Duration(seconds: 1));
-    var newItems = await fetchRecommendedItems(_currentPage + 1);
+    var newItems = await getFlashSales(_currentPage + 1);
     setState(() {
       if (newItems.isEmpty) {
         _isEndReached = true;

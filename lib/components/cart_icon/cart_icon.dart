@@ -1,3 +1,4 @@
+import 'package:add_to_cart_animation/add_to_cart_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -7,7 +8,7 @@ import '../../pages/cart/cart.dart';
 import '../../server/functions/functions.dart';
 
 class CartIcon extends StatefulWidget {
-  const CartIcon({super.key});
+  const CartIcon(int itemCount, {super.key});
 
   @override
   State<CartIcon> createState() => _CartIconState();
@@ -15,6 +16,7 @@ class CartIcon extends StatefulWidget {
 
 class _CartIconState extends State<CartIcon> {
   @override
+  GlobalKey<CartIconKey> cartKey = GlobalKey<CartIconKey>();
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.topRight,
