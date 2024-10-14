@@ -174,7 +174,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
               }
             }),
         FutureBuilder(
-            future: getSliders(),
+            future: getSliders(withCategory: false),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
@@ -205,6 +205,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height * 0.25,
                       child: SlideImage(
+                        withCategory: false,
                         click: true,
                         showShadow: true,
                         slideimage: album,
@@ -358,490 +359,528 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 5),
-          child: Visibility(
-            visible: _isCategoryDataValid(),
-            child: InkWell(
-              onTap: () {
-                bool All = false;
-                bool Women = false;
-                bool Men = false;
-                bool Kids = false;
-                if (categoryPath.toString() == "5") {
-                  NavigatorFunction(context, ShoesCategoryDialog());
-                } else if (categoryPath.toString() == "3") {
-                  NavigatorFunction(context, KidsCategoryDialog());
-                } else if (categoryPath.toString() == "17") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Sports %26 Outdoor, Sports  Outdoor",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "مستلزمات رياضية",
-                          sizes: "null",
-                          main_category: "Sports %26 Outdoor, Sports  Outdoor",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "7") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id:
-                              "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "للمنزل",
-                          sizes: "null",
-                          main_category:
-                              "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "6") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Women Apparel, Baby",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "للرضيع و الأم",
-                          sizes: "null",
-                          main_category: "Women Apparel, Baby",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "10") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Jewelry %26 Watches, Jewelry  Watches",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "مجوهرات و ساعات",
-                          sizes: "null",
-                          main_category:
-                              "Jewelry %26 Watches, Jewelry  Watches",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "9") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Apparel Accessories",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "اكسسوارات",
-                          sizes: "null",
-                          main_category: "Apparel Accessories",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "16") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Beauty %26 Health, Jewelry %26 Watches",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "مستحضرات تجميلية",
-                          sizes: "null",
-                          main_category:
-                              "Beauty %26 Health, Jewelry %26 Watches",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "16") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Electronics",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "الكترونيات",
-                          sizes: "null",
-                          main_category: "Electronics",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "15") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Bags %26 Luggage, Bags %26 Luggage",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "حقائب",
-                          sizes: "null",
-                          main_category: "Bags %26 Luggage, Bags %26 Luggage",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "11") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Pet Supplies",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "للحيوانات الاليفة",
-                          sizes: "null",
-                          main_category: "Pet Supplies",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "12") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id: "Automotive",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "مستلزمات سيارات",
-                          sizes: "null",
-                          main_category: "Automotive",
-                        ),
-                      )));
-                } else if (categoryPath.toString() == "14") {
-                  NavigatorFunction(
-                      context,
-                      ShowCaseWidget(
-                          builder: Builder(
-                        builder: (context) => ProductsCategories(
-                          SIZES: [],
-                          category_id:
-                              "Office School Supplies, Office %26 School Supplies",
-                          search: false,
-                          size: "",
-                          containerWidths: "null",
-                          keys: "null",
-                          name: "مستلزمات مكاتب",
-                          sizes: "null",
-                          main_category:
-                              "Office School Supplies, Office %26 School Supplies",
-                        ),
-                      )));
-                } else {
-                  Map sizes = {};
-                  if (categoryPath.toString() == "2") {
-                    sizes = LocalStorage().getSize("womenSizes");
-                  } else if (categoryPath.toString() == "1") {
-                    sizes = LocalStorage().getSize("menSizes");
-                  } else if (categoryPath.toString() == "4") {
-                    sizes = LocalStorage().getSize("womenPlusSizes");
-                  } else if (categoryPath.toString() == "18") {
-                    sizes = LocalStorage().getSize("Weddings & Events");
-                  } else if (categoryPath.toString() == "8") {
-                    sizes = LocalStorage().getSize("Underwear_Sleepwear_sizes");
-                  }
-
-                  var keys = sizes.keys.toList();
-
-                  double gridViewHeight = calculateGridViewHeight(keys.length);
-                  // Calculate the widths for each Container
-                  List<double> containerWidths = keys
-                      .map((text) =>
-                          getTextWidth(
-                              text, TextStyle(fontWeight: FontWeight.bold)) +
-                          120.0)
-                      .toList();
-                  NavigatorFunction(
-                      context,
-                      SizesPage(
-                        sizes: sizes,
-                        main_category: categoryPath.toString() == "2"
-                            ? "Women Apparel"
-                            : categoryPath.toString() == "1"
-                                ? "Men Apparel, Men"
-                                : categoryPath.toString() == "4"
-                                    ? "Women Apparel"
-                                    : categoryPath.toString() == "18"
-                                        ? "Weddings %26 Events, Weddings %26 Events"
-                                        : categoryPath.toString() == "8"
-                                            ? "Underwear & Sleepwear, Underwear Sleepwear"
-                                            : "",
-                        name: categoryPath.toString() == "2"
-                            ? "ملابس نسائيه"
-                            : categoryPath.toString() == "1"
-                                ? "ملابس رجاليه"
-                                : categoryPath.toString() == "4"
-                                    ? "ملابس نسائيه مقاس كبير"
-                                    : categoryPath.toString() == "18"
-                                        ? "مستلزمات اعراس"
-                                        : categoryPath.toString() == "8"
-                                            ? "ملابس داخليه"
-                                            : "",
-                        containerWidths: containerWidths,
-                        keys: keys,
-                      ));
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 145, 114, 13).withOpacity(0.5),
-                      blurRadius: 7,
-                      offset: Offset(0, 2),
+        FutureBuilder(
+            future: getSliders(withCategory: true),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.20,
+                  child: Shimmer.fromColors(
+                    baseColor: const Color.fromARGB(255, 196, 196, 196),
+                    highlightColor: const Color.fromARGB(255, 129, 129, 129),
+                    child: Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.20,
+                      color: Colors.white,
                     ),
-                  ], borderRadius: BorderRadius.circular(6)),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Stack(
-                          children: [
-                            FancyShimmerImage(
-                              imageUrl: categoryImage,
-                              boxFit: BoxFit.cover,
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.25,
-                            ),
-                            // Container(
-                            //     width: double.infinity,
-                            //     height:
-                            //         MediaQuery.of(context).size.height * 0.25,
-                            //     decoration: BoxDecoration(
-                            //       gradient: LinearGradient(
-                            //         begin: Alignment.topCenter,
-                            //         end: Alignment.bottomCenter,
-                            //         colors: [
-                            //           Color.fromARGB(183, 182, 138, 18),
-                            //           Color.fromARGB(45, 0, 0, 0)
-                            //         ],
-                            //       ),
-                            //     )),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20, top: 5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              categoryName,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 30),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Text(
-                              categoryDesc,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
                   ),
-                ),
+                );
+              } else {
+                List<Silder>? album = [];
+                if (snapshot.data != null) {
+                  List mysslide = snapshot.data;
+                  List<Silder> album1 = mysslide.map((s) {
+                    Silder c = Silder.fromJson(s);
+                    return c;
+                  }).toList();
+                  album = album1;
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.20,
+                      child: SlideImage(
+                        withCategory: true,
+                        click: true,
+                        showShadow: true,
+                        slideimage: album,
+                      ),
+                    ),
+                  );
+                } else {
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.20,
+                    width: double.infinity,
+                    color: Colors.white,
+                  );
+                }
+              }
+            }),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 5),
+        //   child: Visibility(
+        //     visible: _isCategoryDataValid(),
+        //     child: InkWell(
+        //       onTap: () {
+        //         bool All = false;
+        //         bool Women = false;
+        //         bool Men = false;
+        //         bool Kids = false;
+        //         if (categoryPath.toString() == "5") {
+        //           NavigatorFunction(context, ShoesCategoryDialog());
+        //         } else if (categoryPath.toString() == "3") {
+        //           NavigatorFunction(context, KidsCategoryDialog());
+        //         } else if (categoryPath.toString() == "17") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Sports %26 Outdoor, Sports  Outdoor",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "مستلزمات رياضية",
+        //                   sizes: "null",
+        //                   main_category: "Sports %26 Outdoor, Sports  Outdoor",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "7") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id:
+        //                       "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "للمنزل",
+        //                   sizes: "null",
+        //                   main_category:
+        //                       "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "6") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Women Apparel, Baby",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "للرضيع و الأم",
+        //                   sizes: "null",
+        //                   main_category: "Women Apparel, Baby",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "10") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Jewelry %26 Watches, Jewelry  Watches",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "مجوهرات و ساعات",
+        //                   sizes: "null",
+        //                   main_category:
+        //                       "Jewelry %26 Watches, Jewelry  Watches",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "9") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Apparel Accessories",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "اكسسوارات",
+        //                   sizes: "null",
+        //                   main_category: "Apparel Accessories",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "16") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Beauty %26 Health, Jewelry %26 Watches",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "مستحضرات تجميلية",
+        //                   sizes: "null",
+        //                   main_category:
+        //                       "Beauty %26 Health, Jewelry %26 Watches",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "16") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Electronics",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "الكترونيات",
+        //                   sizes: "null",
+        //                   main_category: "Electronics",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "15") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Bags %26 Luggage, Bags %26 Luggage",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "حقائب",
+        //                   sizes: "null",
+        //                   main_category: "Bags %26 Luggage, Bags %26 Luggage",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "11") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Pet Supplies",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "للحيوانات الاليفة",
+        //                   sizes: "null",
+        //                   main_category: "Pet Supplies",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "12") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id: "Automotive",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "مستلزمات سيارات",
+        //                   sizes: "null",
+        //                   main_category: "Automotive",
+        //                 ),
+        //               )));
+        //         } else if (categoryPath.toString() == "14") {
+        //           NavigatorFunction(
+        //               context,
+        //               ShowCaseWidget(
+        //                   builder: Builder(
+        //                 builder: (context) => ProductsCategories(
+        //                   SIZES: [],
+        //                   category_id:
+        //                       "Office School Supplies, Office %26 School Supplies",
+        //                   search: false,
+        //                   size: "",
+        //                   containerWidths: "null",
+        //                   keys: "null",
+        //                   name: "مستلزمات مكاتب",
+        //                   sizes: "null",
+        //                   main_category:
+        //                       "Office School Supplies, Office %26 School Supplies",
+        //                 ),
+        //               )));
+        //         } else {
+        //           Map sizes = {};
+        //           if (categoryPath.toString() == "2") {
+        //             sizes = LocalStorage().getSize("womenSizes");
+        //           } else if (categoryPath.toString() == "1") {
+        //             sizes = LocalStorage().getSize("menSizes");
+        //           } else if (categoryPath.toString() == "4") {
+        //             sizes = LocalStorage().getSize("womenPlusSizes");
+        //           } else if (categoryPath.toString() == "18") {
+        //             sizes = LocalStorage().getSize("Weddings & Events");
+        //           } else if (categoryPath.toString() == "8") {
+        //             sizes = LocalStorage().getSize("Underwear_Sleepwear_sizes");
+        //           }
+
+        //           var keys = sizes.keys.toList();
+
+        //           double gridViewHeight = calculateGridViewHeight(keys.length);
+        //           // Calculate the widths for each Container
+        //           List<double> containerWidths = keys
+        //               .map((text) =>
+        //                   getTextWidth(
+        //                       text, TextStyle(fontWeight: FontWeight.bold)) +
+        //                   120.0)
+        //               .toList();
+        //           NavigatorFunction(
+        //               context,
+        //               SizesPage(
+        //                 sizes: sizes,
+        //                 main_category: categoryPath.toString() == "2"
+        //                     ? "Women Apparel"
+        //                     : categoryPath.toString() == "1"
+        //                         ? "Men Apparel, Men"
+        //                         : categoryPath.toString() == "4"
+        //                             ? "Women Apparel"
+        //                             : categoryPath.toString() == "18"
+        //                                 ? "Weddings %26 Events, Weddings %26 Events"
+        //                                 : categoryPath.toString() == "8"
+        //                                     ? "Underwear & Sleepwear, Underwear Sleepwear"
+        //                                     : "",
+        //                 name: categoryPath.toString() == "2"
+        //                     ? "ملابس نسائيه"
+        //                     : categoryPath.toString() == "1"
+        //                         ? "ملابس رجاليه"
+        //                         : categoryPath.toString() == "4"
+        //                             ? "ملابس نسائيه مقاس كبير"
+        //                             : categoryPath.toString() == "18"
+        //                                 ? "مستلزمات اعراس"
+        //                                 : categoryPath.toString() == "8"
+        //                                     ? "ملابس داخليه"
+        //                                     : "",
+        //                 containerWidths: containerWidths,
+        //                 keys: keys,
+        //               ));
+        //         }
+        //       },
+        //       child: Padding(
+        //         padding: const EdgeInsets.all(8.0),
+        //         child: Container(
+        //           decoration: BoxDecoration(boxShadow: [
+        //             BoxShadow(
+        //               color: Color.fromARGB(255, 145, 114, 13).withOpacity(0.5),
+        //               blurRadius: 7,
+        //               offset: Offset(0, 2),
+        //             ),
+        //           ], borderRadius: BorderRadius.circular(6)),
+        //           child: Stack(
+        //             alignment: Alignment.center,
+        //             children: [
+        //               ClipRRect(
+        //                 borderRadius: BorderRadius.circular(6),
+        //                 child: Stack(
+        //                   children: [
+        //                     FancyShimmerImage(
+        //                       imageUrl: categoryImage,
+        //                       boxFit: BoxFit.cover,
+        //                       width: double.infinity,
+        //                       height: MediaQuery.of(context).size.height * 0.25,
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //               Padding(
+        //                 padding: const EdgeInsets.only(right: 20, top: 5),
+        //                 child: Column(
+        //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //                   children: [
+        //                     Text(
+        //                       categoryName,
+        //                       style: TextStyle(
+        //                           fontWeight: FontWeight.bold,
+        //                           color: Colors.white,
+        //                           fontSize: 30),
+        //                     ),
+        //                     SizedBox(
+        //                       height: 30,
+        //                     ),
+        //                     Text(
+        //                       categoryDesc,
+        //                       style: TextStyle(
+        //                           fontWeight: FontWeight.bold,
+        //                           color: Colors.white,
+        //                           fontSize: 20),
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        Padding(
+          padding: const EdgeInsets.only(top: 15),
+          child: Container(
+            height: 480,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [
+                  Color.fromARGB(255, 255, 238, 0),
+                  Color.fromRGBO(141, 143, 27, 1),
+                ],
               ),
             ),
-          ),
-        ),
-        Container(
-          height: 480,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromARGB(255, 255, 238, 0),
-                Color.fromRGBO(141, 143, 27, 1),
-              ],
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                        height: 4,
-                        color: MAIN_COLOR,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "Flash Sales",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                          color: Colors.white),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                        height: 4,
-                        color: MAIN_COLOR,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color.fromARGB(171, 82, 80, 80)),
-                        child: Center(
-                          child: Lottie.asset(
-                            "assets/lottie_animations/Animation - 1720525210493.json",
-                            height: 40,
-                            reverse: true,
-                            repeat: true,
-                            fit: BoxFit.cover,
-                          ),
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          height: 4,
+                          color: MAIN_COLOR,
                         ),
                       ),
-                      Text(
-                        "ينتهي خلال",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                      SizedBox(
+                        width: 15,
                       ),
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color.fromARGB(171, 82, 80, 80)),
-                        child: Center(
-                          child: Lottie.asset(
-                            "assets/lottie_animations/Animation - 1720525210493.json",
-                            height: 40,
-                            reverse: true,
-                            repeat: true,
-                            fit: BoxFit.cover,
-                          ),
+                      Text(
+                        "Flash Sales",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.white),
+                      ),
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          height: 4,
+                          color: MAIN_COLOR,
                         ),
                       ),
                     ],
                   ),
-                ),
-                CountdownTimerScreen(),
-                FutureBuilder(
-                  future: getFlashSales(1),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          child: ListView.builder(
-                            itemCount: 4,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, int index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.only(right: 5, left: 5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  width: 160,
-                                  height: 100,
-                                  child: Shimmer.fromColors(
-                                    baseColor: const Color.fromARGB(
-                                        255, 196, 196, 196),
-                                    highlightColor: const Color.fromARGB(
-                                        255, 129, 129, 129),
-                                    child: Container(
-                                      width: 120,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color.fromARGB(171, 82, 80, 80)),
+                          child: Center(
+                            child: Lottie.asset(
+                              "assets/lottie_animations/Animation - 1720525210493.json",
+                              height: 40,
+                              reverse: true,
+                              repeat: true,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          "ينتهي خلال",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color.fromARGB(171, 82, 80, 80)),
+                          child: Center(
+                            child: Lottie.asset(
+                              "assets/lottie_animations/Animation - 1720525210493.json",
+                              height: 40,
+                              reverse: true,
+                              repeat: true,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  CountdownTimerScreen(),
+                  FutureBuilder(
+                    future: getFlashSales(1),
+                    builder: (context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Container(
+                            width: double.infinity,
+                            height: MediaQuery.of(context).size.height * 0.25,
+                            child: ListView.builder(
+                              itemCount: 4,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, int index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.only(right: 5, left: 5),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    width: 160,
+                                    height: 100,
+                                    child: Shimmer.fromColors(
+                                      baseColor: const Color.fromARGB(
+                                          255, 196, 196, 196),
+                                      highlightColor: const Color.fromARGB(
+                                          255, 129, 129, 129),
+                                      child: Container(
+                                        width: 120,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      );
-                    } else if (snapshot.hasData && snapshot.data != null) {
-                      return FlashSalesProducts(
-                        productCardStyle: 4,
-                        shortlisted: snapshot.data["items"],
-                      );
-                    } else {
-                      return Container(
-                        height: MediaQuery.of(context).size.height * 0.25,
-                        width: double.infinity,
-                        color: Colors.white,
-                      );
-                    }
-                  },
-                ),
-              ],
+                        );
+                      } else if (snapshot.hasData && snapshot.data != null) {
+                        return FlashSalesProducts(
+                          productCardStyle: 4,
+                          shortlisted: snapshot.data["items"],
+                        );
+                      } else {
+                        return Container(
+                          height: MediaQuery.of(context).size.height * 0.25,
+                          width: double.infinity,
+                          color: Colors.white,
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -911,18 +950,18 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           },
         ),
         Container(
-          height: 380,
+          height: 450,
           width: double.infinity,
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
-              colors: [
-                Color.fromARGB(255, 0, 89, 255),
-                Color.fromRGBO(90, 88, 233, 1),
-              ],
-            ),
-          ),
+              // gradient: LinearGradient(
+              //   begin: Alignment.topRight,
+              //   end: Alignment.bottomLeft,
+              //   colors: [
+              //     Color.fromARGB(255, 0, 89, 255),
+              //     Color.fromRGBO(90, 88, 233, 1),
+              //   ],
+              // ),
+              ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
@@ -932,9 +971,10 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                     Text(
                       "الأكثر مبيعا",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30,
-                          color: Colors.white),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Colors.black,
+                      ),
                     ),
                   ],
                 ),
@@ -943,10 +983,11 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                     Container(
                       width: 200,
                       height: 3,
-                      color: Colors.white,
-                    )
+                      color: Colors.black,
+                    ),
                   ],
                 ),
+                SizedBox(height: 10),
                 FutureBuilder(
                   future: getBestSellersProducts(1),
                   builder: (context, AsyncSnapshot snapshot) {
@@ -962,25 +1003,18 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                             itemBuilder: (context, int index) {
                               return Padding(
                                 padding:
-                                    const EdgeInsets.only(right: 5, left: 5),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  width: 160,
-                                  height: 100,
-                                  child: Shimmer.fromColors(
-                                    baseColor: const Color.fromARGB(
-                                        255, 196, 196, 196),
-                                    highlightColor: const Color.fromARGB(
-                                        255, 129, 129, 129),
-                                    child: Container(
-                                      width: 120,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: Shimmer.fromColors(
+                                  baseColor:
+                                      const Color.fromARGB(255, 196, 196, 196),
+                                  highlightColor:
+                                      const Color.fromARGB(255, 129, 129, 129),
+                                  child: Container(
+                                    width: 160,
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
                                 ),
@@ -990,8 +1024,135 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                         ),
                       );
                     } else if (snapshot.hasData && snapshot.data != null) {
-                      return BestSellerProducts(
-                        shortlisted: snapshot.data["data"],
+                      List products = snapshot.data["data"];
+                      int pageCount = (products.length / 4)
+                          .ceil(); // Calculate number of pages
+
+                      return SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.38,
+                        child: PageView.builder(
+                          itemCount: pageCount,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, pageIndex) {
+                            // Display 4 products per page (2x2 grid)
+                            int start = pageIndex * 4;
+                            int end = (start + 4 > products.length)
+                                ? products.length
+                                : start + 4;
+
+                            List currentProducts = products.sublist(start, end);
+
+                            return GridView.builder(
+                              physics:
+                                  NeverScrollableScrollPhysics(), // Prevent individual scrolling
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2, // Two products per row
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                childAspectRatio:
+                                    1.5, // Adjust this ratio for card size
+                              ),
+                              itemCount: currentProducts.length,
+                              itemBuilder: (context, gridIndex) {
+                                var product = currentProducts[gridIndex];
+                                return Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  elevation: 5,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: 1,
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(10),
+                                              bottomRight: Radius.circular(10)),
+                                          child: Container(
+                                            color: Colors.green,
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 50,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            5.0),
+                                                    child: Text(
+                                                      product["item_name"],
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                product.containsKey(
+                                                            "new_price") &&
+                                                        product["new_price"] !=
+                                                            null
+                                                    ? Text(
+                                                        product["new_price"]
+                                                                is double
+                                                            ? "₪${(product["new_price"] as double).toStringAsFixed(2)}"
+                                                            : (double.tryParse(product[
+                                                                            "new_price"]
+                                                                        .toString()) !=
+                                                                    null
+                                                                ? "₪${double.parse(product["new_price"]).toStringAsFixed(2)}"
+                                                                : "₪0"),
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 24,
+                                                          color: Colors.white,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        "₪0",
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 24,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Container(
+                                          height: 150,
+                                          decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: NetworkImage(product[
+                                                              "images"]
+                                                          .length ==
+                                                      0
+                                                  ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                  : product["images"][0] ??
+                                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg"),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       );
                     } else {
                       return Container(

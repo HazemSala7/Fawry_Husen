@@ -119,22 +119,25 @@ fetchRecommendedItems(int page) async {
   return combinedResponse;
 }
 
-getSliders() async {
-  final cacheManager = CacheManager();
-  const cacheKey = 'sliders';
-  final cachedData = await cacheManager.getCache(cacheKey);
+getSliders({bool withCategory = false}) async {
+  // final cacheManager = CacheManager();
+  // const cacheKey = 'sliders';
+  // final cachedData = await cacheManager.getCache(cacheKey);
 
-  if (cachedData != null) {
-    return cachedData;
-  }
+  // if (cachedData != null) {
+  //   return cachedData;
+  // }
 
   try {
-    var response = await http
-        .get(Uri.parse("${URL}getSliders?api_key=$key_bath"), headers: headers);
+    var response = await http.get(
+        Uri.parse(withCategory
+            ? "${URL}getSliders?api_key=$key_bath&type=category"
+            : "${URL}getSliders?api_key=$key_bath"),
+        headers: headers);
     var res = json.decode(utf8.decode(response.bodyBytes));
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      await cacheManager.setCache(cacheKey, res);
+      // await cacheManager.setCache(cacheKey, res);
       return res;
     } else {
       throw Exception('Failed to load sliders: ${response.statusCode}');
@@ -145,7 +148,7 @@ getSliders() async {
     var res = jsonDecode(response.body)["response"];
 
     if (response.statusCode == 200) {
-      await cacheManager.setCache(cacheKey, res);
+      // await cacheManager.setCache(cacheKey, res);
       return res;
     } else {
       throw Exception(
