@@ -1,9 +1,7 @@
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
-import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../services/flutter_flow_icon_button/flutter_flow_icon_button.dart';
 

@@ -23,9 +23,7 @@ import '../../services/dash_point/dash_point.dart';
 import '../../services/remote_config_firebase/remote_config_firebase.dart';
 import '../home_screen/category-screen/category-screen.dart';
 import '../home_screen/favourite-screen/favourite-screen.dart';
-import '../home_screen/main-screen/main-screen.dart';
 import '../home_screen/profile-screen/profile-screen.dart';
-import '../search_screen/search_screen.dart';
 
 class ProductsCategories extends StatefulWidget {
   final category_id, size;
@@ -875,6 +873,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                       child: FadeInAnimation(
                                                         curve: Curves.easeOut,
                                                         child: ProductWidget(
+                                                            hasAPI: false,
                                                             cardHeight: cardHeight
                                                                 .toInt(),
                                                             cardWidth: cardWidth

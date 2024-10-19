@@ -1,28 +1,18 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/pages/checkout/first-screen/first-screen.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
-import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
-import 'package:fawri_app_refactor/firebase/cart/CartController.dart';
-import 'package:fawri_app_refactor/firebase/cart/CartFirebaseModel.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:uuid/uuid.dart';
 import '../../LocalDB/Models/CartModel.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../constants/constants.dart';
-import '../../firebase/cart/CartProvider.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
-import '../../services/dialogs/bottom-dialogs.dart';
 import '../newest_orders/newest_orders.dart';
 import '../product-screen/product-screen.dart';
 
@@ -486,6 +476,7 @@ class _CartState extends State<Cart> {
               NavigatorFunction(
                 context,
                 ProductScreen(
+                  hasAPI: false,
                   priceMul: 1.0,
                   price: price.toString(),
                   SIZES: [],

@@ -404,7 +404,6 @@
 //   }
 // }
 
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/components/product_widget/product-widget.dart';
 import 'package:fawri_app_refactor/pages/cart/cart.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
@@ -524,26 +523,32 @@ class _ShopProfileState extends State<ShopProfile> {
                 titlePadding: EdgeInsets.all(0),
                 centerTitle: true,
                 title: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(widget.image),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(widget.image),
+                      ),
                     ),
                     SizedBox(width: 10),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.name,
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Text(
-                          'Rank: ${widget.rank}',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            widget.name,
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Text(
+                            'Rank: ${widget.rank}',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -612,6 +617,7 @@ class _ShopProfileState extends State<ShopProfile> {
                                         child: FadeInAnimation(
                                           curve: Curves.easeOut,
                                           child: ProductWidget(
+                                            hasAPI: false,
                                             cardHeight: 420,
                                             cardWidth: 420,
                                             priceMul: 1,

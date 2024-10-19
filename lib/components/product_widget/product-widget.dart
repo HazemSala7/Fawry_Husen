@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
@@ -8,8 +6,6 @@ import 'package:fawri_app_refactor/services/dimension_utils/dimension_utils.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:like_button/like_button.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
@@ -39,6 +35,7 @@ class ProductWidget extends StatefulWidget {
   bool home = false;
   bool isLiked = false;
   bool inCart = false;
+  bool hasAPI = false;
   bool ALL;
   ProductWidget({
     super.key,
@@ -46,6 +43,7 @@ class ProductWidget extends StatefulWidget {
     this.name,
     required this.ALL,
     required this.cardWidth,
+    required this.hasAPI,
     required this.cardHeight,
     required this.priceMul,
     required this.inCart,
@@ -170,6 +168,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             context,
             MaterialPageRoute(
                 builder: (context) => ProductScreen(
+                      hasAPI: widget.hasAPI,
                       priceMul: double.parse(widget.priceMul.toString()),
                       price: widget.old_price.toString(),
                       SIZES: widget.SIZES,

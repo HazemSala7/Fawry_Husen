@@ -3,12 +3,7 @@ import 'package:fawri_app_refactor/components/product-widgets-styles/product-wid
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:lottie/lottie.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 
-import '../../constants/constants.dart';
-import '../../pages/product-screen/product-screen.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
 class FlashSalesList extends StatefulWidget {
@@ -118,17 +113,20 @@ class _FlashSalesListState extends State<FlashSalesList> {
                           child: FadeInAnimation(
                               child: widget.productStyleNumber == 2
                                   ? ProductWidgetStyleTwo(
+                                      hasAPI: true,
                                       fire: true,
                                       index: index,
                                       shortlisted: widget.shortlisted,
                                     )
                                   : widget.productStyleNumber == 3
                                       ? ProductWidgetStyleThree(
+                                          hasAPI: true,
                                           fire: false,
                                           index: index,
                                           shortlisted: widget.shortlisted,
                                         )
                                       : ProductWidgetStyleTwo(
+                                          hasAPI: true,
                                           fire: true,
                                           index: index,
                                           shortlisted: widget.shortlisted,

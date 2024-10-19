@@ -3,7 +3,6 @@ import 'package:fawri_app_refactor/pages/home_screen/category-screen/category-sc
 import 'package:fawri_app_refactor/pages/home_screen/favourite-screen/favourite-screen.dart';
 import 'package:fawri_app_refactor/pages/home_screen/main-screen/main-screen.dart';
 import 'package:fawri_app_refactor/pages/home_screen/profile-screen/profile-screen.dart';
-import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:fawri_app_refactor/services/app_bar/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -15,9 +14,12 @@ import 'slider_products/slider_products.dart';
 class HomeScreen extends StatefulWidget {
   int selectedIndex = 0;
   bool slider = false;
-  String url, title;
+  bool productsKinds = false;
+  String url, title, type;
   HomeScreen({
     Key? key,
+    required this.type,
+    required this.productsKinds,
     required this.url,
     required this.title,
     required this.slider,
@@ -52,7 +54,11 @@ class _HomeScreenState extends State<HomeScreen> {
               url: widget.url,
               title: widget.title,
             )
-          : MainScreen(),
+          : MainScreen(
+              type: widget.type,
+              API: widget.url,
+              hasAPI: widget.productsKinds,
+            ),
       CategoryScreen(),
       Favourite(),
       ProfileScreen(),

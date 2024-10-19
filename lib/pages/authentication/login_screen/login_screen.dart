@@ -6,23 +6,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/firebase/user/UserModel.dart';
-import 'package:fawri_app_refactor/pages/authentication/register_screen/register_screen.dart';
-import 'package:fawri_app_refactor/pages/authentication/sign_in/sign_in.dart';
 import 'package:fawri_app_refactor/pages/category-splash/category-splash.dart';
-import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vibration/vibration.dart';
-import '../../../components/button_widget/button_widget.dart';
 import '../../../firebase/user/UserController.dart';
-import '../../../services/auth/anonymous_auth.dart';
 import 'bottom-dialog/bottom-dialog.dart';
 
 class LoginScreen extends StatefulWidget {

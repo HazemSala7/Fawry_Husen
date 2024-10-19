@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter/material.dart';
 import 'package:app_links/app_links.dart';
 
 /// Provides methods to manage dynamic links.

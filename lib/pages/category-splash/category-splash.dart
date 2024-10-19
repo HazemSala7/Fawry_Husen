@@ -1,31 +1,16 @@
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/components/grid_view_categories/grid_view_categories.dart';
-import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:sliding_clipped_nav_bar/sliding_clipped_nav_bar.dart';
 
-import '../../../components/category_widget/category-widget.dart';
 import '../../../constants/constants.dart';
-import '../../../services/custom_icons/custom_icons.dart';
 import '../../components/cart_icon/cart_icon.dart';
-import '../../components/flash_sales_list/flash_sales_list.dart';
-import '../../components/product_widget/product-widget.dart';
-import '../../components/slider-widget/slider-widget.dart';
-import '../../model/slider/slider.dart';
-import '../../server/domain/domain.dart';
-import '../../services/remote_config_firebase/remote_config_firebase.dart';
 import '../home_screen/category-screen/category-screen.dart';
 import '../home_screen/favourite-screen/favourite-screen.dart';
 import '../home_screen/profile-screen/profile-screen.dart';
-import '../product-screen/product-screen.dart';
 
 class CategorySplash extends StatefulWidget {
   int selectedIndex = 0;
@@ -118,6 +103,8 @@ class _CategorySplashState extends State<CategorySplash> {
                   NavigatorFunction(
                       context,
                       HomeScreen(
+                        type: "normal",
+                        productsKinds: false,
                         title: "",
                         selectedIndex: 0,
                         slider: false,

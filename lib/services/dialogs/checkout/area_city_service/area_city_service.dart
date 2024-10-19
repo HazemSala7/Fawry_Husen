@@ -1,4 +1,3 @@
-import 'package:csv/csv.dart';
 import 'package:fawri_app_refactor/model/Area/area.dart';
 import 'package:fawri_app_refactor/model/City/city.dart';
 import 'package:flutter/services.dart' show rootBundle;

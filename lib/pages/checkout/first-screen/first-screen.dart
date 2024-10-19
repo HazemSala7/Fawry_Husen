@@ -5,7 +5,6 @@ import 'package:bouncerwidget/bouncerwidget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fawri_app_refactor/components/app-bar-widget/app-bar-widget.dart';
 import 'package:fawri_app_refactor/pages/checkout/second-screen/second-screen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';

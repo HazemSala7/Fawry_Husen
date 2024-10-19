@@ -1,4 +1,3 @@
-import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 
 class SearchScreen extends StatefulWidget {

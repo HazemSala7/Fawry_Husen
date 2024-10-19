@@ -1,9 +1,7 @@
-import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/pages/account_information/account_information.dart';
 import 'package:fawri_app_refactor/pages/cart/cart.dart';
 import 'package:fawri_app_refactor/pages/newest_orders/newest_orders.dart';
-import 'package:fawri_app_refactor/pages/order_details/order_details.dart';
 import 'package:fawri_app_refactor/pages/orders/orders.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../firebase/user/UserController.dart';
 import '../../authentication/login_screen/login_screen.dart';
-import '../../privacy_policy/privacy_policy.dart';
-import '../../switch_policy/switch_policy.dart';
-import '../../who/who.dart';
 import '../home_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -163,6 +158,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen(
+                                      productsKinds: false,
+                                      type: "normal",
                                       selectedIndex: 2,
                                       title: "",
                                       slider: false,

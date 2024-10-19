@@ -1,14 +1,8 @@
 import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-four/product-widget-style-four.dart';
-import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-two/product-widget-style-two.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:lottie/lottie.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 
-import '../../constants/constants.dart';
-import '../../pages/product-screen/product-screen.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
 class BestSellerProducts extends StatefulWidget {
@@ -107,6 +101,7 @@ class _BestSellerProductsState extends State<BestSellerProducts> {
                           horizontalOffset: 100.0,
                           child: FadeInAnimation(
                               child: ProductWidgetStyleFour(
+                            hasAPI: true,
                             fire: false,
                             index: index,
                             shortlisted: widget.shortlisted,

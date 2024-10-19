@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../services/custom_icons/custom_icons.dart';
-
 var MAIN_COLOR = Colors.black;
 var categories = [
   {

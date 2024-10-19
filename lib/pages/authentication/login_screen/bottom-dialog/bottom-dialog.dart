@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sms_otp_auto_verify/sms_otp_auto_verify.dart';
 
 import '../../../../components/button_widget/button_widget.dart';

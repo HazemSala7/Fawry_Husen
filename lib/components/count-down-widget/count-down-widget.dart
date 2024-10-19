@@ -68,16 +68,16 @@ class _CountdownTimerScreenState extends State<CountdownTimerScreen> {
       children: [
         Container(
           height: 60,
-          width: 60,
+          width: 80,
           decoration: BoxDecoration(
-            color: Color.fromARGB(171, 121, 121, 121),
+            color: Color.fromARGB(181, 17, 17, 19),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Center(
             child: Text(
               value,
               style: TextStyle(
-                fontSize: 28,
+                fontSize: 32,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),

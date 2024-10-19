@@ -1,19 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/LocalDB/Provider/FavouriteProvider.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../constants/constants.dart';
-import '../../../LocalDB/Models/CartModel.dart';
 import '../../../LocalDB/Models/FavoriteItem.dart';
 import '../../../LocalDB/Provider/CartProvider.dart';
-import '../../../firebase/favourites/FavouriteControler.dart';
-import '../../../firebase/favourites/favourite.dart';
 
 class Favourite extends StatefulWidget {
   const Favourite({Key? key}) : super(key: key);
@@ -137,6 +129,7 @@ class _FavouriteState extends State<Favourite> {
     NavigatorFunction(
       context,
       ProductScreen(
+        hasAPI: false,
         priceMul: 1.0,
         SIZES: [],
         price: price.toString(),
@@ -281,6 +274,7 @@ class _FavouriteState extends State<Favourite> {
                 NavigatorFunction(
                   context,
                   ProductScreen(
+                    hasAPI: false,
                     priceMul: 1.0,
                     price: price.toString(),
                     SIZES: [],
@@ -420,6 +414,7 @@ class _FavouriteState extends State<Favourite> {
                                   NavigatorFunction(
                                     context,
                                     ProductScreen(
+                                      hasAPI: false,
                                       priceMul: 1.0,
                                       SIZES: [],
                                       price: price.toString(),

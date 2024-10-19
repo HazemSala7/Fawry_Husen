@@ -3,20 +3,17 @@ import 'package:fawri_app_refactor/components/product-widgets-styles/product-wid
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:lottie/lottie.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 
-import '../../constants/constants.dart';
-import '../../pages/product-screen/product-screen.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
 class RecommendedProducts extends StatefulWidget {
   int productCardStyle;
   final List shortlisted;
+  bool hasAPI = false;
 
   RecommendedProducts({
     Key? key,
+    required this.hasAPI,
     required this.productCardStyle,
     required this.shortlisted,
   }) : super(key: key);
@@ -110,11 +107,13 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
                           child: FadeInAnimation(
                               child: widget.productCardStyle == 2
                                   ? ProductWidgetStyleTwo(
+                                      hasAPI: widget.hasAPI,
                                       fire: false,
                                       index: index,
                                       shortlisted: widget.shortlisted,
                                     )
                                   : ProductWidgetStyleFour(
+                                      hasAPI: widget.hasAPI,
                                       fire: false,
                                       index: index,
                                       shortlisted: widget.shortlisted,

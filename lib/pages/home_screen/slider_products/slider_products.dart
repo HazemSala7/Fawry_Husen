@@ -1,18 +1,15 @@
-import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:fawri_app_refactor/components/product_widget/product-widget.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 import '../../../../LocalDB/Provider/CartProvider.dart';
 import '../../../../LocalDB/Provider/FavouriteProvider.dart';
 import '../../../../constants/constants.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../../server/domain/domain.dart';
-import '../../../services/app_bar/app_bar.dart';
 
 class SliderProducts extends StatefulWidget {
   final url, title;
@@ -163,6 +160,7 @@ class _SliderProductsState extends State<SliderProducts> {
                                             child: FadeInAnimation(
                                               curve: Curves.easeOut,
                                               child: ProductWidget(
+                                                  hasAPI: false,
                                                   cardHeight: 0,
                                                   cardWidth: 0,
                                                   priceMul: 1,

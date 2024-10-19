@@ -21,11 +21,9 @@ import '../../../LocalDB/Models/CartModel.dart';
 import '../../../LocalDB/Models/FavoriteItem.dart';
 import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../LocalDB/Provider/FavouriteProvider.dart';
-import '../../../components/button_widget/button_widget.dart';
 import '../../../constants/constants.dart';
 import '../../../firebase/cart/CartController.dart';
 import '../../../firebase/cart/CartFirebaseModel.dart';
-import '../../../server/domain/domain.dart';
 import '../../../server/functions/functions.dart';
 
 class ProductItem extends StatefulWidget {

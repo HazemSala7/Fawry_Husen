@@ -3,10 +3,8 @@ import 'package:fawri_app_refactor/components/app-bar-widget/app-bar-widget.dart
 import 'package:fawri_app_refactor/components/cutom-text-field/cutom-text-field.dart';
 import 'package:fawri_app_refactor/firebase/user/UserController.dart';
 import 'package:fawri_app_refactor/pages/checkout/add-address/add-address.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -580,6 +578,8 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                               NavigatorFunction(
                                                   context,
                                                   HomeScreen(
+                                                    type: "normal",
+                                                    productsKinds: false,
                                                     title: "",
                                                     selectedIndex: 0,
                                                     slider: false,
@@ -653,6 +653,9 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                       NavigatorFunction(
                                                           context,
                                                           HomeScreen(
+                                                              type: "normal",
+                                                              productsKinds:
+                                                                  false,
                                                               title: "",
                                                               slider: false,
                                                               url: "",
@@ -764,6 +767,8 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                             NavigatorFunction(
                                                 context,
                                                 HomeScreen(
+                                                    type: "normal",
+                                                    productsKinds: false,
                                                     title: "",
                                                     slider: false,
                                                     url: "",
@@ -844,6 +849,9 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                     NavigatorFunction(
                                                         context,
                                                         HomeScreen(
+                                                            type: "normal",
+                                                            productsKinds:
+                                                                false,
                                                             title: "",
                                                             slider: false,
                                                             url: "",

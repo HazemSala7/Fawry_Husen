@@ -126,7 +126,7 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
                           activeColor: Color(0xffB04759),
                           onChanged: (value) {
                             setState(() {
-                              selectedGender = value as String?;
+                              selectedGender = value;
                             });
                           },
                         ),
@@ -141,7 +141,7 @@ class _ChooseBirthdateState extends State<ChooseBirthdate> {
                           activeColor: Color(0xffB04759),
                           onChanged: (value) {
                             setState(() {
-                              selectedGender = value as String?;
+                              selectedGender = value;
                             });
                           },
                         ),

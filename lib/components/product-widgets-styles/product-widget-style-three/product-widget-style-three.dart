@@ -11,8 +11,10 @@ class ProductWidgetStyleThree extends StatefulWidget {
   int index;
   var shortlisted;
   bool fire;
+  bool hasAPI = false;
   ProductWidgetStyleThree({
     Key? key,
+    required this.hasAPI,
     required this.index,
     required this.shortlisted,
     required this.fire,
@@ -45,6 +47,7 @@ class _ProductWidgetStyleThreeState extends State<ProductWidgetStyleThree> {
         NavigatorFunction(
             context,
             ProductScreen(
+              hasAPI: widget.hasAPI,
               priceMul: 1.0,
               price: widget.shortlisted[widget.index]["price"].toString(),
               SIZES: [],

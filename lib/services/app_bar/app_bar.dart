@@ -1,22 +1,11 @@
 import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
-import 'package:fawri_app_refactor/pages/choose_size/choose_size.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:vibration/vibration.dart';
 
 import '../../LocalDB/Database/local_storage.dart';
-import '../../LocalDB/Models/CartModel.dart';
-import '../../LocalDB/Provider/CartProvider.dart';
-import '../../components/button_widget/button_widget.dart';
 import '../../components/cart_icon/cart_icon.dart';
-import '../../constants/constants.dart';
-import '../../firebase/cart/CartController.dart';
-import '../../firebase/cart/CartFirebaseModel.dart';
-import '../../pages/cart/cart.dart';
-import '../../pages/products-category/products-category.dart';
 import '../../server/functions/functions.dart';
 
 class AppBarWidget extends StatefulWidget {

@@ -1,16 +1,9 @@
-import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-four/product-widget-style-four.dart';
-import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-two/product-widget-style-two.dart';
 import 'package:fawri_app_refactor/pages/shop-profile/shop-profile.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:lottie/lottie.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
-import 'package:shimmer/shimmer.dart';
 
-import '../../constants/constants.dart';
-import '../../pages/product-screen/product-screen.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
 class ShopsList extends StatefulWidget {
@@ -110,7 +103,7 @@ class _ShopsListState extends State<ShopsList> {
                           child: FadeInAnimation(
                               child: Padding(
                             padding: const EdgeInsets.only(
-                                right: 5, left: 5, top: 10),
+                                right: 10, left: 10, top: 10),
                             child: InkWell(
                               onTap: () {
                                 NavigatorFunction(
@@ -157,7 +150,7 @@ class _ShopsListState extends State<ShopsList> {
                                       widget.shortlisted[index]["shopName"],
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 22,
+                                          fontSize: 18,
                                           color: Colors.white),
                                     ),
                                   )

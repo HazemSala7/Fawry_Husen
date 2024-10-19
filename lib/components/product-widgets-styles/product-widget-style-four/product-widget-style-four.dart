@@ -11,8 +11,10 @@ class ProductWidgetStyleFour extends StatefulWidget {
   int index;
   var shortlisted;
   bool fire;
+  bool hasAPI = false;
   ProductWidgetStyleFour({
     Key? key,
+    required this.hasAPI,
     required this.index,
     required this.shortlisted,
     required this.fire,
@@ -46,6 +48,7 @@ class _ProductWidgetStyleFourState extends State<ProductWidgetStyleFour> {
           NavigatorFunction(
               context,
               ProductScreen(
+                hasAPI: widget.hasAPI,
                 priceMul: 1.0,
                 price: widget.shortlisted[widget.index]["new_price"].toString(),
                 SIZES: [],
@@ -83,36 +86,33 @@ class _ProductWidgetStyleFourState extends State<ProductWidgetStyleFour> {
                       decoration: BoxDecoration(color: Colors.transparent),
                       child: Column(
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Stack(
-                              alignment: Alignment.bottomCenter,
-                              children: [
-                                Container(
+                          Stack(
+                            alignment: Alignment.bottomCenter,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 200,
+                                child: FancyShimmerImage(
+                                  shimmerDuration: Duration(milliseconds: 0),
+                                  imageUrl: widget
+                                              .shortlisted[widget.index]
+                                                  ["images"]
+                                              .length ==
+                                          0
+                                      ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                      : widget.shortlisted[widget.index]
+                                              ["images"][0] ??
+                                          "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
                                   width: double.infinity,
                                   height: 200,
-                                  child: FancyShimmerImage(
-                                    shimmerDuration: Duration(milliseconds: 0),
-                                    imageUrl: widget
-                                                .shortlisted[widget.index]
-                                                    ["images"]
-                                                .length ==
-                                            0
-                                        ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                        : widget.shortlisted[widget.index]
-                                                ["images"][0] ??
-                                            "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
-                                    width: double.infinity,
-                                    height: 200,
-                                    boxFit: BoxFit.cover,
-                                    errorWidget: Image.asset(
-                                      "assets/images/playstore.png",
-                                      fit: BoxFit.cover,
-                                    ),
+                                  boxFit: BoxFit.cover,
+                                  errorWidget: Image.asset(
+                                    "assets/images/playstore.png",
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,7 +167,7 @@ class _ProductWidgetStyleFourState extends State<ProductWidgetStyleFour> {
                                                 : "₪0"),
                                         style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 18,
+                                          fontSize: 22,
                                           color: Colors.red,
                                         ),
                                       )

@@ -5,14 +5,12 @@ import 'package:fawri_app_refactor/components/category_widget/kids_category_dial
 import 'package:fawri_app_refactor/components/category_widget/shoes_category_dialog/shoes_category_dialog.dart';
 import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
-import 'package:fawri_app_refactor/pages/home_screen/slider_products/slider_products.dart';
 import 'package:fawri_app_refactor/pages/products-category/products-category.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:showcaseview/showcaseview.dart';
 import '../../constants/constants.dart';
 import '../../model/slider/slider.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 
 class SlideImage extends StatefulWidget {
@@ -313,6 +311,8 @@ class _SlideImageState extends State<SlideImage> {
                       NavigatorFunction(
                           context,
                           HomeScreen(
+                            type: "normal",
+                            productsKinds: false,
                             title: e.title.toString() == ""
                                 ? "سلايدر 1 سلايدر 1"
                                 : e.title,

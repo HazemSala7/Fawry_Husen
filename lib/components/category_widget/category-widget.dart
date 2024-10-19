@@ -1,22 +1,12 @@
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
-import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
-import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
-import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:fawri_app_refactor/components/category_widget/kids_category_dialog/kids_category_dialog.dart';
 import 'package:fawri_app_refactor/components/category_widget/shoes_category_dialog/shoes_category_dialog.dart';
 import 'package:fawri_app_refactor/components/category_widget/sizes_page/sizes_page.dart';
-import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fawri_app_refactor/constants/constants.dart';
-import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
 import 'package:showcaseview/showcaseview.dart';
-import 'package:vibration/vibration.dart';
 
 import '../../pages/products-category/products-category.dart';
-import '../../services/custom_icons/custom_icons.dart';
 
 double calculateGridViewHeight(int itemCount) {
   final double itemHeight = 30.0; // Height of each item

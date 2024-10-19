@@ -2,11 +2,9 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import '../../components/button_widget/button_widget.dart';
 import '../../constants/constants.dart';
 import '../../firebase/order/OrderFirebaseModel.dart';
 import '../../server/functions/functions.dart';
-import '../order_details/order_details.dart';
 
 class Orders extends StatefulWidget {
   final user_id;
@@ -337,7 +335,7 @@ class _OrdersState extends State<Orders> {
                                                                 child: Padding(
                                                                   padding:
                                                                       const EdgeInsets
-                                                                              .all(
+                                                                          .all(
                                                                           8.0),
                                                                   child: Row(
                                                                     mainAxisAlignment:

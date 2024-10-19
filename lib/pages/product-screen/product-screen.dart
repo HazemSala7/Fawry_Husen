@@ -1,40 +1,19 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:add_to_cart_animation/add_to_cart_animation.dart';
 import 'package:fawri_app_refactor/pages/product-screen/product-screen-item/product-screen-item.dart';
-import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_flutter/flare_controls.dart';
-import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dots_indicator/dots_indicator.dart';
-import 'package:expandable/expandable.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/LocalDB/Database/local_storage.dart';
-import 'package:fawri_app_refactor/components/button_widget/button_widget.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
-import 'package:vibration/vibration.dart';
-import '../../LocalDB/Models/CartModel.dart';
-import '../../LocalDB/Models/FavoriteItem.dart';
 import '../../LocalDB/Provider/CartProvider.dart';
 import '../../LocalDB/Provider/FavouriteProvider.dart';
-import '../../components/product_widget/product-widget.dart';
 import '../../constants/constants.dart';
-import '../../firebase/cart/CartFirebaseModel.dart';
-import '../../firebase/cart/CartController.dart';
-import '../../server/domain/domain.dart';
 import '../../server/functions/functions.dart';
 import '../../services/remote_config_firebase/remote_config_firebase.dart';
 import '../cart/cart.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProductScreen extends StatefulWidget {
   var favourite;
@@ -49,9 +28,10 @@ class ProductScreen extends StatefulWidget {
   var IDs, SIZES;
   final url, price;
   int page;
-  bool ALL;
+  bool ALL, hasAPI;
   ProductScreen({
     Key? key,
+    required this.hasAPI,
     required this.price,
     required this.priceMul,
     required this.url,
@@ -607,23 +587,32 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 nickname: "",
                                                 variants: [],
                                                 vendor_SKU: "",
-                                                name: widget.Product[i]["title"]
-                                                    as String,
-                                                id: widget.Product[i]["id"],
-                                                images: widget.Product[i]
-                                                    ["vendor_images_links"],
+                                                name: widget.hasAPI
+                                                    ? widget.Product[i]
+                                                        ["item_name"]
+                                                    : widget.Product[i]["title"]
+                                                        as String,
+                                                id: widget.hasAPI
+                                                    ? widget.Product[i]
+                                                        ["item_id"]
+                                                    : widget.Product[i]["id"],
+                                                images: widget.hasAPI
+                                                    ? widget.Product[i]
+                                                        ["images"]
+                                                    : widget.Product[i]
+                                                        ["vendor_images_links"],
                                                 description: [],
-                                                new_price: double.parse(widget.Product[i]["price"].toString()) *
-                                                    double.parse(widget.priceMul
-                                                        .toString()),
-                                                old_price:
-                                                    double.parse(widget.Product[i]["price"].toString()) *
-                                                        double.parse(widget
-                                                            .priceMul
-                                                            .toString()),
-                                                image: widget.Product[i]
-                                                        ["vendor_images_links"]
-                                                    [0] as String,
+                                                new_price: double.parse(widget
+                                                            .hasAPI
+                                                        ? widget.Product[i]
+                                                                ["new_price"]
+                                                            .toString()
+                                                        : widget.Product[i]["price"]
+                                                            .toString()) *
+                                                    double.parse(
+                                                        widget.priceMul.toString()),
+                                                old_price: double.parse(widget.hasAPI ? widget.Product[i]["old_price"].toString() : widget.Product[i]["price"].toString()) * double.parse(widget.priceMul.toString()),
+                                                image: widget.hasAPI ? widget.Product[i]["images"][0] as String : widget.Product[i]["vendor_images_links"][0] as String,
                                                 sizesApi: [],
                                                 TypeApi: false,
                                                 placeInWarehouse: {}),

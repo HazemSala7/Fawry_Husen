@@ -1,8 +1,6 @@
 import 'package:fawri_app_refactor/services/dialogs/choose-size/choose-size.dart';
 import 'package:flutter/material.dart';
 
-import 'checkout/checkout.dart';
-
 class ChooseSizeDialogForShoes {
   void showBottomDialog(BuildContext context) {
     showGeneralDialog(
