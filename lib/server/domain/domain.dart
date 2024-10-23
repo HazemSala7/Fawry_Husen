@@ -16,6 +16,7 @@ var URL_CATEGORIES = URL + "categories";
 var URL_FLASH_SALES = URL + "flash_sale_items";
 var URL_TOP_SELLERS = URL + "top-sellers";
 var URL_GET_SHOPS = URL + "getShops";
+var URL_APP_SECTIONS = URL + "getAppSections";
 var URL_SINGLE_PRODUCT = URL + "getItemData";
 var URL_ADD_ORDER = URL + "orders/submitOrder";
 var URL_ORDER_DETAILS = URL + "getOrderData";

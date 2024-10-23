@@ -1,20 +1,24 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class CountdownTimerScreen extends StatefulWidget {
+  final String endDate; // Accept the end date from the API
+
+  CountdownTimerScreen({required this.endDate});
+
   @override
   _CountdownTimerScreenState createState() => _CountdownTimerScreenState();
 }
 
 class _CountdownTimerScreenState extends State<CountdownTimerScreen> {
   Timer? _timer;
-  DateTime _endTime =
-      DateTime.now().add(Duration(hours: 24)); // 24-hour countdown
+  late DateTime _endTime;
 
   @override
   void initState() {
     super.initState();
+    _endTime =
+        DateTime.parse(widget.endDate); // Parse the end date from the API
     startTimer();
   }
 
@@ -26,7 +30,7 @@ class _CountdownTimerScreenState extends State<CountdownTimerScreen> {
 
   void startTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      setState(() {}); // Trigger UI update every minute instead of every second
+      setState(() {});
       if (_remainingTime.inSeconds <= 0) {
         timer.cancel();
       }
@@ -49,6 +53,7 @@ class _CountdownTimerScreenState extends State<CountdownTimerScreen> {
     int hours = _remainingTime.inHours;
     int minutes = _remainingTime.inMinutes % 60;
     int seconds = _remainingTime.inSeconds % 60;
+
     return Center(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

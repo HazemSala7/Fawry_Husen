@@ -171,7 +171,29 @@ class _ProductWidgetStyleFourState extends State<ProductWidgetStyleFour> {
                                           color: Colors.red,
                                         ),
                                       )
-                                    : Container(), // Hide if new_price is missing or null
+                                    : widget.shortlisted[widget.index]
+                                                .containsKey("new_price") &&
+                                            widget.shortlisted[widget.index]
+                                                    ["new_price"] !=
+                                                null
+                                        ? Text(
+                                            widget.shortlisted[widget.index]
+                                                    ["price"] is double
+                                                ? "₪${(widget.shortlisted[widget.index]["price"] as double).toStringAsFixed(2)}"
+                                                : (double.tryParse(widget
+                                                            .shortlisted[widget
+                                                                .index]["price"]
+                                                            .toString()) !=
+                                                        null
+                                                    ? "₪${double.parse(widget.shortlisted[widget.index]["price"]).toStringAsFixed(2)}"
+                                                    : "₪0"),
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 22,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        : Container(),
                                 SizedBox(width: 5),
                                 // Check if old_price exists and is not null
                                 widget.shortlisted[widget.index]

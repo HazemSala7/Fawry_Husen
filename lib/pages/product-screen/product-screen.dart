@@ -604,14 +604,17 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 description: [],
                                                 new_price: double.parse(widget
                                                             .hasAPI
-                                                        ? widget.Product[i]
+                                                        ? widget.Product[i]["new_price"] != null ? widget.Product[i]
                                                                 ["new_price"]
-                                                            .toString()
+                                                            .toString() :
+                                                            widget.Product[i]
+                                                                ["price"]
+                                                            .toString() 
                                                         : widget.Product[i]["price"]
                                                             .toString()) *
                                                     double.parse(
                                                         widget.priceMul.toString()),
-                                                old_price: double.parse(widget.hasAPI ? widget.Product[i]["old_price"].toString() : widget.Product[i]["price"].toString()) * double.parse(widget.priceMul.toString()),
+                                                old_price: double.parse(widget.hasAPI ? widget.Product[i]["old_price"] != null ? widget.Product[i]["old_price"].toString():widget.Product[i]["price"].toString() : widget.Product[i]["price"].toString()) * double.parse(widget.priceMul.toString()),
                                                 image: widget.hasAPI ? widget.Product[i]["images"][0] as String : widget.Product[i]["vendor_images_links"][0] as String,
                                                 sizesApi: [],
                                                 TypeApi: false,

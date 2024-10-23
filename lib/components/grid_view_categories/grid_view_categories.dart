@@ -1,16 +1,22 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:fawri_app_refactor/components/category_widget/category-widget.dart';
 import 'package:fawri_app_refactor/components/count-down-widget/count-down-widget.dart';
 import 'package:fawri_app_refactor/components/flash_sales_list/flash_sales_list.dart';
 import 'package:fawri_app_refactor/components/flash_sales_products/flash_sales_products.dart';
+import 'package:fawri_app_refactor/components/grid_view_categories/flash-sales-widget/flash-sales-widget.dart';
 import 'package:fawri_app_refactor/components/home_tools_products/home_tools_products.dart';
 import 'package:fawri_app_refactor/components/recommended_products/recommended_products.dart';
+import 'package:fawri_app_refactor/components/sections/style-four/style-four.dart';
+import 'package:fawri_app_refactor/components/sections/style-one/style-one.dart';
+import 'package:fawri_app_refactor/components/sections/style-three/style-three.dart';
 import 'package:fawri_app_refactor/components/shops_list/shops_list.dart';
 import 'package:fawri_app_refactor/components/slider-widget/slider-widget.dart';
 import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/model/slider/slider.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
+import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
 import 'package:fawri_app_refactor/server/domain/domain.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:fawri_app_refactor/services/remote_config_firebase/remote_config_firebase.dart';
@@ -18,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class GridViewCategories extends StatefulWidget {
@@ -126,106 +133,110 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           ),
         ),
         FutureBuilder(
-            future: getProducts(1),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 15, bottom: 0),
-                  child: Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: ListView.builder(
-                          itemCount: 4,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 5, left: 5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)),
-                                width: 160,
-                                height: 100,
-                                child: Shimmer.fromColors(
-                                  baseColor:
-                                      const Color.fromARGB(255, 196, 196, 196),
-                                  highlightColor:
-                                      const Color.fromARGB(255, 129, 129, 129),
-                                  child: Container(
-                                    width: 120,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                  ),
-                                ),
+          future: getCachedProducts(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Padding(
+                padding: const EdgeInsets.only(top: 15, bottom: 0),
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: ListView.builder(
+                    itemCount: 4,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 5, left: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          width: 160,
+                          height: 100,
+                          child: Shimmer.fromColors(
+                            baseColor: const Color.fromARGB(255, 196, 196, 196),
+                            highlightColor:
+                                const Color.fromARGB(255, 129, 129, 129),
+                            child: Container(
+                              width: 120,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            );
-                          })),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              );
+            } else {
+              if (snapshot.data != null) {
+                return FlashSalesList(
+                  productStyleNumber: 2,
+                  shortlisted: snapshot.data["items"],
                 );
               } else {
-                if (snapshot.data != null) {
-                  return FlashSalesList(
-                    productStyleNumber: 2,
-                    shortlisted: snapshot.data["items"],
-                  );
-                } else {
-                  return Container(
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    width: double.infinity,
-                    color: Colors.white,
-                  );
-                }
-              }
-            }),
-        FutureBuilder(
-            future: getSliders(withCategory: false),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  child: Shimmer.fromColors(
-                    baseColor: const Color.fromARGB(255, 196, 196, 196),
-                    highlightColor: const Color.fromARGB(255, 129, 129, 129),
-                    child: Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      color: Colors.white,
+                  color: Colors.white,
+                );
+              }
+            }
+          },
+        ),
+        FutureBuilder(
+          future: getCachedSliders(),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: Shimmer.fromColors(
+                  baseColor: const Color.fromARGB(255, 196, 196, 196),
+                  highlightColor: const Color.fromARGB(255, 129, 129, 129),
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            } else {
+              List<Silder>? album = [];
+              if (snapshot.data != null) {
+                List mysslide = snapshot.data;
+                List<Silder> album1 = mysslide.map((s) {
+                  Silder c = Silder.fromJson(s);
+                  return c;
+                }).toList();
+                album = album1;
+                return Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Container(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.25,
+                    child: SlideImage(
+                      withCategory: false,
+                      click: true,
+                      showShadow: true,
+                      slideimage: album,
                     ),
                   ),
                 );
               } else {
-                List<Silder>? album = [];
-                if (snapshot.data != null) {
-                  List mysslide = snapshot.data;
-                  List<Silder> album1 = mysslide.map((s) {
-                    Silder c = Silder.fromJson(s);
-                    return c;
-                  }).toList();
-                  album = album1;
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Container(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      child: SlideImage(
-                        withCategory: false,
-                        click: true,
-                        showShadow: true,
-                        slideimage: album,
-                      ),
-                    ),
-                  );
-                } else {
-                  return Container(
-                    height: MediaQuery.of(context).size.height * 0.25,
-                    width: double.infinity,
-                    color: Colors.white,
-                  );
-                }
+                return Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: double.infinity,
+                  color: Colors.white,
+                );
               }
-            }),
+            }
+          },
+        ),
         Padding(
           padding: const EdgeInsets.only(top: 15, left: 8, right: 8),
           child: Row(
@@ -732,174 +743,76 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
         //     ),
         //   ),
         // ),
-        Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            Container(
-              height: 525,
-              width: double.infinity,
-              decoration: BoxDecoration(color: Colors.yellow),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20, right: 8),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          child: Lottie.asset(
-                            "assets/lottie_animations/Animation - 1729073541927.json",
-                            height: 40,
-                            reverse: true,
-                            repeat: true,
-                            fit: BoxFit.cover,
+        SizedBox(
+          height: 20,
+        ),
+
+        FutureBuilder(
+          future: getFlashSales(1),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // Shimmer loading effect during data fetch
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  child: ListView.builder(
+                    itemCount: 4,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          "Flash Sales",
-                          style: GoogleFonts.cairo(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 36,
-                            color: MAIN_COLOR,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Container(
-                          width: 50,
-                          height: 50,
-                          child: Lottie.asset(
-                            "assets/lottie_animations/Animation - 1729073541927.json",
-                            height: 40,
-                            reverse: true,
-                            repeat: true,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "ينتهي خلال",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    CountdownTimerScreen(),
-                    FutureBuilder(
-                      future: getFlashSales(1),
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 15),
+                          width: 160,
+                          height: 100,
+                          child: Shimmer.fromColors(
+                            baseColor: const Color.fromARGB(255, 196, 196, 196),
+                            highlightColor:
+                                const Color.fromARGB(255, 129, 129, 129),
                             child: Container(
-                              width: double.infinity,
-                              height: MediaQuery.of(context).size.height * 0.25,
-                              child: ListView.builder(
-                                itemCount: 4,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, int index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(
-                                        right: 5, left: 5),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      width: 160,
-                                      height: 100,
-                                      child: Shimmer.fromColors(
-                                        baseColor: const Color.fromARGB(
-                                            255, 196, 196, 196),
-                                        highlightColor: const Color.fromARGB(
-                                            255, 129, 129, 129),
-                                        child: Container(
-                                          width: 120,
-                                          height: 150,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
+                              width: 120,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
-                          );
-                        } else if (snapshot.hasData && snapshot.data != null) {
-                          return FlashSalesProducts(
-                            productCardStyle: 4,
-                            shortlisted: snapshot.data["items"],
-                          );
-                        } else {
-                          return Container(
-                            height: MediaQuery.of(context).size.height * 0.25,
-                            width: double.infinity,
-                            color: Colors.white,
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  NavigatorFunction(
-                      context,
-                      HomeScreen(
-                        type: "flash_sales",
-                        url: URL_FLASH_SALES,
-                        title: "",
-                        slider: false,
-                        selectedIndex: 0,
-                        productsKinds: true,
-                      ));
-                },
-                child: Column(
-                  children: [
-                    Text(
-                      "اعرض المزيد من المنتجات",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: MAIN_COLOR,
-                          fontSize: 14),
-                    ),
-                    Container(
-                      width: 150,
-                      height: 2,
-                      color: MAIN_COLOR,
-                    )
-                  ],
+              );
+            } else if (snapshot.hasData && snapshot.data != null) {
+              // Display flash sales content when data is available
+              return FlashSalesWidget(
+                active: snapshot.data["active"],
+                flashSalesArray: snapshot.data,
+                startDate: snapshot.data["start_date"],
+                endDate: snapshot.data["end_date"],
+              );
+            } else {
+              // Fallback for empty or null data
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.25,
+                width: double.infinity,
+                color: Colors.white,
+                child: Center(
+                  child: Text(
+                    "No flash sales available",
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
                 ),
-              ),
-            )
-          ],
+              );
+            }
+          },
         ),
+
         Padding(
           padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
           child: Row(
@@ -968,7 +881,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
         ),
         SizedBox(height: 20),
         Container(
-          height: 380,
+          height: 370,
           width: double.infinity,
           decoration: BoxDecoration(
               // gradient: LinearGradient(
@@ -995,39 +908,6 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                         color: Colors.black,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: InkWell(
-                        onTap: () {
-                          NavigatorFunction(
-                              context,
-                              HomeScreen(
-                                type: "best_seller",
-                                url: URL_TOP_SELLERS,
-                                title: "",
-                                slider: false,
-                                selectedIndex: 0,
-                                productsKinds: true,
-                              ));
-                        },
-                        child: Column(
-                          children: [
-                            Text(
-                              "عرض المزيد",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: MAIN_COLOR,
-                                  fontSize: 14),
-                            ),
-                            Container(
-                              width: 75,
-                              height: 2,
-                              color: MAIN_COLOR,
-                            )
-                          ],
-                        ),
-                      ),
-                    )
                   ],
                 ),
                 Row(
@@ -1110,97 +990,148 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                                 var product = currentProducts[gridIndex];
                                 Color randomColor = darkColors[
                                     random.nextInt(darkColors.length)];
-                                return Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  elevation: 5,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                              topRight: Radius.circular(10),
-                                              bottomRight: Radius.circular(10)),
-                                          child: Container(
-                                            color: randomColor,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 50,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            5.0),
-                                                    child: Text(
-                                                      product["item_name"],
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        color: Colors.white,
+                                return InkWell(
+                                  onTap: () {
+                                    List result = [];
+                                    int startIndex = gridIndex - 20;
+                                    int endIndex = gridIndex + 20;
+                                    if (startIndex < 0) {
+                                      startIndex = 0;
+                                    }
+                                    if (endIndex > products.length) {
+                                      endIndex = products.length;
+                                    }
+                                    result.addAll(
+                                        products.sublist(startIndex, endIndex));
+                                    result.insert(0, products[gridIndex]);
+                                    List<String> idsList = result
+                                        .map((item) =>
+                                            item['item_id'].toString())
+                                        .toList();
+                                    String commaSeparatedIds =
+                                        idsList.join(', ');
+                                    NavigatorFunction(
+                                        context,
+                                        ProductScreen(
+                                          hasAPI: true,
+                                          priceMul: 1.0,
+                                          price: products[gridIndex]["price"]
+                                              .toString(),
+                                          SIZES: [],
+                                          ALL: true,
+                                          SubCategories: [],
+                                          url:
+                                              "${URL}getAllItems?api_key=$key_bath&page=1",
+                                          page: 1,
+                                          Sub_Category_Key:
+                                              sub_categories_women_appearel[0]
+                                                      ["key"]
+                                                  .toString(),
+                                          sizes: [],
+                                          index: gridIndex,
+                                          cart_fav: false,
+                                          Images: [],
+                                          favourite: false,
+                                          id: products[gridIndex]["item_id"],
+                                          Product: result,
+                                          IDs: commaSeparatedIds,
+                                        ));
+                                  },
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    elevation: 5,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(10),
+                                                bottomRight:
+                                                    Radius.circular(10)),
+                                            child: Container(
+                                              color: randomColor,
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 50,
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              5.0),
+                                                      child: Text(
+                                                        product["item_name"],
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                                product.containsKey(
-                                                            "new_price") &&
-                                                        product["new_price"] !=
-                                                            null
-                                                    ? Text(
-                                                        product["new_price"]
-                                                                is double
-                                                            ? "₪${(product["new_price"] as double).toStringAsFixed(2)}"
-                                                            : (double.tryParse(product[
-                                                                            "new_price"]
-                                                                        .toString()) !=
-                                                                    null
-                                                                ? "₪${double.parse(product["new_price"]).toStringAsFixed(2)}"
-                                                                : "₪0"),
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 24,
-                                                          color: Colors.white,
+                                                  product.containsKey(
+                                                              "price") &&
+                                                          product["price"] !=
+                                                              null
+                                                      ? Text(
+                                                          product["price"]
+                                                                  is double
+                                                              ? "₪${(product["price"] as double).toStringAsFixed(2)}"
+                                                              : (double.tryParse(
+                                                                          product["price"]
+                                                                              .toString()) !=
+                                                                      null
+                                                                  ? "₪${double.parse(product["price"]).toStringAsFixed(2)}"
+                                                                  : "₪0"),
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 24,
+                                                            color: Colors.white,
+                                                          ),
+                                                        )
+                                                      : Text(
+                                                          "₪0",
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 24,
+                                                            color: Colors.white,
+                                                          ),
                                                         ),
-                                                      )
-                                                    : Text(
-                                                        "₪0",
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 24,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Container(
-                                          height: 150,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: NetworkImage(product[
-                                                              "images"]
-                                                          .length ==
-                                                      0
-                                                  ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                  : product["images"][0] ??
-                                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg"),
-                                              fit: BoxFit.cover,
+                                        Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            height: 150,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: NetworkImage(product[
+                                                                "images"]
+                                                            .length ==
+                                                        0
+                                                    ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                    : product["images"][0] ??
+                                                        "https://www.fawri.co/assets/about_us/fawri_logo.jpg"),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(10),
+                                                  bottomLeft:
+                                                      Radius.circular(10)),
                                             ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
                                           ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 );
                               },
@@ -1220,6 +1151,44 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
               ],
             ),
           ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10, bottom: 10),
+              child: InkWell(
+                onTap: () {
+                  NavigatorFunction(
+                      context,
+                      HomeScreen(
+                        type: "best_seller",
+                        url: URL_TOP_SELLERS,
+                        title: "",
+                        slider: false,
+                        selectedIndex: 0,
+                        productsKinds: true,
+                      ));
+                },
+                child: Column(
+                  children: [
+                    Text(
+                      "عرض بشكل أوسع",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: MAIN_COLOR,
+                          fontSize: 14),
+                    ),
+                    Container(
+                      width: 110,
+                      height: 2,
+                      color: MAIN_COLOR,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
         Visibility(
           visible: marque.toString() == "" ? false : true,
@@ -1493,7 +1462,134 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             )
           ],
         ),
+
+        Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: FutureBuilder(
+              future: getAppSections(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Container(
+                        width: double.infinity,
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: ListView.builder(
+                            itemCount: 4,
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, int index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.only(right: 5, left: 5),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  width: 160,
+                                  height: 100,
+                                  child: Shimmer.fromColors(
+                                    baseColor: const Color.fromARGB(
+                                        255, 196, 196, 196),
+                                    highlightColor: const Color.fromARGB(
+                                        255, 129, 129, 129),
+                                    child: Container(
+                                      width: 120,
+                                      height: 150,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            })),
+                  );
+                } else {
+                  if (snapshot.data != null) {
+                    return ListView.builder(
+                        itemCount: snapshot.data.length,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, int index) {
+                          String styleID =
+                              snapshot.data[index]["style"]["style_id"] ?? "1";
+                          String sectionName =
+                              snapshot.data[index]["name"] ?? "";
+                          String sectionURL =
+                              snapshot.data[index]["content_url"] ?? "";
+                          var bgColor =
+                              snapshot.data[index]['style']['BG_color'] ?? "";
+                          Color backgroundColor = bgColor.isNotEmpty
+                              ? Color(
+                                  int.parse(bgColor.replaceFirst('#', '0xff')))
+                              : Colors.transparent;
+
+                          return styleID == "1"
+                              ? SectionStyleOne(
+                                  sectionName: sectionName,
+                                  sectionURL: sectionURL,
+                                  backgroundColor: backgroundColor)
+                              : styleID == "2"
+                                  ? Container()
+                                  : styleID == "3"
+                                      ? SectionStyleThree(
+                                          sectionName: sectionName,
+                                          sectionURL: sectionURL,
+                                          backgroundColor: backgroundColor)
+                                      : SectionStyleFour(
+                                          sectionName: sectionName,
+                                          sectionURL: sectionURL,
+                                          backgroundColor: backgroundColor);
+                        });
+                  } else {
+                    return Container(
+                      height: MediaQuery.of(context).size.height * 0.25,
+                      width: double.infinity,
+                      color: Colors.white,
+                    );
+                  }
+                }
+              }),
+        )
       ],
     );
+  }
+
+  var cachedProducts;
+  List<dynamic>? cachedSliders;
+  DateTime? productsCacheTime;
+  DateTime? slidersCacheTime;
+
+  getCachedProducts() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? cachedProductsString = prefs.getString('cachedProducts');
+    String? productsCacheTimeString = prefs.getString('productsCacheTime');
+    if (cachedProductsString != null && productsCacheTimeString != null) {
+      DateTime productsCacheTime = DateTime.parse(productsCacheTimeString);
+      if (DateTime.now().difference(productsCacheTime).inHours < 2) {
+        return jsonDecode(cachedProductsString);
+      }
+    }
+    Map<String, dynamic> fetchedProducts = await getProducts(1);
+    prefs.setString('cachedProducts', jsonEncode(fetchedProducts));
+    prefs.setString('productsCacheTime', DateTime.now().toIso8601String());
+    return fetchedProducts;
+  }
+
+  getCachedSliders() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? cachedSlidersString = prefs.getString('cachedSliders');
+    String? slidersCacheTimeString = prefs.getString('slidersCacheTime');
+    if (cachedSlidersString != null && slidersCacheTimeString != null) {
+      DateTime slidersCacheTime = DateTime.parse(slidersCacheTimeString);
+      if (DateTime.now().difference(slidersCacheTime).inHours < 2) {
+        return jsonDecode(cachedSlidersString);
+      }
+    }
+    List<dynamic> fetchedSliders = await getSliders(withCategory: false);
+    prefs.setString('cachedSliders', jsonEncode(fetchedSliders));
+    prefs.setString('slidersCacheTime', DateTime.now().toIso8601String());
+    return fetchedSliders;
   }
 }

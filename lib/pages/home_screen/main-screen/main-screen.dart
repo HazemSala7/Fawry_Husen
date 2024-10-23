@@ -33,11 +33,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     return Container(
-      color: widget.type == "flash_sales"
-          ? Colors.yellow
-          : widget.type == "best_seller"
-              ? Colors.blue
-              : Colors.transparent,
       child: Column(
         children: [
           Row(
@@ -106,7 +101,23 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
           ),
-
+          Visibility(
+              visible: widget.hasAPI,
+              child: Opacity(
+                opacity: 0.7,
+                child: Container(
+                  width: double.infinity,
+                  height: 40,
+                  color: MAIN_COLOR,
+                  child: Center(
+                    child: Text(
+                      widget.type,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                  ),
+                ),
+              )),
           _isFirstLoadRunning
               ? Container(
                   width: double.infinity,

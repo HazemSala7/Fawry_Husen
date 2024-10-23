@@ -184,6 +184,17 @@ getShops(int page) async {
   }
 }
 
+getAppSections() async {
+  var response = await http
+      .get(Uri.parse("$URL_APP_SECTIONS?api_key=$key_bath"), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
 getBestSellersProducts(int page) async {
   var response = await http.get(Uri.parse("$URL_TOP_SELLERS?page=$page"),
       headers: headers);
@@ -233,6 +244,13 @@ getProducts(int page) async {
 }
 
 getSliderProducts(url, page) async {
+  var response = await http.get(Uri.parse("$url&page=$page"), headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  return res;
+}
+
+getDynamicSectionProducts(String url, int page) async {
+  url = url.replaceAll(RegExp(r'(&page=\d+)'), '');
   var response = await http.get(Uri.parse("$url&page=$page"), headers: headers);
   var res = json.decode(utf8.decode(response.bodyBytes));
   return res;
