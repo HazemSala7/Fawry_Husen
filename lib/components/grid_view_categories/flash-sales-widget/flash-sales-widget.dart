@@ -44,7 +44,7 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
         countdownDuration = countdownDuration - Duration(seconds: 1);
         if (countdownDuration.isNegative) {
           countdownTimer?.cancel();
-          navigateToNextPage();
+          // navigateToNextPage();
         }
       });
     });
@@ -54,6 +54,7 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
     NavigatorFunction(
       context,
       HomeScreen(
+        endDate: "",
         type: "Flash Sale Ended",
         url: URL_FLASH_SALES,
         title: "",
@@ -157,9 +158,12 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () {
+                print("countdownText");
+                print(countdownText);
                 NavigatorFunction(
                   context,
                   HomeScreen(
+                    endDate: widget.endDate,
                     type: "ينتهي خلال ${countdownText}",
                     url: URL_FLASH_SALES,
                     title: "",

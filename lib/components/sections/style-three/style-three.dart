@@ -193,7 +193,7 @@ class _SectionStyleThreeState extends State<SectionStyleThree> {
                                     horizontalOffset: 100.0,
                                     child: FadeInAnimation(
                                       child: ProductWidgetStyleThree(
-                                        hasAPI: true,
+                                        hasAPI: false,
                                         fire: true,
                                         index: index,
                                         shortlisted: _productsArray,
@@ -222,6 +222,7 @@ class _SectionStyleThreeState extends State<SectionStyleThree> {
               NavigatorFunction(
                 context,
                 HomeScreen(
+                  endDate: "",
                   type: "",
                   url: URL_FLASH_SALES,
                   title: "",

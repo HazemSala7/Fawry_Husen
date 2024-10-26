@@ -158,6 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomeScreen(
+                                      endDate: "",
                                       productsKinds: false,
                                       type: "normal",
                                       selectedIndex: 2,

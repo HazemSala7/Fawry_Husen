@@ -578,6 +578,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                               NavigatorFunction(
                                                   context,
                                                   HomeScreen(
+                                                    endDate: "",
                                                     type: "normal",
                                                     productsKinds: false,
                                                     title: "",
@@ -653,6 +654,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                       NavigatorFunction(
                                                           context,
                                                           HomeScreen(
+                                                              endDate: "",
                                                               type: "normal",
                                                               productsKinds:
                                                                   false,
@@ -767,6 +769,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                             NavigatorFunction(
                                                 context,
                                                 HomeScreen(
+                                                    endDate: "",
                                                     type: "normal",
                                                     productsKinds: false,
                                                     title: "",
@@ -849,6 +852,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                     NavigatorFunction(
                                                         context,
                                                         HomeScreen(
+                                                            endDate: "",
                                                             type: "normal",
                                                             productsKinds:
                                                                 false,

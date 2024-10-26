@@ -15,10 +15,12 @@ class HomeScreen extends StatefulWidget {
   int selectedIndex = 0;
   bool slider = false;
   bool productsKinds = false;
-  String url, title, type;
+  String url, title, endDate;
+  var type;
   HomeScreen({
     Key? key,
     required this.type,
+    required this.endDate,
     required this.productsKinds,
     required this.url,
     required this.title,

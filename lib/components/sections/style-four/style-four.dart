@@ -151,7 +151,7 @@ class _SectionStyleFourState extends State<SectionStyleFour> {
                                 NavigatorFunction(
                                   context,
                                   ProductScreen(
-                                    hasAPI: true,
+                                    hasAPI: false,
                                     priceMul: 1.0,
                                     price:
                                         products[gridIndex]["price"].toString(),

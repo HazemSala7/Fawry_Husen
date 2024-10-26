@@ -1,4 +1,5 @@
 import 'package:fawri_app_refactor/components/product_widget/product-widget.dart';
+import 'package:fawri_app_refactor/pages/home_screen/main-screen/count-down-time-widget/count-down-time-widget.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -101,23 +102,10 @@ class _MainScreenState extends State<MainScreen> {
               ),
             ],
           ),
-          Visibility(
-              visible: widget.hasAPI,
-              child: Opacity(
-                opacity: 0.7,
-                child: Container(
-                  width: double.infinity,
-                  height: 40,
-                  color: MAIN_COLOR,
-                  child: Center(
-                    child: Text(
-                      widget.type,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                  ),
-                ),
-              )),
+          CountdownTimerWidget(
+            hasAPI: widget.hasAPI,
+            type: widget.type,
+          ),
           _isFirstLoadRunning
               ? Container(
                   width: double.infinity,

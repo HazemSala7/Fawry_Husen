@@ -1162,6 +1162,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                   NavigatorFunction(
                       context,
                       HomeScreen(
+                        endDate: "",
                         type: "best_seller",
                         url: URL_TOP_SELLERS,
                         title: "",
