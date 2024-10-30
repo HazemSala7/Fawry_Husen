@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -510,13 +512,18 @@ class _ProductItemState extends State<ProductItem> {
                             ),
                             if (widget.tags.isNotEmpty)
                               SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.2),
+                                  width: widget.tags.length == 1
+                                      ? MediaQuery.of(context).size.width * 0.57
+                                      : widget.tags.length == 2
+                                          ? MediaQuery.of(context).size.width *
+                                              0.24
+                                          : MediaQuery.of(context).size.width *
+                                              0.1),
                             if (widget.tags.isNotEmpty)
                               Expanded(
                                 flex: 4,
                                 child: Container(
-                                  height: 40,
+                                  height: 35,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     itemCount: widget.tags.length,
@@ -552,7 +559,7 @@ class _ProductItemState extends State<ProductItem> {
                                                 productsKinds: false,
                                               ),
                                             );
-                                          } else {
+                                          } else if (tagName == "discount") {
                                             NavigatorFunction(
                                               context,
                                               HomeScreen(
@@ -566,6 +573,20 @@ class _ProductItemState extends State<ProductItem> {
                                                 productsKinds: false,
                                               ),
                                             );
+                                          } else {
+                                            NavigatorFunction(
+                                              context,
+                                              HomeScreen(
+                                                bannerTitle: "Flash Sales",
+                                                endDate: "",
+                                                type: "flash_sales",
+                                                url: URL_FLASH_SALES,
+                                                title: "",
+                                                slider: false,
+                                                selectedIndex: 0,
+                                                productsKinds: true,
+                                              ),
+                                            );
                                           }
                                         },
                                         child: Container(
@@ -577,30 +598,99 @@ class _ProductItemState extends State<ProductItem> {
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.grey
-                                                    .withOpacity(0.1),
-                                                spreadRadius: 7,
-                                                blurRadius: 5,
+                                                    .withOpacity(0.5),
+                                                spreadRadius: 0,
+                                                blurRadius: 3,
                                               ),
                                             ],
                                             color: widget.tags[index] ==
                                                     "flash_sales"
                                                 ? Colors.yellow
-                                                : Colors.blue,
+                                                : widget.tags[index] == "11.11"
+                                                    ? widget.tags[index] == "pw"
+                                                        ? Colors.green
+                                                        : Colors.black
+                                                    : Colors.blue,
                                             borderRadius:
-                                                BorderRadius.circular(40),
+                                                BorderRadius.circular(10),
                                           ),
-                                          child: Center(
-                                            child: Text(
-                                              widget.tags[index],
-                                              style: TextStyle(
-                                                color: widget.tags[index] ==
-                                                        "flash_sales"
-                                                    ? MAIN_COLOR
-                                                    : Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 14,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Visibility(
+                                                  visible: widget.tags[index] ==
+                                                      "pw",
+                                                  child: Text(
+                                                    "🇵🇸🛍️",
+                                                    style:
+                                                        TextStyle(fontSize: 18),
+                                                  )),
+                                              Visibility(
+                                                visible: widget.tags[index] ==
+                                                    "flash_sales",
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 5),
+                                                  child: Lottie.asset(
+                                                    "assets/lottie_animations/Animation - 1729073541927.json",
+                                                    height: 40,
+                                                    reverse: true,
+                                                    repeat: true,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              Visibility(
+                                                visible: widget.tags[index] ==
+                                                    "11.11",
+                                                child: Lottie.asset(
+                                                  "assets/lottie_animations/Animation - 1720525210493.json",
+                                                  height: 40,
+                                                  reverse: true,
+                                                  repeat: true,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                              Text(
+                                                widget.tags[index],
+                                                style: widget.tags[index] ==
+                                                            "11.11" ||
+                                                        widget.tags[index] ==
+                                                            "flash_sales"
+                                                    ? GoogleFonts.cairo(
+                                                        fontWeight: widget.tags[
+                                                                    index] ==
+                                                                "11.11"
+                                                            ? FontWeight.w900
+                                                            : FontWeight.w800,
+                                                        fontSize: 14,
+                                                        color: widget.tags[
+                                                                    index] ==
+                                                                "11.11"
+                                                            ? Colors.red
+                                                            : MAIN_COLOR,
+                                                      )
+                                                    : TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w900,
+                                                        fontSize: 14,
+                                                      ),
+                                              ),
+                                              Visibility(
+                                                visible: widget.tags[index] ==
+                                                    "11.11",
+                                                child: Lottie.asset(
+                                                  "assets/lottie_animations/Animation - 1720525210493.json",
+                                                  height: 40,
+                                                  reverse: true,
+                                                  repeat: true,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              )
+                                            ],
                                           ),
                                         ),
                                       );

@@ -338,15 +338,15 @@ class _MainScreenState extends State<MainScreen> {
             AllProducts = cache["all_products"];
           });
         } else {
-          var _products = widget.hasAPI
-              ? widget.type == "flash_sales"
-                  ? await getFlashSales(_page)
-                  : widget.type == "11.11"
-                      ? await get11Products(_page)
-                      : widget.type == "discount"
-                          ? await getDiscountProducts(_page)
-                          : await getBestSellersProducts(_page)
-              : await getProducts(_page);
+          var _products = widget.type == "flash_sales"
+              ? await getFlashSales(_page)
+              : widget.type == "11.11"
+                  ? await get11Products(_page)
+                  : widget.type == "discount"
+                      ? await getDiscountProducts(_page)
+                      : widget.hasAPI
+                          ? await getBestSellersProducts(_page)
+                          : await getProducts(_page);
 
           setState(() {
             AllProducts = widget.hasAPI

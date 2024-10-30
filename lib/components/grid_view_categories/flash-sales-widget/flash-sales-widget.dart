@@ -5,9 +5,11 @@ import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
 import 'package:fawri_app_refactor/server/domain/domain.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
+import 'package:fawri_app_refactor/services/count-down-time/count-down-time.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FlashSalesWidget extends StatefulWidget {
   final bool active;
@@ -27,48 +29,28 @@ class FlashSalesWidget extends StatefulWidget {
 }
 
 class _FlashSalesWidgetState extends State<FlashSalesWidget> {
+  final countdownService = CountdownService();
   Duration countdownDuration = Duration();
-  Timer? countdownTimer;
 
   @override
   void initState() {
+    setEndData();
     super.initState();
-    startCountdown();
-  }
-
-  void startCountdown() {
-    final endDateTime = DateTime.parse(widget.endDate);
-    countdownDuration = endDateTime.difference(DateTime.now());
-    countdownTimer = Timer.periodic(Duration(seconds: 1), (_) {
+    countdownService.startCountdown(widget.endDate, (duration) {
       setState(() {
-        countdownDuration = countdownDuration - Duration(seconds: 1);
-        if (countdownDuration.isNegative) {
-          countdownTimer?.cancel();
-          // navigateToNextPage();
-        }
+        countdownDuration = duration;
       });
     });
   }
 
-  void navigateToNextPage() {
-    NavigatorFunction(
-      context,
-      HomeScreen(
-        bannerTitle: "",
-        endDate: "",
-        type: "Flash Sale Ended",
-        url: URL_FLASH_SALES,
-        title: "",
-        slider: false,
-        selectedIndex: 0,
-        productsKinds: true,
-      ),
-    );
+  setEndData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('end_date_falsh', widget.endDate.toString());
   }
 
   @override
   void dispose() {
-    countdownTimer?.cancel();
+    countdownService.dispose();
     super.dispose();
   }
 
@@ -86,7 +68,7 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
         alignment: Alignment.bottomLeft,
         children: [
           Container(
-            height: 525,
+            height: 550,
             width: double.infinity,
             decoration: BoxDecoration(color: Colors.yellow),
             child: Padding(
@@ -156,7 +138,7 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
 
           // "See More" Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 25, bottom: 10),
             child: InkWell(
               onTap: () {
                 NavigatorFunction(
@@ -174,9 +156,11 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
                 );
               },
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "اعرض بشكل أوسع",

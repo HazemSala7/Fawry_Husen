@@ -174,6 +174,8 @@ getFlashSales(int page) async {
 }
 
 get11Products(int page) async {
+  print("url");
+  print("${URL}getAvailableItems?api_key=$key_bath&page=$page&tag=11.11");
   var response = await http.get(
       Uri.parse(
           "${URL}getAvailableItems?api_key=$key_bath&page=$page&tag=11.11"),

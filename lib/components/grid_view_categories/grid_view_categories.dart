@@ -6,6 +6,7 @@ import 'package:fawri_app_refactor/components/category_widget/category-widget.da
 import 'package:fawri_app_refactor/components/count-down-widget/count-down-widget.dart';
 import 'package:fawri_app_refactor/components/flash_sales_list/flash_sales_list.dart';
 import 'package:fawri_app_refactor/components/flash_sales_products/flash_sales_products.dart';
+import 'package:fawri_app_refactor/components/grid_view_categories/best-seller-widget/best-seller-widget.dart';
 import 'package:fawri_app_refactor/components/grid_view_categories/flash-sales-widget/flash-sales-widget.dart';
 import 'package:fawri_app_refactor/components/home_tools_products/home_tools_products.dart';
 import 'package:fawri_app_refactor/components/recommended_products/recommended_products.dart';
@@ -47,15 +48,6 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   bool setBigCategories = false;
   bool setShow11 = false;
   List<int> discountCategories = [];
-  final List<Color> darkColors = [
-    Colors.black,
-    Colors.brown,
-    Colors.blue.shade900,
-    Colors.green.shade900,
-    Colors.grey.shade800,
-    Colors.indigo.shade900,
-  ];
-  final Random random = Random();
 
   setControllers() async {
     var _discountCategories =
@@ -103,6 +95,46 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Visibility(
+          visible: setShow11,
+          child: Column(
+            children: [
+              InkWell(
+                onTap: () {
+                  NavigatorFunction(
+                    context,
+                    HomeScreen(
+                      bannerTitle: "11.11",
+                      endDate: "",
+                      type: "11.11",
+                      url: "",
+                      title: "",
+                      slider: false,
+                      selectedIndex: 0,
+                      productsKinds: false,
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 230,
+                  decoration:
+                      BoxDecoration(borderRadius: BorderRadius.circular(0)),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(0),
+                    child: FancyShimmerImage(
+                      imageUrl: URL11,
+                      boxFit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
         Container(
           height: 40,
           width: double.infinity,
@@ -430,49 +462,6 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                 }
               }
             }),
-        Visibility(
-          visible: setShow11,
-          child: Column(
-            children: [
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: InkWell(
-                  onTap: () {
-                    NavigatorFunction(
-                      context,
-                      HomeScreen(
-                        bannerTitle: "11.11",
-                        endDate: "",
-                        type: "11.11",
-                        url: "",
-                        title: "",
-                        slider: false,
-                        selectedIndex: 0,
-                        productsKinds: false,
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    height: 200,
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(40)),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(40),
-                      child: FancyShimmerImage(
-                        imageUrl: URL11,
-                        boxFit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
         SizedBox(
           height: 20,
         ),
@@ -608,285 +597,12 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           },
         ),
         SizedBox(height: 20),
-        Container(
-          height: 370,
-          width: double.infinity,
-          decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   begin: Alignment.topRight,
-              //   end: Alignment.bottomLeft,
-              //   colors: [
-              //     Color.fromARGB(255, 0, 89, 255),
-              //     Color.fromRGBO(90, 88, 233, 1),
-              //   ],
-              // ),
-              ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "الأكثر مبيعا",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 200,
-                      height: 3,
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-                SizedBox(height: 30),
-                FutureBuilder(
-                  future: getBestSellersProducts(1),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 15),
-                        child: Container(
-                          width: double.infinity,
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          child: ListView.builder(
-                            itemCount: 4,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, int index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
-                                child: Shimmer.fromColors(
-                                  baseColor:
-                                      const Color.fromARGB(255, 196, 196, 196),
-                                  highlightColor:
-                                      const Color.fromARGB(255, 129, 129, 129),
-                                  child: Container(
-                                    width: 160,
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    } else if (snapshot.hasData && snapshot.data != null) {
-                      List products = snapshot.data["data"];
-                      int pageCount = (products.length / 4)
-                          .ceil(); // Calculate number of pages
-
-                      return SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.38,
-                        child: PageView.builder(
-                          itemCount: pageCount,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, pageIndex) {
-                            // Display 4 products per page (2x2 grid)
-                            int start = pageIndex * 4;
-                            int end = (start + 4 > products.length)
-                                ? products.length
-                                : start + 4;
-
-                            List currentProducts = products.sublist(start, end);
-
-                            return GridView.builder(
-                              physics:
-                                  NeverScrollableScrollPhysics(), // Prevent individual scrolling
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2, // Two products per row
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
-                                childAspectRatio:
-                                    1.5, // Adjust this ratio for card size
-                              ),
-                              itemCount: currentProducts.length,
-                              itemBuilder: (context, gridIndex) {
-                                var product = currentProducts[gridIndex];
-                                Color randomColor = darkColors[
-                                    random.nextInt(darkColors.length)];
-                                return InkWell(
-                                  onTap: () {
-                                    // print("product[images]");
-                                    // print(product["images"]);
-                                    // return;
-                                    List result = [];
-                                    int startIndex = gridIndex - 20;
-                                    int endIndex = gridIndex + 20;
-                                    if (startIndex < 0) {
-                                      startIndex = 0;
-                                    }
-                                    if (endIndex > products.length) {
-                                      endIndex = products.length;
-                                    }
-                                    result.addAll(
-                                        products.sublist(startIndex, endIndex));
-                                    result.insert(0, product);
-                                    List<String> idsList = result
-                                        .map((item) =>
-                                            item['item_id'].toString())
-                                        .toList();
-                                    String commaSeparatedIds =
-                                        idsList.join(', ');
-                                    NavigatorFunction(
-                                        context,
-                                        ProductScreen(
-                                          hasAPI: true,
-                                          priceMul: 1.0,
-                                          price: product["price"].toString(),
-                                          SIZES: [],
-                                          ALL: true,
-                                          SubCategories: [],
-                                          url:
-                                              "${URL}getAllItems?api_key=$key_bath&page=1",
-                                          page: 1,
-                                          Sub_Category_Key:
-                                              sub_categories_women_appearel[0]
-                                                      ["key"]
-                                                  .toString(),
-                                          sizes: [],
-                                          index: gridIndex,
-                                          cart_fav: false,
-                                          Images: product["images"],
-                                          favourite: false,
-                                          id: product["item_id"],
-                                          Product: result,
-                                          IDs: commaSeparatedIds,
-                                        ));
-                                  },
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    elevation: 5,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 1,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.only(
-                                                topRight: Radius.circular(10),
-                                                bottomRight:
-                                                    Radius.circular(10)),
-                                            child: Container(
-                                              color: randomColor,
-                                              child: Column(
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: 50,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5.0),
-                                                      child: Text(
-                                                        product["item_name"],
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 14,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  product.containsKey(
-                                                              "price") &&
-                                                          product["price"] !=
-                                                              null
-                                                      ? Text(
-                                                          product["price"]
-                                                                  is double
-                                                              ? "₪${(product["price"] as double).toStringAsFixed(2)}"
-                                                              : (double.tryParse(
-                                                                          product["price"]
-                                                                              .toString()) !=
-                                                                      null
-                                                                  ? "₪${double.parse(product["price"]).toStringAsFixed(2)}"
-                                                                  : "₪0"),
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 24,
-                                                            color: Colors.white,
-                                                          ),
-                                                        )
-                                                      : Text(
-                                                          "₪0",
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 24,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          flex: 1,
-                                          child: Container(
-                                            height: 150,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: NetworkImage(product[
-                                                                "images"]
-                                                            .length ==
-                                                        0
-                                                    ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                    : product["images"][0] ??
-                                                        "https://www.fawri.co/assets/about_us/fawri_logo.jpg"),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(10),
-                                                  bottomLeft:
-                                                      Radius.circular(10)),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    } else {
-                      return Container(
-                        height: MediaQuery.of(context).size.height * 0.25,
-                        width: double.infinity,
-                        color: Colors.white,
-                      );
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
+        BestSellersWidget(),
         Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10, bottom: 10),
+              padding: const EdgeInsets.only(right: 10, bottom: 10),
               child: InkWell(
                 onTap: () {
                   NavigatorFunction(
@@ -903,19 +619,27 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                       ));
                 },
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "عرض بشكل أوسع",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: MAIN_COLOR,
-                          fontSize: 14),
+                    Row(
+                      children: [
+                        Text(
+                          "اعرض بشكل أوسع",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: MAIN_COLOR,
+                            fontSize: 14,
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Icon(Icons.arrow_circle_left_outlined),
+                      ],
                     ),
                     Container(
-                      width: 110,
+                      width: 145,
                       height: 2,
                       color: MAIN_COLOR,
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -1071,129 +795,129 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             }
           },
         ),
-        Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            Container(
-              height: 330,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomLeft,
-                  colors: [
-                    Color.fromARGB(255, 241, 9, 40),
-                    Color.fromRGBO(116, 13, 13, 1),
-                  ],
-                ),
-              ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text(
-                          "شركاء النجاح",
-                          style: GoogleFonts.cairo(
-                            fontWeight: FontWeight.w900,
-                            fontSize: 26,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: FutureBuilder(
-                        future: getShops(1),
-                        builder: (context, AsyncSnapshot snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 15),
-                              child: Container(
-                                  width: double.infinity,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.25,
-                                  child: ListView.builder(
-                                      itemCount: 4,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, int index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 5, left: 5),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            width: 160,
-                                            height: 100,
-                                            child: Shimmer.fromColors(
-                                              baseColor: const Color.fromARGB(
-                                                  255, 196, 196, 196),
-                                              highlightColor:
-                                                  const Color.fromARGB(
-                                                      255, 129, 129, 129),
-                                              child: Container(
-                                                width: 120,
-                                                height: 150,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10)),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      })),
-                            );
-                          } else {
-                            if (snapshot.data != null) {
-                              return ShopsList(
-                                shortlisted: snapshot.data["data"],
-                              );
-                            } else {
-                              return Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.25,
-                                width: double.infinity,
-                                color: Colors.white,
-                              );
-                            }
-                          }
-                        }),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "اعرض منتوجاتك على فوري ؟ ",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 12),
-                  ),
-                  // SizedBox(
-                  //   height: 1,
-                  // ),
-                  Container(
-                    width: 140,
-                    height: 2,
-                    color: Colors.white,
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
+        // Stack(
+        //   alignment: Alignment.bottomRight,
+        //   children: [
+        //     Container(
+        //       height: 330,
+        //       width: double.infinity,
+        //       decoration: BoxDecoration(
+        //         gradient: LinearGradient(
+        //           begin: Alignment.topRight,
+        //           end: Alignment.bottomLeft,
+        //           colors: [
+        //             Color.fromARGB(255, 241, 9, 40),
+        //             Color.fromRGBO(116, 13, 13, 1),
+        //           ],
+        //         ),
+        //       ),
+        //       child: Column(
+        //         children: [
+        //           Row(
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             children: [
+        //               Padding(
+        //                 padding: const EdgeInsets.only(top: 20),
+        //                 child: Text(
+        //                   "شركاء النجاح",
+        //                   style: GoogleFonts.cairo(
+        //                     fontWeight: FontWeight.w900,
+        //                     fontSize: 26,
+        //                     color: Colors.white,
+        //                   ),
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //           Padding(
+        //             padding: const EdgeInsets.only(bottom: 20),
+        //             child: FutureBuilder(
+        //                 future: getShops(1),
+        //                 builder: (context, AsyncSnapshot snapshot) {
+        //                   if (snapshot.connectionState ==
+        //                       ConnectionState.waiting) {
+        //                     return Padding(
+        //                       padding: const EdgeInsets.only(bottom: 15),
+        //                       child: Container(
+        //                           width: double.infinity,
+        //                           height:
+        //                               MediaQuery.of(context).size.height * 0.25,
+        //                           child: ListView.builder(
+        //                               itemCount: 4,
+        //                               scrollDirection: Axis.horizontal,
+        //                               itemBuilder: (context, int index) {
+        //                                 return Padding(
+        //                                   padding: const EdgeInsets.only(
+        //                                       right: 5, left: 5),
+        //                                   child: Container(
+        //                                     decoration: BoxDecoration(
+        //                                         borderRadius:
+        //                                             BorderRadius.circular(10)),
+        //                                     width: 160,
+        //                                     height: 100,
+        //                                     child: Shimmer.fromColors(
+        //                                       baseColor: const Color.fromARGB(
+        //                                           255, 196, 196, 196),
+        //                                       highlightColor:
+        //                                           const Color.fromARGB(
+        //                                               255, 129, 129, 129),
+        //                                       child: Container(
+        //                                         width: 120,
+        //                                         height: 150,
+        //                                         decoration: BoxDecoration(
+        //                                             color: Colors.white,
+        //                                             borderRadius:
+        //                                                 BorderRadius.circular(
+        //                                                     10)),
+        //                                       ),
+        //                                     ),
+        //                                   ),
+        //                                 );
+        //                               })),
+        //                     );
+        //                   } else {
+        //                     if (snapshot.data != null) {
+        //                       return ShopsList(
+        //                         shortlisted: snapshot.data["data"],
+        //                       );
+        //                     } else {
+        //                       return Container(
+        //                         height:
+        //                             MediaQuery.of(context).size.height * 0.25,
+        //                         width: double.infinity,
+        //                         color: Colors.white,
+        //                       );
+        //                     }
+        //                   }
+        //                 }),
+        //           )
+        //         ],
+        //       ),
+        //     ),
+        //     Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: Column(
+        //         children: [
+        //           Text(
+        //             "اعرض منتوجاتك على فوري ؟ ",
+        //             style: TextStyle(
+        //                 fontWeight: FontWeight.bold,
+        //                 color: Colors.white,
+        //                 fontSize: 12),
+        //           ),
+        //           // SizedBox(
+        //           //   height: 1,
+        //           // ),
+        //           Container(
+        //             width: 140,
+        //             height: 2,
+        //             color: Colors.white,
+        //           )
+        //         ],
+        //       ),
+        //     )
+        //   ],
+        // ),
         Padding(
           padding: const EdgeInsets.only(bottom: 20),
           child: FutureBuilder(
