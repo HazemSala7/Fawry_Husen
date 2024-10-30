@@ -173,6 +173,32 @@ getFlashSales(int page) async {
   }
 }
 
+get11Products(int page) async {
+  var response = await http.get(
+      Uri.parse(
+          "${URL}getAvailableItems?api_key=$key_bath&page=$page&tag=11.11"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
+getDiscountProducts(int page) async {
+  var response = await http.get(
+      Uri.parse(
+          "${URL}getAvailableItems?api_key=$key_bath&page=$page&tag=discount"),
+      headers: headers);
+  var res = json.decode(utf8.decode(response.bodyBytes));
+  if (response.statusCode != 200) {
+    return false;
+  } else {
+    return res;
+  }
+}
+
 getShops(int page) async {
   var response =
       await http.get(Uri.parse("$URL_GET_SHOPS?page=$page"), headers: headers);
@@ -261,7 +287,7 @@ getSpeceficProduct(id) async {
     if (id.toString().endsWith(',')) {
       id = id.toString().substring(0, id.toString().length - 1);
     }
-    print("1");
+    print("// get item data //");
     print("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id");
     var response = await http.get(
         Uri.parse("$URL_SINGLE_PRODUCT?api_key=$key_bath&id=$id"),

@@ -311,6 +311,7 @@ class _SlideImageState extends State<SlideImage> {
                       NavigatorFunction(
                           context,
                           HomeScreen(
+                            bannerTitle: "",
                             endDate: "",
                             type: "normal",
                             productsKinds: false,

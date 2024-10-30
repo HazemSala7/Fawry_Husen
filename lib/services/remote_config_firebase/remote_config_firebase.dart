@@ -160,6 +160,16 @@ class FirebaseRemoteConfigClass {
     return remoteConfig.getString('OtherPrice');
   }
 
+  Future<String> fetchShow11() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('show_11_11');
+  }
+
+  Future<String> fetchURL11() async {
+    await _configureRemoteConfig();
+    return remoteConfig.getString('url_11_11');
+  }
+
   Future<String> fetchWomenPrice() async {
     await _configureRemoteConfig();
     return remoteConfig.getString('WomenPrice');

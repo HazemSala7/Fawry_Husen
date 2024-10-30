@@ -17,9 +17,11 @@ class MainScreen extends StatefulWidget {
   bool hasAPI = false;
   String API = "";
   String type = "";
+  String bannerTitle = "";
   MainScreen({
     Key? key,
     required this.type,
+    required this.bannerTitle,
     required this.hasAPI,
     required this.API,
   }) : super(key: key);
@@ -103,8 +105,10 @@ class _MainScreenState extends State<MainScreen> {
             ],
           ),
           CountdownTimerWidget(
-            hasAPI: widget.hasAPI,
-            type: widget.type,
+            hasAPI: widget.type == "11.11" || widget.type == "discount"
+                ? true
+                : widget.hasAPI,
+            type: widget.bannerTitle,
           ),
           _isFirstLoadRunning
               ? Container(
@@ -321,7 +325,6 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _isFirstLoadRunning = true;
     });
-
     bool isConnected = await checkInternetConnectivity();
     if (!isConnected) {
       no_internet = true;
@@ -330,56 +333,61 @@ class _MainScreenState extends State<MainScreen> {
       return;
     } else {
       try {
-        // Check if data for the current sub-category key exists in the cache
         if (cache.containsKey("all_products")) {
-          // Use the cached data
           setState(() {
             AllProducts = cache["all_products"];
           });
         } else {
-          // Fetch data from the API
           var _products = widget.hasAPI
               ? widget.type == "flash_sales"
                   ? await getFlashSales(_page)
-                  : await getBestSellersProducts(_page)
+                  : widget.type == "11.11"
+                      ? await get11Products(_page)
+                      : widget.type == "discount"
+                          ? await getDiscountProducts(_page)
+                          : await getBestSellersProducts(_page)
               : await getProducts(_page);
+
           setState(() {
             AllProducts = widget.hasAPI
-                ? widget.type == "flash_sales"
+                ? widget.type == "flash_sales" ||
+                        widget.type == "11.11" ||
+                        widget.type == "discount"
                     ? _products["items"]
                     : _products["data"]
                 : _products["items"];
             cache["all_products"] = AllProducts;
           });
+          print("AllProducts");
+          print(AllProducts);
         }
-      } catch (err) {
-        if (kDebugMode) {
-          print('Something went wrong');
-        }
-      }
+      } catch (err) {}
       setState(() {
         _isFirstLoadRunning = false;
       });
     }
   }
 
-  // This function will be triggered whenver the user scroll
-  // to near the bottom of the list view
   void _loadMore() async {
     if (_hasNextPage == true &&
         _isFirstLoadRunning == false &&
         _isLoadMoreRunning == false &&
         _controller.position.extentAfter < 300) {
       setState(() {
-        _isLoadMoreRunning = true; // Display a progress indicator at the bottom
+        _isLoadMoreRunning = true;
       });
-      _page += 1; // Increase _page by 1
+      _page += 1;
       try {
         var _products = widget.hasAPI
             ? widget.type == "flash_sales"
                 ? await getFlashSales(_page)
-                : await getBestSellersProducts(_page)
+                : widget.type == "11.11"
+                    ? await get11Products(_page)
+                    : widget.type == "discount"
+                        ? await getDiscountProducts(_page)
+                        : await getBestSellersProducts(_page)
             : await getProducts(_page);
+
         if (widget.hasAPI
             ? widget.type == "flash_sales"
                 ? _products["items"]

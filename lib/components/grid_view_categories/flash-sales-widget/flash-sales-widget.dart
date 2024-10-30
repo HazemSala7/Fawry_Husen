@@ -54,6 +54,7 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
     NavigatorFunction(
       context,
       HomeScreen(
+        bannerTitle: "",
         endDate: "",
         type: "Flash Sale Ended",
         url: URL_FLASH_SALES,
@@ -158,15 +159,14 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
             padding: const EdgeInsets.all(8.0),
             child: InkWell(
               onTap: () {
-                print("countdownText");
-                print(countdownText);
                 NavigatorFunction(
                   context,
                   HomeScreen(
+                    bannerTitle: "ينتهي خلال ${countdownText}",
                     endDate: widget.endDate,
-                    type: "ينتهي خلال ${countdownText}",
+                    type: "flash_sales",
                     url: URL_FLASH_SALES,
-                    title: "",
+                    title: "ينتهي خلال ${countdownText}",
                     slider: false,
                     selectedIndex: 0,
                     productsKinds: true,

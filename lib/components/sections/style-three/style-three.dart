@@ -222,6 +222,7 @@ class _SectionStyleThreeState extends State<SectionStyleThree> {
               NavigatorFunction(
                 context,
                 HomeScreen(
+                  bannerTitle: "",
                   endDate: "",
                   type: "",
                   url: URL_FLASH_SALES,

@@ -234,6 +234,7 @@ class _ProductScreenState extends State<ProductScreen> {
     List<String> idsList =
         additionalItems.map((item) => item['id'].toString()).toList();
     String commaSeparatedIds = idsList.join(', ');
+    print("// Initial Data //");
     var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
 
     setState(() {
@@ -365,6 +366,7 @@ class _ProductScreenState extends State<ProductScreen> {
           additionalItems.map((item) => item['id'].toString()).toList();
 
       String commaSeparatedIds = idsList.join(', ');
+      print("// Featured Items");
 
       var ProductsApiData = await getSpeceficProduct(commaSeparatedIds);
 
@@ -498,6 +500,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           child: FadeInAnimation(
                                             curve: Curves.easeIn,
                                             child: ProductItem(
+                                                tags: [],
                                                 shopId: "",
                                                 quantity: 0,
                                                 quantityAvailable: 0,
@@ -572,6 +575,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                           child: FadeInAnimation(
                                             curve: Curves.easeIn,
                                             child: ProductItem(
+                                                tags: [],
                                                 shopId: "",
                                                 quantity: 0,
                                                 quantityAvailable: 0,
@@ -604,17 +608,25 @@ class _ProductScreenState extends State<ProductScreen> {
                                                 description: [],
                                                 new_price: double.parse(widget
                                                             .hasAPI
-                                                        ? widget.Product[i]["new_price"] != null ? widget.Product[i]
-                                                                ["new_price"]
-                                                            .toString() :
-                                                            widget.Product[i]
+                                                        ? widget.Product[i]["new_price"] !=
+                                                                null
+                                                            ? widget.Product[i][
+                                                                    "new_price"]
+                                                                .toString()
+                                                            : widget.Product[i]
+                                                                    ["price"]
+                                                                .toString()
+                                                        : widget.Product[i]
                                                                 ["price"]
-                                                            .toString() 
-                                                        : widget.Product[i]["price"]
                                                             .toString()) *
                                                     double.parse(
                                                         widget.priceMul.toString()),
-                                                old_price: double.parse(widget.hasAPI ? widget.Product[i]["old_price"] != null ? widget.Product[i]["old_price"].toString():widget.Product[i]["price"].toString() : widget.Product[i]["price"].toString()) * double.parse(widget.priceMul.toString()),
+                                                old_price: double.parse(widget.hasAPI
+                                                        ? widget.Product[i]["old_price"] != null
+                                                            ? widget.Product[i]["old_price"].toString()
+                                                            : widget.Product[i]["price"].toString()
+                                                        : widget.Product[i]["price"].toString()) *
+                                                    double.parse(widget.priceMul.toString()),
                                                 image: widget.hasAPI ? widget.Product[i]["images"][0] as String : widget.Product[i]["vendor_images_links"][0] as String,
                                                 sizesApi: [],
                                                 TypeApi: false,
@@ -707,7 +719,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     return Stack(
                                       children: [
                                         ProductItem(
-                                          // You can pass some default values here for the ProductItem widget
+                                          tags: item["tags"] ?? [],
                                           quantity: 0,
                                           quantityAvailable: 0,
                                           showQuantitySelector: false,
@@ -778,6 +790,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                       child: FadeInAnimation(
                                         curve: Curves.easeIn,
                                         child: ProductItem(
+                                          tags: item["tags"] ?? [],
                                           shopId:
                                               item["shop_id"].toString() ?? "-",
                                           quantity: _quantity,

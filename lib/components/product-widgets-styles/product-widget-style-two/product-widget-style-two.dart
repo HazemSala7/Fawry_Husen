@@ -45,10 +45,11 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
           List<String> idsList =
               result.map((item) => item['id'].toString()).toList();
           String commaSeparatedIds = idsList.join(', ');
+
           NavigatorFunction(
               context,
               ProductScreen(
-                hasAPI: widget.hasAPI,
+                hasAPI: false,
                 priceMul: 1.0,
                 price: widget.shortlisted[widget.index]["price"].toString(),
                 SIZES: [],
@@ -61,9 +62,9 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
                 sizes: [],
                 index: widget.index,
                 cart_fav: false,
-                Images: [],
+                Images: widget.shortlisted[widget.index]["vendor_images_links"],
                 favourite: false,
-                id: widget.shortlisted[widget.index]["id"],
+                id: widget.shortlisted[widget.index]["id"] ?? 0,
                 Product: result,
                 IDs: commaSeparatedIds,
               ));

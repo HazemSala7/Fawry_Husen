@@ -103,6 +103,7 @@ class _CategorySplashState extends State<CategorySplash> {
                   NavigatorFunction(
                       context,
                       HomeScreen(
+                        bannerTitle: "",
                         endDate: "",
                         type: "normal",
                         productsKinds: false,

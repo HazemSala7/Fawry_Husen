@@ -578,6 +578,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                               NavigatorFunction(
                                                   context,
                                                   HomeScreen(
+                                                    bannerTitle: "",
                                                     endDate: "",
                                                     type: "normal",
                                                     productsKinds: false,
@@ -654,6 +655,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                       NavigatorFunction(
                                                           context,
                                                           HomeScreen(
+                                                              bannerTitle: "",
                                                               endDate: "",
                                                               type: "normal",
                                                               productsKinds:
@@ -769,6 +771,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                             NavigatorFunction(
                                                 context,
                                                 HomeScreen(
+                                                    bannerTitle: "",
                                                     endDate: "",
                                                     type: "normal",
                                                     productsKinds: false,
@@ -852,6 +855,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
                                                     NavigatorFunction(
                                                         context,
                                                         HomeScreen(
+                                                            bannerTitle: "",
                                                             endDate: "",
                                                             type: "normal",
                                                             productsKinds:

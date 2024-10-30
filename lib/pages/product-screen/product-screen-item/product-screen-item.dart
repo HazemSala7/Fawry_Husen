@@ -4,6 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:expandable/expandable.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fawri_app_refactor/pages/home_screen/home_screen.dart';
+import 'package:fawri_app_refactor/server/domain/domain.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
@@ -30,13 +32,14 @@ class ProductItem extends StatefulWidget {
   String image, name, nickname, SKU, vendor_SKU, SelectedSizes, shopId;
   var variants, old_price, new_price, description, runAddToCartAnimation;
   Map placeInWarehouse;
-  List sizesApi, images, Sizes;
+  List sizesApi, images, Sizes, tags;
   int id = 0, quantity, quantityAvailable;
   bool featureProduct = false;
   bool isLikedProduct, loadingPage, TypeApi, showQuantitySelector;
   ProductItem({
     super.key,
     required this.showQuantitySelector,
+    required this.tags,
     required this.quantity,
     required this.shopId,
     required this.quantityAvailable,
@@ -486,73 +489,125 @@ class _ProductItemState extends State<ProductItem> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Stack(
-                          alignment: Alignment.center,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Stack(
+                              alignment: Alignment.center,
                               children: [
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Text(
-                                      "₪${(widget.old_price * 1.5).round().toString()}",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 1,
-                                      width: 50,
-                                      color: Colors.black,
-                                    ),
-                                  ],
+                                Text(
+                                  "₪${(widget.old_price * 1.5).round().toString()}",
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          0.0, 0.0, 190, 0.0),
-                                      child: Tooltip(
-                                        triggerMode: TooltipTriggerMode.tap,
-                                        message: "תوصيل فوري",
-                                        child: FaIcon(
-                                          FontAwesomeIcons.truck,
-                                          color: Color(0xD9000000),
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          0.0, 0.0, 10, 0.0),
-                                      child: Tooltip(
-                                        triggerMode: TooltipTriggerMode.tap,
-                                        message: "الدفع عند الاستلام",
-                                        child: FaIcon(
-                                          FontAwesomeIcons.moneyBillWaveAlt,
-                                          color: Color(0xD9000000),
-                                          size: 16,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(
-                                          0.0, 0.0, 10.0, 0.0),
-                                      child: Tooltip(
-                                        triggerMode: TooltipTriggerMode.tap,
-                                        message: "سياسه الخصوصيه",
-                                        child: FaIcon(
-                                          Icons.handshake,
-                                          color: Color(0xD9000000),
-                                          size: 19,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                Container(
+                                  height: 1,
+                                  width: 50,
+                                  color: Colors.black,
                                 ),
                               ],
                             ),
+                            if (widget.tags.isNotEmpty)
+                              SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2),
+                            if (widget.tags.isNotEmpty)
+                              Expanded(
+                                flex: 4,
+                                child: Container(
+                                  height: 40,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.tags.length,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          String tagName = widget.tags[index];
+                                          if (tagName == "flash_sales") {
+                                            NavigatorFunction(
+                                              context,
+                                              HomeScreen(
+                                                bannerTitle: "Flash Sales",
+                                                endDate: "",
+                                                type: "flash_sales",
+                                                url: URL_FLASH_SALES,
+                                                title: "",
+                                                slider: false,
+                                                selectedIndex: 0,
+                                                productsKinds: true,
+                                              ),
+                                            );
+                                          } else if (tagName == "11.11") {
+                                            NavigatorFunction(
+                                              context,
+                                              HomeScreen(
+                                                bannerTitle: "11.11",
+                                                endDate: "",
+                                                type: "11.11",
+                                                url: "",
+                                                title: "",
+                                                slider: false,
+                                                selectedIndex: 0,
+                                                productsKinds: false,
+                                              ),
+                                            );
+                                          } else {
+                                            NavigatorFunction(
+                                              context,
+                                              HomeScreen(
+                                                bannerTitle: "Discount",
+                                                endDate: "",
+                                                type: "discount",
+                                                url: "",
+                                                title: "",
+                                                slider: false,
+                                                selectedIndex: 0,
+                                                productsKinds: false,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 4),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 15, vertical: 8),
+                                          decoration: BoxDecoration(
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.1),
+                                                spreadRadius: 7,
+                                                blurRadius: 5,
+                                              ),
+                                            ],
+                                            color: widget.tags[index] ==
+                                                    "flash_sales"
+                                                ? Colors.yellow
+                                                : Colors.blue,
+                                            borderRadius:
+                                                BorderRadius.circular(40),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              widget.tags[index],
+                                              style: TextStyle(
+                                                color: widget.tags[index] ==
+                                                        "flash_sales"
+                                                    ? MAIN_COLOR
+                                                    : Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                           ],
                         ),
                       ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fawri_app_refactor/components/category_widget/category-widget.dart';
 import 'package:fawri_app_refactor/components/count-down-widget/count-down-widget.dart';
 import 'package:fawri_app_refactor/components/flash_sales_list/flash_sales_list.dart';
@@ -42,7 +43,9 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   String categoryPath = "";
   String featuresUrl3 = "";
   String marque = "";
+  String URL11 = "";
   bool setBigCategories = false;
+  bool setShow11 = false;
   List<int> discountCategories = [];
   final List<Color> darkColors = [
     Colors.black,
@@ -57,6 +60,8 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
   setControllers() async {
     var _discountCategories =
         await FirebaseRemoteConfigClass().fetchDiscountCategories();
+    var _show11 = await FirebaseRemoteConfigClass().fetchShow11();
+    var _url11 = await FirebaseRemoteConfigClass().fetchURL11();
     var _featuresUrl3 = await FirebaseRemoteConfigClass().getCategoryIDKey3();
     var _categoryName = await FirebaseRemoteConfigClass().fetchCategoryName();
     var _marque = await FirebaseRemoteConfigClass().fetchMarque();
@@ -68,6 +73,8 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
           .map((category) => int.parse(category.toString()))
           .toList();
       categoryName = _categoryName.toString();
+      URL11 = _url11.toString();
+      setShow11 = _show11.toString() == "true" ? true : false;
       categoryDesc = _categoryDesc.toString();
       categoryImage = _categoryImage.toString();
       categoryPath = _categoryPath.toString();
@@ -423,330 +430,52 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                 }
               }
             }),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 5),
-        //   child: Visibility(
-        //     visible: _isCategoryDataValid(),
-        //     child: InkWell(
-        //       onTap: () {
-        //         bool All = false;
-        //         bool Women = false;
-        //         bool Men = false;
-        //         bool Kids = false;
-        //         if (categoryPath.toString() == "5") {
-        //           NavigatorFunction(context, ShoesCategoryDialog());
-        //         } else if (categoryPath.toString() == "3") {
-        //           NavigatorFunction(context, KidsCategoryDialog());
-        //         } else if (categoryPath.toString() == "17") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Sports %26 Outdoor, Sports  Outdoor",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "مستلزمات رياضية",
-        //                   sizes: "null",
-        //                   main_category: "Sports %26 Outdoor, Sports  Outdoor",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "7") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id:
-        //                       "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "للمنزل",
-        //                   sizes: "null",
-        //                   main_category:
-        //                       "Home & Living, Home Living, Home Textile,Tools & Home Improvement",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "6") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Women Apparel, Baby",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "للرضيع و الأم",
-        //                   sizes: "null",
-        //                   main_category: "Women Apparel, Baby",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "10") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Jewelry %26 Watches, Jewelry  Watches",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "مجوهرات و ساعات",
-        //                   sizes: "null",
-        //                   main_category:
-        //                       "Jewelry %26 Watches, Jewelry  Watches",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "9") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Apparel Accessories",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "اكسسوارات",
-        //                   sizes: "null",
-        //                   main_category: "Apparel Accessories",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "16") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Beauty %26 Health, Jewelry %26 Watches",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "مستحضرات تجميلية",
-        //                   sizes: "null",
-        //                   main_category:
-        //                       "Beauty %26 Health, Jewelry %26 Watches",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "16") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Electronics",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "الكترونيات",
-        //                   sizes: "null",
-        //                   main_category: "Electronics",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "15") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Bags %26 Luggage, Bags %26 Luggage",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "حقائب",
-        //                   sizes: "null",
-        //                   main_category: "Bags %26 Luggage, Bags %26 Luggage",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "11") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Pet Supplies",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "للحيوانات الاليفة",
-        //                   sizes: "null",
-        //                   main_category: "Pet Supplies",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "12") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id: "Automotive",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "مستلزمات سيارات",
-        //                   sizes: "null",
-        //                   main_category: "Automotive",
-        //                 ),
-        //               )));
-        //         } else if (categoryPath.toString() == "14") {
-        //           NavigatorFunction(
-        //               context,
-        //               ShowCaseWidget(
-        //                   builder: Builder(
-        //                 builder: (context) => ProductsCategories(
-        //                   SIZES: [],
-        //                   category_id:
-        //                       "Office School Supplies, Office %26 School Supplies",
-        //                   search: false,
-        //                   size: "",
-        //                   containerWidths: "null",
-        //                   keys: "null",
-        //                   name: "مستلزمات مكاتب",
-        //                   sizes: "null",
-        //                   main_category:
-        //                       "Office School Supplies, Office %26 School Supplies",
-        //                 ),
-        //               )));
-        //         } else {
-        //           Map sizes = {};
-        //           if (categoryPath.toString() == "2") {
-        //             sizes = LocalStorage().getSize("womenSizes");
-        //           } else if (categoryPath.toString() == "1") {
-        //             sizes = LocalStorage().getSize("menSizes");
-        //           } else if (categoryPath.toString() == "4") {
-        //             sizes = LocalStorage().getSize("womenPlusSizes");
-        //           } else if (categoryPath.toString() == "18") {
-        //             sizes = LocalStorage().getSize("Weddings & Events");
-        //           } else if (categoryPath.toString() == "8") {
-        //             sizes = LocalStorage().getSize("Underwear_Sleepwear_sizes");
-        //           }
-
-        //           var keys = sizes.keys.toList();
-
-        //           double gridViewHeight = calculateGridViewHeight(keys.length);
-        //           // Calculate the widths for each Container
-        //           List<double> containerWidths = keys
-        //               .map((text) =>
-        //                   getTextWidth(
-        //                       text, TextStyle(fontWeight: FontWeight.bold)) +
-        //                   120.0)
-        //               .toList();
-        //           NavigatorFunction(
-        //               context,
-        //               SizesPage(
-        //                 sizes: sizes,
-        //                 main_category: categoryPath.toString() == "2"
-        //                     ? "Women Apparel"
-        //                     : categoryPath.toString() == "1"
-        //                         ? "Men Apparel, Men"
-        //                         : categoryPath.toString() == "4"
-        //                             ? "Women Apparel"
-        //                             : categoryPath.toString() == "18"
-        //                                 ? "Weddings %26 Events, Weddings %26 Events"
-        //                                 : categoryPath.toString() == "8"
-        //                                     ? "Underwear & Sleepwear, Underwear Sleepwear"
-        //                                     : "",
-        //                 name: categoryPath.toString() == "2"
-        //                     ? "ملابس نسائيه"
-        //                     : categoryPath.toString() == "1"
-        //                         ? "ملابس رجاليه"
-        //                         : categoryPath.toString() == "4"
-        //                             ? "ملابس نسائيه مقاس كبير"
-        //                             : categoryPath.toString() == "18"
-        //                                 ? "مستلزمات اعراس"
-        //                                 : categoryPath.toString() == "8"
-        //                                     ? "ملابس داخليه"
-        //                                     : "",
-        //                 containerWidths: containerWidths,
-        //                 keys: keys,
-        //               ));
-        //         }
-        //       },
-        //       child: Padding(
-        //         padding: const EdgeInsets.all(8.0),
-        //         child: Container(
-        //           decoration: BoxDecoration(boxShadow: [
-        //             BoxShadow(
-        //               color: Color.fromARGB(255, 145, 114, 13).withOpacity(0.5),
-        //               blurRadius: 7,
-        //               offset: Offset(0, 2),
-        //             ),
-        //           ], borderRadius: BorderRadius.circular(6)),
-        //           child: Stack(
-        //             alignment: Alignment.center,
-        //             children: [
-        //               ClipRRect(
-        //                 borderRadius: BorderRadius.circular(6),
-        //                 child: Stack(
-        //                   children: [
-        //                     FancyShimmerImage(
-        //                       imageUrl: categoryImage,
-        //                       boxFit: BoxFit.cover,
-        //                       width: double.infinity,
-        //                       height: MediaQuery.of(context).size.height * 0.25,
-        //                     ),
-        //                   ],
-        //                 ),
-        //               ),
-        //               Padding(
-        //                 padding: const EdgeInsets.only(right: 20, top: 5),
-        //                 child: Column(
-        //                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-        //                   children: [
-        //                     Text(
-        //                       categoryName,
-        //                       style: TextStyle(
-        //                           fontWeight: FontWeight.bold,
-        //                           color: Colors.white,
-        //                           fontSize: 30),
-        //                     ),
-        //                     SizedBox(
-        //                       height: 30,
-        //                     ),
-        //                     Text(
-        //                       categoryDesc,
-        //                       style: TextStyle(
-        //                           fontWeight: FontWeight.bold,
-        //                           color: Colors.white,
-        //                           fontSize: 20),
-        //                     ),
-        //                   ],
-        //                 ),
-        //               ),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        Visibility(
+          visible: setShow11,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: InkWell(
+                  onTap: () {
+                    NavigatorFunction(
+                      context,
+                      HomeScreen(
+                        bannerTitle: "11.11",
+                        endDate: "",
+                        type: "11.11",
+                        url: "",
+                        title: "",
+                        slider: false,
+                        selectedIndex: 0,
+                        productsKinds: false,
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 200,
+                    decoration:
+                        BoxDecoration(borderRadius: BorderRadius.circular(40)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(40),
+                      child: FancyShimmerImage(
+                        imageUrl: URL11,
+                        boxFit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
         SizedBox(
           height: 20,
         ),
-
         FutureBuilder(
           future: getFlashSales(1),
           builder: (context, AsyncSnapshot snapshot) {
@@ -812,7 +541,6 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             }
           },
         ),
-
         Padding(
           padding: const EdgeInsets.only(left: 10, top: 20, right: 10),
           child: Row(
@@ -992,6 +720,9 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                                     random.nextInt(darkColors.length)];
                                 return InkWell(
                                   onTap: () {
+                                    // print("product[images]");
+                                    // print(product["images"]);
+                                    // return;
                                     List result = [];
                                     int startIndex = gridIndex - 20;
                                     int endIndex = gridIndex + 20;
@@ -1003,7 +734,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                                     }
                                     result.addAll(
                                         products.sublist(startIndex, endIndex));
-                                    result.insert(0, products[gridIndex]);
+                                    result.insert(0, product);
                                     List<String> idsList = result
                                         .map((item) =>
                                             item['item_id'].toString())
@@ -1015,8 +746,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                                         ProductScreen(
                                           hasAPI: true,
                                           priceMul: 1.0,
-                                          price: products[gridIndex]["price"]
-                                              .toString(),
+                                          price: product["price"].toString(),
                                           SIZES: [],
                                           ALL: true,
                                           SubCategories: [],
@@ -1030,9 +760,9 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                                           sizes: [],
                                           index: gridIndex,
                                           cart_fav: false,
-                                          Images: [],
+                                          Images: product["images"],
                                           favourite: false,
-                                          id: products[gridIndex]["item_id"],
+                                          id: product["item_id"],
                                           Product: result,
                                           IDs: commaSeparatedIds,
                                         ));
@@ -1162,6 +892,7 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
                   NavigatorFunction(
                       context,
                       HomeScreen(
+                        bannerTitle: "",
                         endDate: "",
                         type: "best_seller",
                         url: URL_TOP_SELLERS,
@@ -1463,7 +1194,6 @@ class _GridViewCategoriesState extends State<GridViewCategories> {
             )
           ],
         ),
-
         Padding(
           padding: const EdgeInsets.only(bottom: 20),
           child: FutureBuilder(
