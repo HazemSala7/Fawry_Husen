@@ -513,7 +513,7 @@ class _ProductItemState extends State<ProductItem> {
                             if (widget.tags.isNotEmpty)
                               SizedBox(
                                   width: widget.tags.length == 1
-                                      ? MediaQuery.of(context).size.width * 0.57
+                                      ? MediaQuery.of(context).size.width * 0.5
                                       : widget.tags.length == 2
                                           ? MediaQuery.of(context).size.width *
                                               0.24

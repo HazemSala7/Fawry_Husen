@@ -9,9 +9,10 @@ import '../../server/functions/functions.dart';
 class FlashSalesList extends StatefulWidget {
   final List shortlisted;
   int productStyleNumber;
-
+  bool check11;
   FlashSalesList({
     Key? key,
+    required this.check11,
     required this.shortlisted,
     required this.productStyleNumber,
   }) : super(key: key);
@@ -88,7 +89,7 @@ class _FlashSalesListState extends State<FlashSalesList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
+      color: widget.check11 ? Colors.black : Colors.transparent,
       child: Column(
         children: [
           Padding(
@@ -113,6 +114,7 @@ class _FlashSalesListState extends State<FlashSalesList> {
                           child: FadeInAnimation(
                               child: widget.productStyleNumber == 2
                                   ? ProductWidgetStyleTwo(
+                                      check11: widget.check11,
                                       hasAPI: true,
                                       fire: true,
                                       index: index,
@@ -121,11 +123,13 @@ class _FlashSalesListState extends State<FlashSalesList> {
                                   : widget.productStyleNumber == 3
                                       ? ProductWidgetStyleThree(
                                           hasAPI: true,
+                                          check11: widget.check11,
                                           fire: false,
                                           index: index,
                                           shortlisted: widget.shortlisted,
                                         )
                                       : ProductWidgetStyleTwo(
+                                          check11: widget.check11,
                                           hasAPI: true,
                                           fire: true,
                                           index: index,

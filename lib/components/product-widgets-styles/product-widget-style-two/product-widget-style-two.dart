@@ -10,10 +10,11 @@ import 'package:lottie/lottie.dart';
 class ProductWidgetStyleTwo extends StatefulWidget {
   int index;
   var shortlisted;
-  bool fire;
+  bool fire, check11;
   bool hasAPI = false;
   ProductWidgetStyleTwo({
     Key? key,
+    required this.check11,
     required this.hasAPI,
     required this.index,
     required this.shortlisted,
@@ -139,6 +140,9 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       fontSize: 15,
+                                      color: widget.check11
+                                          ? Colors.white
+                                          : MAIN_COLOR,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -178,12 +182,17 @@ class _ProductWidgetStyleTwoState extends State<ProductWidgetStyleTwo> {
                                           "₪${(double.parse(widget.shortlisted[widget.index]["price"].toString()) * 2.5).toStringAsFixed(2)}",
                                           style: TextStyle(
                                             fontSize: 14,
+                                            color: widget.check11
+                                                ? Colors.white
+                                                : MAIN_COLOR,
                                           ),
                                         ),
                                         Container(
                                           height: 1,
                                           width: 50,
-                                          color: Colors.black,
+                                          color: widget.check11
+                                              ? Colors.yellow
+                                              : Colors.black,
                                         ),
                                       ],
                                     ),

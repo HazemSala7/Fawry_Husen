@@ -1,4 +1,5 @@
 import 'package:fawri_app_refactor/components/product-widgets-styles/product-widget-style-two/product-widget-style-two.dart';
+import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -6,8 +7,10 @@ import 'package:shimmer/shimmer.dart';
 
 class SectionStyleOne extends StatefulWidget {
   var sectionName, sectionURL, backgroundColor;
+  bool check11;
   SectionStyleOne({
     Key? key,
+    required this.check11,
     required this.sectionName,
     required this.sectionURL,
     required this.backgroundColor,
@@ -91,7 +94,7 @@ class _SectionStyleOneState extends State<SectionStyleOne> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: widget.backgroundColor,
+      color: widget.check11 ? MAIN_COLOR : widget.backgroundColor,
       child: Column(
         children: [
           Padding(
@@ -100,7 +103,10 @@ class _SectionStyleOneState extends State<SectionStyleOne> {
               children: [
                 Text(
                   widget.sectionName,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: widget.check11 ? Colors.red : MAIN_COLOR),
                 ),
               ],
             ),
@@ -157,6 +163,7 @@ class _SectionStyleOneState extends State<SectionStyleOne> {
                                 horizontalOffset: 100.0,
                                 child: FadeInAnimation(
                                   child: ProductWidgetStyleTwo(
+                                    check11: widget.check11,
                                     hasAPI: true,
                                     fire: true,
                                     index: index,

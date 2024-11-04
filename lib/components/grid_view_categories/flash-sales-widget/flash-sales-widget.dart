@@ -16,8 +16,10 @@ class FlashSalesWidget extends StatefulWidget {
   final String startDate;
   final String endDate;
   var flashSalesArray;
+  bool check11 = false;
 
   FlashSalesWidget({
+    required this.check11,
     required this.flashSalesArray,
     required this.active,
     required this.startDate,
@@ -128,6 +130,7 @@ class _FlashSalesWidgetState extends State<FlashSalesWidget> {
 
                   // Flash sale products
                   FlashSalesProducts(
+                    check11: widget.check11,
                     productCardStyle: 4,
                     shortlisted: widget.flashSalesArray["items"],
                   ),

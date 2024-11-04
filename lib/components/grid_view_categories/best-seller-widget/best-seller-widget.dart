@@ -1,9 +1,17 @@
 import 'dart:math';
 
+import 'package:fawri_app_refactor/constants/constants.dart';
+import 'package:fawri_app_refactor/pages/product-screen/product-screen.dart';
+import 'package:fawri_app_refactor/server/domain/domain.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/material.dart';
 
 class BestSellersWidget extends StatefulWidget {
+  bool check11;
+  BestSellersWidget({
+    Key? key,
+    required this.check11,
+  }) : super(key: key);
   @override
   _BestSellersWidgetState createState() => _BestSellersWidgetState();
 }
@@ -59,7 +67,7 @@ class _BestSellersWidgetState extends State<BestSellersWidget> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 30,
-                    color: Colors.black,
+                    color: widget.check11 ? Colors.red : Colors.black,
                   ),
                 ),
               ],
@@ -69,7 +77,7 @@ class _BestSellersWidgetState extends State<BestSellersWidget> {
                 Container(
                   width: 200,
                   height: 3,
-                  color: Colors.black,
+                  color: widget.check11 ? Colors.red : Colors.black,
                 ),
               ],
             ),
@@ -112,7 +120,47 @@ class _BestSellersWidgetState extends State<BestSellersWidget> {
                                   darkColors[random.nextInt(darkColors.length)];
                               return InkWell(
                                 onTap: () {
-                                  // Handle product tap
+                                  List result = [];
+                                  int startIndex = gridIndex - 20;
+                                  int endIndex = gridIndex + 20;
+                                  if (startIndex < 0) {
+                                    startIndex = 0;
+                                  }
+                                  if (endIndex > products.length) {
+                                    endIndex = products.length;
+                                  }
+                                  result.addAll(
+                                      products.sublist(startIndex, endIndex));
+                                  result.insert(0, product);
+                                  List<String> idsList = result
+                                      .map((item) => item['item_id'].toString())
+                                      .toList();
+                                  String commaSeparatedIds = idsList.join(', ');
+                                  NavigatorFunction(
+                                      context,
+                                      ProductScreen(
+                                        hasAPI: true,
+                                        priceMul: 1.0,
+                                        price: product["price"].toString(),
+                                        SIZES: [],
+                                        ALL: true,
+                                        SubCategories: [],
+                                        url:
+                                            "${URL}getAllItems?api_key=$key_bath&page=1",
+                                        page: 1,
+                                        Sub_Category_Key:
+                                            sub_categories_women_appearel[0]
+                                                    ["key"]
+                                                .toString(),
+                                        sizes: [],
+                                        index: gridIndex,
+                                        cart_fav: false,
+                                        Images: product["images"],
+                                        favourite: false,
+                                        id: product["item_id"],
+                                        Product: result,
+                                        IDs: commaSeparatedIds,
+                                      ));
                                 },
                                 child: Card(
                                   shape: RoundedRectangleBorder(

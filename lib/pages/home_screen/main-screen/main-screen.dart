@@ -36,6 +36,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
     return Container(
+      color: widget.type == "11.11" ? MAIN_COLOR : Colors.transparent,
       child: Column(
         children: [
           Row(
@@ -240,7 +241,11 @@ class _MainScreenState extends State<MainScreen> {
                                                   id: widget.hasAPI
                                                       ? AllProducts[index]["item_id"]
                                                       : AllProducts[index]["id"],
-                                                  new_price: widget.hasAPI ? AllProducts[index]["new_price"] : AllProducts[index]["price"] ?? 0.0,
+                                                  new_price: widget.hasAPI
+                                                      ? widget.type == "best_seller"
+                                                          ? AllProducts[index]["price"]
+                                                          : AllProducts[index]["new_price"]
+                                                      : AllProducts[index]["price"] ?? 0.0,
                                                   old_price: widget.hasAPI ? AllProducts[index]["old_price"] ?? 0.0 : AllProducts[index]["old_price"] ?? 0.0,
                                                   image: widget.hasAPI
                                                       ? AllProducts[index]["images"].length == 0
@@ -358,8 +363,6 @@ class _MainScreenState extends State<MainScreen> {
                 : _products["items"];
             cache["all_products"] = AllProducts;
           });
-          print("AllProducts");
-          print(AllProducts);
         }
       } catch (err) {}
       setState(() {
@@ -388,16 +391,24 @@ class _MainScreenState extends State<MainScreen> {
                         : await getBestSellersProducts(_page)
             : await getProducts(_page);
 
-        if (widget.hasAPI
-            ? widget.type == "flash_sales"
-                ? _products["items"]
-                : _products["data"]
-            : _products["items"].isNotEmpty) {
+        if (widget.type == "best_seller"
+            ? _products["data"].isNotEmpty
+            : widget.hasAPI
+                ? widget.type == "flash_sales" ||
+                        widget.type == "11.11" ||
+                        widget.type == "discount"
+                    ? _products["items"].isNotEmpty
+                    : _products["data"].isNotEmpty
+                : _products["items"].isNotEmpty) {
           setState(() {
             AllProducts.addAll(widget.hasAPI
-                ? widget.type == "flash_sales"
-                    ? _products["items"]
-                    : _products["data"]
+                ? widget.type == "best_seller"
+                    ? _products["data"]
+                    : widget.type == "flash_sales" ||
+                            widget.type == "11.11" ||
+                            widget.type == "discount"
+                        ? _products["items"]
+                        : _products["data"]
                 : _products["items"]);
           });
         } else {

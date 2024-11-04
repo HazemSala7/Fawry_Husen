@@ -70,7 +70,9 @@ class _CountdownTimerWidgetState extends State<CountdownTimerWidget> {
           color: MAIN_COLOR,
           child: Center(
             child: Text(
-              widget.type == "11.11" || widget.type == "Discount"
+              widget.type == "11.11" ||
+                      widget.type == "Discount" ||
+                      widget.type == "Best Seller"
                   ? widget.type
                   : "ينتهي خلال  ${_formatDuration(remainingTime)}",
               style: TextStyle(

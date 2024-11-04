@@ -11,8 +11,10 @@ import 'package:shimmer/shimmer.dart';
 
 class SectionStyleThree extends StatefulWidget {
   var sectionName, sectionURL, backgroundColor;
+  bool check11;
   SectionStyleThree({
     Key? key,
+    required this.check11,
     required this.sectionName,
     required this.sectionURL,
     required this.backgroundColor,
@@ -194,6 +196,7 @@ class _SectionStyleThreeState extends State<SectionStyleThree> {
                                     child: FadeInAnimation(
                                       child: ProductWidgetStyleThree(
                                         hasAPI: false,
+                                        check11: widget.check11,
                                         fire: true,
                                         index: index,
                                         shortlisted: _productsArray,

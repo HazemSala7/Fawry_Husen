@@ -9,9 +9,11 @@ import '../../server/functions/functions.dart';
 class FlashSalesProducts extends StatefulWidget {
   int productCardStyle;
   final List shortlisted;
+  bool check11;
 
   FlashSalesProducts({
     Key? key,
+    required this.check11,
     required this.productCardStyle,
     required this.shortlisted,
   }) : super(key: key);
@@ -105,6 +107,7 @@ class _FlashSalesProductsState extends State<FlashSalesProducts> {
                           child: FadeInAnimation(
                               child: widget.productCardStyle == 2
                                   ? ProductWidgetStyleTwo(
+                                      check11: widget.check11,
                                       hasAPI: true,
                                       fire: false,
                                       index: index,

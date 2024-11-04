@@ -10,10 +10,11 @@ import 'package:lottie/lottie.dart';
 class ProductWidgetStyleThree extends StatefulWidget {
   int index;
   var shortlisted;
-  bool fire;
+  bool fire, check11;
   bool hasAPI = false;
   ProductWidgetStyleThree({
     Key? key,
+    required this.check11,
     required this.hasAPI,
     required this.index,
     required this.shortlisted,
@@ -137,6 +138,9 @@ class _ProductWidgetStyleThreeState extends State<ProductWidgetStyleThree> {
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     fontSize: 15,
+                                    color: widget.check11
+                                        ? Colors.white
+                                        : MAIN_COLOR,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -175,14 +179,17 @@ class _ProductWidgetStyleThreeState extends State<ProductWidgetStyleThree> {
                                       Text(
                                         "₪${double.parse(widget.shortlisted[widget.index]["price"].toString()) * 2.5}",
                                         style: TextStyle(
-                                          fontSize: 14,
-                                        ),
+                                            fontSize: 14,
+                                            color: widget.check11
+                                                ? Colors.white
+                                                : MAIN_COLOR),
                                       ),
                                       Container(
-                                        height: 1,
-                                        width: 50,
-                                        color: Colors.black,
-                                      ),
+                                          height: 1,
+                                          width: 50,
+                                          color: widget.check11
+                                              ? Colors.yellow
+                                              : MAIN_COLOR),
                                     ],
                                   ),
                                 ],

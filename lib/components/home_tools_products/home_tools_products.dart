@@ -7,9 +7,11 @@ import '../../server/functions/functions.dart';
 
 class HomeToolsProducts extends StatefulWidget {
   final List shortlisted;
+  bool check11;
 
   HomeToolsProducts({
     Key? key,
+    required this.check11,
     required this.shortlisted,
   }) : super(key: key);
 
@@ -103,6 +105,7 @@ class _HomeToolsProductsState extends State<HomeToolsProducts> {
                           horizontalOffset: 100.0,
                           child: FadeInAnimation(
                               child: ProductWidgetStyleTwo(
+                            check11: widget.check11,
                             hasAPI: false,
                             fire: false,
                             index: index,

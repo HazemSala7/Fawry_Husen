@@ -10,9 +10,11 @@ class RecommendedProducts extends StatefulWidget {
   int productCardStyle;
   final List shortlisted;
   bool hasAPI = false;
+  bool check11 = false;
 
   RecommendedProducts({
     Key? key,
+    required this.check11,
     required this.hasAPI,
     required this.productCardStyle,
     required this.shortlisted,
@@ -107,6 +109,7 @@ class _RecommendedProductsState extends State<RecommendedProducts> {
                           child: FadeInAnimation(
                               child: widget.productCardStyle == 2
                                   ? ProductWidgetStyleTwo(
+                                      check11: widget.check11,
                                       hasAPI: widget.hasAPI,
                                       fire: false,
                                       index: index,
