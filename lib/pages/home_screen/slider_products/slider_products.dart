@@ -160,6 +160,7 @@ class _SliderProductsState extends State<SliderProducts> {
                                             child: FadeInAnimation(
                                               curve: Curves.easeOut,
                                               child: ProductWidget(
+                                                  bannerTitle: "",
                                                   hasAPI: false,
                                                   cardHeight: 0,
                                                   cardWidth: 0,

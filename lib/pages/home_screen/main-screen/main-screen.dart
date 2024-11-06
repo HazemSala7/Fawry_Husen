@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../LocalDB/Provider/CartProvider.dart';
 import '../../../LocalDB/Provider/FavouriteProvider.dart';
@@ -32,259 +34,314 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   @override
+  bool showTutorial = false;
+  bool isFirstOpen = false;
+  int currentIndex = 0;
+  bool tutorialActive = true;
+
+  Future<void> _checkFirstOpen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _isFirstOpen = prefs.getBool('isFirstOpen') ?? true;
+    print("_isFirstOpen");
+    print(_isFirstOpen);
+    setState(() {
+      isFirstOpen = _isFirstOpen;
+    });
+
+    if (isFirstOpen) {
+      setState(() {
+        showTutorial = true;
+      });
+      await prefs.setBool('isFirstOpen', false);
+    }
+  }
+
+  void stopTutorial() {
+    setState(() {
+      tutorialActive = false;
+      showTutorial = false;
+    });
+  }
+
   TextEditingController? textController;
   Widget build(BuildContext context) {
     final cartProvider = Provider.of<CartProvider>(context);
-    return Container(
-      color: widget.type == "11.11" ? MAIN_COLOR : Colors.transparent,
-      child: Column(
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.max,
+    return Stack(
+      children: [
+        Container(
+          color: widget.type == "11.11" ? MAIN_COLOR : Colors.transparent,
+          child: Column(
             children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
-                  child: TextFormField(
-                    onTap: () {
-                      showSearchDialog(context, "Women Apparel");
-                    },
-                    obscureText: false,
-                    autofocus: false,
-                    decoration: InputDecoration(
-                      labelText: "ابحث هنا",
-                      // labelStyle:
-                      //     FlutterFlowTheme.of(context).bodyText2,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1,
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                      child: TextFormField(
+                        onTap: () {
+                          showSearchDialog(context, "Women Apparel");
+                        },
+                        obscureText: false,
+                        autofocus: false,
+                        decoration: InputDecoration(
+                          labelText: "ابحث هنا",
+                          // labelStyle:
+                          //     FlutterFlowTheme.of(context).bodyText2,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          errorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          focusedErrorBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Color(0x00000000),
+                              width: 1,
+                            ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(4.0),
+                              topRight: Radius.circular(4.0),
+                            ),
+                          ),
+                          suffixIcon: Icon(
+                            Icons.search,
+                            size: 20,
+                          ),
                         ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      errorBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      focusedErrorBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Color(0x00000000),
-                          width: 1,
-                        ),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(4.0),
-                          topRight: Radius.circular(4.0),
-                        ),
-                      ),
-                      suffixIcon: Icon(
-                        Icons.search,
-                        size: 20,
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-          CountdownTimerWidget(
-            hasAPI: widget.type == "11.11" || widget.type == "discount"
-                ? true
-                : widget.hasAPI,
-            type: widget.bannerTitle,
-          ),
-          _isFirstLoadRunning
-              ? Container(
-                  width: double.infinity,
-                  height: 400,
-                  child: Center(
-                    child: SpinKitPulse(
-                      color: MAIN_COLOR,
-                      size: 60,
-                    ),
-                  ),
-                )
-              : no_internet
+              CountdownTimerWidget(
+                hasAPI: widget.type == "11.11" || widget.type == "discount"
+                    ? true
+                    : widget.hasAPI,
+                type: widget.bannerTitle,
+              ),
+              _isFirstLoadRunning
                   ? Container(
-                      height: MediaQuery.of(context).size.height - 100,
                       width: double.infinity,
+                      height: 400,
                       child: Center(
-                        child: Text(
-                          "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+                        child: SpinKitPulse(
+                          color: MAIN_COLOR,
+                          size: 60,
                         ),
                       ),
                     )
-                  : AllProducts.length == 0
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 50),
-                          child: Text(
-                            "لا يوجد أي منتج",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 18),
-                          ),
-                        )
-                      : Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                top: 15, right: 10, left: 10),
-                            child: AnimationLimiter(
-                              child: RefreshIndicator(
-                                onRefresh: _refreshData,
-                                child: LayoutBuilder(
-                                    builder: (context, constraints) {
-                                  double width = constraints.maxWidth;
-                                  double height = constraints.maxHeight;
-
-                                  double cardWidth = 420;
-                                  double cardHeight = 420;
-                                  return GridView.builder(
-                                      cacheExtent: 5000,
-                                      controller: _controller,
-                                      itemCount: AllProducts.length,
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 6,
-                                        mainAxisSpacing: 10,
-                                        childAspectRatio: 0.48,
-                                      ),
-                                      itemBuilder: (context, int index) {
-                                        final isLiked = Provider.of<
-                                                FavouriteProvider>(context)
-                                            .isProductFavorite(widget.hasAPI
-                                                ? AllProducts[index]["item_id"]
-                                                : AllProducts[index]["id"]);
-                                        return AnimationConfiguration
-                                            .staggeredList(
-                                          position: index,
-                                          duration:
-                                              const Duration(milliseconds: 500),
-                                          child: SlideAnimation(
-                                            horizontalOffset: 100.0,
-                                            // verticalOffset: 100.0,
-                                            child: FadeInAnimation(
-                                              curve: Curves.easeOut,
-                                              child: ProductWidget(
-                                                  hasAPI: widget.hasAPI,
-                                                  cardHeight:
-                                                      cardHeight.toInt(),
-                                                  cardWidth: cardWidth.toInt(),
-                                                  priceMul: 1,
-                                                  inCart: cartProvider.isProductCart(
-                                                      widget.hasAPI
-                                                          ? AllProducts[index]
-                                                              ["item_id"]
-                                                          : AllProducts[index]
-                                                              ["id"]),
-                                                  SIZES: [],
-                                                  ALL: true,
-                                                  url:
-                                                      "${URL}getAllItems?api_key=$key_bath&page=$_page",
-                                                  isLiked: isLiked,
-                                                  Sub_Category_Key:
-                                                      Sub_Category_Key,
-                                                  SubCategories: [],
-                                                  page: _page,
-                                                  sizes: [],
-                                                  home: true,
-                                                  category_id: "",
-                                                  size: "",
-                                                  Images: widget.hasAPI
-                                                      ? AllProducts[index]["images"].length ==
-                                                              0
-                                                          ? [
-                                                              "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                            ]
-                                                          : AllProducts[index]["images"] ??
-                                                              [
-                                                                "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                              ]
-                                                      : AllProducts[index]["vendor_images_links"].length ==
-                                                              0
-                                                          ? [
-                                                              "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                            ]
-                                                          : AllProducts[index]["vendor_images_links"] ??
-                                                              [
-                                                                "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                              ],
-                                                  Products: AllProducts,
-                                                  index: index,
-                                                  name: widget.hasAPI
-                                                      ? AllProducts[index]
-                                                          ["item_name"]
-                                                      : AllProducts[index]
-                                                          ["title"],
-                                                  thumbnail: AllProducts[index]
-                                                          ["thumbnail"] ??
-                                                      "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
-                                                  id: widget.hasAPI
-                                                      ? AllProducts[index]["item_id"]
-                                                      : AllProducts[index]["id"],
-                                                  new_price: widget.hasAPI
-                                                      ? widget.type == "best_seller"
-                                                          ? AllProducts[index]["price"]
-                                                          : AllProducts[index]["new_price"]
-                                                      : AllProducts[index]["price"] ?? 0.0,
-                                                  old_price: widget.hasAPI ? AllProducts[index]["old_price"] ?? 0.0 : AllProducts[index]["old_price"] ?? 0.0,
-                                                  image: widget.hasAPI
-                                                      ? AllProducts[index]["images"].length == 0
-                                                          ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                          : AllProducts[index]["images"][0]
-                                                      : AllProducts[index]["vendor_images_links"].length == 0
-                                                          ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
-                                                          : AllProducts[index]["vendor_images_links"][0]),
-                                            ),
-                                          ),
-                                        );
-                                      });
-                                }),
-                              ),
+                  : no_internet
+                      ? Container(
+                          height: MediaQuery.of(context).size.height - 100,
+                          width: double.infinity,
+                          child: Center(
+                            child: Text(
+                              "لا يوجد اتصال بالانترنت , الرجاء التحقق منه",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ),
-                        ),
-          // when the _loadMore function is running
-          if (_isLoadMoreRunning == true)
-            Padding(
-              padding: EdgeInsets.only(top: 10, bottom: 40),
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: MAIN_COLOR,
-                ),
-              ),
-            ),
+                        )
+                      : AllProducts.length == 0
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 50),
+                              child: Text(
+                                "لا يوجد أي منتج",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
+                            )
+                          : Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 15, right: 10, left: 10),
+                                child: AnimationLimiter(
+                                  child: RefreshIndicator(
+                                    onRefresh: _refreshData,
+                                    child: LayoutBuilder(
+                                        builder: (context, constraints) {
+                                      double width = constraints.maxWidth;
+                                      double height = constraints.maxHeight;
 
-          // When nothing else to load
-          if (_hasNextPage == false)
-            Container(
-              padding: const EdgeInsets.only(top: 30, bottom: 40),
-              color: MAIN_COLOR,
-              child: const Center(
-                child: Text('You have fetched all of the products'),
-              ),
+                                      double cardWidth = 420;
+                                      double cardHeight = 420;
+                                      return GridView.builder(
+                                          cacheExtent: 5000,
+                                          controller: _controller,
+                                          itemCount: AllProducts.length,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                            crossAxisSpacing: 6,
+                                            mainAxisSpacing: 10,
+                                            childAspectRatio: 0.48,
+                                          ),
+                                          itemBuilder: (context, int index) {
+                                            final isLiked = Provider.of<
+                                                    FavouriteProvider>(context)
+                                                .isProductFavorite(widget.hasAPI
+                                                    ? AllProducts[index]
+                                                        ["item_id"]
+                                                    : AllProducts[index]["id"]);
+                                            return AnimationConfiguration
+                                                .staggeredList(
+                                              position: index,
+                                              duration: const Duration(
+                                                  milliseconds: 500),
+                                              child: SlideAnimation(
+                                                horizontalOffset: 100.0,
+                                                // verticalOffset: 100.0,
+                                                child: FadeInAnimation(
+                                                  curve: Curves.easeOut,
+                                                  child: ProductWidget(
+                                                      bannerTitle:
+                                                          widget.bannerTitle,
+                                                      hasAPI: widget.hasAPI,
+                                                      cardHeight:
+                                                          cardHeight.toInt(),
+                                                      cardWidth:
+                                                          cardWidth.toInt(),
+                                                      priceMul: 1,
+                                                      inCart: cartProvider.isProductCart(
+                                                          widget.hasAPI
+                                                              ? AllProducts[index]
+                                                                  ["item_id"]
+                                                              : AllProducts[index]
+                                                                  ["id"]),
+                                                      SIZES: [],
+                                                      ALL: true,
+                                                      url:
+                                                          "${URL}getAllItems?api_key=$key_bath&page=$_page",
+                                                      isLiked: isLiked,
+                                                      Sub_Category_Key:
+                                                          Sub_Category_Key,
+                                                      SubCategories: [],
+                                                      page: _page,
+                                                      sizes: [],
+                                                      home: true,
+                                                      category_id: "",
+                                                      size: "",
+                                                      Images: widget.hasAPI
+                                                          ? AllProducts[index]["images"].length ==
+                                                                  0
+                                                              ? [
+                                                                  "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                                ]
+                                                              : AllProducts[index]["images"] ??
+                                                                  [
+                                                                    "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                                  ]
+                                                          : AllProducts[index]["vendor_images_links"].length ==
+                                                                  0
+                                                              ? [
+                                                                  "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                                ]
+                                                              : AllProducts[index]["vendor_images_links"] ??
+                                                                  [
+                                                                    "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                                  ],
+                                                      Products: AllProducts,
+                                                      index: index,
+                                                      name: widget.hasAPI
+                                                          ? AllProducts[index]
+                                                              ["item_name"]
+                                                          : AllProducts[index]
+                                                              ["title"],
+                                                      thumbnail: AllProducts[index]
+                                                              ["thumbnail"] ??
+                                                          "https://www.fawri.co/assets/about_us/fawri_logo.jpg",
+                                                      id: widget.hasAPI
+                                                          ? AllProducts[index]
+                                                              ["item_id"]
+                                                          : AllProducts[index]["id"],
+                                                      new_price: widget.hasAPI
+                                                          ? widget.type == "best_seller"
+                                                              ? AllProducts[index]["price"]
+                                                              : AllProducts[index]["new_price"]
+                                                          : AllProducts[index]["price"] ?? 0.0,
+                                                      old_price: widget.hasAPI ? AllProducts[index]["old_price"] ?? 0.0 : AllProducts[index]["old_price"] ?? 0.0,
+                                                      image: widget.hasAPI
+                                                          ? AllProducts[index]["images"].length == 0
+                                                              ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                              : AllProducts[index]["images"][0]
+                                                          : AllProducts[index]["vendor_images_links"].length == 0
+                                                              ? "https://www.fawri.co/assets/about_us/fawri_logo.jpg"
+                                                              : AllProducts[index]["vendor_images_links"][0]),
+                                                ),
+                                              ),
+                                            );
+                                          });
+                                    }),
+                                  ),
+                                ),
+                              ),
+                            ),
+              // when the _loadMore function is running
+              if (_isLoadMoreRunning == true)
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 40),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: widget.bannerTitle == "11.11"
+                          ? Colors.white
+                          : MAIN_COLOR,
+                    ),
+                  ),
+                ),
+
+              // When nothing else to load
+              if (_hasNextPage == false)
+                Container(
+                  padding: const EdgeInsets.only(top: 30, bottom: 40),
+                  color: MAIN_COLOR,
+                  child: const Center(
+                    child: Text('You have fetched all of the products'),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        if (showTutorial && isFirstOpen)
+          GestureDetector(
+            onTap: stopTutorial,
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: double.infinity,
+              color: Colors.transparent,
+              child: Lottie.asset(
+                  "assets/lottie_animations/Animation - 1730914195220.json",
+                  height: MediaQuery.of(context).size.height - 150,
+                  reverse: true,
+                  repeat: true,
+                  fit: BoxFit.cover),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
@@ -431,6 +488,9 @@ class _MainScreenState extends State<MainScreen> {
   ScrollController _controller = ScrollController();
   @override
   void initState() {
+    if (widget.bannerTitle == "11.11") {
+      _checkFirstOpen();
+    }
     super.initState();
     _firstLoad();
     _controller = ScrollController()..addListener(_loadMore);

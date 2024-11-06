@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 import '../../LocalDB/Models/FavoriteItem.dart';
@@ -25,6 +27,7 @@ class ProductWidget extends StatefulWidget {
       size,
       page,
       url,
+      bannerTitle,
       priceMul;
   var SIZES;
   int index, id, cardWidth, cardHeight;
@@ -42,6 +45,7 @@ class ProductWidget extends StatefulWidget {
     this.image,
     this.name,
     required this.ALL,
+    required this.bannerTitle,
     required this.cardWidth,
     required this.hasAPI,
     required this.cardHeight,
@@ -188,13 +192,18 @@ class _ProductWidgetState extends State<ProductWidget> {
                     )));
       },
       child: Container(
-        decoration: BoxDecoration(boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 7,
-            blurRadius: 5,
-          ),
-        ], color: Colors.white, borderRadius: BorderRadius.circular(10)),
+        decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 7,
+                blurRadius: 5,
+              ),
+            ],
+            color: widget.bannerTitle.toString() == "11.11"
+                ? Colors.grey
+                : Colors.white,
+            borderRadius: BorderRadius.circular(10)),
         child: Column(
           children: [
             Stack(
@@ -277,21 +286,24 @@ class _ProductWidgetState extends State<ProductWidget> {
                 children: [
                   Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Text(
-                            "₪${OLD_PRICE is double ? OLD_PRICE.round().toString() : OLD_PRICE.toString().length > 5 ? OLD_PRICE.toString().substring(0, 5) : OLD_PRICE.toString()}",
-                            style: TextStyle(
-                              fontSize: 16,
+                      Visibility(
+                        visible: OLD_PRICE.toString() == "0.0" ? false : true,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Text(
+                              "₪${OLD_PRICE is double ? OLD_PRICE.round().toString() : OLD_PRICE.toString().length > 5 ? OLD_PRICE.toString().substring(0, 5) : OLD_PRICE.toString()}",
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
-                          Container(
-                            height: 1,
-                            width: 40,
-                            color: Colors.black,
-                          ),
-                        ],
+                            Container(
+                              height: 1,
+                              width: 40,
+                              color: Colors.black,
+                            ),
+                          ],
+                        ),
                       ),
                       Text(
                         widget.new_price != null
@@ -358,6 +370,45 @@ class _ProductWidgetState extends State<ProductWidget> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            Visibility(
+              visible: widget.bannerTitle == "11.11",
+              child: Padding(
+                padding: const EdgeInsets.only(top: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Lottie.asset(
+                        "assets/lottie_animations/Animation - 1720525210493.json",
+                        height: 35,
+                        reverse: true,
+                        repeat: true,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Text(
+                      "11.11",
+                      style: GoogleFonts.cairo(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 20,
+                        color: MAIN_COLOR,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Lottie.asset(
+                        "assets/lottie_animations/Animation - 1720525210493.json",
+                        height: 35,
+                        reverse: true,
+                        repeat: true,
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],

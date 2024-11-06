@@ -617,6 +617,7 @@ class _ShopProfileState extends State<ShopProfile> {
                                         child: FadeInAnimation(
                                           curve: Curves.easeOut,
                                           child: ProductWidget(
+                                            bannerTitle: "",
                                             hasAPI: false,
                                             cardHeight: 420,
                                             cardWidth: 420,

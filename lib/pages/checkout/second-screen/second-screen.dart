@@ -25,11 +25,12 @@ import 'package:fawri_app_refactor/services/dialogs/checkout/area_city_service/a
 import 'package:url_launcher/url_launcher.dart';
 
 class CheckoutSecondScreen extends StatefulWidget {
-  var total;
+  var total, coupon;
   String dropdownValue = 'اختر منطقتك', initialCity = "";
   CheckoutSecondScreen({
     Key? key,
     required this.total,
+    required this.coupon,
     required this.dropdownValue,
     required this.initialCity,
   }) : super(key: key);
@@ -80,6 +81,7 @@ class _CheckoutSecondScreenState extends State<CheckoutSecondScreen> {
       NameController.text = "";
       PhoneController.text = "";
     }
+    CoponController.text = widget.coupon.toString();
     cities = CityService().loadCities();
     final addressItems = context.read<AddressProvider>().addressItems;
     if (addressItems.isNotEmpty && selectedArea == null) {

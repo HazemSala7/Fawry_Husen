@@ -874,6 +874,7 @@ class _ProductsCategoriesState extends State<ProductsCategories> {
                                                         curve: Curves.easeOut,
                                                         child: ProductWidget(
                                                             hasAPI: false,
+                                                            bannerTitle: "",
                                                             cardHeight: cardHeight
                                                                 .toInt(),
                                                             cardWidth: cardWidth

@@ -686,13 +686,27 @@ class _ProductScreenState extends State<ProductScreen> {
                                       typeApi = true;
                                     }
                                   }
+                                  double _price;
 
-                                  var _price = double.parse(
-                                          item["variants"].isNotEmpty
-                                              ? item["variants"][0]["price"]
-                                                  .toString()
-                                              : "0") *
-                                      double.parse(widget.priceMul.toString());
+                                  if (item["tags"] != null &&
+                                      item["tags"].contains("flash_sales")) {
+                                    // If "flash_sales" tag is present
+                                    _price = double.parse(widget
+                                            .Product[itemIndex]["new_price"]
+                                            .to ??
+                                        "0.0");
+                                  } else {
+                                    // If "flash_sales" tag is not present, use the variant price or default to "0"
+                                    String variantPrice =
+                                        item["variants"].isNotEmpty
+                                            ? item["variants"][0]["price"]
+                                                .toString()
+                                            : "0";
+
+                                    _price = double.parse(variantPrice) *
+                                        double.parse(
+                                            widget.priceMul.toString());
+                                  }
 
                                   final selectedVariant =
                                       item["variants"].isNotEmpty

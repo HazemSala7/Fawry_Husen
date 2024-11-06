@@ -15,61 +15,43 @@ import 'package:fawri_app_refactor/constants/constants.dart';
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 
 class CheckoutFirstScreen extends StatefulWidget {
-  var total, freeShipValue;
   CheckoutFirstScreen({
     Key? key,
     required this.total,
     required this.freeShipValue,
   }) : super(key: key);
 
+  var total, freeShipValue;
+
   @override
   State<CheckoutFirstScreen> createState() => _CheckoutFirstScreenState();
 }
 
 class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
+  String CoponMessage = "";
+  bool checkCopon = false;
+  bool coponApplied = false;
+  bool coponed = false;
+  double delivery_price = 0.0;
+  String discountPercentage = "0.0";
+  double discountPrice = 0.0;
+  String dropdownValue = 'اختر منطقتك';
+  var oldTotal;
+  bool status = false;
+
   @override
   TextEditingController CoponController = TextEditingController();
-  String dropdownValue = 'اختر منطقتك';
-  bool _hasError = false;
-  String CoponMessage = "";
-  bool coponApplied = false;
-  String discountPercentage = "0.0";
-  bool checkCopon = false;
-  bool status = false;
-  bool coponed = false;
-  var oldTotal;
-  double delivery_price = 0.0;
-  double discountPrice = 0.0;
-  void _setDeliveryPrice() {
-    if (dropdownValue == "الداخل") {
-      delivery_price = 60.0;
-    } else if (dropdownValue == "القدس") {
-      delivery_price = 30.0;
-    } else if (dropdownValue == "الضفه الغربيه") {
-      delivery_price = 20.0;
-    } else {
-      delivery_price = 0.0;
-    }
-    if (dropdownValue == "اختر منطقتك") {
-      delivery_price = 0.0;
-    } else {
-      if (int.parse(widget.freeShipValue.toString()) == 0) {
-        delivery_price = delivery_price;
-      } else {
-        if (widget.total >= int.parse(widget.freeShipValue.toString())) {
-          delivery_price = delivery_price - 20;
-        }
-      }
-    }
-
-    setState(() {});
-  }
 
   Timer? _couponMessageTimer;
+  bool _hasError = false;
   PageController _pageController = PageController();
-  setControllers() async {
-    oldTotal = widget.total.toString();
-    setState(() {});
+
+  // Inside your State class
+  @override
+  void dispose() {
+    // Dispose the timer when the widget is disposed to prevent memory leaks
+    _couponMessageTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -77,6 +59,11 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
     _setDeliveryPrice();
     setControllers();
     super.initState();
+  }
+
+  setControllers() async {
+    oldTotal = widget.total.toString();
+    setState(() {});
   }
 
   Widget build(BuildContext context) {
@@ -406,6 +393,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                         NavigatorFunction(
                                           context,
                                           CheckoutSecondScreen(
+                                            coupon: CoponController.text,
                                             initialCity:
                                                 dropdownValue.toString(),
                                             dropdownValue:
@@ -433,6 +421,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                             NavigatorFunction(
                               context,
                               CheckoutSecondScreen(
+                                coupon: CoponController.text,
                                 initialCity: dropdownValue.toString(),
                                 dropdownValue: dropdownValue.toString(),
                                 total: double.parse(
@@ -632,6 +621,7 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
                                 }
                               }
                             } else {
+                              print("5");
                               setState(() {
                                 CoponMessage = "تم استخدام الكوبون من قبل";
                               });
@@ -704,12 +694,29 @@ class _CheckoutFirstScreenState extends State<CheckoutFirstScreen> {
     }
   }
 
-  // Inside your State class
-  @override
-  void dispose() {
-    // Dispose the timer when the widget is disposed to prevent memory leaks
-    _couponMessageTimer?.cancel();
-    super.dispose();
+  void _setDeliveryPrice() {
+    if (dropdownValue == "الداخل") {
+      delivery_price = 60.0;
+    } else if (dropdownValue == "القدس") {
+      delivery_price = 30.0;
+    } else if (dropdownValue == "الضفه الغربيه") {
+      delivery_price = 20.0;
+    } else {
+      delivery_price = 0.0;
+    }
+    if (dropdownValue == "اختر منطقتك") {
+      delivery_price = 0.0;
+    } else {
+      if (int.parse(widget.freeShipValue.toString()) == 0) {
+        delivery_price = delivery_price;
+      } else {
+        if (widget.total >= int.parse(widget.freeShipValue.toString())) {
+          delivery_price = delivery_price - 20;
+        }
+      }
+    }
+
+    setState(() {});
   }
 
   int _safeRound(dynamic value) {

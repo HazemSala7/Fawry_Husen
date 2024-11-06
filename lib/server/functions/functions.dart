@@ -384,6 +384,7 @@ addOrder(
       "city": city.toString(),
       "total_price": double.parse(total.toString()),
       "user_id": 38,
+      "used_coupon": copon.toString(),
       "location_ids": {
         "city_id": cityID.toString(),
         "area_id": areaID.toString(),
@@ -427,8 +428,6 @@ addOrder(
       return 404;
     }
   } catch (e) {
-    print("response");
-    print(e);
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String UserID = prefs.getString('user_id') ?? "";
@@ -471,6 +470,7 @@ addOrder(
         "page": "Fawri App",
         "description": "description Test",
         "phone": phone.toString(),
+        "used_coupon": copon.toString(),
         "address": address.toString(),
         "city": city.toString(),
         "total_price": double.parse(total.toString()),
