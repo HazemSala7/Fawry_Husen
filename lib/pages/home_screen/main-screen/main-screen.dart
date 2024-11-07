@@ -3,6 +3,7 @@ import 'package:fawri_app_refactor/pages/home_screen/main-screen/count-down-time
 import 'package:fawri_app_refactor/server/functions/functions.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -42,8 +43,6 @@ class _MainScreenState extends State<MainScreen> {
   Future<void> _checkFirstOpen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _isFirstOpen = prefs.getBool('isFirstOpen') ?? true;
-    print("_isFirstOpen");
-    print(_isFirstOpen);
     setState(() {
       isFirstOpen = _isFirstOpen;
     });
@@ -138,12 +137,21 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ],
               ),
-              CountdownTimerWidget(
-                hasAPI: widget.type == "11.11" || widget.type == "discount"
-                    ? true
-                    : widget.hasAPI,
-                type: widget.bannerTitle,
-              ),
+
+              widget.type == "11.11"
+                  ? Container(
+                      width: double.infinity,
+                      height: 40,
+                      color: MAIN_COLOR,
+                      child: Image.asset('assets/images/11shekkkel.gif'))
+                  : CountdownTimerWidget(
+                      hasAPI:
+                          widget.type == "11.11" || widget.type == "discount"
+                              ? true
+                              : widget.hasAPI,
+                      type: widget.bannerTitle,
+                    ),
+
               _isFirstLoadRunning
                   ? Container(
                       width: double.infinity,
