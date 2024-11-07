@@ -313,11 +313,17 @@ class _ProductWidgetState extends State<ProductWidget> {
                                     ? "₪${double.parse(widget.new_price).round().toString()}"
                                     : "₪0"))
                             : "₪0",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Colors.red,
-                        ),
+                        style: widget.bannerTitle == "11.11"
+                            ? GoogleFonts.cairo(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 20,
+                                color: Colors.red,
+                              )
+                            : TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Colors.red,
+                              ),
                       ),
                     ],
                   ),

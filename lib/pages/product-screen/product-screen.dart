@@ -689,21 +689,29 @@ class _ProductScreenState extends State<ProductScreen> {
                                   double _price;
 
                                   if (item["tags"] != null &&
-                                      item["tags"].contains("flash_sales")) {
-                                    // If "flash_sales" tag is present
+                                      item["tags"].contains("flash_sales") &&
+                                      widget.Product[itemIndex]["new_price"] !=
+                                          null &&
+                                      widget.Product[itemIndex]["new_price"]
+                                          .toString()
+                                          .isNotEmpty) {
+                                    // Use the "new_price" if it exists and is not empty
                                     _price = double.parse(widget
                                             .Product[itemIndex]["new_price"]
-                                            .to ??
+                                            ?.toString() ??
                                         "0.0");
                                   } else {
-                                    // If "flash_sales" tag is not present, use the variant price or default to "0"
-                                    String variantPrice =
+                                    // If "flash_sales" tag is not present or "new_price" doesn't exist, use the variant price or default to "0"
+                                    var variantPrice =
                                         item["variants"].isNotEmpty
                                             ? item["variants"][0]["price"]
-                                                .toString()
                                             : "0";
 
-                                    _price = double.parse(variantPrice) *
+                                    // Convert to double only if variantPrice is not already a double
+                                    _price = (variantPrice is double
+                                            ? variantPrice
+                                            : double.parse(
+                                                variantPrice.toString())) *
                                         double.parse(
                                             widget.priceMul.toString());
                                   }
