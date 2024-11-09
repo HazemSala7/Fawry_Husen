@@ -446,15 +446,17 @@ class _MainScreenState extends State<MainScreen> {
       });
       _page += 1;
       try {
-        var _products = widget.hasAPI
-            ? widget.type == "flash_sales"
-                ? await getFlashSales(_page)
-                : widget.type == "11.11"
-                    ? await get11Products(_page)
-                    : widget.type == "discount"
-                        ? await getDiscountProducts(_page)
-                        : await getBestSellersProducts(_page)
-            : await getProducts(_page);
+        var _products = widget.type == "11.11"
+            ? await get11Products(_page)
+            : widget.hasAPI
+                ? widget.type == "flash_sales"
+                    ? await getFlashSales(_page)
+                    : widget.type == "11.11"
+                        ? await get11Products(_page)
+                        : widget.type == "discount"
+                            ? await getDiscountProducts(_page)
+                            : await getBestSellersProducts(_page)
+                : await getProducts(_page);
 
         if (widget.type == "best_seller"
             ? _products["data"].isNotEmpty
